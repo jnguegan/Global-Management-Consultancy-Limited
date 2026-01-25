@@ -1,1 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Contact | Global Management Consultancy Limited</title>
+  <meta name="description" content="Contact Global Management Consultancy Limited for Global Sport Finance and football agency services." />
 
+  <link rel="icon" href="favicon.png" type="image/png" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+<div class="wrap">
+
+<nav class="nav">
+  <a class="brand" href="index.html">
+    <img src="assets/images/gmc-logo.png" alt="Global Management Consultancy Limited" />
+  </a>
+  <div class="menu">
+    <a href="index.html">Home</a>
+    <a href="services.html">Services</a>
+    <a href="finance.html">Finance</a>
+    <a class="active" href="contact.html">Contact</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <span class="kicker">Contact</span>
+  <h1 class="h1">Send us a message</h1>
+  <p class="lead">Tell us whether your enquiry is about Global Sport Finance or Football Agency services.</p>
+</header>
+
+<section class="split section">
+  <div class="card">
+    <h2>Contact form</h2>
+
+    <form class="form" name="contact" method="POST" data-netlify="true">
+      <input type="hidden" name="form-name" value="contact" />
+      <input name="name" placeholder="Your name" required />
+      <input name="email" type="email" placeholder="Email address" required />
+      <input name="subject" placeholder="Subject (Finance / Agency / Other)" />
+      <textarea name="message" placeholder="Your message" required></textarea>
+      <button class="btn primary" type="submit">Send</button>
+    </form>
+  </div>
+
+  <div class="card">
+    <h2>What to include</h2>
+    <ul class="list">
+      <li>Finance or Agency</li>
+      <li>Countries involved (if cross-border)</li>
+      <li>Time sensitivity</li>
+      <li>Best way to reach you</li>
+    </ul>
+  </div>
+</section>
+
+<footer class="footer">
+  © <span id="y"></span> Global Management Consultancy Limited.
+</footer>
+
+</div>
+<script>document.getElementById("y").textContent = new Date().getFullYear();</script>
+</body>
+</html>
