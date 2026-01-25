@@ -1,1 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Partner Enquiry — Global Management Consultancy Limited</title>
+  <meta name="description" content="Partner enquiry form for commercial & contractual consulting and partner onboarding." />
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a class="brand" href="index.html">
+      <img src="assets/images/gmc-logo.png" alt="Global Management Consultancy Limited" />
+    </a>
+
+    <!-- If you already have a nav in other pages, you can copy it here -->
+  </div>
+</header>
+
+<!-- GMC Credibility Strip -->
+<div class="cred-strip">
+  Commercial & contractual consulting · Partner onboarding · Global Management Consultancy Limited
+</div>
+<!-- END GMC Credibility Strip -->
+
+<main class="container" style="padding:24px 16px;">
+  <h1>Partner Enquiry</h1>
+  <p class="muted" style="max-width: 70ch;">
+    Submit a commercial enquiry for partnership discussions. This form is for general business enquiries and does not
+    constitute regulated financial services onboarding.
+  </p>
+
+  <!-- NETLIFY FORM -->
+  <form name="partner-enquiry" method="POST" data-netlify="true" netlify-honeypot="bot-field" class="form-card">
+    <input type="hidden" name="form-name" value="partner-enquiry" />
+    <p class="hidden">
+      <label>Don’t fill this out: <input name="bot-field" /></label>
+    </p>
+
+    <div class="grid" style="gap:16px;">
+      <div>
+        <label for="fullName">Full name *</label>
+        <input id="fullName" name="fullName" type="text" autocomplete="name" required />
+      </div>
+
+      <div>
+        <label for="company">Company / Organisation *</label>
+        <input id="company" name="company" type="text" required />
+      </div>
+
+      <div>
+        <label for="country">Country *</label>
+        <input id="country" name="country" type="text" required />
+      </div>
+
+      <div>
+        <label for="email">Email *</label>
+        <input id="email" name="email" type="email" autocomplete="email" required />
+      </div>
+
+      <div>
+        <label for="phone">Phone (optional)</label>
+        <input id="phone" name="phone" type="tel" autocomplete="tel" />
+      </div>
+
+      <div>
+        <label for="enquiryType">Nature of enquiry *</label>
+        <select id="enquiryType" name="enquiryType" required>
+          <option value="" selected disabled>Select one…</option>
+          <option>Card Issuing &amp; Payment Services</option>
+          <option>Foreign Exchange &amp; International Payments</option>
+          <option>Football Commercial &amp; Contract Representation</option>
+          <option>Other Commercial Enquiries</option>
+        </select>
+      </div>
+    </div>
+
+    <div style="margin-top:16px;">
+      <label for="message">Brief description *</label>
+      <textarea id="message" name="message" rows="6" required
+        placeholder="Please summarise your request, relevant jurisdictions, and preferred next step (intro call / email)."></textarea>
+    </div>
+
+    <div style="margin-top:16px;">
+      <label class="check">
+        <input type="checkbox" name="consent" required />
+        I confirm I am submitting this enquiry for business purposes and I have read the Privacy notice.
+      </label>
+    </div>
+
+    <div style="margin-top:18px; display:flex; gap:12px; flex-wrap:wrap; align-items:center;">
+      <button type="submit" class="btn">Submit enquiry</button>
+      <span class="muted" style="font-size:0.95rem;">We typically respond within 1–2 business days.</span>
+    </div>
+  </form>
+
+  <p class="muted" style="margin-top:18px; max-width: 75ch;">
+    <strong>Note:</strong> Please do not submit account credentials, payment details, or sensitive personal information through this form.
+  </p>
+</main>
+
+<!-- GMC Footer -->
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div><strong>Global Management Consultancy Limited</strong></div>
+      <div>
+        <strong>Legal</strong><br />
+        <a href="terms.html">Terms</a> · <a href="privacy.html">Privacy</a> · <a href="cookies.html">Cookies</a>
+      </div>
+    </div>
+
+    <hr />
+
+    <p class="small">
+      <strong>Important notice:</strong> Content on this website is provided for general information only and does not
+      constitute legal, tax, investment or financial advice.
+    </p>
+
+    <p class="small">
+      <strong>Regulatory:</strong> Services described may include commercial and contractual consulting. If any activity
+      falls within UK financial services regulation (including FCA-regulated activities), such services are provided only
+      where authorised or through appropriately authorised partners. Clients should obtain independent professional advice.
+    </p>
+
+    <p class="small muted">
+      © <span id="year"></span> Global Management Consultancy Limited. All rights reserved.
+    </p>
+  </div>
+</footer>
+
+<script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+
+</body>
+</html>
 
