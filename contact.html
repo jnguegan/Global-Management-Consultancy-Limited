@@ -12,23 +12,24 @@
 <body>
 <div class="wrap">
 
-nav class="nav">
+<nav class="nav">
   <a class="brand" href="index.html">
     <img src="assets/images/gmc-logo.png" alt="Global Management Consultancy Limited" />
   </a>
-
   <div class="menu">
     <a href="index.html">Home</a>
     <a href="services.html">Services</a>
     <a href="finance.html">Finance</a>
-    <a href="contact.html">Contact</a>
+    <a class="active" href="contact.html">Contact</a>
   </div>
 </nav>
 
 <header class="hero">
   <span class="kicker">Contact</span>
   <h1 class="h1">Send us a message</h1>
-  <p class="lead">Tell us whether your enquiry is about Global Sport Finance or Football Agency services.</p>
+  <p class="lead">
+    Tell us whether your enquiry is about Global Sport Finance or Football Agency services.
+  </p>
 </header>
 
 <section class="split section">
@@ -39,7 +40,7 @@ nav class="nav">
       <input type="hidden" name="form-name" value="contact" />
       <input name="name" placeholder="Your name" required />
       <input name="email" type="email" placeholder="Email address" required />
-      <input name="subject" placeholder="Subject (Finance / Agency / Other)" />
+      <input name="subject" placeholder="Subject (Finance / Agency)" />
       <textarea name="message" placeholder="Your message" required></textarea>
       <button class="btn primary" type="submit">Send</button>
     </form>
@@ -64,4 +65,3 @@ nav class="nav">
 <script>document.getElementById("y").textContent = new Date().getFullYear();</script>
 </body>
 </html>
-
