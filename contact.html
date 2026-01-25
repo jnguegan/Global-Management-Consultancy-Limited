@@ -10,18 +10,25 @@
 <body>
 
 <header class="site-header">
-  <div class="container">
+  <div class="container header-inner">
     <a class="brand" href="index.html">
       <img src="assets/images/gmc-logo.png" alt="Global Management Consultancy Limited" />
     </a>
 
-    <!-- If you already have a nav menu, keep it here -->
+    <!-- NAV (keeps your header layout consistent) -->
+    <nav class="nav">
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="services.html">Services</a>
+      <a href="contact.html" aria-current="page">Contact</a>
+      <a class="btn" href="partner-enquiry.html">Partner Enquiry</a>
+    </nav>
   </div>
 </header>
 
 <!-- GMC Credibility Strip -->
 <div class="cred-strip">
-  Commercial & contractual consulting · Partner onboarding · Global Management Consultancy Limited
+  Commercial &amp; contractual consulting · Partner onboarding · Global Management Consultancy Limited
 </div>
 <!-- END GMC Credibility Strip -->
 
@@ -38,7 +45,10 @@
   </p>
   <!-- END Partner Enquiry CTA -->
 
-  <!-- Optional additional contact content can remain here -->
+  <!-- Optional: if you want a basic contact note without publishing emails/phones -->
+  <p class="muted" style="margin-top:14px; max-width:70ch;">
+    For compliance and data protection, please avoid sending sensitive personal or payment information via web forms.
+  </p>
 </main>
 
 <!-- GMC Footer -->
