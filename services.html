@@ -62,11 +62,43 @@
   </div>
 </section>
 
-<footer class="footer">
-  © <span id="y"></span> Global Management Consultancy Limited.
-</footer>
+  <!-- GMC Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <strong>Global Management Consultancy Limited</strong>
+        </div>
 
-</div>
-<script>document.getElementById("y").textContent = new Date().getFullYear();</script>
+        <div>
+          <strong>Legal</strong><br />
+          <a href="terms.html">Terms</a> · <a href="privacy.html">Privacy</a> · <a href="cookies.html">Cookies</a>
+        </div>
+      </div>
+
+      <hr />
+
+      <p class="small">
+        <strong>Important notice:</strong> Content on this website is provided for general information only and does not
+        constitute legal, tax, investment or financial advice.
+      </p>
+
+      <p class="small">
+        <strong>Regulatory:</strong> Services described may include commercial and contractual consulting. If any activity
+        falls within UK financial services regulation (including FCA-regulated activities), such services are provided only
+        where authorised or through appropriately authorised partners. Clients should obtain independent professional advice.
+      </p>
+
+      <p class="small muted">
+        © <span id="year"></span> Global Management Consultancy Limited. All rights reserved.
+      </p>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+  <!-- END GMC Footer -->
 </body>
 </html>
+
