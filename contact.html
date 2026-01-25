@@ -6,6 +6,32 @@
   <title>Contact — Global Management Consultancy Limited</title>
   <meta name="description" content="Contact Global Management Consultancy Limited for commercial and contractual consulting enquiries." />
   <link rel="stylesheet" href="assets/css/style.css" />
+  <style>
+  /* Contact page only fixes (does not affect other pages) */
+  .site-header .container { 
+    display: flex; 
+    align-items: center; 
+    justify-content: space-between; 
+    gap: 16px; 
+  }
+  .nav { 
+    display: flex; 
+    align-items: center; 
+    justify-content: flex-end; 
+    gap: 18px; 
+    flex-wrap: wrap; 
+  }
+  .nav a { white-space: nowrap; }
+
+  /* Prevent footer clipping on this page */
+  .site-footer { padding-left: 16px; padding-right: 16px; box-sizing: border-box; }
+  .site-footer .container { margin: 0 auto; max-width: 1100px; padding: 0; box-sizing: border-box; }
+
+  /* Optional: make footer columns behave */
+  .footer-grid { display: grid; grid-template-columns: 1fr auto; gap: 16px; }
+  @media (max-width: 820px) { .footer-grid { grid-template-columns: 1fr; } }
+</style>
+
 </head>
 <body>
 
@@ -87,3 +113,4 @@
 
 </body>
 </html>
+
