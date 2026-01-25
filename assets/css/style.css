@@ -269,6 +269,45 @@ textarea{
   font-size: 0.95rem;
   background: #fff;
 }
+/* Partner Enquiry Form */
+.form-card{
+  margin-top: 18px;
+  padding: 18px;
+  border: 1px solid rgba(0,0,0,0.10);
+  border-radius: 14px;
+  background: #fff;
+}
+
+label{ display:block; font-weight:600; margin-bottom:6px; }
+input, select, textarea{
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid rgba(0,0,0,0.15);
+  border-radius: 10px;
+  font: inherit;
+  background: #fff;
+}
+textarea{ resize: vertical; }
+
+.check{
+  display:flex;
+  gap:10px;
+  align-items:flex-start;
+  font-weight:500;
+}
+.check input{ width:auto; margin-top:4px; }
+
+.hidden{ display:none; }
+
+.btn{
+  padding: 10px 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(0,0,0,0.15);
+  background: #fff;
+  cursor: pointer;
+  font-weight: 600;
+}
+.btn:hover{ filter: brightness(0.98); }
 
 
 
