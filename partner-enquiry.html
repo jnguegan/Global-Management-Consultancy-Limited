@@ -79,6 +79,32 @@
     </div>
 
     <div style="margin-top:16px;">
+      <!-- Qualification fields (Option A) -->
+<div style="margin-top:16px;">
+  <label for="orgType">Type of Organisation</label>
+  <select id="orgType" name="orgType" required>
+    <option value="" selected disabled>Select one…</option>
+    <option>Fintech / Payments Provider</option>
+    <option>Brokerage / Liquidity Provider</option>
+    <option>Football Club / Agency</option>
+    <option>Corporate / Commercial Partner</option>
+    <option>Individual (Other)</option>
+  </select>
+</div>
+
+<div style="margin-top:16px;">
+  <label for="jurisdiction">Jurisdiction of Interest</label>
+  <select id="jurisdiction" name="jurisdiction" required>
+    <option value="" selected disabled>Select one…</option>
+    <option>United Kingdom</option>
+    <option>European Union</option>
+    <option>Africa</option>
+    <option>Middle East</option>
+    <option>Other</option>
+  </select>
+</div>
+<!-- END Qualification fields -->
+
       <label for="message">Brief description *</label>
       <textarea id="message" name="message" rows="6" required
         placeholder="Please summarise your request, relevant jurisdictions, and preferred next step (intro call / email)."></textarea>
