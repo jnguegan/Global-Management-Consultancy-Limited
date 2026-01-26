@@ -34,10 +34,15 @@
 
   <!-- NETLIFY FORM -->
   <form name="partner-enquiry" method="POST" action="success.html" data-netlify="true" netlify-honeypot="bot-field" class="form-card">
+   
+    <input type="hidden" name="formType" value="Partner Enquiry" />
+    <input type="hidden" name="sourceSite" value="Global Management Consultancy Limited" />
+    <input type="hidden" name="submittedFrom" value="Website" />
+
 
     <input type="hidden" name="form-name" value="partner-enquiry" />
     <p class="hidden">
-      <label>Don’t fill this out: <input name="bot-field" /></label>
+    <label>Don’t fill this out: <input name="bot-field" /></label>
     </p>
 
     <div class="grid" style="gap:16px;">
@@ -134,6 +139,7 @@
       <span class="muted" style="font-size:0.95rem;">We typically respond within 1–2 business days.</span>
     </div>
   </form>
+  
 
   <p class="muted" style="margin-top:18px; max-width: 75ch;">
     <strong>Note:</strong> Please do not submit account credentials, payment details, or sensitive personal information through this form.
