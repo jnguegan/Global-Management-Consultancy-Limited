@@ -401,6 +401,26 @@ textarea{ resize: vertical; }
     width: 100%;
   }
 }
+/* Make the main hero/card area narrower and more premium */
+.hero{
+  max-width: 980px;        /* try 920–1040 depending on taste */
+  margin: 24px auto 0;     /* centers the whole box */
+}
+
+/* Professional paragraph alignment inside hero */
+.hero .lead{
+  text-align: justify;
+  text-justify: inter-word;
+  max-width: none;          /* removes any tight paragraph limits */
+}
+
+/* Avoid awkward big gaps on short lines: last line stays left */
+.hero .lead{
+  text-align-last: left;
+}
+.hero .lead{
+  line-height: 1.7;
+}
 
 
 
