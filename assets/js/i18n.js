@@ -103,7 +103,41 @@
       "services.card2.li3": "Club relations and opportunity sourcing",
       "services.card2.li4": "International mobility guidance",
       "services.card2.li5": "Strategic career advisory",
-      
+       "finance.kicker": "Global Sport Finance",
+      "finance.title": "Financial infrastructure for the global football ecosystem",
+      "finance.p1": "Global Sport Finance is a specialised financial services platform provided by <strong>Global Management Consultancy Limited</strong>, designed to help football clubs, agencies and professional players manage money seamlessly across borders.",
+      "finance.p2": "Built specifically for the international football industry, we combine multi-currency accounts, foreign exchange, international payments and card-based expense management into one integrated solution — delivered in partnership with regulated financial institutions.",
+
+      "finance.who.title": "Who we serve",
+      "finance.who.li1": "Professional football clubs",
+      "finance.who.li2": "Player agencies and management companies",
+      "finance.who.li3": "Professional players and image rights vehicles",
+      "finance.who.li4": "Academies, training centres and strategic partners",
+
+      "finance.services.title": "Our services",
+      "finance.services.li1": "Multi-currency accounts and wallets",
+      "finance.services.li2": "Local and international IBANs",
+      "finance.services.li3": "Institutional FX pricing and conversion",
+      "finance.services.li4": "Local and international payments",
+      "finance.services.li5": "Mass payouts (salaries, bonuses, suppliers)",
+      "finance.services.li6": "Club and player cards",
+      "finance.services.li7": "Expense management and spending controls",
+
+      "finance.why.title": "Why Global Sport Finance",
+      "finance.why.p1": "Football is inherently international. Salaries, bonuses, transfers and operating costs move across countries and currencies every day. Generic banking solutions are rarely designed for this reality.",
+      "finance.why.li1": "Designed for international football operations",
+      "finance.why.li2": "Built for football-specific workflows",
+      "finance.why.li3": "Institutional-grade financial partners",
+      "finance.why.li4": "Scalable across clubs, agencies and player structures",
+
+      "finance.approach.title": "Our approach",
+      "finance.approach.p1": "Global Sport Finance operates as a specialised service line within <strong>Global Management Consultancy Limited</strong>, combining financial infrastructure with deep football industry expertise.",
+      "finance.approach.p2": "All payment services, e-money accounts, card issuing and foreign exchange services are delivered in partnership with FCA and EU regulated financial institutions.",
+
+      "finance.reg.title": "Regulatory Notice",
+      "finance.reg.p1": "Global Sport Finance is a service provided by <strong>Global Management Consultancy Limited</strong>. Payment services, e-money accounts, card issuing and foreign exchange services are provided by regulated Electronic Money Institutions and Payment Institutions.",
+      "finance.reg.p2": "Global Management Consultancy Limited does not itself provide regulated payment services.",
+     
 
     },
 
@@ -202,6 +236,40 @@
       "services.card2.li3": "Relations clubs et sourcing d’opportunités",
       "services.card2.li4": "Accompagnement à la mobilité internationale",
       "services.card2.li5": "Conseil stratégique de carrière",
+      "finance.kicker": "Global Sport Finance",
+      "finance.title": "Infrastructure financière pour l’écosystème mondial du football",
+      "finance.p1": "Global Sport Finance est une plateforme de services financiers spécialisés fournie par <strong>Global Management Consultancy Limited</strong>, conçue pour aider les clubs, agences et joueurs professionnels à gérer leurs finances facilement au-delà des frontières.",
+      "finance.p2": "Conçue spécifiquement pour l’industrie internationale du football, nous combinons comptes multidevises, change (FX), paiements internationaux et gestion des dépenses par cartes dans une solution intégrée — fournie en partenariat avec des institutions financières régulées.",
+
+      "finance.who.title": "À qui s’adresse notre offre",
+      "finance.who.li1": "Clubs de football professionnels",
+      "finance.who.li2": "Agences de joueurs et sociétés de management",
+      "finance.who.li3": "Joueurs professionnels et structures de droits à l’image",
+      "finance.who.li4": "Académies, centres de formation et partenaires stratégiques",
+
+      "finance.services.title": "Nos services",
+      "finance.services.li1": "Comptes et portefeuilles multidevises",
+      "finance.services.li2": "IBAN locaux et internationaux",
+      "finance.services.li3": "Tarification FX institutionnelle et conversion",
+      "finance.services.li4": "Paiements locaux et internationaux",
+      "finance.services.li5": "Paiements en masse (salaires, primes, fournisseurs)",
+      "finance.services.li6": "Cartes club et joueurs",
+      "finance.services.li7": "Gestion des dépenses et contrôles de paiement",
+
+      "finance.why.title": "Pourquoi Global Sport Finance",
+      "finance.why.p1": "Le football est par nature international. Salaires, primes, transferts et coûts d’exploitation circulent chaque jour entre pays et devises. Les solutions bancaires classiques sont rarement conçues pour cette réalité.",
+      "finance.why.li1": "Conçu pour les opérations internationales du football",
+      "finance.why.li2": "Adapté aux flux spécifiques du football",
+      "finance.why.li3": "Partenaires financiers de niveau institutionnel",
+      "finance.why.li4": "Évolutif pour clubs, agences et structures de joueurs",
+
+      "finance.approach.title": "Notre approche",
+      "finance.approach.p1": "Global Sport Finance fonctionne comme une ligne de service spécialisée au sein de <strong>Global Management Consultancy Limited</strong>, combinant infrastructure financière et expertise approfondie du football.",
+      "finance.approach.p2": "Tous les services de paiement, comptes de monnaie électronique, émission de cartes et services de change sont fournis en partenariat avec des institutions financières régulées FCA et UE.",
+
+      "finance.reg.title": "Avis réglementaire",
+      "finance.reg.p1": "Global Sport Finance est un service fourni par <strong>Global Management Consultancy Limited</strong>. Les services de paiement, comptes de monnaie électronique, émission de cartes et services de change sont fournis par des établissements de monnaie électronique et établissements de paiement régulés.",
+      "finance.reg.p2": "Global Management Consultancy Limited ne fournit pas directement de services de paiement réglementés.",
 
 
     },
@@ -300,6 +368,40 @@
       "services.card2.li3": "Relación con clubes y búsqueda de oportunidades",
       "services.card2.li4": "Orientación para movilidad internacional",
       "services.card2.li5": "Asesoría estratégica de carrera",
+      "finance.kicker": "Global Sport Finance",
+      "finance.title": "Infraestructura financiera para el ecosistema global del fútbol",
+      "finance.p1": "Global Sport Finance es una plataforma especializada de servicios financieros ofrecida por <strong>Global Management Consultancy Limited</strong>, diseñada para ayudar a clubes, agencias y jugadores profesionales a gestionar su dinero sin fricciones a nivel internacional.",
+      "finance.p2": "Diseñada específicamente para la industria internacional del fútbol, combinamos cuentas multidivisa, cambio de divisas (FX), pagos internacionales y gestión de gastos con tarjetas en una solución integrada — ofrecida en colaboración con instituciones financieras reguladas.",
+
+      "finance.who.title": "A quién servimos",
+      "finance.who.li1": "Clubes de fútbol profesionales",
+      "finance.who.li2": "Agencias de jugadores y empresas de representación",
+      "finance.who.li3": "Jugadores profesionales y estructuras de derechos de imagen",
+      "finance.who.li4": "Academias, centros de formación y socios estratégicos",
+
+      "finance.services.title": "Nuestros servicios",
+      "finance.services.li1": "Cuentas y monederos multidivisa",
+      "finance.services.li2": "IBAN locales e internacionales",
+      "finance.services.li3": "Tipo de cambio institucional y conversión",
+      "finance.services.li4": "Pagos locales e internacionales",
+      "finance.services.li5": "Pagos masivos (salarios, primas y proveedores)",
+      "finance.services.li6": "Tarjetas para clubes y jugadores",
+      "finance.services.li7": "Gestión de gastos y controles de gasto",
+
+      "finance.why.title": "Por qué Global Sport Finance",
+      "finance.why.p1": "El fútbol es inherentemente internacional. Salarios, primas, traspasos y costes operativos se mueven cada día entre países y monedas. Las soluciones bancarias tradicionales rara vez están diseñadas para esta realidad.",
+      "finance.why.li1": "Diseñado para operaciones internacionales de fútbol",
+      "finance.why.li2": "Creado para flujos específicos del fútbol",
+      "finance.why.li3": "Partners financieros de nivel institucional",
+      "finance.why.li4": "Escalable para clubes, agencias y estructuras de jugadores",
+
+      "finance.approach.title": "Nuestro enfoque",
+      "finance.approach.p1": "Global Sport Finance opera como una línea de servicio especializada dentro de <strong>Global Management Consultancy Limited</strong>, combinando infraestructura financiera con experiencia profunda en la industria del fútbol.",
+      "finance.approach.p2": "Todos los servicios de pago, cuentas de dinero electrónico, emisión de tarjetas y servicios de cambio se prestan en colaboración con instituciones financieras reguladas por la FCA y la UE.",
+
+      "finance.reg.title": "Aviso regulatorio",
+      "finance.reg.p1": "Global Sport Finance es un servicio proporcionado por <strong>Global Management Consultancy Limited</strong>. Los servicios de pago, cuentas de dinero electrónico, emisión de tarjetas y servicios de cambio son prestados por Entidades de Dinero Electrónico y Entidades de Pago reguladas.",
+      "finance.reg.p2": "Global Management Consultancy Limited no presta directamente servicios de pago regulados.",
 
 
     }
