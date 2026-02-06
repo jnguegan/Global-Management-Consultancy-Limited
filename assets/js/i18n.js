@@ -84,6 +84,26 @@
 "partner.submit": "Submit enquiry",
 "partner.sla": "We typically respond within 1–2 business days.",
 "partner.note": "<strong>Note:</strong> Please do not submit account credentials, payment details, or sensitive personal information through this form.",
+       "services.kicker": "Services",
+      "services.title": "Focused services for football and finance",
+      "services.p1": "Global Management Consultancy Limited provides two core service lines designed for the realities of international football operations.",
+      "services.p2": "Our primary focus is <strong>Global Sport Finance</strong> and <strong>Football Agency Services</strong>, supporting clubs, agencies and professional players with modern financial infrastructure and professional representation.",
+
+      "services.card1.title": "Global Sport Finance",
+      "services.card1.li1": "Multi-currency accounts and wallets",
+      "services.card1.li2": "Foreign exchange and treasury workflows",
+      "services.card1.li3": "Local and international payments",
+      "services.card1.li4": "Mass payouts for salaries, bonuses and suppliers",
+      "services.card1.li5": "Club and player cards (physical and virtual)",
+      "services.card1.li6": "Expense management and spending controls",
+
+      "services.card2.title": "Football Agency Services",
+      "services.card2.li1": "Player representation and career planning",
+      "services.card2.li2": "Contract negotiation support",
+      "services.card2.li3": "Club relations and opportunity sourcing",
+      "services.card2.li4": "International mobility guidance",
+      "services.card2.li5": "Strategic career advisory",
+      
 
     },
 
@@ -163,6 +183,27 @@
 "partner.sla": "Nous répondons généralement sous 1 à 2 jours ouvrés.",
 "partner.note": "<strong>Note :</strong> Merci de ne pas transmettre d’identifiants, de détails de paiement ou d’informations sensibles via ce formulaire.",
 
+      "services.kicker": "Services",
+      "services.title": "Des services ciblés pour le football et la finance",
+      "services.p1": "Global Management Consultancy Limited propose deux lignes de services principales adaptées aux réalités des opérations internationales du football.",
+      "services.p2": "Notre priorité est <strong>Global Sport Finance</strong> et les <strong>services d’agence de football</strong>, en accompagnant clubs, agences et joueurs professionnels grâce à une infrastructure financière moderne et une représentation professionnelle.",
+
+      "services.card1.title": "Global Sport Finance",
+      "services.card1.li1": "Comptes et portefeuilles multidevises",
+      "services.card1.li2": "Change (FX) et gestion de trésorerie",
+      "services.card1.li3": "Paiements locaux et internationaux",
+      "services.card1.li4": "Paiements en masse : salaires, primes et fournisseurs",
+      "services.card1.li5": "Cartes club et joueurs (physiques et virtuelles)",
+      "services.card1.li6": "Gestion des dépenses et contrôles de paiement",
+
+      "services.card2.title": "Services d’agence de football",
+      "services.card2.li1": "Représentation des joueurs et planification de carrière",
+      "services.card2.li2": "Assistance à la négociation contractuelle",
+      "services.card2.li3": "Relations clubs et sourcing d’opportunités",
+      "services.card2.li4": "Accompagnement à la mobilité internationale",
+      "services.card2.li5": "Conseil stratégique de carrière",
+
+
     },
 
     es: {
@@ -239,7 +280,27 @@
 "partner.consent": "Confirmo que envío esta consulta con fines comerciales y que he leído el aviso de privacidad.",
 "partner.submit": "Enviar consulta",
 "partner.sla": "Normalmente respondemos en 1–2 días laborables.",
-"partner.note": "<strong>Nota:</strong> No envíes credenciales, datos de pago ni información personal sensible a través de este formulario."
+"partner.note": "<strong>Nota:</strong> No envíes credenciales, datos de pago ni información personal sensible a través de este formulario.",
+      "services.kicker": "Servicios",
+      "services.title": "Servicios especializados para fútbol y finanzas",
+      "services.p1": "Global Management Consultancy Limited ofrece dos líneas principales de servicios diseñadas para la realidad de las operaciones internacionales del fútbol.",
+      "services.p2": "Nuestro enfoque principal es <strong>Global Sport Finance</strong> y los <strong>servicios de agencia de fútbol</strong>, apoyando a clubes, agencias y jugadores profesionales con infraestructura financiera moderna y representación profesional.",
+
+      "services.card1.title": "Global Sport Finance",
+      "services.card1.li1": "Cuentas y monederos multidivisa",
+      "services.card1.li2": "Cambio de divisas (FX) y flujos de tesorería",
+      "services.card1.li3": "Pagos locales e internacionales",
+      "services.card1.li4": "Pagos masivos para salarios, primas y proveedores",
+      "services.card1.li5": "Tarjetas para clubes y jugadores (físicas y virtuales)",
+      "services.card1.li6": "Gestión de gastos y controles de gasto",
+
+      "services.card2.title": "Servicios de agencia de fútbol",
+      "services.card2.li1": "Representación de jugadores y planificación de carrera",
+      "services.card2.li2": "Apoyo en negociación de contratos",
+      "services.card2.li3": "Relación con clubes y búsqueda de oportunidades",
+      "services.card2.li4": "Orientación para movilidad internacional",
+      "services.card2.li5": "Asesoría estratégica de carrera",
+
 
     }
   };
