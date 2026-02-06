@@ -160,6 +160,11 @@
       }
     });
 
+    // Keep dropdown in sync (if present)
+    const select = document.getElementById("langSelect");
+    if (select) select.value = lang;
+
+    // Keep buttons in sync (if present)
     setActiveLangUI(lang);
   }
 
@@ -173,6 +178,14 @@
     const initial = getInitialLang();
     applyI18n(initial);
 
+    // Dropdown (preferred)
+    const select = document.getElementById("langSelect");
+    if (select) {
+      select.value = initial;
+      select.addEventListener("change", () => setLang(select.value));
+    }
+
+    // Buttons (legacy support)
     document.querySelectorAll(".langBtn").forEach((btn) => {
       btn.addEventListener("click", () => setLang(btn.dataset.lang));
     });
