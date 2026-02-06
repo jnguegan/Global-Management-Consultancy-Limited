@@ -178,6 +178,37 @@
 
       "terms.7.title": "7. Contact",
       "terms.7.text": "For legal requests or notices, please use the contact method provided on the Contact page.",
+      "privacy.title": "Privacy",
+      "privacy.last": "Last updated:",
+
+      "privacy.1.title": "1. Who we are",
+      "privacy.1.text": "This website is operated by Global Management Consultancy Limited (“we”, “us”, “our”).",
+
+      "privacy.2.title": "2. What data we collect",
+      "privacy.2.text": "We may collect information you submit via forms (such as name, email, phone, company details, and message content).",
+
+      "privacy.3.title": "3. How we use your data",
+      "privacy.3.li1": "To respond to enquiries and provide requested information",
+      "privacy.3.li2": "To operate, maintain, and improve our website",
+      "privacy.3.li3": "To meet legal and compliance obligations",
+
+      "privacy.4.title": "4. Legal bases",
+      "privacy.4.text": "Where applicable under data protection laws, we process personal data based on legitimate interests, consent (where requested), and compliance with legal obligations.",
+
+      "privacy.5.title": "5. Sharing",
+      "privacy.5.text": "We do not sell personal data. We may share with service providers who support website operations (e.g., hosting, forms) and professional advisers, where necessary.",
+
+      "privacy.6.title": "6. Retention",
+      "privacy.6.text": "We keep personal data only as long as needed for the purposes above or as required by law.",
+
+      "privacy.7.title": "7. Your rights",
+      "privacy.7.text": "You may have rights to access, correct, delete, or restrict processing of your personal data. Requests can be made via the Contact page.",
+
+      "privacy.8.title": "8. International transfers",
+      "privacy.8.text": "Where data is transferred internationally, we use appropriate safeguards where required.",
+
+      "privacy.9.title": "9. Security",
+      "privacy.9.text": "We take reasonable measures to protect personal data, but no method of transmission is completely secure.",
 
 
     },
@@ -352,6 +383,37 @@
 
       "terms.7.title": "7. Contact",
       "terms.7.text": "Pour toute demande ou notification juridique, veuillez utiliser les coordonnées indiquées sur la page Contact.",
+      "privacy.title": "Confidentialité",
+      "privacy.last": "Dernière mise à jour :", 
+
+      "privacy.1.title": "1. Qui sommes-nous",
+      "privacy.1.text": "Ce site web est exploité par Global Management Consultancy Limited (« nous », « notre »).",
+
+      "privacy.2.title": "2. Données collectées",
+      "privacy.2.text": "Nous pouvons collecter les informations que vous soumettez via les formulaires (nom, e-mail, téléphone, informations d’entreprise et contenu du message).",
+
+      "privacy.3.title": "3. Utilisation de vos données",
+      "privacy.3.li1": "Répondre aux demandes et fournir les informations sollicitées",
+      "privacy.3.li2": "Exploiter, maintenir et améliorer notre site web",
+      "privacy.3.li3": "Respecter nos obligations légales et de conformité",
+
+      "privacy.4.title": "4. Bases légales",
+      "privacy.4.text": "Lorsque la législation sur la protection des données s’applique, nous traitons les données personnelles sur la base de nos intérêts légitimes, du consentement (lorsqu’il est demandé) et du respect de nos obligations légales.",
+
+      "privacy.5.title": "5. Partage",
+      "privacy.5.text": "Nous ne vendons pas vos données personnelles. Nous pouvons les partager avec des prestataires soutenant le fonctionnement du site (hébergement, formulaires) et avec des conseillers professionnels si nécessaire.",
+
+      "privacy.6.title": "6. Conservation",
+      "privacy.6.text": "Nous conservons les données personnelles uniquement le temps nécessaire aux finalités ci-dessus ou selon les exigences légales.",
+
+      "privacy.7.title": "7. Vos droits",
+      "privacy.7.text": "Vous pouvez disposer de droits d’accès, de rectification, de suppression ou de limitation du traitement de vos données. Les demandes peuvent être faites via la page Contact.",
+
+      "privacy.8.title": "8. Transferts internationaux",
+      "privacy.8.text": "Lorsque des données sont transférées à l’international, nous mettons en place les garanties appropriées lorsque cela est requis.",
+
+      "privacy.9.title": "9. Sécurité",
+      "privacy.9.text": "Nous prenons des mesures raisonnables pour protéger les données personnelles, mais aucune méthode de transmission n’est totalement sécurisée.",
 
 
     },
@@ -526,6 +588,37 @@
 
       "terms.7.title": "7. Contacto",
       "terms.7.text": "Para solicitudes o notificaciones legales, utilice el método de contacto indicado en la página de Contacto.",
+      "privacy.title": "Privacidad",
+      "privacy.last": "Última actualización:",
+
+      "privacy.1.title": "1. Quiénes somos",
+      "privacy.1.text": "Este sitio web es operado por Global Management Consultancy Limited (“nosotros”, “nuestro”).",
+
+      "privacy.2.title": "2. Qué datos recopilamos",
+      "privacy.2.text": "Podemos recopilar información que envíes a través de formularios (como nombre, email, teléfono, datos de empresa y contenido del mensaje).",
+
+      "privacy.3.title": "3. Cómo usamos tus datos",
+      "privacy.3.li1": "Responder consultas y proporcionar la información solicitada",
+      "privacy.3.li2": "Operar, mantener y mejorar nuestro sitio web",
+      "privacy.3.li3": "Cumplir con obligaciones legales y de cumplimiento",
+
+      "privacy.4.title": "4. Bases legales",
+      "privacy.4.text": "Cuando sea aplicable bajo las leyes de protección de datos, procesamos datos personales basándonos en intereses legítimos, consentimiento (cuando se solicite) y cumplimiento de obligaciones legales.",
+
+      "privacy.5.title": "5. Compartir datos",
+      "privacy.5.text": "No vendemos datos personales. Podemos compartirlos con proveedores que apoyen el funcionamiento del sitio web (por ejemplo, hosting y formularios) y con asesores profesionales cuando sea necesario.",
+
+      "privacy.6.title": "6. Conservación",
+      "privacy.6.text": "Conservamos los datos personales solo el tiempo necesario para los fines anteriores o según lo requiera la ley.",
+
+      "privacy.7.title": "7. Tus derechos",
+      "privacy.7.text": "Puedes tener derechos de acceso, corrección, eliminación o restricción del tratamiento de tus datos personales. Las solicitudes pueden hacerse a través de la página de Contacto.",
+
+      "privacy.8.title": "8. Transferencias internacionales",
+      "privacy.8.text": "Cuando los datos se transfieren internacionalmente, aplicamos las salvaguardas adecuadas cuando sea necesario.",
+
+      "privacy.9.title": "9. Seguridad",
+      "privacy.9.text": "Tomamos medidas razonables para proteger los datos personales, pero ningún método de transmisión es completamente seguro.",
 
     }
   };
