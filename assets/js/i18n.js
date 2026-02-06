@@ -155,7 +155,30 @@
       "contact.include.li2": "Countries involved (if cross-border)",
       "contact.include.li3": "Time sensitivity",
       "contact.include.li4": "Best way to reach you",
-  
+        "terms.title": "Terms",
+      "terms.last": "Last updated:",
+
+      "terms.1.title": "1. Information only",
+      "terms.1.text": "Content on this website is provided for general information purposes only and does not constitute professional advice.",
+
+      "terms.2.title": "2. No reliance",
+      "terms.2.text": "You should not rely on the information on this website as an alternative to legal, tax, financial, or other professional advice.",
+
+      "terms.3.title": "3. Services and regulation",
+      "terms.3.text": "Any services described may include commercial and contractual consulting. Where an activity is subject to regulation, it is provided only where authorised or through appropriately authorised partners, as applicable.",
+
+      "terms.4.title": "4. Intellectual property",
+      "terms.4.text": "Unless stated otherwise, all content is owned by or licensed to Global Management Consultancy Limited. You may not reproduce it without permission.",
+
+      "terms.5.title": "5. Limitation of liability",
+      "terms.5.text": "To the extent permitted by law, we are not liable for any loss arising from use of this website or reliance on its content.",
+
+      "terms.6.title": "6. Third-party links",
+      "terms.6.text": "Links to third-party sites are provided for convenience only. We do not endorse and are not responsible for their content.",
+
+      "terms.7.title": "7. Contact",
+      "terms.7.text": "For legal requests or notices, please use the contact method provided on the Contact page.",
+
 
     },
 
@@ -306,6 +329,29 @@
       "contact.include.li2": "Pays concernés (si transfrontalier)",
       "contact.include.li3": "Niveau d’urgence",
       "contact.include.li4": "Meilleur moyen de vous contacter",
+      "terms.title": "Conditions",
+      "terms.last": "Dernière mise à jour :", 
+
+      "terms.1.title": "1. Informations générales",
+      "terms.1.text": "Le contenu de ce site est fourni à titre informatif uniquement et ne constitue pas un conseil professionnel.",
+
+      "terms.2.title": "2. Absence de reliance",
+      "terms.2.text": "Vous ne devez pas vous appuyer sur les informations de ce site comme alternative à un conseil juridique, fiscal, financier ou autre conseil professionnel.",
+
+      "terms.3.title": "3. Services et réglementation",
+      "terms.3.text": "Les services décrits peuvent inclure du conseil commercial et contractuel. Lorsqu’une activité est soumise à réglementation, elle n’est fournie que lorsqu’elle est autorisée ou via des partenaires dûment autorisés, selon le cas.",
+
+      "terms.4.title": "4. Propriété intellectuelle",
+      "terms.4.text": "Sauf indication contraire, l’ensemble du contenu appartient à Global Management Consultancy Limited ou est utilisé sous licence. Vous ne pouvez pas le reproduire sans autorisation.",
+
+      "terms.5.title": "5. Limitation de responsabilité",
+      "terms.5.text": "Dans la limite autorisée par la loi, nous ne sommes pas responsables des pertes résultant de l’utilisation de ce site ou de la confiance accordée à son contenu.",
+
+      "terms.6.title": "6. Liens vers des tiers",
+      "terms.6.text": "Les liens vers des sites tiers sont fournis uniquement pour votre commodité. Nous ne les approuvons pas et ne sommes pas responsables de leur contenu.",
+
+      "terms.7.title": "7. Contact",
+      "terms.7.text": "Pour toute demande ou notification juridique, veuillez utiliser les coordonnées indiquées sur la page Contact.",
 
 
     },
@@ -457,6 +503,29 @@
       "contact.include.li3": "Urgencia / plazo",
       "contact.include.li4": "Mejor forma de contactarte",
 
+      "terms.title": "Términos",
+      "terms.last": "Última actualización:",
+
+      "terms.1.title": "1. Solo información",
+      "terms.1.text": "El contenido de este sitio web se proporciona únicamente con fines informativos y no constituye asesoramiento profesional.",
+
+      "terms.2.title": "2. No dependencia",
+      "terms.2.text": "No debe basarse en la información de este sitio web como alternativa a asesoramiento legal, fiscal, financiero u otro asesoramiento profesional.",
+
+      "terms.3.title": "3. Servicios y regulación",
+      "terms.3.text": "Los servicios descritos pueden incluir consultoría comercial y contractual. Cuando una actividad esté sujeta a regulación, se prestará únicamente cuando esté autorizada o a través de partners debidamente autorizados, según corresponda.",
+
+      "terms.4.title": "4. Propiedad intelectual",
+      "terms.4.text": "Salvo que se indique lo contrario, todo el contenido es propiedad de Global Management Consultancy Limited o se utiliza bajo licencia. No puede reproducirse sin permiso.",
+
+      "terms.5.title": "5. Limitación de responsabilidad",
+      "terms.5.text": "En la medida permitida por la ley, no somos responsables de ninguna pérdida derivada del uso de este sitio web o de la confianza depositada en su contenido.",
+
+      "terms.6.title": "6. Enlaces de terceros",
+      "terms.6.text": "Los enlaces a sitios web de terceros se proporcionan solo por conveniencia. No los respaldamos ni somos responsables de su contenido.",
+
+      "terms.7.title": "7. Contacto",
+      "terms.7.text": "Para solicitudes o notificaciones legales, utilice el método de contacto indicado en la página de Contacto.",
 
     }
   };
