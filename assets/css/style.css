@@ -432,6 +432,21 @@ textarea{
     grid-template-columns: 1fr;
   }
 }
+/* =====================================
+   FORCE ALL CONTENT BELOW NAV TO MATCH NAV WIDTH
+   (without changing :root)
+   ===================================== */
+
+.hero,
+.cred-strip,
+.grid,
+.section,
+.split,
+.form-card,
+.site-footer,
+.footer{
+  max-width: var(--max);
+}
 
 
 
