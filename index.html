@@ -8,121 +8,200 @@
 
   <link rel="icon" href="favicon.png" type="image/png" />
   <link rel="stylesheet" href="assets/css/style.css" />
+
+  <!-- Language toggle styles (safe to keep here; we can move to style.css later) -->
+  <style>
+    .lang {
+      margin-left: auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding-left: 12px;
+    }
+    .langLabel {
+      font-size: 12px;
+      opacity: .8;
+      white-space: nowrap;
+    }
+    .langToggle {
+      display: inline-flex;
+      gap: 6px;
+      align-items: center;
+      padding: 6px;
+      border-radius: 999px;
+      border: 1px solid rgba(0,0,0,.12);
+      background: rgba(255,255,255,.7);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+    }
+    .langBtn {
+      appearance: none;
+      border: 0;
+      background: transparent;
+      cursor: pointer;
+      font: inherit;
+      font-weight: 600;
+      letter-spacing: .2px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      line-height: 1;
+      opacity: .8;
+    }
+    .langBtn[aria-pressed="true"]{
+      opacity: 1;
+      border: 1px solid rgba(0,0,0,.14);
+      background: rgba(0,0,0,.06);
+    }
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+    .menu {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+    @media (max-width: 720px){
+      .lang{
+        width: 100%;
+        order: 3;
+        margin-left: 0;
+        padding-left: 0;
+        justify-content: flex-start;
+      }
+      .langLabel{ display:none; }
+      .langToggle{ padding: 6px; }
+    }
+  </style>
 </head>
+
 <body>
 <div class="wrap">
 
 <nav class="nav">
-  <a class="brand" href="index.html">
+  <a class="brand" href="index.html" aria-label="Global Management Consultancy Limited">
     <img src="assets/images/gmc-logo.png" alt="Global Management Consultancy Limited" />
   </a>
-  <div class="menu">
-    <a class="active" href="index.html">Home</a>
-    <a href="services.html">Services</a>
-    <a href="finance.html">Finance</a>
-    <a href="contact.html">Contact</a>
-<a href="partner-enquiry.html">Partner Enquiry</a>
 
+  <div class="menu" aria-label="Primary navigation">
+    <a class="active" href="index.html" data-i18n="nav.home">Home</a>
+    <a href="services.html" data-i18n="nav.services">Services</a>
+    <a href="finance.html" data-i18n="nav.finance">Finance</a>
+    <a href="contact.html" data-i18n="nav.contact">Contact</a>
+    <a href="partner-enquiry.html" data-i18n="nav.partner">Partner Enquiry</a>
+  </div>
+
+  <!-- Language Toggle (EN/FR/ES) -->
+  <div class="lang" aria-label="Language selector">
+    <span class="langLabel" data-i18n="lang.label">Language</span>
+    <div class="langToggle" role="group" aria-label="Choose language">
+      <button class="langBtn" type="button" data-lang="en" aria-pressed="true">EN</button>
+      <button class="langBtn" type="button" data-lang="fr" aria-pressed="false">FR</button>
+      <button class="langBtn" type="button" data-lang="es" aria-pressed="false">ES</button>
+    </div>
   </div>
 </nav>
 
 <header class="hero">
-  <span class="kicker">International · Football · Finance</span>
-  <h1 class="h1">Global Sport Finance and Football Agency Services</h1>
+  <span class="kicker" data-i18n="hero.kicker">International · Football · Finance</span>
+  <h1 class="h1" data-i18n="hero.title">Global Sport Finance and Football Agency Services</h1>
 
-  <p class="lead">
+  <p class="lead" data-i18n="hero.p1">
     <strong>Global Management Consultancy Limited</strong> is an international advisory and services firm operating at the intersection of professional football and cross-border financial infrastructure.
   </p>
 
-  <p class="lead">
+  <p class="lead" data-i18n="hero.p2">
     We provide specialised football agency services and modern financial solutions through <strong>Global Sport Finance</strong>, supporting professional football clubs, agencies and players with multi-currency accounts, foreign exchange, international payments and card-based expense management.
   </p>
 
-  <p class="lead">
+  <p class="lead" data-i18n="hero.p3">
     Football is inherently international. Salaries, bonuses, transfers, sponsorship revenues and operating costs move across countries and currencies every day. Generic banking and payment solutions are rarely designed for this reality. Global Management Consultancy Limited was created to address this gap by combining sports industry expertise with modern financial services built specifically for international football operations.
   </p>
 
-  <p class="lead">
+  <p class="lead" data-i18n="hero.p4">
     Through <strong>Global Sport Finance</strong>, we deliver integrated treasury workflows, FX optimisation, cross-border payments and operational spending controls, helping clubs and agencies manage their financial operations efficiently while supporting players with practical tools for international living, travel and career mobility.
   </p>
 
-  <p class="lead">
+  <p class="lead" data-i18n="hero.p5">
     Our football agency services complement this financial infrastructure by providing professional representation, career strategy, contract negotiation support and club relations within the global game.
   </p>
 
-  <p class="lead">
+  <p class="lead" data-i18n="hero.p6">
     Our work is international by design and compliance-driven by structure. All payment services, e-money accounts, card issuing and foreign exchange services are delivered in partnership with FCA and EU regulated financial institutions, ensuring secure, compliant and scalable solutions for our international clients.
   </p>
 
-  <p class="lead">
+  <p class="lead" data-i18n="hero.p7">
     Global Management Consultancy Limited combines football industry expertise and institutional-grade financial infrastructure to support the modern realities of the global football ecosystem.
   </p>
 
   <div class="actions">
-    <a class="btn primary" href="finance.html">Explore Global Sport Finance</a>
-    <a class="btn" href="services.html">View services</a>
-    <a class="btn" href="contact.html">Contact</a>
+    <a class="btn primary" href="finance.html" data-i18n="cta.finance">Explore Global Sport Finance</a>
+    <a class="btn" href="services.html" data-i18n="cta.services">View services</a>
+    <a class="btn" href="contact.html" data-i18n="cta.contact">Contact</a>
   </div>
 </header>
-  
- <!-- GMC Credibility Strip -->
-  <div class="cred-strip">
-    Commercial & contractual consulting · Partner onboarding · Global Management Consultancy Limited
-  </div>
-  <!-- END GMC Credibility Strip -->
+
+<!-- GMC Credibility Strip -->
+<div class="cred-strip" data-i18n="cred.strip">
+  Commercial & contractual consulting · Partner onboarding · Global Management Consultancy Limited
+</div>
+<!-- END GMC Credibility Strip -->
+
 <section class="grid">
   <div class="card">
-    <h2>Global Sport Finance</h2>
-    <p>Multi-currency, FX, cross-border payments, cards and expense workflows tailored to football operations.</p>
-    <p class="meta"><span class="badge">Primary focus</span></p>
+    <h2 data-i18n="cards.finance.title">Global Sport Finance</h2>
+    <p data-i18n="cards.finance.text">Multi-currency, FX, cross-border payments, cards and expense workflows tailored to football operations.</p>
+    <p class="meta"><span class="badge" data-i18n="cards.primary">Primary focus</span></p>
   </div>
 
   <div class="card">
-    <h2>Football Agency</h2>
-    <p>Representation, career strategy, negotiations, and player-focused support within the professional game.</p>
-    <p class="meta"><span class="badge">Primary focus</span></p>
+    <h2 data-i18n="cards.agency.title">Football Agency</h2>
+    <p data-i18n="cards.agency.text">Representation, career strategy, negotiations, and player-focused support within the professional game.</p>
+    <p class="meta"><span class="badge" data-i18n="cards.primary">Primary focus</span></p>
   </div>
 </section>
 
-  <!-- GMC Footer -->
-  <footer class="site-footer">
-    <div class="container">
-      <div class="footer-grid">
-        <div>
-          <strong>Global Management Consultancy Limited</strong>
-        </div>
-
-        <div>
-          <strong>Legal</strong><br />
-          <a href="terms.html">Terms</a> · <a href="privacy.html">Privacy</a> · <a href="cookies.html">Cookies</a>
-        </div>
+<!-- GMC Footer -->
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <strong data-i18n="footer.company">Global Management Consultancy Limited</strong>
       </div>
 
-      <hr />
-
-      <p class="small">
-        <strong>Important notice:</strong> Content on this website is provided for general information only and does not
-        constitute legal, tax, investment or financial advice.
-      </p>
-
-      <p class="small">
-        <strong>Regulatory:</strong> Services described may include commercial and contractual consulting. If any activity
-        falls within UK financial services regulation (including FCA-regulated activities), such services are provided only
-        where authorised or through appropriately authorised partners. Clients should obtain independent professional advice.
-      </p>
-
-      <p class="small muted">
-        © <span id="year"></span> Global Management Consultancy Limited. All rights reserved.
-      </p>
+      <div>
+        <strong data-i18n="footer.legal">Legal</strong><br />
+        <a href="terms.html" data-i18n="footer.terms">Terms</a> ·
+        <a href="privacy.html" data-i18n="footer.privacy">Privacy</a> ·
+        <a href="cookies.html" data-i18n="footer.cookies">Cookies</a>
+      </div>
     </div>
-  </footer>
 
-  <script>
-    document.getElementById("year").textContent = new Date().getFullYear();
-  </script>
-  <!-- END GMC Footer -->
+    <hr />
+
+    <p class="small" data-i18n="footer.notice">
+      <strong>Important notice:</strong> Content on this website is provided for general information only and does not
+      constitute legal, tax, investment or financial advice.
+    </p>
+
+    <p class="small" data-i18n="footer.regulatory">
+      <strong>Regulatory:</strong> Services described may include commercial and contractual consulting. If any activity
+      falls within UK financial services regulation (including FCA-regulated activities), such services are provided only
+      where authorised or through appropriately authorised partners. Clients should obtain independent professional advice.
+    </p>
+
+    <p class="small muted">
+      © <span id="year"></span> <span data-i18n="footer.rights">Global Management Consultancy Limited. All rights reserved.</span>
+    </p>
+  </div>
+</footer>
+<!-- END GMC Footer -->
+
+<!-- Shared i18n (must load on every page) -->
+<script src="assets/js/i18n.js"></script>
+
 </body>
 </html>
-
-
-
