@@ -6,7 +6,9 @@
   --soft:#f8fafc;
   --accent:#1e73be;
   --accent2:#0f766e;
-  --max:1100px;
+
+  --max:1100px;            /* NAV container width (wrap) */
+  --content:980px;         /* card/content width below nav */
   --radius:16px;
   --shadow:0 10px 26px rgba(15, 23, 42, .08);
 }
@@ -26,13 +28,16 @@ body{
 a{color:inherit;text-decoration:none}
 a:hover{opacity:.95}
 
+/* Global page container (NAV width) */
 .wrap{
   max-width:var(--max);
   margin:0 auto;
   padding:22px 18px 70px;
 }
 
-/* Navigation */
+/* -----------------------
+   Navigation
+------------------------ */
 .nav{
   display:flex;
   align-items:center;
@@ -50,6 +55,16 @@ a:hover{opacity:.95}
 .brand img{
   height:52px;
   width:auto;
+  display:block;
+}
+
+/* Right side group: menu + language dropdown */
+.navRight{
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:14px;
+  flex-wrap:wrap;
 }
 
 .menu{
@@ -72,26 +87,73 @@ a:hover{opacity:.95}
   background:var(--soft);
 }
 
-/* Hero */
+/* Language dropdown */
+.lang{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  white-space:nowrap;
+}
+
+.langLabel{
+  font-size:13px;
+  opacity:.75;
+}
+
+.langSelect{
+  appearance:none;
+  -webkit-appearance:none;
+  -moz-appearance:none;
+
+  border:1px solid rgba(0,0,0,.14);
+  border-radius:12px;
+  padding:10px 12px;
+  padding-right:34px;
+  background:#fff;
+  font-weight:700;
+  cursor:pointer;
+  line-height:1;
+
+  /* dropdown arrow */
+  background-image:
+    linear-gradient(45deg, transparent 50%, rgba(0,0,0,.6) 50%),
+    linear-gradient(135deg, rgba(0,0,0,.6) 50%, transparent 50%);
+  background-position:
+    calc(100% - 16px) 55%,
+    calc(100% - 10px) 55%;
+  background-size:6px 6px, 6px 6px;
+  background-repeat:no-repeat;
+}
+
+/* -----------------------
+   Content width rails
+   (Hero + sections below)
+------------------------ */
+.hero,
+.cred-strip,
+.grid,
+.footer{
+  max-width:var(--content);
+  margin-left:auto;
+  margin-right:auto;
+}
+
+/* -----------------------
+   Hero card
+------------------------ */
 .hero{
   margin-top:18px;
   border:1px solid var(--line);
   border-radius:var(--radius);
   background:linear-gradient(180deg, var(--soft), #ffffff);
   box-shadow:var(--shadow);
-  padding:30px 22px;
+  padding:34px 34px; /* more breathing room = more premium */
 }
 
 .h1{
   margin:0 0 12px;
   font-size:clamp(2rem,3.6vw,2.85rem);
   letter-spacing:-.02em;
-}
-
-.lead{
-  margin:0 0 14px;
-  color:var(--muted);
-  max-width:78ch;
 }
 
 .kicker{
@@ -108,12 +170,26 @@ a:hover{opacity:.95}
   border-radius:999px;
 }
 
+.lead{
+  margin:0 0 14px;
+  color:var(--muted);
+  line-height:1.7;
+
+  /* Professional alignment */
+  text-align:justify;
+  text-justify:inter-word;
+  text-align-last:left;
+
+  /* Use full hero width (no cut-off feel) */
+  max-width:none;
+}
+
 /* Buttons */
 .actions{
   display:flex;
   gap:12px;
   flex-wrap:wrap;
-  margin-top:10px;
+  margin-top:14px;
 }
 
 .btn{
@@ -125,6 +201,7 @@ a:hover{opacity:.95}
   border:1px solid var(--line);
   background:#ffffff;
   font-weight:700;
+  cursor:pointer;
   transition:transform .15s ease, background .15s ease, border-color .15s ease;
 }
 
@@ -140,10 +217,25 @@ a:hover{opacity:.95}
   color:var(--accent);
 }
 
-/* Grid + Cards */
+/* -----------------------
+   Credibility strip
+------------------------ */
+.cred-strip{
+  margin-top:16px;
+  border-top:1px solid rgba(0,0,0,0.06);
+  border-bottom:1px solid rgba(0,0,0,0.06);
+  padding:10px 16px;
+  font-size:.95rem;
+  background:#fff;
+  color:var(--muted);
+}
+
+/* -----------------------
+   Grid + Cards
+------------------------ */
 .grid{
   display:grid;
-  grid-template-columns:repeat(3, minmax(0,1fr));
+  grid-template-columns:repeat(2, minmax(0,1fr));
   gap:16px;
   margin-top:18px;
 }
@@ -153,7 +245,7 @@ a:hover{opacity:.95}
   border-radius:var(--radius);
   background:#ffffff;
   box-shadow:0 8px 18px rgba(15, 23, 42, .06);
-  padding:18px 18px;
+  padding:18px;
 }
 
 .card h2{
@@ -231,7 +323,9 @@ a:hover{opacity:.95}
   gap:12px;
 }
 
-input, textarea{
+label{display:block; font-weight:600; margin-bottom:6px;}
+
+input, select, textarea{
   width:100%;
   border-radius:14px;
   border:1px solid var(--line);
@@ -246,48 +340,14 @@ textarea{
   resize:vertical;
 }
 
-/* Footer */
-.footer{
-  margin-top:22px;
-  padding-top:18px;
-  border-top:1px solid var(--line);
-  color:var(--muted);
-  font-size:.95rem;
-}
-
-/* Mobile */
-@media (max-width: 900px){
-  .grid{grid-template-columns:1fr}
-  .split{grid-template-columns:1fr}
-}
-
-/* GMC Credibility Strip */
-.cred-strip {
-  border-top: 1px solid rgba(0,0,0,0.06);
-  border-bottom: 1px solid rgba(0,0,0,0.06);
-  padding: 10px 16px;
-  font-size: 0.95rem;
-  background: #fff;
-}
 /* Partner Enquiry Form */
 .form-card{
-  margin-top: 18px;
-  padding: 18px;
-  border: 1px solid rgba(0,0,0,0.10);
-  border-radius: 14px;
-  background: #fff;
+  margin-top:18px;
+  padding:18px;
+  border:1px solid rgba(0,0,0,0.10);
+  border-radius:14px;
+  background:#fff;
 }
-
-label{ display:block; font-weight:600; margin-bottom:6px; }
-input, select, textarea{
-  width: 100%;
-  padding: 10px 12px;
-  border: 1px solid rgba(0,0,0,0.15);
-  border-radius: 10px;
-  font: inherit;
-  background: #fff;
-}
-textarea{ resize: vertical; }
 
 .check{
   display:flex;
@@ -299,235 +359,29 @@ textarea{ resize: vertical; }
 
 .hidden{ display:none; }
 
-.btn{
-  padding: 10px 16px;
-  border-radius: 12px;
-  border: 1px solid rgba(0,0,0,0.15);
-  background: #fff;
-  cursor: pointer;
-  font-weight: 600;
-}
-.btn:hover{ filter: brightness(0.98); }
-
-/* Container */
-.wrap{
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 18px;
+/* Footer */
+.footer{
+  margin-top:22px;
+  padding-top:18px;
+  border-top:1px solid var(--line);
+  color:var(--muted);
+  font-size:.95rem;
 }
 
-/* NAV */
-.nav{
-  display: flex;
-  align-items: center;
-  justify-content: space-between; /* logo left, navRight right */
-  gap: 18px;
-  padding: 18px 0;
+/* Responsive */
+@media (max-width: 1000px){
+  :root{ --content:100%; }
+  .hero{ padding:22px; }
 }
 
-.brand img{
-  display: block;
-  height: 44px;
-  width: auto;
+@media (max-width: 900px){
+  .grid{ grid-template-columns:1fr; }
+  .split{ grid-template-columns:1fr; }
 }
 
-/* RIGHT GROUP: menu + language */
-.navRight{
-  display: flex;
-  align-items: center;
-  gap: 18px;            /* space between menu and language */
-  justify-content: flex-end;
-  flex-wrap: wrap;      /* prevents overflow on smaller widths */
-}
-
-/* Menu */
-.menu{
-  display: flex;
-  align-items: center;
-  gap: 18px;
-  flex-wrap: wrap;
-}
-
-/* Language */
-.lang{
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  white-space: nowrap;
-}
-
-.langLabel{
-  font-size: 13px;
-  opacity: .75;
-}
-
-.langSelect{
-  appearance: none;
-  border: 1px solid rgba(0,0,0,.14);
-  border-radius: 12px;
-  padding: 10px 12px;
-  padding-right: 34px;
-  background: #fff;
-  font-weight: 700;
-  cursor: pointer;
-  line-height: 1;
-
-  /* dropdown arrow */
-  background-image:
-    linear-gradient(45deg, transparent 50%, rgba(0,0,0,.6) 50%),
-    linear-gradient(135deg, rgba(0,0,0,.6) 50%, transparent 50%);
-  background-position:
-    calc(100% - 16px) 55%,
-    calc(100% - 10px) 55%;
-  background-size: 6px 6px, 6px 6px;
-  background-repeat: no-repeat;
-}
-
-/* HERO: let text use full width of the hero box */
-.hero .lead{
-  max-width: 100%;
-}
-
-/* Mobile: stack menu and language nicely */
 @media (max-width: 780px){
-  .nav{
-    align-items: flex-start;
-  }
-  .navRight{
-    width: 100%;
-    justify-content: flex-start;
-  }
-  .menu{
-    width: 100%;
-  }
+  .nav{ align-items:flex-start; }
+  .navRight{ width:100%; justify-content:flex-start; }
+  .menu{ width:100%; }
+  .lang{ width:100%; justify-content:flex-start; }
 }
-/* Make the main hero/card area narrower and more premium */
-.hero{
-  max-width: 980px;        /* try 920–1040 depending on taste */
-  margin: 24px auto 0;     /* centers the whole box */
-}
-
-/* Professional paragraph alignment inside hero */
-.hero .lead{
-  text-align: justify;
-  text-justify: inter-word;
-  max-width: none;          /* removes any tight paragraph limits */
-}
-
-/* Avoid awkward big gaps on short lines: last line stays left */
-.hero .lead{
-  text-align-last: left;
-}
-.hero .lead{
-  line-height: 1.7;
-}
-
-/* Keep page sections in sync with the hero width */
-:root{
-  --content-width: 980px; /* match your hero max-width */
-}
-
-/* Hero + sections below use same width */
-.hero,
-.cred-strip,
-.grid{
-  max-width: var(--content-width);
-  margin-left: auto;
-  margin-right: auto;
-}
-
-/* Footer alignment: keep it consistent too */
-.site-footer .container{
-  max-width: var(--content-width);
-  margin-left: auto;
-  margin-right: auto;
-}
-
-/* Optional: ensure sections don’t touch edges on small screens */
-.hero,
-.cred-strip,
-.grid,
-.site-footer .container{
-  padding-left: 0;
-  padding-right: 0;
-}
-
-@media (max-width: 1020px){
-  .hero,
-  .cred-strip,
-  .grid,
-  .site-footer .container{
-    max-width: 100%;
-    padding-left: 18px;
-    padding-right: 18px;
-  }
-}
-
-/* ================================
-   GLOBAL WIDTH SYNC (NAV = CONTENT)
-   ================================ */
-
-/* 1) Set one shared site width */
-:root{
-  --site-width: 1200px;   /* adjust if you want (1120/1280) */
-  --gutter: 18px;
-  --card-pad: 34px;       /* inside padding so text never touches border */
-}
-
-/* 2) Make .wrap the single source of truth */
-.wrap{
-  max-width: var(--site-width);
-  margin: 0 auto;
-  padding-left: var(--gutter);
-  padding-right: var(--gutter);
-}
-
-/* 3) Ensure NAV stretches exactly to wrap edges */
-.nav{
-  width: 100%;
-}
-
-/* 4) Make the hero/card match NAV width (NO separate max-width) */
-.hero{
-  width: 100%;
-  max-width: none;              /* IMPORTANT: removes the 980px constraint */
-  margin: 24px 0 0;             /* align with wrap, not centered separately */
-  padding: var(--card-pad);     /* IMPORTANT: prevents cut-off look */
-  box-sizing: border-box;
-}
-
-/* If your hero has a border/background and needs softer spacing */
-.hero .h1{ margin-top: 12px; }
-.hero .actions{ margin-top: 18px; }
-
-/* 5) Justified text but never touching borders */
-.hero .lead{
-  margin-top: 14px;
-  text-align: justify;
-  text-justify: inter-word;
-  text-align-last: left;
-}
-
-/* 6) Keep the rest of the page aligned with NAV edges too */
-.cred-strip,
-.grid,
-.site-footer .container{
-  width: 100%;
-  max-width: none;
-  margin-left: 0;
-  margin-right: 0;
-  box-sizing: border-box;
-}
-
-/* Optional: If the cred strip or grid needs consistent breathing room */
-.cred-strip{ padding-left: 0; padding-right: 0; }
-.grid{ padding-left: 0; padding-right: 0; }
-
-/* 7) Mobile padding */
-@media (max-width: 820px){
-  :root{ --card-pad: 20px; }
-}
-
-
-
-
