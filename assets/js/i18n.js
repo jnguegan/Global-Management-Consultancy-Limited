@@ -209,6 +209,20 @@
 
       "privacy.9.title": "9. Security",
       "privacy.9.text": "We take reasonable measures to protect personal data, but no method of transmission is completely secure.",
+      "cookies.title": "Cookies",
+      "cookies.last": "Last updated:",
+
+      "cookies.1.title": "1. What are cookies?",
+      "cookies.1.text": "Cookies are small text files stored on your device when you visit a website.",
+
+      "cookies.2.title": "2. How we use cookies",
+      "cookies.2.text": "We may use cookies that are strictly necessary for the website to function and analytics cookies to understand usage and improve performance.",
+
+      "cookies.3.title": "3. Managing cookies",
+      "cookies.3.text": "You can control cookies through your browser settings. Disabling cookies may affect website functionality.",
+
+      "cookies.4.title": "4. Third-party cookies",
+      "cookies.4.text": "Some third-party services (such as embedded content or analytics providers) may set cookies. Where used, they are subject to the third party’s policies.",
 
 
     },
@@ -414,6 +428,20 @@
 
       "privacy.9.title": "9. Sécurité",
       "privacy.9.text": "Nous prenons des mesures raisonnables pour protéger les données personnelles, mais aucune méthode de transmission n’est totalement sécurisée.",
+      "cookies.title": "Cookies",
+      "cookies.last": "Dernière mise à jour :",
+
+      "cookies.1.title": "1. Qu’est-ce qu’un cookie ?",
+      "cookies.1.text": "Les cookies sont de petits fichiers texte stockés sur votre appareil lorsque vous visitez un site web.",
+
+      "cookies.2.title": "2. Comment nous utilisons les cookies",
+      "cookies.2.text": "Nous pouvons utiliser des cookies strictement nécessaires au fonctionnement du site ainsi que des cookies d’analyse afin de comprendre l’utilisation et d’améliorer les performances.",
+
+      "cookies.3.title": "3. Gestion des cookies",
+      "cookies.3.text": "Vous pouvez gérer les cookies via les paramètres de votre navigateur. La désactivation des cookies peut affecter certaines fonctionnalités du site.",
+
+      "cookies.4.title": "4. Cookies tiers",
+      "cookies.4.text": "Certains services tiers (tels que du contenu intégré ou des fournisseurs d’analyses) peuvent déposer des cookies. Le cas échéant, ils sont soumis aux politiques de ces tiers.",
 
 
     },
@@ -619,6 +647,20 @@
 
       "privacy.9.title": "9. Seguridad",
       "privacy.9.text": "Tomamos medidas razonables para proteger los datos personales, pero ningún método de transmisión es completamente seguro.",
+      "cookies.title": "Cookies",
+      "cookies.last": "Última actualización:",
+
+      "cookies.1.title": "1. ¿Qué son las cookies?",
+      "cookies.1.text": "Las cookies son pequeños archivos de texto almacenados en tu dispositivo cuando visitas un sitio web.",
+
+      "cookies.2.title": "2. Cómo usamos las cookies",
+      "cookies.2.text": "Podemos utilizar cookies estrictamente necesarias para el funcionamiento del sitio web y cookies de análisis para comprender el uso y mejorar el rendimiento.",
+
+      "cookies.3.title": "3. Gestión de cookies",
+      "cookies.3.text": "Puedes controlar las cookies a través de la configuración de tu navegador. Desactivar las cookies puede afectar la funcionalidad del sitio web.",
+
+      "cookies.4.title": "4. Cookies de terceros",
+      "cookies.4.text": "Algunos servicios de terceros (como contenido incrustado o proveedores de analítica) pueden establecer cookies. Cuando se utilicen, estarán sujetos a las políticas del tercero correspondiente.",
 
     }
   };
