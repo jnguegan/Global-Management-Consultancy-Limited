@@ -4,68 +4,120 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Cookies — Global Management Consultancy Limited</title>
+
+  <link rel="icon" href="favicon.png" type="image/png" />
   <link rel="stylesheet" href="assets/css/style.css" />
 </head>
 <body>
+<div class="wrap">
 
-<header class="site-header">
-  <div class="container">
-    <a class="brand" href="index.html">
+  <nav class="nav">
+    <a class="brand" href="index.html" aria-label="Global Management Consultancy Limited">
       <img src="assets/images/gmc-logo.png" alt="Global Management Consultancy Limited" />
     </a>
-  </div>
-</header>
+
+    <div class="navRight">
+      <div class="menu" aria-label="Primary navigation">
+        <a href="index.html" data-i18n="nav.home">Home</a>
+        <a href="services.html" data-i18n="nav.services">Services</a>
+        <a href="finance.html" data-i18n="nav.finance">Finance</a>
+        <a href="contact.html" data-i18n="nav.contact">Contact</a>
+        <a href="partner-enquiry.html" data-i18n="nav.partner">Partner Enquiry</a>
+      </div>
+
+      <!-- Language Dropdown (ONLY EN/FR/ES) -->
+      <div class="lang" aria-label="Language selector">
+        <label class="langLabel" for="langSelect" data-i18n="lang.label">Language</label>
+        <select id="langSelect" class="langSelect" aria-label="Choose language">
+          <option value="en">EN</option>
+          <option value="fr">FR</option>
+          <option value="es">ES</option>
+        </select>
+      </div>
+    </div>
+  </nav>
+
   <!-- GMC Credibility Strip -->
-  <div class="cred-strip">
+  <div class="cred-strip" data-i18n="cred.strip">
     Commercial & contractual consulting · Partner onboarding · Global Management Consultancy Limited
   </div>
   <!-- END GMC Credibility Strip -->
 
-<main class="container" style="padding:24px 16px;">
-  <h1>Cookies</h1>
-  <p class="muted">Last updated: <span id="d"></span></p>
+  <main class="container" style="padding:24px 16px;">
+    <h1 data-i18n="cookies.title">Cookies</h1>
+    <p class="muted">
+      <span data-i18n="cookies.last">Last updated:</span> <span id="d"></span>
+    </p>
 
-  <h2>1. What are cookies?</h2>
-  <p>Cookies are small text files stored on your device when you visit a website.</p>
+    <h2 data-i18n="cookies.1.title">1. What are cookies?</h2>
+    <p data-i18n="cookies.1.text">
+      Cookies are small text files stored on your device when you visit a website.
+    </p>
 
-  <h2>2. How we use cookies</h2>
-  <p>We may use cookies that are strictly necessary for the website to function and analytics cookies to understand usage and improve performance.</p>
+    <h2 data-i18n="cookies.2.title">2. How we use cookies</h2>
+    <p data-i18n="cookies.2.text">
+      We may use cookies that are strictly necessary for the website to function and analytics cookies to understand usage and improve performance.
+    </p>
 
-  <h2>3. Managing cookies</h2>
-  <p>You can control cookies through your browser settings. Disabling cookies may affect website functionality.</p>
+    <h2 data-i18n="cookies.3.title">3. Managing cookies</h2>
+    <p data-i18n="cookies.3.text">
+      You can control cookies through your browser settings. Disabling cookies may affect website functionality.
+    </p>
 
-  <h2>4. Third-party cookies</h2>
-  <p>Some third-party services (such as embedded content or analytics providers) may set cookies. Where used, they are subject to the third party’s policies.</p>
-</main>
+    <h2 data-i18n="cookies.4.title">4. Third-party cookies</h2>
+    <p data-i18n="cookies.4.text">
+      Some third-party services (such as embedded content or analytics providers) may set cookies. Where used, they are subject to the third party’s policies.
+    </p>
+  </main>
 
-<footer class="site-footer">
-  <div class="container">
-    <div class="footer-grid">
-      <div><strong>Global Management Consultancy Limited</strong></div>
-      <div>
-        <strong>Legal</strong><br />
-        <a href="terms.html">Terms</a> · <a href="privacy.html">Privacy</a> · <a href="cookies.html">Cookies</a>
+  <!-- GMC Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <strong data-i18n="footer.company">Global Management Consultancy Limited</strong>
+        </div>
+
+        <div>
+          <strong data-i18n="footer.legal">Legal</strong><br />
+          <a href="terms.html" data-i18n="footer.terms">Terms</a> ·
+          <a href="privacy.html" data-i18n="footer.privacy">Privacy</a> ·
+          <a href="cookies.html" data-i18n="footer.cookies">Cookies</a>
+        </div>
       </div>
+
+      <hr />
+
+      <p class="small" data-i18n="footer.notice">
+        <strong>Important notice:</strong> Content on this website is provided for general information only and does not
+        constitute legal, tax, investment or financial advice.
+      </p>
+
+      <p class="small" data-i18n="footer.regulatory">
+        <strong>Regulatory:</strong> Services described may include commercial and contractual consulting. If any activity
+        falls within UK financial services regulation (including FCA-regulated activities), such services are provided only
+        where authorised or through appropriately authorised partners. Clients should obtain independent professional advice.
+      </p>
+
+      <p class="small muted">
+        © <span id="year"></span> <span data-i18n="footer.rights">Global Management Consultancy Limited. All rights reserved.</span>
+      </p>
     </div>
-    <hr />
-    <p class="small">
-      <strong>Important notice:</strong> Content on this website is provided for general information only and does not
-      constitute legal, tax, investment or financial advice.
-    </p>
-    <p class="small">
-      <strong>Regulatory:</strong> Services described may include commercial and contractual consulting. If any activity
-      falls within UK financial services regulation (including FCA-regulated activities), such services are provided only
-      where authorised or through appropriately authorised partners. Clients should obtain independent professional advice.
-    </p>
-    <p class="small muted">© <span id="year"></span> Global Management Consultancy Limited. All rights reserved.</p>
-  </div>
-</footer>
+  </footer>
+  <!-- END GMC Footer -->
+
+</div><!-- /.wrap -->
+
+<!-- Shared i18n -->
+<script src="assets/js/i18n.js"></script>
 
 <script>
-  document.getElementById("year").textContent = new Date().getFullYear();
-  document.getElementById("d").textContent = new Date().toISOString().slice(0,10);
+  const y = document.getElementById("year");
+  if (y) y.textContent = new Date().getFullYear();
+
+  const d = document.getElementById("d");
+  if (d) d.textContent = new Date().toISOString().slice(0,10);
 </script>
 
 </body>
 </html>
-
