@@ -4,87 +4,147 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Privacy — Global Management Consultancy Limited</title>
+
+  <link rel="icon" href="favicon.png" type="image/png" />
   <link rel="stylesheet" href="assets/css/style.css" />
 </head>
 <body>
+<div class="wrap">
 
-<header class="site-header">
-  <div class="container">
-    <a class="brand" href="index.html">
+  <nav class="nav">
+    <a class="brand" href="index.html" aria-label="Global Management Consultancy Limited">
       <img src="assets/images/gmc-logo.png" alt="Global Management Consultancy Limited" />
     </a>
-  </div>
-</header>
 
-   <!-- GMC Credibility Strip -->
-  <div class="cred-strip">
+    <div class="navRight">
+      <div class="menu" aria-label="Primary navigation">
+        <a href="index.html" data-i18n="nav.home">Home</a>
+        <a href="services.html" data-i18n="nav.services">Services</a>
+        <a href="finance.html" data-i18n="nav.finance">Finance</a>
+        <a href="contact.html" data-i18n="nav.contact">Contact</a>
+        <a href="partner-enquiry.html" data-i18n="nav.partner">Partner Enquiry</a>
+      </div>
+
+      <!-- Language Dropdown (ONLY EN/FR/ES) -->
+      <div class="lang" aria-label="Language selector">
+        <label class="langLabel" for="langSelect" data-i18n="lang.label">Language</label>
+        <select id="langSelect" class="langSelect" aria-label="Choose language">
+          <option value="en">EN</option>
+          <option value="fr">FR</option>
+          <option value="es">ES</option>
+        </select>
+      </div>
+    </div>
+  </nav>
+
+  <!-- GMC Credibility Strip -->
+  <div class="cred-strip" data-i18n="cred.strip">
     Commercial & contractual consulting · Partner onboarding · Global Management Consultancy Limited
   </div>
   <!-- END GMC Credibility Strip -->
-<main class="container" style="padding:24px 16px;">
-  <h1>Privacy</h1>
-  <p class="muted">Last updated: <span id="d"></span></p>
 
-  <h2>1. Who we are</h2>
-  <p>This website is operated by Global Management Consultancy Limited (“we”, “us”, “our”).</p>
+  <main class="container" style="padding:24px 16px;">
+    <h1 data-i18n="privacy.title">Privacy</h1>
+    <p class="muted">
+      <span data-i18n="privacy.last">Last updated:</span> <span id="d"></span>
+    </p>
 
-  <h2>2. What data we collect</h2>
-  <p>We may collect information you submit via forms (such as name, email, phone, company details, and message content).</p>
+    <h2 data-i18n="privacy.1.title">1. Who we are</h2>
+    <p data-i18n="privacy.1.text">
+      This website is operated by Global Management Consultancy Limited (“we”, “us”, “our”).
+    </p>
 
-  <h2>3. How we use your data</h2>
-  <ul>
-    <li>To respond to enquiries and provide requested information</li>
-    <li>To operate, maintain, and improve our website</li>
-    <li>To meet legal and compliance obligations</li>
-  </ul>
+    <h2 data-i18n="privacy.2.title">2. What data we collect</h2>
+    <p data-i18n="privacy.2.text">
+      We may collect information you submit via forms (such as name, email, phone, company details, and message content).
+    </p>
 
-  <h2>4. Legal bases</h2>
-  <p>Where applicable under data protection laws, we process personal data based on legitimate interests, consent (where requested), and compliance with legal obligations.</p>
+    <h2 data-i18n="privacy.3.title">3. How we use your data</h2>
+    <ul class="list">
+      <li data-i18n="privacy.3.li1">To respond to enquiries and provide requested information</li>
+      <li data-i18n="privacy.3.li2">To operate, maintain, and improve our website</li>
+      <li data-i18n="privacy.3.li3">To meet legal and compliance obligations</li>
+    </ul>
 
-  <h2>5. Sharing</h2>
-  <p>We do not sell personal data. We may share with service providers who support website operations (e.g., hosting, forms) and professional advisers, where necessary.</p>
+    <h2 data-i18n="privacy.4.title">4. Legal bases</h2>
+    <p data-i18n="privacy.4.text">
+      Where applicable under data protection laws, we process personal data based on legitimate interests, consent (where requested), and compliance with legal obligations.
+    </p>
 
-  <h2>6. Retention</h2>
-  <p>We keep personal data only as long as needed for the purposes above or as required by law.</p>
+    <h2 data-i18n="privacy.5.title">5. Sharing</h2>
+    <p data-i18n="privacy.5.text">
+      We do not sell personal data. We may share with service providers who support website operations (e.g., hosting, forms) and professional advisers, where necessary.
+    </p>
 
-  <h2>7. Your rights</h2>
-  <p>You may have rights to access, correct, delete, or restrict processing of your personal data. Requests can be made via the Contact page.</p>
+    <h2 data-i18n="privacy.6.title">6. Retention</h2>
+    <p data-i18n="privacy.6.text">
+      We keep personal data only as long as needed for the purposes above or as required by law.
+    </p>
 
-  <h2>8. International transfers</h2>
-  <p>Where data is transferred internationally, we use appropriate safeguards where required.</p>
+    <h2 data-i18n="privacy.7.title">7. Your rights</h2>
+    <p data-i18n="privacy.7.text">
+      You may have rights to access, correct, delete, or restrict processing of your personal data. Requests can be made via the Contact page.
+    </p>
 
-  <h2>9. Security</h2>
-  <p>We take reasonable measures to protect personal data, but no method of transmission is completely secure.</p>
-</main>
+    <h2 data-i18n="privacy.8.title">8. International transfers</h2>
+    <p data-i18n="privacy.8.text">
+      Where data is transferred internationally, we use appropriate safeguards where required.
+    </p>
 
-<footer class="site-footer">
-  <div class="container">
-    <div class="footer-grid">
-      <div><strong>Global Management Consultancy Limited</strong></div>
-      <div>
-        <strong>Legal</strong><br />
-        <a href="terms.html">Terms</a> · <a href="privacy.html">Privacy</a> · <a href="cookies.html">Cookies</a>
+    <h2 data-i18n="privacy.9.title">9. Security</h2>
+    <p data-i18n="privacy.9.text">
+      We take reasonable measures to protect personal data, but no method of transmission is completely secure.
+    </p>
+  </main>
+
+  <!-- GMC Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <strong data-i18n="footer.company">Global Management Consultancy Limited</strong>
+        </div>
+
+        <div>
+          <strong data-i18n="footer.legal">Legal</strong><br />
+          <a href="terms.html" data-i18n="footer.terms">Terms</a> ·
+          <a href="privacy.html" data-i18n="footer.privacy">Privacy</a> ·
+          <a href="cookies.html" data-i18n="footer.cookies">Cookies</a>
+        </div>
       </div>
+
+      <hr />
+
+      <p class="small" data-i18n="footer.notice">
+        <strong>Important notice:</strong> Content on this website is provided for general information only and does not
+        constitute legal, tax, investment or financial advice.
+      </p>
+
+      <p class="small" data-i18n="footer.regulatory">
+        <strong>Regulatory:</strong> Services described may include commercial and contractual consulting. If any activity
+        falls within UK financial services regulation (including FCA-regulated activities), such services are provided only
+        where authorised or through appropriately authorised partners. Clients should obtain independent professional advice.
+      </p>
+
+      <p class="small muted">
+        © <span id="year"></span> <span data-i18n="footer.rights">Global Management Consultancy Limited. All rights reserved.</span>
+      </p>
     </div>
-    <hr />
-    <p class="small">
-      <strong>Important notice:</strong> Content on this website is provided for general information only and does not
-      constitute legal, tax, investment or financial advice.
-    </p>
-    <p class="small">
-      <strong>Regulatory:</strong> Services described may include commercial and contractual consulting. If any activity
-      falls within UK financial services regulation (including FCA-regulated activities), such services are provided only
-      where authorised or through appropriately authorised partners. Clients should obtain independent professional advice.
-    </p>
-    <p class="small muted">© <span id="year"></span> Global Management Consultancy Limited. All rights reserved.</p>
-  </div>
-</footer>
+  </footer>
+  <!-- END GMC Footer -->
+
+</div><!-- /.wrap -->
+
+<!-- Shared i18n -->
+<script src="assets/js/i18n.js"></script>
 
 <script>
-  document.getElementById("year").textContent = new Date().getFullYear();
-  document.getElementById("d").textContent = new Date().toISOString().slice(0,10);
+  const y = document.getElementById("year");
+  if (y) y.textContent = new Date().getFullYear();
+
+  const d = document.getElementById("d");
+  if (d) d.textContent = new Date().toISOString().slice(0,10);
 </script>
 
 </body>
 </html>
-
