@@ -422,6 +422,46 @@ textarea{ resize: vertical; }
   line-height: 1.7;
 }
 
+/* Keep page sections in sync with the hero width */
+:root{
+  --content-width: 980px; /* match your hero max-width */
+}
+
+/* Hero + sections below use same width */
+.hero,
+.cred-strip,
+.grid{
+  max-width: var(--content-width);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Footer alignment: keep it consistent too */
+.site-footer .container{
+  max-width: var(--content-width);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Optional: ensure sections don’t touch edges on small screens */
+.hero,
+.cred-strip,
+.grid,
+.site-footer .container{
+  padding-left: 0;
+  padding-right: 0;
+}
+
+@media (max-width: 1020px){
+  .hero,
+  .cred-strip,
+  .grid,
+  .site-footer .container{
+    max-width: 100%;
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+}
 
 
 
