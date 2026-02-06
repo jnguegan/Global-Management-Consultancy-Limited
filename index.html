@@ -94,14 +94,17 @@
     <a href="partner-enquiry.html" data-i18n="nav.partner">Partner Enquiry</a>
   </div>
 
-  <!-- Language Toggle (EN/FR/ES) -->
-  <div class="lang" aria-label="Language selector">
-    <span class="langLabel" data-i18n="lang.label">Language</span>
-    <div class="langToggle" role="group" aria-label="Choose language">
-      <button class="langBtn" type="button" data-lang="en" aria-pressed="true">EN</button>
-      <button class="langBtn" type="button" data-lang="fr" aria-pressed="false">FR</button>
-      <button class="langBtn" type="button" data-lang="es" aria-pressed="false">ES</button>
-    </div>
+  <!-- Language Dropdown (EN/FR/ES) -->
+<div class="lang" aria-label="Language selector">
+  <label class="langLabel" for="langSelect" data-i18n="lang.label">Language</label>
+
+  <select id="langSelect" class="langSelect" aria-label="Choose language">
+    <option value="en">🇬🇧 EN</option>
+    <option value="fr">🇫🇷 FR</option>
+    <option value="es">🇪🇸 ES</option>
+  </select>
+</div>
+
   </div>
 </nav>
 
@@ -205,3 +208,4 @@
 
 </body>
 </html>
+
