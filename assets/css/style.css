@@ -463,6 +463,70 @@ textarea{ resize: vertical; }
   }
 }
 
+/* ================================
+   GLOBAL WIDTH SYNC (NAV = CONTENT)
+   ================================ */
+
+/* 1) Set one shared site width */
+:root{
+  --site-width: 1200px;   /* adjust if you want (1120/1280) */
+  --gutter: 18px;
+  --card-pad: 34px;       /* inside padding so text never touches border */
+}
+
+/* 2) Make .wrap the single source of truth */
+.wrap{
+  max-width: var(--site-width);
+  margin: 0 auto;
+  padding-left: var(--gutter);
+  padding-right: var(--gutter);
+}
+
+/* 3) Ensure NAV stretches exactly to wrap edges */
+.nav{
+  width: 100%;
+}
+
+/* 4) Make the hero/card match NAV width (NO separate max-width) */
+.hero{
+  width: 100%;
+  max-width: none;              /* IMPORTANT: removes the 980px constraint */
+  margin: 24px 0 0;             /* align with wrap, not centered separately */
+  padding: var(--card-pad);     /* IMPORTANT: prevents cut-off look */
+  box-sizing: border-box;
+}
+
+/* If your hero has a border/background and needs softer spacing */
+.hero .h1{ margin-top: 12px; }
+.hero .actions{ margin-top: 18px; }
+
+/* 5) Justified text but never touching borders */
+.hero .lead{
+  margin-top: 14px;
+  text-align: justify;
+  text-justify: inter-word;
+  text-align-last: left;
+}
+
+/* 6) Keep the rest of the page aligned with NAV edges too */
+.cred-strip,
+.grid,
+.site-footer .container{
+  width: 100%;
+  max-width: none;
+  margin-left: 0;
+  margin-right: 0;
+  box-sizing: border-box;
+}
+
+/* Optional: If the cred strip or grid needs consistent breathing room */
+.cred-strip{ padding-left: 0; padding-right: 0; }
+.grid{ padding-left: 0; padding-right: 0; }
+
+/* 7) Mobile padding */
+@media (max-width: 820px){
+  :root{ --card-pad: 20px; }
+}
 
 
 
