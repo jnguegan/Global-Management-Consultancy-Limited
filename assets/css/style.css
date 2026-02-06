@@ -447,6 +447,15 @@ textarea{
 .footer{
   max-width: var(--max);
 }
+/* Sticky NAV (stays visible while scrolling) */
+.nav{
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
 
 
 
