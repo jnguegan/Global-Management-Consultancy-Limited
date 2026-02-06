@@ -137,7 +137,25 @@
       "finance.reg.title": "Regulatory Notice",
       "finance.reg.p1": "Global Sport Finance is a service provided by <strong>Global Management Consultancy Limited</strong>. Payment services, e-money accounts, card issuing and foreign exchange services are provided by regulated Electronic Money Institutions and Payment Institutions.",
       "finance.reg.p2": "Global Management Consultancy Limited does not itself provide regulated payment services.",
-     
+         "contact.kicker": "Contact",
+      "contact.title": "Send us a message",
+      "contact.p1": "Tell us whether your enquiry is about Global Sport Finance or Football Agency services.",
+
+      "contact.form.title": "Contact form",
+      "contact.form.name": "Your name",
+      "contact.form.email": "Email address",
+      "contact.form.subject": "Subject (Finance / Agency)",
+      "contact.form.message": "Your message",
+      "contact.form.send": "Send",
+
+      "contact.note": "For commercial partnerships, use the <a href=\"partner-enquiry.html\">Partner Enquiry</a> form.",
+
+      "contact.include.title": "What to include",
+      "contact.include.li1": "Finance or Agency",
+      "contact.include.li2": "Countries involved (if cross-border)",
+      "contact.include.li3": "Time sensitivity",
+      "contact.include.li4": "Best way to reach you",
+  
 
     },
 
@@ -270,6 +288,24 @@
       "finance.reg.title": "Avis réglementaire",
       "finance.reg.p1": "Global Sport Finance est un service fourni par <strong>Global Management Consultancy Limited</strong>. Les services de paiement, comptes de monnaie électronique, émission de cartes et services de change sont fournis par des établissements de monnaie électronique et établissements de paiement régulés.",
       "finance.reg.p2": "Global Management Consultancy Limited ne fournit pas directement de services de paiement réglementés.",
+      "contact.kicker": "Contact",
+      "contact.title": "Envoyez-nous un message",
+      "contact.p1": "Indiquez si votre demande concerne Global Sport Finance ou les services d’agence de football.",
+
+      "contact.form.title": "Formulaire de contact",
+      "contact.form.name": "Votre nom",
+      "contact.form.email": "Adresse e-mail",
+      "contact.form.subject": "Objet (Finance / Agence)",
+      "contact.form.message": "Votre message",
+      "contact.form.send": "Envoyer",
+
+      "contact.note": "Pour les partenariats commerciaux, utilisez le formulaire <a href=\"partner-enquiry.html\">Demande de partenariat</a>.",
+
+      "contact.include.title": "À inclure dans votre message",
+      "contact.include.li1": "Finance ou Agence",
+      "contact.include.li2": "Pays concernés (si transfrontalier)",
+      "contact.include.li3": "Niveau d’urgence",
+      "contact.include.li4": "Meilleur moyen de vous contacter",
 
 
     },
@@ -402,6 +438,24 @@
       "finance.reg.title": "Aviso regulatorio",
       "finance.reg.p1": "Global Sport Finance es un servicio proporcionado por <strong>Global Management Consultancy Limited</strong>. Los servicios de pago, cuentas de dinero electrónico, emisión de tarjetas y servicios de cambio son prestados por Entidades de Dinero Electrónico y Entidades de Pago reguladas.",
       "finance.reg.p2": "Global Management Consultancy Limited no presta directamente servicios de pago regulados.",
+      "contact.kicker": "Contacto",
+      "contact.title": "Envíanos un mensaje",
+      "contact.p1": "Indica si tu consulta es sobre Global Sport Finance o servicios de agencia de fútbol.",
+
+      "contact.form.title": "Formulario de contacto",
+      "contact.form.name": "Tu nombre",
+      "contact.form.email": "Correo electrónico",
+      "contact.form.subject": "Asunto (Finanzas / Agencia)",
+      "contact.form.message": "Tu mensaje",
+      "contact.form.send": "Enviar",
+
+      "contact.note": "Para partnerships comerciales, utiliza el formulario de <a href=\"partner-enquiry.html\">Solicitud de partnership</a>.",
+
+      "contact.include.title": "Qué incluir",
+      "contact.include.li1": "Finanzas o Agencia",
+      "contact.include.li2": "Países implicados (si es transfronterizo)",
+      "contact.include.li3": "Urgencia / plazo",
+      "contact.include.li4": "Mejor forma de contactarte",
 
 
     }
@@ -437,7 +491,16 @@
         el.innerHTML = val;
       }
     });
+    // Translate placeholders (for forms)
+    document.querySelectorAll("[data-i18n-placeholder]").forEach((el) => {
+      const key = el.getAttribute("data-i18n-placeholder");
+      const val = dict[key];
+      if (typeof val === "string") {
+        el.setAttribute("placeholder", val);
+      }
+    });
 
+     
     // Keep dropdown in sync (if present)
     const select = document.getElementById("langSelect");
     if (select) select.value = lang;
