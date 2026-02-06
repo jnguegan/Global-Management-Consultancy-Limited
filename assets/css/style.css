@@ -309,6 +309,101 @@ textarea{ resize: vertical; }
 }
 .btn:hover{ filter: brightness(0.98); }
 
+/* Container */
+.wrap{
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 18px;
+}
+
+/* NAV */
+.nav{
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* logo left, navRight right */
+  gap: 18px;
+  padding: 18px 0;
+}
+
+.brand img{
+  display: block;
+  height: 44px;
+  width: auto;
+}
+
+/* RIGHT GROUP: menu + language */
+.navRight{
+  display: flex;
+  align-items: center;
+  gap: 18px;            /* space between menu and language */
+  justify-content: flex-end;
+  flex-wrap: wrap;      /* prevents overflow on smaller widths */
+}
+
+/* Menu */
+.menu{
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+/* Language */
+.lang{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  white-space: nowrap;
+}
+
+.langLabel{
+  font-size: 13px;
+  opacity: .75;
+}
+
+.langSelect{
+  appearance: none;
+  border: 1px solid rgba(0,0,0,.14);
+  border-radius: 12px;
+  padding: 10px 12px;
+  padding-right: 34px;
+  background: #fff;
+  font-weight: 700;
+  cursor: pointer;
+  line-height: 1;
+
+  /* dropdown arrow */
+  background-image:
+    linear-gradient(45deg, transparent 50%, rgba(0,0,0,.6) 50%),
+    linear-gradient(135deg, rgba(0,0,0,.6) 50%, transparent 50%);
+  background-position:
+    calc(100% - 16px) 55%,
+    calc(100% - 10px) 55%;
+  background-size: 6px 6px, 6px 6px;
+  background-repeat: no-repeat;
+}
+
+/* HERO: let text use full width of the hero box */
+.hero .lead{
+  max-width: 100%;
+}
+
+/* Mobile: stack menu and language nicely */
+@media (max-width: 780px){
+  .nav{
+    align-items: flex-start;
+  }
+  .navRight{
+    width: 100%;
+    justify-content: flex-start;
+  }
+  .menu{
+    width: 100%;
+  }
+}
+
+
+
 
 
 
