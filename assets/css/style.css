@@ -385,3 +385,53 @@ textarea{
   .menu{ width:100%; }
   .lang{ width:100%; justify-content:flex-start; }
 }
+
+/* ==========================
+   FOOTER: support .site-footer
+   ========================== */
+
+/* Keep footer aligned with the same content rail as hero/grid */
+.site-footer{
+  max-width: var(--content);
+  margin-left: auto;
+  margin-right: auto;
+
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: .95rem;
+}
+
+/* Your footer uses .container — remove any “full width” behavior */
+.site-footer .container{
+  max-width: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Basic footer layout helpers (if not already defined elsewhere) */
+.site-footer .footer-grid{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  align-items: start;
+}
+
+.site-footer .small{
+  font-size: .95rem;
+  color: var(--muted);
+}
+
+.site-footer .muted{
+  opacity: .9;
+}
+
+@media (max-width: 900px){
+  .site-footer .footer-grid{
+    grid-template-columns: 1fr;
+  }
+}
+
+
+
