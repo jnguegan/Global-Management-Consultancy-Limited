@@ -487,5 +487,56 @@ textarea{
   padding-top: 92px; /* adjust if nav height changes */
 }
 
+/* HERO BACKGROUND IMAGE (Premium) */
+.heroImage{
+  position: relative;
+  background: url("assets/images/stadium-hero.jpg") center/cover no-repeat;
+  border: none;
+  overflow: hidden;
+  color: #fff;
+}
+
+.heroImage::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background: rgba(0,0,0,0.65);
+}
+
+.heroOverlay{
+  position: relative;
+  z-index: 2;
+}
+
+.heroImage .h1{
+  color:#fff;
+}
+
+.heroImage .lead{
+  color: rgba(255,255,255,0.88);
+}
+
+.heroImage .kicker{
+  background: rgba(255,255,255,0.10);
+  border: 1px solid rgba(255,255,255,0.18);
+  color: rgba(255,255,255,0.92);
+}
+
+.heroImage .btn{
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(255,255,255,0.22);
+  color:#fff;
+}
+
+.heroImage .btn:hover{
+  background: rgba(255,255,255,0.14);
+  border-color: rgba(255,255,255,0.30);
+}
+
+.heroImage .btn.primary{
+  background: rgba(30,115,190,0.35);
+  border-color: rgba(30,115,190,0.55);
+  color:#fff;
+}
 
 
