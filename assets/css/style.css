@@ -539,4 +539,22 @@ textarea{
   color:#fff;
 }
 
+/* Finance hero background */
+body[data-page="finance"] .hero{
+  background:
+    linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)),
+    url("assets/images/gsf-pos-payment.jpg") center/cover no-repeat;
+  color: white;
+}
+
+body[data-page="finance"] .hero .lead{
+  color: rgba(255,255,255,0.88);
+}
+
+body[data-page="finance"] .hero .kicker{
+  background: rgba(255,255,255,0.12);
+  border-color: rgba(255,255,255,0.25);
+  color: white;
+}
+
 
