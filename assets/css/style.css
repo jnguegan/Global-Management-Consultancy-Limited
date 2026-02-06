@@ -490,7 +490,7 @@ textarea{
 /* HERO BACKGROUND IMAGE (Premium) */
 .heroImage{
   position: relative;
-  background: url("assets/images/stadium-hero.jpg") center/cover no-repeat;
+  background: url("../images/stadium-hero.jpg") center/cover no-repeat;
   border: none;
   overflow: hidden;
   color: #fff;
