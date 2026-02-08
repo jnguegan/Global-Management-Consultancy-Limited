@@ -1,1 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Global Sport Finance — Onboarding</title>
+  <link rel="stylesheet" href="/assets/css/styles.css" />
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <a class="brand" href="/finance/">
+        <div class="badge" aria-hidden="true"></div>
+        <div>
+          <h1>Global Sport Finance</h1>
+          <p>Onboarding — Sport + Business</p>
+        </div>
+      </a>
+      <div class="small">MVP v1</div>
+    </div>
+
+    <div class="card">
+      <h2>Get started</h2>
+      <p>Select your track. You can still access the same core services: multi-currency, payments, FX, payouts, cards.</p>
+
+      <div class="grid">
+        <button class="btn" id="btnSport" type="button">
+          <strong>Sport</strong>
+          <span>Clubs • Players • Agents • Academies • Federations</span>
+        </button>
+
+        <button class="btn" id="btnBiz" type="button">
+          <strong>Business & Individuals</strong>
+          <span>SMEs • Trading • Services • Real estate • Creators • E-commerce</span>
+        </button>
+      </div>
+
+      <hr />
+      <p class="small">By continuing, you consent to being contacted about your application and compliance checks.</p>
+    </div>
+  </div>
+
+  <script type="module">
+    import { setState, clearState } from "/assets/js/app.js";
+
+    clearState();
+
+    document.getElementById("btnSport").addEventListener("click", () => {
+      setState({ track: "sport" });
+      location.href = "/finance/step-1.html";
+    });
+
+    document.getElementById("btnBiz").addEventListener("click", () => {
+      setState({ track: "business" });
+      location.href = "/finance/step-1.html";
+    });
+  </script>
+</body>
+</html>
 
