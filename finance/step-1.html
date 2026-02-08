@@ -1,1 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>GSF — Step 1</title>
+  <link rel="stylesheet" href="/assets/css/styles.css" />
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <a class="brand" href="/finance/">
+        <div class="badge" aria-hidden="true"></div>
+        <div>
+          <h1>Global Sport Finance</h1>
+          <p>Onboarding — Step 1 of 3</p>
+        </div>
+      </a>
+      <div class="small">Track: <span id="trackLabel">—</span></div>
+    </div>
+
+    <div class="card">
+      <h2>Your details</h2>
+      <p>Start with basic information. You’ll choose services and volumes next.</p>
+
+      <div class="row">
+        <div>
+          <label>Account type</label>
+          <select id="account_type" required>
+            <option value="">Select…</option>
+            <option value="business">Business (Company)</option>
+            <option value="individual">Individual (Personal)</option>
+            <option value="intermediary">Intermediary (Onboarding clients)</option>
+          </select>
+        </div>
+
+        <div>
+          <label>Preferred language</label>
+          <select id="language" required>
+            <option value="EN">EN</option>
+            <option value="FR">FR</option>
+            <option value="ES">ES</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row">
+        <div>
+          <label>Full name</label>
+          <input id="full_name" type="text" placeholder="Your name" required />
+        </div>
+        <div>
+          <label>Email</label>
+          <input id="email" type="email" placeholder="you@email.com" required />
+        </div>
+      </div>
+
+      <div class="row">
+        <div>
+          <label>Phone (with country code)</label>
+          <input id="phone" type="tel" placeholder="+34 …" required />
+        </div>
+
+        <div>
+          <label>WhatsApp preferred?</label>
+          <select id="whatsapp">
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="btn secondary" type="button" id="backBtn">
+          <strong>Back</strong>
+          <span>Return to track selection</span>
+        </button>
+        <button class="btn primary" type="button" id="nextBtn">
+          <strong>Continue</strong>
+          <span>Go to Step 2</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { getState, setState } from "/assets/js/app.js";
+
+    const s = getState();
+    const track = s.track || "";
+    document.getElementById("trackLabel").textContent = track ? track.toUpperCase() : "—";
+
+    // Prefill if returning
+    if (s.account_type) document.getElementById("account_type").value = s.account_type;
+    if (s.language) document.getElementById("language").value = s.language;
+    if (s.full_name) document.getElementById("full_name").value = s.full_name;
+    if (s.email) document.getElementById("email").value = s.email;
+    if (s.phone) document.getElementById("phone").value = s.phone;
+    if (s.whatsapp) document.getElementById("whatsapp").value = s.whatsapp;
+
+    document.getElementById("backBtn").addEventListener("click", () => {
+      location.href = "/finance/";
+    });
+
+    document.getElementById("nextBtn").addEventListener("click", () => {
+      const account_type = document.getElementById("account_type").value.trim();
+      const language = document.getElementById("language").value.trim();
+      const full_name = document.getElementById("full_name").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const phone = document.getElementById("phone").value.trim();
+      const whatsapp = document.getElementById("whatsapp").value.trim();
+
+      if (!track) {
+        alert("Please choose a track first (Sport or Business & Individuals).");
+        location.href = "/finance/";
+        return;
+      }
+      if (!account_type || !language || !full_name || !email || !phone) {
+        alert("Please complete all required fields.");
+        return;
+      }
+
+      setState({ account_type, language, full_name, email, phone, whatsapp });
+      location.href = "/finance/step-2.html";
+    });
+  </script>
+</body>
+</html>
 
