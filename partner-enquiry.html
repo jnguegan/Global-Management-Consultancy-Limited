@@ -70,6 +70,7 @@
       <input type="hidden" name="formType" value="Partner Enquiry" />
       <input type="hidden" name="sourceSite" value="Global Management Consultancy Limited" />
       <input type="hidden" name="submittedFrom" value="Website" />
+      <input type="hidden" name="siteLanguage" id="siteLanguage" value="en" />
 
       <input type="hidden" name="form-name" value="partner-enquiry" />
       <p class="hidden">
@@ -108,10 +109,10 @@
             <label for="enquiryType" data-i18n="partner.enquirytype">Nature of enquiry *</label>
             <select id="enquiryType" name="enquiryType" required>
               <option value="" selected disabled data-i18n="partner.selectone">Select one…</option>
-              <option data-i18n="partner.enquiry.card">Card Issuing &amp; Payment Services</option>
-              <option data-i18n="partner.enquiry.fx">Foreign Exchange &amp; International Payments</option>
-              <option data-i18n="partner.enquiry.football">Football Commercial &amp; Contract Representation</option>
-              <option data-i18n="partner.enquiry.other">Other Commercial Enquiries</option>
+              <option value="cards_payments" data-i18n="partner.enquiry.card">Card Issuing &amp; Payment Services</option>
+              <option value="fx_intl_payments" data-i18n="partner.enquiry.fx">Foreign Exchange &amp; International Payments</option>
+              <option value="football" data-i18n="partner.enquiry.football">Football Commercial &amp; Contract Representation</option>
+              <option value="other" data-i18n="partner.enquiry.other">Other Commercial Enquiries</option>
             </select>
           </div>
         </div>
@@ -156,6 +157,160 @@
 
           <div></div>
         </div>
+
+        <!-- ===================== -->
+        <!-- GSF PRE-QUALIFICATION -->
+        <!-- ===================== -->
+        <div id="gsfBlock" style="margin-top:10px; padding-top:14px; border-top:1px solid rgba(255,255,255,.10); display:none;">
+          <h2 class="h2" style="font-size:1.15rem; margin:0 0 6px;">Global Sport Finance — Pre-Qualification (optional)</h2>
+          <p class="muted" style="margin-top:0;">
+            This helps us route your request and prepare a fast handover to our regulated onboarding partner.
+            Please do not upload sensitive documents via this enquiry form.
+          </p>
+
+          <div class="split" style="grid-template-columns:1fr 1fr;">
+            <div>
+              <label for="gsfClientType">Client type (for finance services)</label>
+              <select id="gsfClientType" name="gsfClientType">
+                <option value="" selected>Select one…</option>
+                <option value="individual">Individual</option>
+                <option value="business">Business</option>
+                <option value="intermediary">Intermediary / Agent</option>
+              </select>
+            </div>
+
+            <div>
+              <label for="gsfClientCountry">Country of residence / main operations</label>
+              <input id="gsfClientCountry" name="gsfClientCountry" type="text" placeholder="e.g. Spain, UK, UAE" />
+            </div>
+          </div>
+
+          <div class="split" style="grid-template-columns:1fr 1fr;">
+            <div>
+              <label for="gsfIncorpCountry">Country of incorporation (business only)</label>
+              <input id="gsfIncorpCountry" name="gsfIncorpCountry" type="text" placeholder="e.g. United Kingdom" />
+            </div>
+
+            <div>
+              <label for="gsfMonthlyVolume">Estimated monthly volume</label>
+              <select id="gsfMonthlyVolume" name="gsfMonthlyVolume">
+                <option value="" selected>Select one…</option>
+                <option value="<10k">&lt;€10k</option>
+                <option value="10-50k">€10k–€50k</option>
+                <option value="50-250k">€50k–€250k</option>
+                <option value="250k-1m">€250k–€1m</option>
+                <option value="1m+">€1m+</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="split" style="grid-template-columns:1fr 1fr;">
+            <div>
+              <label for="gsfCurrencies">Currencies needed (comma separated)</label>
+              <input id="gsfCurrencies" name="gsfCurrencies" type="text" placeholder="EUR, GBP, USD, XAF, AED…" />
+            </div>
+
+            <div>
+              <label for="gsfCorridors">Payment corridors / countries involved (comma separated)</label>
+              <input id="gsfCorridors" name="gsfCorridors" type="text" placeholder="e.g. UK ⇄ Spain, UAE ⇄ Cameroon" />
+            </div>
+          </div>
+
+          <div style="margin-top:8px;">
+            <label>Services needed (select all that apply)</label>
+            <div class="split" style="grid-template-columns:1fr 1fr; gap:10px;">
+              <label class="check">
+                <input type="checkbox" name="gsfServices" value="multi_currency_wallets" />
+                <span>Multi-currency accounts / wallets</span>
+              </label>
+              <label class="check">
+                <input type="checkbox" name="gsfServices" value="fx_conversion" />
+                <span>FX conversion</span>
+              </label>
+              <label class="check">
+                <input type="checkbox" name="gsfServices" value="international_payments" />
+                <span>International payments</span>
+              </label>
+              <label class="check">
+                <input type="checkbox" name="gsfServices" value="cards" />
+                <span>Cards (physical / virtual)</span>
+              </label>
+              <label class="check">
+                <input type="checkbox" name="gsfServices" value="mass_payouts" />
+                <span>Mass payouts (payroll / bonuses / suppliers)</span>
+              </label>
+              <label class="check">
+                <input type="checkbox" name="gsfServices" value="expense_controls" />
+                <span>Expense controls</span>
+              </label>
+              <label class="check" style="grid-column:1 / -1;">
+                <input type="checkbox" id="gsfCryptoCheck" name="gsfServices" value="crypto_digital_assets" />
+                <span><strong>Crypto / Digital Assets</strong> (e.g. USD ⇄ USDC conversion, crypto wallet)</span>
+              </label>
+            </div>
+          </div>
+
+          <div id="gsfCryptoBlock" style="display:none; margin-top:10px;">
+            <div class="split" style="grid-template-columns:1fr 1fr;">
+              <div>
+                <label for="gsfCryptoType">Crypto activity type</label>
+                <select id="gsfCryptoType" name="gsfCryptoType">
+                  <option value="" selected>Select one…</option>
+                  <option value="stablecoin_conversion">Stablecoin conversion (USDC/USDT)</option>
+                  <option value="wallet_holding">Wallet holding</option>
+                  <option value="payments_to_exchanges">Payments to exchanges</option>
+                  <option value="web3_business">Web3 / blockchain business</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+              <div>
+                <label for="gsfCryptoVol">Estimated crypto monthly volume</label>
+                <select id="gsfCryptoVol" name="gsfCryptoVol">
+                  <option value="" selected>Select one…</option>
+                  <option value="<10k">&lt;€10k</option>
+                  <option value="10-50k">€10k–€50k</option>
+                  <option value="50-250k">€50k–€250k</option>
+                  <option value="250k-1m">€250k–€1m</option>
+                  <option value="1m+">€1m+</option>
+                </select>
+              </div>
+            </div>
+            <div>
+              <label for="gsfCryptoNotes">Brief crypto description (optional)</label>
+              <textarea id="gsfCryptoNotes" name="gsfCryptoNotes" rows="4" placeholder="Explain the stablecoin use case / counterparties / expected flows (no wallet addresses needed)."></textarea>
+            </div>
+          </div>
+
+          <div class="split" style="grid-template-columns:1fr 1fr; margin-top:10px;">
+            <div>
+              <label for="gsfPEP">PEP (politically exposed person) or close relation?</label>
+              <select id="gsfPEP" name="gsfPEP">
+                <option value="" selected>Select one…</option>
+                <option value="no">No</option>
+                <option value="yes">Yes</option>
+              </select>
+            </div>
+            <div>
+              <label for="gsfSanctions">Any sanctioned / high-risk jurisdictions involved?</label>
+              <select id="gsfSanctions" name="gsfSanctions">
+                <option value="" selected>Select one…</option>
+                <option value="no">No</option>
+                <option value="yes">Yes</option>
+                <option value="not_sure">Not sure</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label class="check">
+              <input type="checkbox" id="gsfConsent" name="gsfConsent" />
+              <span>
+                I consent to being contacted about finance services and understand a regulated partner may request further information.
+              </span>
+            </label>
+          </div>
+        </div>
+        <!-- /GSF PRE-QUALIFICATION -->
 
         <div>
           <label for="message" data-i18n="partner.message">Brief description *</label>
@@ -234,6 +389,74 @@
 <script>
   const y = document.getElementById("year");
   if (y) y.textContent = new Date().getFullYear();
+</script>
+
+<!-- GSF pre-qual logic -->
+<script>
+  (function(){
+    const enquiryType = document.getElementById("enquiryType");
+    const gsfBlock = document.getElementById("gsfBlock");
+
+    const langSelect = document.getElementById("langSelect");
+    const siteLangInput = document.getElementById("siteLanguage");
+
+    const gsfClientType = document.getElementById("gsfClientType");
+    const gsfClientCountry = document.getElementById("gsfClientCountry");
+    const gsfMonthlyVolume = document.getElementById("gsfMonthlyVolume");
+    const gsfCurrencies = document.getElementById("gsfCurrencies");
+    const gsfPEP = document.getElementById("gsfPEP");
+    const gsfSanctions = document.getElementById("gsfSanctions");
+    const gsfConsent = document.getElementById("gsfConsent");
+
+    const cryptoCheck = document.getElementById("gsfCryptoCheck");
+    const cryptoBlock = document.getElementById("gsfCryptoBlock");
+    const gsfCryptoType = document.getElementById("gsfCryptoType");
+    const gsfCryptoVol = document.getElementById("gsfCryptoVol");
+
+    function setRequired(el, required){
+      if (!el) return;
+      if (required) el.setAttribute("required","required");
+      else el.removeAttribute("required");
+    }
+
+    function isFinanceEnquiry(){
+      const v = (enquiryType && enquiryType.value) ? enquiryType.value : "";
+      return v === "cards_payments" || v === "fx_intl_payments";
+    }
+
+    function refreshLang(){
+      if (siteLangInput && langSelect) siteLangInput.value = (langSelect.value || "en");
+    }
+
+    function refreshGSF(){
+      const finance = isFinanceEnquiry();
+
+      // show/hide block
+      gsfBlock.style.display = finance ? "block" : "none";
+
+      // Only require a light pre-screen when finance enquiry
+      setRequired(gsfClientType, finance);
+      setRequired(gsfClientCountry, false); // optional
+      setRequired(gsfMonthlyVolume, finance);
+      setRequired(gsfCurrencies, finance);
+      setRequired(gsfPEP, finance);
+      setRequired(gsfSanctions, finance);
+      setRequired(gsfConsent, finance);
+
+      // crypto conditional requirements
+      const cryptoOn = finance && cryptoCheck && cryptoCheck.checked;
+      cryptoBlock.style.display = cryptoOn ? "block" : "none";
+      setRequired(gsfCryptoType, cryptoOn);
+      setRequired(gsfCryptoVol, cryptoOn);
+    }
+
+    if (enquiryType) enquiryType.addEventListener("change", refreshGSF);
+    if (cryptoCheck) cryptoCheck.addEventListener("change", refreshGSF);
+    if (langSelect) langSelect.addEventListener("change", refreshLang);
+
+    refreshLang();
+    refreshGSF();
+  })();
 </script>
 
 </body>
