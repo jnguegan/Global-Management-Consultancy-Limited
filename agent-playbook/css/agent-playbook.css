@@ -447,5 +447,7 @@ select {
   font-size: 0.95rem;
   color: #b8c3d3;
 }
-
+.credibility em {
+  font-style: italic;
+}
 
