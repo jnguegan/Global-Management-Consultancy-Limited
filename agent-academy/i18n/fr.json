@@ -1,1 +1,6 @@
-
+{
+"signup.title":"Créer un compte",
+"signup.heading":"Créer un compte",
+"signup.button":"S'inscrire",
+"signup.success":"Inscription réussie. Vérifiez votre email."
+}
