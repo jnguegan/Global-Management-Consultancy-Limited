@@ -3,4 +3,16 @@
 "signup.heading":"Crear cuenta",
 "signup.button":"Registrarse",
 "signup.success":"Registro exitoso. Revisa tu correo electrónico."
+},
+{
+  "login.pageTitle": "Acceso — Football Agent Exam Prep Platform",
+  "login.badge": "Football Agent Exam Prep Platform",
+  "login.heading": "Acceso",
+  "login.lead": "Accede a tu panel, continúa tu revisión y sigue tu progreso.",
+  "login.emailLabel": "Correo electrónico",
+  "login.passwordLabel": "Contraseña",
+  "login.button": "Entrar",
+  "login.noAccount": "¿No tienes una cuenta?",
+  "login.signupLink": "Créala aquí",
+  "login.success": "Acceso correcto. Redirigiendo..."
 }
