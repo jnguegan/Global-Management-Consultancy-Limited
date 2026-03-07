@@ -271,68 +271,83 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="/agent-academy/js/supabase-client.js"></script>
 
-  <script>
-    let translations = {};
-    let currentLang = localStorage.getItem("academyLang") || "en";
+ <script>
+  let translations = {};
+  let currentLang = localStorage.getItem("academyLang") || "en";
 
-    async function loadLang(lang){
-      try{
-        const res = await fetch(`/agent-academy/i18n/${lang}.json`, { cache: "no-store" });
-        translations = await res.json();
+  async function loadLang(lang){
+    try{
+      const res = await fetch(`/agent-academy/i18n/${lang}.json`, { cache: "no-store" });
 
-        document.querySelectorAll("[data-i18n]").forEach((el) => {
-          const key = el.getAttribute("data-i18n");
-          if (translations[key]) {
-            el.textContent = translations[key];
-          }
-        });
-
-        document.documentElement.lang = lang;
-        currentLang = lang;
-        localStorage.setItem("academyLang", lang);
-
-        document.querySelectorAll(".lang-switch button").forEach((btn) => {
-          btn.classList.toggle("active", btn.dataset.lang === lang);
-        });
-
-        if (translations["dashboard.pageTitle"]) {
-          document.title = translations["dashboard.pageTitle"];
-        }
-
-        await loadUser();
-      } catch (error) {
-        console.error("Language load error:", error);
+      if (!res.ok) {
+        throw new Error(`Could not load language file: ${lang}`);
       }
+
+      translations = await res.json();
+
+      document.querySelectorAll("[data-i18n]").forEach((el) => {
+        const key = el.getAttribute("data-i18n");
+        if (translations[key]) {
+          el.textContent = translations[key];
+        }
+      });
+
+      document.documentElement.lang = lang;
+      currentLang = lang;
+      localStorage.setItem("academyLang", lang);
+
+      document.querySelectorAll(".lang-switch button").forEach((btn) => {
+        btn.classList.toggle("active", btn.dataset.lang === lang);
+      });
+
+      if (translations["dashboard.pageTitle"]) {
+        document.title = translations["dashboard.pageTitle"];
+      }
+    } catch (error) {
+      console.error("Language load error:", error);
     }
+  }
 
-    function t(key, fallback){
-      return translations[key] || fallback;
-    }
+  function t(key, fallback){
+    return translations[key] || fallback;
+  }
 
-    async function loadUser(){
-      const { data, error } = await supabaseClient.auth.getUser();
+  async function loadUser(){
+    try {
+      const { data: { session }, error } = await supabaseClient.auth.getSession();
 
-      if (error || !data?.user) {
+      if (error || !session || !session.user) {
         window.location.href = "/agent-academy/login.html";
         return;
       }
 
       const emailLine = document.getElementById("userEmail");
-      emailLine.textContent = `${t("dashboard.loggedInAs", "Logged in as:")} ${data.user.email}`;
+      if (emailLine) {
+        emailLine.textContent = `${t("dashboard.loggedInAs", "Logged in as:")} ${session.user.email}`;
+      }
+    } catch (error) {
+      console.error("User load error:", error);
     }
+  }
 
-    async function logout(){
-      await supabaseClient.auth.signOut();
-      window.location.href = "/agent-academy/login.html";
-    }
+  async function logout(){
+    await supabaseClient.auth.signOut();
+    window.location.href = "/agent-academy/login.html";
+  }
 
-    document.getElementById("logoutBtn").addEventListener("click", logout);
+  document.getElementById("logoutBtn").addEventListener("click", logout);
 
-    document.querySelectorAll(".lang-switch button").forEach((btn) => {
-      btn.addEventListener("click", () => loadLang(btn.dataset.lang));
+  document.querySelectorAll(".lang-switch button").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      await loadLang(btn.dataset.lang);
+      await loadUser();
     });
+  });
 
-    loadLang(currentLang);
-  </script>
+  window.addEventListener("DOMContentLoaded", async () => {
+    await loadLang(currentLang);
+    await loadUser();
+  });
+</script>
 </body>
 </html>
