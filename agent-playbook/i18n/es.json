@@ -1,1 +1,97 @@
-
+{
+  "meta": {
+    "title": "Manual del Examen y Regulación de Agentes de Fútbol | Global Management Consultancy Limited",
+    "description": "Guía profesional multilingüe para la preparación del examen de agente de fútbol y la comprensión del marco regulatorio."
+  },
+  "hero": {
+    "badge": "Global Management Consultancy Limited",
+    "title": "Manual del Examen y Regulación de Agentes de Fútbol",
+    "subtitle": "Una guía profesional diseñada para ayudar a los candidatos a preparar los exámenes de agente de fútbol y ayudar a los agentes en activo a actualizar sus conocimientos del marco regulatorio.",
+    "ctaPrimary": "Unirse a la lista prioritaria",
+    "ctaSecondary": "Explorar la guía",
+    "card1Label": "Formato",
+    "card1Value": "Ebook digital",
+    "card2Label": "Idiomas",
+    "card2Value": "English • Français • Español"
+  },
+  "panel": {
+    "kicker": "Próximamente",
+    "title": "Estudia mejor. Trabaja con más claridad.",
+    "text": "Diseñado para candidatos, agentes en activo, abogados, ejecutivos de clubes y cualquier persona que quiera entender con claridad las reglas modernas aplicables a los agentes de fútbol.",
+    "feature1": "Explicaciones claras de las reglas clave",
+    "feature2": "Estructura de revisión para el examen",
+    "feature3": "Escenarios prácticos para uso real",
+    "feature4": "Resúmenes rápidos y ayudas de memoria"
+  },
+  "why": {
+    "kicker": "Por qué esta guía",
+    "title": "Un recurso profesional serio, no solo otro resumen",
+    "text": "La mayoría de los lectores no necesitan más texto regulatorio en bruto. Necesitan estructura, claridad, ayudas de memoria y contexto práctico que puedan revisar antes de exámenes, reuniones, negociaciones y revisiones de cumplimiento."
+  },
+  "modules": {
+    "1": {
+      "title": "Módulo 1 — El ecosistema de los agentes de fútbol",
+      "text": "Visión general del sector de la agencia de fútbol, del papel de los agentes e intermediarios, y de la estructura de gobernanza del fútbol mundial."
+    },
+    "2": {
+      "title": "Módulo 2 — Regulaciones explicadas",
+      "text": "Explicaciones claras de las reglas y estructuras principales que regulan la actividad de los agentes de fútbol."
+    },
+    "3": {
+      "title": "Módulo 3 — Revisión para el examen",
+      "text": "Resúmenes estructurados para ayudar a los candidatos a retener y revisar de forma eficiente las reglas esenciales."
+    },
+    "4": {
+      "title": "Módulo 4 — Escenarios prácticos",
+      "text": "Ejemplos reales que muestran cómo se aplican las regulaciones en la práctica diaria de los agentes."
+    }
+  },
+  "pricing": {
+    "kicker": "Precio de lanzamiento sugerido",
+    "title": "Posicionamiento comercial",
+    "text": "Empieza con una oferta de entrada sólida para el ebook y después añade un nivel superior con extras de revisión, preguntas modelo y herramientas prácticas.",
+    "standard": {
+      "title": "Ebook Estándar",
+      "price": "£29",
+      "text": "Guía digital principal para revisión y actualización profesional."
+    },
+    "pro": {
+      "title": "Pack Pro de Revisión",
+      "price": "£49",
+      "text": "Ebook con preguntas de revisión, recordatorios de memoria y listas de control prácticas."
+    },
+    "premium": {
+      "title": "Pack Premium",
+      "price": "£89",
+      "text": "Futuro paquete con ebook, simulacros de examen, plantillas y breves videos explicativos."
+    }
+  },
+  "waitlist": {
+    "kicker": "Prelanzamiento",
+    "title": "Unirse a la lista prioritaria",
+    "text": "Recibe novedades del lanzamiento, precio anticipado y un resumen gratuito de revisión.",
+    "noteTitle": "Buena estrategia de lanzamiento:",
+    "noteText": "Empieza a captar interés antes de que el ebook esté terminado. Así tendrás una lista de compradores potenciales antes del lanzamiento."
+  },
+  "form": {
+    "name": "Nombre completo",
+    "email": "Correo electrónico",
+    "profile": "Perfil",
+    "select": "Seleccionar",
+    "option1": "Candidato al examen",
+    "option2": "Agente en activo",
+    "option3": "Abogado / asesor",
+    "option4": "Ejecutivo / personal de club",
+    "option5": "Otro",
+    "submit": "Avisarme en el lanzamiento",
+    "validationError": "Por favor complete todos los campos.",
+    "success": "Gracias. Su interés ha sido registrado."
+  },
+  "disclaimer": {
+    "title": "Aviso importante",
+    "text": "Esta publicación es un recurso educativo independiente producido bajo Global Management Consultancy Limited. No está afiliado a la FIFA, ni respaldado por la FIFA, ni oficialmente conectado con ella."
+  },
+  "footer": {
+    "text": "Recurso educativo independiente para profesionales de la industria del fútbol."
+  }
+}
