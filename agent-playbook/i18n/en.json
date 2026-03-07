@@ -6,6 +6,7 @@
   "hero": {
     "badge": "Global Management Consultancy Limited",
     "title": "The Football Agent Exam & Regulations Playbook",
+      "credibility": "Written by a licensed football agent and industry advisor.",
     "subtitle": "A professional guide designed to help candidates revise for football agent exams and help practising agents refresh their knowledge of the regulatory framework.",
     "ctaPrimary": "Join the Priority List",
     "ctaSecondary": "Explore the Guide",
@@ -13,7 +14,7 @@
     "card1Value": "Digital Ebook",
     "card2Label": "Languages",
     "card2Value": "English • Français • Español"
-    "credibility": "Written by a licensed football agent and industry advisor."
+  
   },
   "panel": {
     "kicker": "Coming Soon",
