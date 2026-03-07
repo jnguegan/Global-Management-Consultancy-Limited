@@ -1,6 +1,14 @@
 const supportedLanguages = ["en", "fr", "es"];
 let currentLanguage = "en";
 let translations = {};
+let supabaseClient = null;
+
+if (window.supabase && window.SUPABASE_URL && window.SUPABASE_ANON_KEY) {
+  supabaseClient = window.supabase.createClient(
+    window.SUPABASE_URL,
+    window.SUPABASE_ANON_KEY
+  );
+}
 
 async function loadLanguage(lang) {
   try {
@@ -74,16 +82,17 @@ function bindForm() {
 
   if (!form || !message) return;
 
-  form.addEventListener("submit", (e) => {
+  form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    const name = form.name.value.trim();
+    const full_name = form.name.value.trim();
     const email = form.email.value.trim();
     const profile = form.profile.value.trim();
+    const language = currentLanguage || "en";
 
     message.className = "form-message";
 
-    if (!name || !email || !profile) {
+    if (!full_name || !email || !profile) {
       message.textContent =
         getNestedValue(translations, "form.validationError") ||
         "Please complete all fields.";
@@ -91,12 +100,46 @@ function bindForm() {
       return;
     }
 
-    message.textContent =
-      getNestedValue(translations, "form.success") ||
-      "Thank you. Your interest has been recorded.";
-    message.classList.add("success");
+    if (!supabaseClient) {
+      message.textContent =
+        getNestedValue(translations, "form.submitError") ||
+        "Form service is not configured yet.";
+      message.classList.add("error");
+      return;
+    }
 
-    form.reset();
+    try {
+      const { error } = await supabaseClient
+        .from("waitlist_signups")
+        .insert([
+          {
+            page: "agent-playbook",
+            full_name,
+            email,
+            profile,
+            language,
+            source: window.location.hostname
+          }
+        ]);
+
+      if (error) {
+        throw error;
+      }
+
+      message.textContent =
+        getNestedValue(translations, "form.success") ||
+        "Thank you. Your interest has been recorded.";
+      message.classList.add("success");
+
+      form.reset();
+    } catch (error) {
+      console.error(error);
+
+      message.textContent =
+        getNestedValue(translations, "form.submitError") ||
+        "Something went wrong. Please try again.";
+      message.classList.add("error");
+    }
   });
 }
 
