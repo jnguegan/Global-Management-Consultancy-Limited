@@ -15,4 +15,23 @@
   "login.noAccount": "Do not have an account?",
   "login.signupLink": "Create one here",
   "login.success": "Login successful. Redirecting..."
+},
+{
+  "dashboard.pageTitle": "Dashboard — Football Agent Exam Prep Platform",
+  "dashboard.brand": "Football Agent Exam Prep Platform",
+  "dashboard.kicker": "Dashboard",
+  "dashboard.heading": "Welcome to your learning dashboard",
+  "dashboard.lead": "Continue your revision, access your study topics, and track your exam preparation progress.",
+  "dashboard.studyTitle": "Start studying",
+  "dashboard.studyText": "Browse your study topics and begin answering practice questions.",
+  "dashboard.studyButton": "Browse study topics",
+  "dashboard.accountTitle": "Account",
+  "dashboard.logout": "Logout",
+  "dashboard.progressTitle": "Progress overview",
+  "dashboard.progressText": "Your statistics and topic performance will appear here as soon as you start answering questions.",
+  "dashboard.stat1Label": "Questions answered",
+  "dashboard.stat2Label": "Average score",
+  "dashboard.stat3Label": "Topics completed",
+  "dashboard.note": "This platform is an independent exam preparation resource and is not affiliated with or endorsed by FIFA.",
+  "dashboard.loggedInAs": "Logged in as:"
 }
