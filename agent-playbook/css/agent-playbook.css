@@ -448,3 +448,17 @@ select {
   color: #b8c3d3;
   font-style: italic !important;
 }
+.hero-book {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.hero-book img {
+  max-width: 340px;
+  width: 100%;
+  height: auto;
+  box-shadow: 0 30px 60px rgba(0,0,0,0.35);
+  border-radius: 8px;
+}
+
