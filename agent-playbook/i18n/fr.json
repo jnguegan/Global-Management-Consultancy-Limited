@@ -6,6 +6,7 @@
   "hero": {
     "badge": "Global Management Consultancy Limited",
     "title": "Le Guide de l’Examen et de la Réglementation des Agents de Football",
+     "credibility": "Rédigé par un agent de football licencié et conseiller du secteur.",
     "subtitle": "Un guide professionnel conçu pour aider les candidats à préparer les examens d’agent de football et permettre aux agents en activité de rafraîchir leurs connaissances du cadre réglementaire.",
     "ctaPrimary": "Rejoindre la liste prioritaire",
     "ctaSecondary": "Découvrir le guide",
@@ -13,7 +14,7 @@
     "card1Value": "Ebook numérique",
     "card2Label": "Langues",
     "card2Value": "English • Français • Español"
-    "credibility": "Rédigé par un agent de football licencié et conseiller du secteur."
+   
   },
   "panel": {
     "kicker": "Bientôt disponible",
