@@ -1,1 +1,6 @@
-
+{
+"signup.title":"Crear cuenta",
+"signup.heading":"Crear cuenta",
+"signup.button":"Registrarse",
+"signup.success":"Registro exitoso. Revisa tu correo electrónico."
+}
