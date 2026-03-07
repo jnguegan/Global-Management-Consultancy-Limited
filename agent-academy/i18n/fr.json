@@ -15,4 +15,23 @@
   "login.noAccount": "Vous n'avez pas de compte ?",
   "login.signupLink": "Créez-en un ici",
   "login.success": "Connexion réussie. Redirection..."
+},
+{
+  "dashboard.pageTitle": "Tableau de bord — Football Agent Exam Prep Platform",
+  "dashboard.brand": "Football Agent Exam Prep Platform",
+  "dashboard.kicker": "Tableau de bord",
+  "dashboard.heading": "Bienvenue sur votre tableau de bord d'apprentissage",
+  "dashboard.lead": "Poursuivez vos révisions, accédez à vos thèmes d'étude et suivez vos progrès dans la préparation à l'examen.",
+  "dashboard.studyTitle": "Commencer à étudier",
+  "dashboard.studyText": "Parcourez vos thèmes d'étude et commencez à répondre aux questions pratiques.",
+  "dashboard.studyButton": "Voir les thèmes d'étude",
+  "dashboard.accountTitle": "Compte",
+  "dashboard.logout": "Se déconnecter",
+  "dashboard.progressTitle": "Vue d'ensemble des progrès",
+  "dashboard.progressText": "Vos statistiques et vos performances par thème apparaîtront ici dès que vous commencerez à répondre aux questions.",
+  "dashboard.stat1Label": "Questions répondues",
+  "dashboard.stat2Label": "Score moyen",
+  "dashboard.stat3Label": "Thèmes terminés",
+  "dashboard.note": "Cette plateforme est une ressource indépendante de préparation à l'examen et n'est ni affiliée à la FIFA ni approuvée par elle.",
+  "dashboard.loggedInAs": "Connecté en tant que :"
 }
