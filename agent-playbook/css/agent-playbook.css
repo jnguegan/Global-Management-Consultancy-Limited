@@ -441,3 +441,11 @@ select {
     width: 100%;
   }
 }
+
+.credibility {
+  margin: 6px 0 14px;
+  font-size: 0.95rem;
+  color: #b8c3d3;
+}
+
+
