@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Regulation Viewer</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      background: #0b1220;
+      color: #fff;
+      font-family: Arial, sans-serif;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 16px;
+      background: #121a2b;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .title {
+      font-weight: 700;
+    }
+
+    .actions a {
+      color: #d4af37;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    iframe {
+      width: 100%;
+      height: calc(100% - 52px);
+      border: 0;
+      display: block;
+      background: #fff;
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="title" id="viewerTitle">Regulation Viewer</div>
+    <div class="actions">
+      <a id="openRawPdf" href="#" target="_blank" rel="noopener noreferrer">Open PDF directly</a>
+    </div>
+  </div>
+
+  <iframe id="pdfFrame" src=""></iframe>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const doc = params.get("doc") || "ffar-2025.pdf";
+    const page = params.get("page") || "1";
+
+    const pdfPath = `/agent-academy/regulations/${doc}`;
+    const iframeSrc = `${pdfPath}#page=${page}`;
+
+    document.getElementById("pdfFrame").src = iframeSrc;
+    document.getElementById("openRawPdf").href = iframeSrc;
+    document.getElementById("viewerTitle").textContent = `${doc} — page ${page}`;
+  </script>
+</body>
+</html>
