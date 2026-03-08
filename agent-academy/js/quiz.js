@@ -397,29 +397,41 @@ async function submitAnswer() {
   if (el.feedbackText) {
     let ref = "";
 
-    if (q.reference_label || q.reference_article) {
-      const refWord =
-        state.lang === "fr" ? "Référence" :
-        state.lang === "es" ? "Referencia" :
-        "Reference";
+  if (q.reference_label || q.reference_article) {
+  const refWord =
+    state.lang === "fr" ? "Référence" :
+    state.lang === "es" ? "Referencia" :
+    "Reference";
 
-      const safeLabel = escapeHtml(q.reference_label || "");
-      const safeArticle = escapeHtml(q.reference_article || "");
+  const safeLabel = escapeHtml(q.reference_label || "");
+  const safeArticle = escapeHtml(q.reference_article || "");
+  const safeTitle = escapeHtml(q.reference_title || "");
+  const safePreview = escapeHtml(getReferencePreview(q));
 
-      let link = q.reference_url;
+  let link = q.reference_url;
 
-// If no URL is stored but the reference is FFAR,
-// generate the link automatically using the article map
-if (!link && q.reference_label === "FFAR" && typeof getFFARArticleLink === "function") {
-  link = getFFARArticleLink(q.reference_article);
+  if (!link && q.reference_label === "FFAR" && typeof getFFARArticleLink === "function") {
+    link = getFFARArticleLink(q.reference_article);
+  }
+
+  const tooltipHtml = (safeTitle || safePreview)
+    ? `
+      <span class="ref-tooltip">
+        ${safeTitle ? `<strong>${getReferenceTitleLabel()}:</strong> ${safeTitle}<br>` : ""}
+        ${safePreview ? `<strong>${getReferencePreviewLabel()}:</strong> ${safePreview}` : ""}
+      </span>
+    `
+    : "";
+
+  const articleHtml = link
+    ? `<span class="ref-link-wrap">
+         <a href="${link}" target="_blank" rel="noopener noreferrer" class="ref-link">${safeArticle}</a>
+         ${tooltipHtml}
+       </span>`
+    : safeArticle;
+
+  ref = `<br><br>${refWord}: ${safeLabel} — ${articleHtml}.`;
 }
-
-const articleHtml = link
-  ? `<a href="${link}" target="_blank" rel="noopener noreferrer">${safeArticle}</a>`
-  : safeArticle;
-
-ref = `<br><br>${refWord}: ${safeLabel} — ${articleHtml}.`;
-    }
 
     el.feedbackText.innerHTML =
       escapeHtml(q._cachedExplanation || (isCorrect ? "Well done." : "Review this point carefully.")) + ref;
@@ -500,6 +512,27 @@ function getLocalizedValue(obj, baseField) {
   if (state.lang === "es") return obj[`${baseField}_es`] || obj[`${baseField}_en`] || "";
 
   return obj[`${baseField}_en`] || "";
+}
+
+function getReferencePreview(q) {
+  if (!q) return "";
+
+  if (state.lang === "fr") return q.reference_preview_fr || q.reference_preview_en || "";
+  if (state.lang === "es") return q.reference_preview_es || q.reference_preview_en || "";
+
+  return q.reference_preview_en || "";
+}
+
+function getReferenceTitleLabel() {
+  if (state.lang === "fr") return "Titre";
+  if (state.lang === "es") return "Título";
+  return "Title";
+}
+
+function getReferencePreviewLabel() {
+  if (state.lang === "fr") return "Aperçu";
+  if (state.lang === "es") return "Resumen";
+  return "Preview";
 }
 
 function escapeHtml(str) {
