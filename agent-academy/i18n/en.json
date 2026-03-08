@@ -2,9 +2,8 @@
 "signup.title":"Create Account",
 "signup.heading":"Create Account",
 "signup.button":"Sign Up",
-"signup.success":"Signup successful. Check your email."
-},
-{
+"signup.success":"Signup successful. Check your email.",
+
   "login.pageTitle": "Login — Football Agent Exam Prep Platform",
   "login.badge": "Football Agent Exam Prep Platform",
   "login.heading": "Login",
