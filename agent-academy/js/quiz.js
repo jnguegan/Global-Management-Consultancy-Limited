@@ -395,8 +395,8 @@ async function submitAnswer() {
       ref = ` Reference: ${[q.reference_label, q.reference_article].filter(Boolean).join(" — ")}.`;
     }
 
-    el.feedbackText.textContent =
-      (q._cachedExplanation || (isCorrect ? "Well done." : "Review this point carefully.")) + ref;
+    el.feedbackText.innerHTML =
+  escapeHtml(q._cachedExplanation || (isCorrect ? "Well done." : "Review this point carefully.")) + ref;
   }
 }
 
