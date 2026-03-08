@@ -402,11 +402,19 @@ async function submitAnswer() {
       const safeLabel = escapeHtml(q.reference_label || "");
       const safeArticle = escapeHtml(q.reference_article || "");
 
-      const articleHtml = q.reference_url
-        ? `<a href="${q.reference_url}" target="_blank" rel="noopener noreferrer">${safeArticle}</a>`
-        : safeArticle;
+      let link = q.reference_url;
 
-      ref = `<br><br>${refWord}: ${safeLabel} — ${articleHtml}.`;
+// If no URL is stored but the reference is FFAR,
+// generate the link automatically using the article map
+if (!link && q.reference_label === "FFAR" && typeof getFFARArticleLink === "function") {
+  link = getFFARArticleLink(q.reference_article);
+}
+
+const articleHtml = link
+  ? `<a href="${link}" target="_blank" rel="noopener noreferrer">${safeArticle}</a>`
+  : safeArticle;
+
+ref = `<br><br>${refWord}: ${safeLabel} — ${articleHtml}.`;
     }
 
     el.feedbackText.innerHTML =
