@@ -370,10 +370,16 @@
       </div>
     </div>
   </div>
-
+<script>
+function setLang(lang){
+  localStorage.setItem("lang", lang);
+  location.reload();
+}
+</script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="/agent-academy/js/supabase-client.js"></script>
 <script src="/agent-academy/js/guard.js"></script>
 <script src="/agent-academy/js/quiz.js"></script>
+  
 </body>
 </html>
