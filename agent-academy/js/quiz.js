@@ -1,8 +1,5 @@
 // /js/quiz.js
 
-// ---------------------------------------------
-// CONFIG / CLIENT
-// ---------------------------------------------
 const supabase =
   window.supabaseClient ||
   window.supabase ||
@@ -13,9 +10,6 @@ if (!supabase) {
   console.error("Supabase client not found. Check supabase-client.js");
 }
 
-// ---------------------------------------------
-// STATE
-// ---------------------------------------------
 const state = {
   lang: localStorage.getItem("lang") || "en",
   topicSlug: null,
@@ -29,49 +23,34 @@ const state = {
   submitted: false
 };
 
-// ---------------------------------------------
-// DOM
-// Required IDs in quiz.html
-// ---------------------------------------------
 const el = {
   loader: document.getElementById("loader"),
   emptyState: document.getElementById("emptyState"),
-
   topicTitle: document.getElementById("topicTitle"),
   topicBadge: document.getElementById("topicBadge"),
   quizHeading: document.getElementById("quizHeading"),
   quizSubheading: document.getElementById("quizSubheading"),
-
   quizContent: document.getElementById("quizContent"),
   resultsView: document.getElementById("resultsView"),
-
   progressLabel: document.getElementById("progressLabel"),
   progressPercent: document.getElementById("progressPercent"),
   progressBar: document.getElementById("progressBar"),
-
   questionNumber: document.getElementById("questionNumber"),
   questionText: document.getElementById("questionText"),
   optionsContainer: document.getElementById("optionsContainer"),
-
   feedbackBox: document.getElementById("feedbackBox"),
   feedbackTitle: document.getElementById("feedbackTitle"),
   feedbackText: document.getElementById("feedbackText"),
-
   scoreLive: document.getElementById("scoreLive"),
   totalLive: document.getElementById("totalLive"),
-
   submitBtn: document.getElementById("submitBtn"),
   nextBtn: document.getElementById("nextBtn"),
   retryBtn: document.getElementById("retryBtn"),
-
   finalScore: document.getElementById("finalScore"),
   correctAnswers: document.getElementById("correctAnswers"),
   totalQuestions: document.getElementById("totalQuestions")
 };
 
-// ---------------------------------------------
-// INIT
-// ---------------------------------------------
 document.addEventListener("DOMContentLoaded", init);
 
 async function init() {
@@ -115,15 +94,13 @@ function bindEvents() {
   if (el.retryBtn) el.retryBtn.addEventListener("click", retryQuiz);
 }
 
-// ---------------------------------------------
-// LOAD TOPIC
-// ---------------------------------------------
 async function loadTopic() {
   const { data, error } = await supabase
     .from("topics")
     .select(`
       id,
       slug,
+      is_active,
       name_en,
       name_fr,
       name_es,
@@ -153,9 +130,6 @@ async function loadTopic() {
   }
 }
 
-// ---------------------------------------------
-// LOAD QUESTIONS + OPTIONS
-// ---------------------------------------------
 async function loadQuestions() {
   const { data, error } = await supabase
     .from("questions")
@@ -163,6 +137,7 @@ async function loadQuestions() {
       id,
       topic_id,
       is_active,
+      created_at,
       question_text_en,
       question_text_fr,
       question_text_es,
@@ -203,22 +178,14 @@ async function loadQuestions() {
   if (el.totalLive) el.totalLive.textContent = String(state.questions.length);
 }
 
-// ---------------------------------------------
-// CREATE QUIZ ATTEMPT
-// ---------------------------------------------
 async function createQuizAttempt() {
   const {
     data: { user },
     error: userError
   } = await supabase.auth.getUser();
 
-  if (userError) {
-    throw userError;
-  }
-
-  if (!user) {
-    throw new Error("User not logged in.");
-  }
+  if (userError) throw userError;
+  if (!user) throw new Error("User not logged in.");
 
   state.startedAt = new Date().toISOString();
 
@@ -236,16 +203,11 @@ async function createQuizAttempt() {
     .select("id")
     .single();
 
-  if (error) {
-    throw error;
-  }
+  if (error) throw error;
 
   state.attemptId = data.id;
 }
 
-// ---------------------------------------------
-// RENDER QUESTION
-// ---------------------------------------------
 function renderQuestion() {
   const q = state.questions[state.currentIndex];
   if (!q) return;
@@ -272,7 +234,6 @@ function renderQuestion() {
 
   if (el.progressPercent) el.progressPercent.textContent = `${percent}%`;
   if (el.progressBar) el.progressBar.style.width = `${percent}%`;
-
   if (el.scoreLive) el.scoreLive.textContent = String(state.score);
 
   if (el.feedbackBox) el.feedbackBox.className = "feedback";
@@ -312,9 +273,6 @@ function renderQuestion() {
   q._cachedExplanation = questionExplanation || "";
 }
 
-// ---------------------------------------------
-// SELECT OPTION
-// ---------------------------------------------
 function selectOption(optionId) {
   state.selectedOptionId = optionId;
 
@@ -326,9 +284,6 @@ function selectOption(optionId) {
   });
 }
 
-// ---------------------------------------------
-// SUBMIT ANSWER
-// ---------------------------------------------
 async function submitAnswer() {
   if (!state.selectedOptionId) {
     alert("Please select an answer first.");
@@ -392,9 +347,6 @@ async function submitAnswer() {
   }
 }
 
-// ---------------------------------------------
-// SAVE EACH ANSWER
-// ---------------------------------------------
 async function saveQuizAnswer(payload) {
   const { error } = await supabase.from("quiz_answers").insert({
     attempt_id: payload.attempt_id,
@@ -409,9 +361,6 @@ async function saveQuizAnswer(payload) {
   }
 }
 
-// ---------------------------------------------
-// NEXT / FINISH
-// ---------------------------------------------
 async function goNext() {
   if (!state.submitted) return;
 
@@ -457,18 +406,12 @@ async function finishQuiz() {
   if (el.totalQuestions) el.totalQuestions.textContent = String(total);
 }
 
-// ---------------------------------------------
-// RETRY
-// ---------------------------------------------
 function retryQuiz() {
   const url = new URL(window.location.href);
   url.searchParams.set("topic", state.topicSlug);
   window.location.href = url.toString();
 }
 
-// ---------------------------------------------
-// HELPERS
-// ---------------------------------------------
 function getLocalizedValue(obj, baseField) {
   if (!obj) return "";
 
