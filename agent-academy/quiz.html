@@ -263,20 +263,30 @@
 </head>
 <body>
   <div class="container">
-    <div class="topbar">
-      <div>
-        <div class="brand">Football Agent Exam Prep</div>
-        <div class="muted" id="topicTitle">Loading topic...</div>
-      </div>
+   <div class="topbar">
+  <div>
+    <div class="brand">Football Agent Exam Prep</div>
+    <div class="muted" id="topicTitle">Loading topic...</div>
+  </div>
 
-      <a
-        class="btn btn-secondary"
-        href="/agent-academy/topics.html"
-        style="text-decoration:none; display:inline-flex; align-items:center;"
-      >
-        ← Back to topics
-      </a>
+  <div style="display:flex; align-items:center; gap:18px;">
+
+    <div style="font-weight:600;">
+      <span onclick="setLang('en')" style="cursor:pointer;">EN</span> |
+      <span onclick="setLang('fr')" style="cursor:pointer;">FR</span> |
+      <span onclick="setLang('es')" style="cursor:pointer;">ES</span>
     </div>
+
+    <a
+      class="btn btn-secondary"
+      href="/agent-academy/topics.html"
+      style="text-decoration:none; display:inline-flex; align-items:center;"
+    >
+      ← Back to topics
+    </a>
+
+  </div>
+</div>
 
     <div class="card" id="quizCard">
       <div id="loader" class="loader">Loading quiz questions...</div>
