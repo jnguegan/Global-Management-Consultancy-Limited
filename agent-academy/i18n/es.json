@@ -14,9 +14,7 @@
   "login.button": "Entrar",
   "login.noAccount": "¿No tienes una cuenta?",
   "login.signupLink": "Créala aquí",
-  "login.success": "Acceso correcto. Redirigiendo..."
-},
-{
+  "login.success": "Acceso correcto. Redirigiendo...",
   "dashboard.pageTitle": "Panel — Football Agent Exam Prep Platform",
   "dashboard.brand": "Football Agent Exam Prep Platform",
   "dashboard.kicker": "Panel",
