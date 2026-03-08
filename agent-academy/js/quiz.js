@@ -1,12 +1,9 @@
-// /js/quiz.js
-
-const supabase =
+const db =
   window.supabaseClient ||
-  window.supabase ||
   window.sb ||
   null;
 
-if (!supabase) {
+if (!db) {
   console.error("Supabase client not found. Check supabase-client.js");
 }
 
@@ -55,7 +52,7 @@ document.addEventListener("DOMContentLoaded", init);
 
 async function init() {
   try {
-    if (!supabase) {
+    if (!db) {
       showEmpty("Supabase client not found.");
       return;
     }
@@ -95,7 +92,7 @@ function bindEvents() {
 }
 
 async function loadTopic() {
-  const { data, error } = await supabase
+  const { data, error } = await db
     .from("topics")
     .select(`
       id,
@@ -131,7 +128,7 @@ async function loadTopic() {
 }
 
 async function loadQuestions() {
-  const { data, error } = await supabase
+  const { data, error } = await db
     .from("questions")
     .select(`
       id,
@@ -182,14 +179,14 @@ async function createQuizAttempt() {
   const {
     data: { user },
     error: userError
-  } = await supabase.auth.getUser();
+  } = await db.auth.getUser();
 
   if (userError) throw userError;
   if (!user) throw new Error("User not logged in.");
 
   state.startedAt = new Date().toISOString();
 
-  const { data, error } = await supabase
+  const { data, error } = await db
     .from("quiz_attempts")
     .insert({
       user_id: user.id,
@@ -348,7 +345,7 @@ async function submitAnswer() {
 }
 
 async function saveQuizAnswer(payload) {
-  const { error } = await supabase.from("quiz_answers").insert({
+  const { error } = await db.from("quiz_answers").insert({
     attempt_id: payload.attempt_id,
     question_id: payload.question_id,
     selected_option_id: payload.selected_option_id,
@@ -380,7 +377,7 @@ async function finishQuiz() {
   const percentage = total > 0 ? Math.round((state.score / total) * 100) : 0;
   const finishedAt = new Date().toISOString();
 
-  const { error } = await supabase
+  const { error } = await db
     .from("quiz_attempts")
     .update({
       finished_at: finishedAt,
