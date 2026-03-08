@@ -147,6 +147,7 @@ async function loadQuestions() {
       explanation_es,
       reference_label,
       reference_article,
+      reference_url,
       difficulty
     `)
     .eq("topic_id", state.topic.id)
@@ -391,12 +392,25 @@ async function submitAnswer() {
 
   if (el.feedbackText) {
     let ref = "";
+
     if (q.reference_label || q.reference_article) {
-      ref = ` Reference: ${[q.reference_label, q.reference_article].filter(Boolean).join(" — ")}.`;
+      const refWord =
+        state.lang === "fr" ? "Référence" :
+        state.lang === "es" ? "Referencia" :
+        "Reference";
+
+      const safeLabel = escapeHtml(q.reference_label || "");
+      const safeArticle = escapeHtml(q.reference_article || "");
+
+      const articleHtml = q.reference_url
+        ? `<a href="${q.reference_url}" target="_blank" rel="noopener noreferrer">${safeArticle}</a>`
+        : safeArticle;
+
+      ref = `<br><br>${refWord}: ${safeLabel} — ${articleHtml}.`;
     }
 
     el.feedbackText.innerHTML =
-  escapeHtml(q._cachedExplanation || (isCorrect ? "Well done." : "Review this point carefully.")) + ref;
+      escapeHtml(q._cachedExplanation || (isCorrect ? "Well done." : "Review this point carefully.")) + ref;
   }
 }
 
