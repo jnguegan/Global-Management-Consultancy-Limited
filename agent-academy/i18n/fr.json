@@ -31,5 +31,20 @@
   "dashboard.stat2Label": "Score moyen",
   "dashboard.stat3Label": "Thèmes terminés",
   "dashboard.note": "Cette plateforme est une ressource indépendante de préparation à l'examen et n'est ni affiliée à la FIFA ni approuvée par elle.",
-  "dashboard.loggedInAs": "Connecté en tant que :"
+  "dashboard.loggedInAs": "Connecté en tant que :",
+  
+  "topics.pageTitle": "Thèmes d'étude — Football Agent Exam Prep Platform",
+  "topics.brand": "Football Agent Exam Prep Platform",
+  "topics.backToDashboard": "Retour au tableau de bord",
+  "topics.kicker": "Thèmes d'étude",
+  "topics.heading": "Choisissez un thème pour commencer vos révisions",
+  "topics.lead": "Sélectionnez un domaine de révision et commencez à pratiquer avec des questions de type examen en plusieurs langues.",
+  "topics.totalTopicsLabel": "Nombre total de thèmes :",
+  "topics.loading": "Chargement des thèmes d'étude...",
+  "topics.empty": "Aucun thème disponible pour le moment.",
+  "topics.loggedInAs": "Connecté en tant que :",
+  "topics.startButton": "Commencer ce thème",
+  "topics.metaLabel": "Identifiant du thème :",
+  "topics.noDescription": "Description du thème à venir.",
+  "topics.error": "Impossible de charger les thèmes pour le moment."
 }
