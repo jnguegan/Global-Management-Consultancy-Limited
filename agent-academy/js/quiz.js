@@ -1,1 +1,513 @@
+// /js/quiz.js
 
+// ---------------------------------------------
+// CONFIG / CLIENT
+// ---------------------------------------------
+const supabase =
+  window.supabaseClient ||
+  window.supabase ||
+  window.sb ||
+  null;
+
+if (!supabase) {
+  console.error("Supabase client not found. Check supabase-client.js");
+}
+
+// ---------------------------------------------
+// STATE
+// ---------------------------------------------
+const state = {
+  lang: localStorage.getItem("lang") || "en",
+  topicSlug: null,
+  topic: null,
+  questions: [],
+  currentIndex: 0,
+  selectedOptionId: null,
+  score: 0,
+  attemptId: null,
+  startedAt: null,
+  submitted: false
+};
+
+// ---------------------------------------------
+// DOM
+// Required IDs in quiz.html
+// ---------------------------------------------
+const el = {
+  loader: document.getElementById("loader"),
+  emptyState: document.getElementById("emptyState"),
+
+  topicTitle: document.getElementById("topicTitle"),
+  topicBadge: document.getElementById("topicBadge"),
+  quizHeading: document.getElementById("quizHeading"),
+  quizSubheading: document.getElementById("quizSubheading"),
+
+  quizContent: document.getElementById("quizContent"),
+  resultsView: document.getElementById("resultsView"),
+
+  progressLabel: document.getElementById("progressLabel"),
+  progressPercent: document.getElementById("progressPercent"),
+  progressBar: document.getElementById("progressBar"),
+
+  questionNumber: document.getElementById("questionNumber"),
+  questionText: document.getElementById("questionText"),
+  optionsContainer: document.getElementById("optionsContainer"),
+
+  feedbackBox: document.getElementById("feedbackBox"),
+  feedbackTitle: document.getElementById("feedbackTitle"),
+  feedbackText: document.getElementById("feedbackText"),
+
+  scoreLive: document.getElementById("scoreLive"),
+  totalLive: document.getElementById("totalLive"),
+
+  submitBtn: document.getElementById("submitBtn"),
+  nextBtn: document.getElementById("nextBtn"),
+  retryBtn: document.getElementById("retryBtn"),
+
+  finalScore: document.getElementById("finalScore"),
+  correctAnswers: document.getElementById("correctAnswers"),
+  totalQuestions: document.getElementById("totalQuestions")
+};
+
+// ---------------------------------------------
+// INIT
+// ---------------------------------------------
+document.addEventListener("DOMContentLoaded", init);
+
+async function init() {
+  try {
+    if (!supabase) {
+      showEmpty("Supabase client not found.");
+      return;
+    }
+
+    const params = new URLSearchParams(window.location.search);
+    state.topicSlug = params.get("topic");
+
+    if (!state.topicSlug) {
+      showEmpty("Missing topic in URL. Example: quiz.html?topic=ffar-basics");
+      return;
+    }
+
+    bindEvents();
+    await loadTopic();
+    await loadQuestions();
+
+    if (!state.questions.length) {
+      showEmpty("No questions found for this topic yet.");
+      return;
+    }
+
+    await createQuizAttempt();
+
+    hideLoader();
+    showQuiz();
+    renderQuestion();
+  } catch (error) {
+    console.error("Quiz init error:", error);
+    showEmpty("Unable to load quiz.");
+  }
+}
+
+function bindEvents() {
+  if (el.submitBtn) el.submitBtn.addEventListener("click", submitAnswer);
+  if (el.nextBtn) el.nextBtn.addEventListener("click", goNext);
+  if (el.retryBtn) el.retryBtn.addEventListener("click", retryQuiz);
+}
+
+// ---------------------------------------------
+// LOAD TOPIC
+// ---------------------------------------------
+async function loadTopic() {
+  const { data, error } = await supabase
+    .from("topics")
+    .select(`
+      id,
+      slug,
+      name_en,
+      name_fr,
+      name_es,
+      description_en,
+      description_fr,
+      description_es
+    `)
+    .eq("slug", state.topicSlug)
+    .eq("is_active", true)
+    .single();
+
+  if (error || !data) {
+    throw error || new Error("Topic not found");
+  }
+
+  state.topic = data;
+
+  const topicName = getLocalizedValue(data, "name");
+  const topicDescription = getLocalizedValue(data, "description");
+
+  if (el.topicTitle) el.topicTitle.textContent = topicName || "Topic";
+  if (el.topicBadge) el.topicBadge.textContent = data.slug;
+  if (el.quizHeading) el.quizHeading.textContent = topicName || "Quiz";
+  if (el.quizSubheading) {
+    el.quizSubheading.textContent =
+      topicDescription || "Answer each question and track your score.";
+  }
+}
+
+// ---------------------------------------------
+// LOAD QUESTIONS + OPTIONS
+// ---------------------------------------------
+async function loadQuestions() {
+  const { data, error } = await supabase
+    .from("questions")
+    .select(`
+      id,
+      topic_id,
+      is_active,
+      question_text_en,
+      question_text_fr,
+      question_text_es,
+      explanation_en,
+      explanation_fr,
+      explanation_es,
+      reference_label,
+      reference_article,
+      difficulty,
+      question_options (
+        id,
+        question_id,
+        is_correct,
+        sort_order,
+        option_text_en,
+        option_text_fr,
+        option_text_es
+      )
+    `)
+    .eq("topic_id", state.topic.id)
+    .eq("is_active", true);
+
+  if (error) {
+    throw error;
+  }
+
+  state.questions = (data || []).map((q) => {
+    const options = [...(q.question_options || [])].sort(
+      (a, b) => (a.sort_order || 0) - (b.sort_order || 0)
+    );
+
+    return {
+      ...q,
+      options
+    };
+  });
+
+  if (el.totalLive) el.totalLive.textContent = String(state.questions.length);
+}
+
+// ---------------------------------------------
+// CREATE QUIZ ATTEMPT
+// ---------------------------------------------
+async function createQuizAttempt() {
+  const {
+    data: { user },
+    error: userError
+  } = await supabase.auth.getUser();
+
+  if (userError) {
+    throw userError;
+  }
+
+  if (!user) {
+    throw new Error("User not logged in.");
+  }
+
+  state.startedAt = new Date().toISOString();
+
+  const { data, error } = await supabase
+    .from("quiz_attempts")
+    .insert({
+      user_id: user.id,
+      topic_id: state.topic.id,
+      started_at: state.startedAt,
+      score: 0,
+      total_questions: state.questions.length,
+      percentage: 0,
+      mode: "practice"
+    })
+    .select("id")
+    .single();
+
+  if (error) {
+    throw error;
+  }
+
+  state.attemptId = data.id;
+}
+
+// ---------------------------------------------
+// RENDER QUESTION
+// ---------------------------------------------
+function renderQuestion() {
+  const q = state.questions[state.currentIndex];
+  if (!q) return;
+
+  state.selectedOptionId = null;
+  state.submitted = false;
+
+  const questionText = getLocalizedValue(q, "question_text");
+  const questionExplanation = getLocalizedValue(q, "explanation");
+
+  if (el.questionNumber) {
+    el.questionNumber.textContent = `Question ${state.currentIndex + 1}`;
+  }
+
+  if (el.questionText) {
+    el.questionText.textContent = questionText || "";
+  }
+
+  if (el.progressLabel) {
+    el.progressLabel.textContent = `Question ${state.currentIndex + 1} of ${state.questions.length}`;
+  }
+
+  const percent = Math.round((state.currentIndex / state.questions.length) * 100);
+
+  if (el.progressPercent) el.progressPercent.textContent = `${percent}%`;
+  if (el.progressBar) el.progressBar.style.width = `${percent}%`;
+
+  if (el.scoreLive) el.scoreLive.textContent = String(state.score);
+
+  if (el.feedbackBox) el.feedbackBox.className = "feedback";
+  if (el.feedbackTitle) el.feedbackTitle.textContent = "";
+  if (el.feedbackText) el.feedbackText.textContent = "";
+
+  if (el.submitBtn) el.submitBtn.disabled = false;
+  if (el.nextBtn) {
+    el.nextBtn.disabled = true;
+    el.nextBtn.textContent =
+      state.currentIndex === state.questions.length - 1
+        ? "Finish quiz"
+        : "Next question";
+  }
+
+  if (el.optionsContainer) {
+    el.optionsContainer.innerHTML = "";
+
+    q.options.forEach((option, index) => {
+      const optionText = getLocalizedValue(option, "option_text");
+
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "option";
+      btn.dataset.optionId = option.id;
+      btn.innerHTML = `<strong>${String.fromCharCode(65 + index)}.</strong> ${escapeHtml(optionText || "")}`;
+
+      btn.addEventListener("click", () => {
+        if (state.submitted) return;
+        selectOption(option.id);
+      });
+
+      el.optionsContainer.appendChild(btn);
+    });
+  }
+
+  q._cachedExplanation = questionExplanation || "";
+}
+
+// ---------------------------------------------
+// SELECT OPTION
+// ---------------------------------------------
+function selectOption(optionId) {
+  state.selectedOptionId = optionId;
+
+  document.querySelectorAll(".option").forEach((button) => {
+    button.classList.remove("selected");
+    if (Number(button.dataset.optionId) === Number(optionId)) {
+      button.classList.add("selected");
+    }
+  });
+}
+
+// ---------------------------------------------
+// SUBMIT ANSWER
+// ---------------------------------------------
+async function submitAnswer() {
+  if (!state.selectedOptionId) {
+    alert("Please select an answer first.");
+    return;
+  }
+
+  const q = state.questions[state.currentIndex];
+  const selected = q.options.find(
+    (opt) => Number(opt.id) === Number(state.selectedOptionId)
+  );
+  const correct = q.options.find((opt) => opt.is_correct === true);
+  const isCorrect = !!selected?.is_correct;
+
+  state.submitted = true;
+
+  if (isCorrect) {
+    state.score += 1;
+    if (el.scoreLive) el.scoreLive.textContent = String(state.score);
+  }
+
+  await saveQuizAnswer({
+    attempt_id: state.attemptId,
+    question_id: q.id,
+    selected_option_id: selected.id,
+    is_correct: isCorrect
+  });
+
+  document.querySelectorAll(".option").forEach((button) => {
+    button.disabled = true;
+
+    const currentId = Number(button.dataset.optionId);
+
+    if (correct && currentId === Number(correct.id)) {
+      button.classList.add("correct");
+    }
+
+    if (selected && currentId === Number(selected.id) && !isCorrect) {
+      button.classList.add("incorrect");
+    }
+  });
+
+  if (el.submitBtn) el.submitBtn.disabled = true;
+  if (el.nextBtn) el.nextBtn.disabled = false;
+
+  if (el.feedbackBox) {
+    el.feedbackBox.className = `feedback show ${isCorrect ? "correct" : "incorrect"}`;
+  }
+
+  if (el.feedbackTitle) {
+    el.feedbackTitle.textContent = isCorrect ? "Correct" : "Incorrect";
+  }
+
+  if (el.feedbackText) {
+    let ref = "";
+    if (q.reference_label || q.reference_article) {
+      ref = ` Reference: ${[q.reference_label, q.reference_article].filter(Boolean).join(" — ")}.`;
+    }
+
+    el.feedbackText.textContent =
+      (q._cachedExplanation || (isCorrect ? "Well done." : "Review this point carefully.")) + ref;
+  }
+}
+
+// ---------------------------------------------
+// SAVE EACH ANSWER
+// ---------------------------------------------
+async function saveQuizAnswer(payload) {
+  const { error } = await supabase.from("quiz_answers").insert({
+    attempt_id: payload.attempt_id,
+    question_id: payload.question_id,
+    selected_option_id: payload.selected_option_id,
+    is_correct: payload.is_correct,
+    answered_at: new Date().toISOString()
+  });
+
+  if (error) {
+    console.error("Failed to save quiz answer:", error);
+  }
+}
+
+// ---------------------------------------------
+// NEXT / FINISH
+// ---------------------------------------------
+async function goNext() {
+  if (!state.submitted) return;
+
+  const isLast = state.currentIndex === state.questions.length - 1;
+
+  if (isLast) {
+    await finishQuiz();
+    return;
+  }
+
+  state.currentIndex += 1;
+  renderQuestion();
+}
+
+async function finishQuiz() {
+  const total = state.questions.length;
+  const percentage = total > 0 ? Math.round((state.score / total) * 100) : 0;
+  const finishedAt = new Date().toISOString();
+
+  const { error } = await supabase
+    .from("quiz_attempts")
+    .update({
+      finished_at: finishedAt,
+      score: state.score,
+      total_questions: total,
+      percentage,
+      mode: "practice"
+    })
+    .eq("id", state.attemptId);
+
+  if (error) {
+    console.error("Failed to update quiz attempt:", error);
+  }
+
+  if (el.progressPercent) el.progressPercent.textContent = "100%";
+  if (el.progressBar) el.progressBar.style.width = "100%";
+
+  hideQuiz();
+  showResults();
+
+  if (el.finalScore) el.finalScore.textContent = `${percentage}%`;
+  if (el.correctAnswers) el.correctAnswers.textContent = String(state.score);
+  if (el.totalQuestions) el.totalQuestions.textContent = String(total);
+}
+
+// ---------------------------------------------
+// RETRY
+// ---------------------------------------------
+function retryQuiz() {
+  const url = new URL(window.location.href);
+  url.searchParams.set("topic", state.topicSlug);
+  window.location.href = url.toString();
+}
+
+// ---------------------------------------------
+// HELPERS
+// ---------------------------------------------
+function getLocalizedValue(obj, baseField) {
+  if (!obj) return "";
+
+  if (state.lang === "fr") return obj[`${baseField}_fr`] || obj[`${baseField}_en`] || "";
+  if (state.lang === "es") return obj[`${baseField}_es`] || obj[`${baseField}_en`] || "";
+
+  return obj[`${baseField}_en`] || "";
+}
+
+function escapeHtml(str) {
+  const div = document.createElement("div");
+  div.textContent = str || "";
+  return div.innerHTML;
+}
+
+function hideLoader() {
+  if (el.loader) el.loader.classList.add("hidden");
+}
+
+function showQuiz() {
+  if (el.quizContent) el.quizContent.classList.remove("hidden");
+  if (el.resultsView) el.resultsView.classList.remove("show");
+  if (el.emptyState) el.emptyState.classList.add("hidden");
+}
+
+function hideQuiz() {
+  if (el.quizContent) el.quizContent.classList.add("hidden");
+}
+
+function showResults() {
+  if (el.resultsView) el.resultsView.classList.add("show");
+}
+
+function showEmpty(message) {
+  hideLoader();
+  hideQuiz();
+  if (el.resultsView) el.resultsView.classList.remove("show");
+  if (el.emptyState) {
+    el.emptyState.classList.remove("hidden");
+    el.emptyState.textContent = message;
+  }
+}
