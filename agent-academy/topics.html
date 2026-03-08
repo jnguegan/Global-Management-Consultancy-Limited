@@ -1,1 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Study Topics — Football Agent Exam Prep Platform</title>
 
+  <style>
+    :root{
+      --bg:#0b1220;
+      --panel:#162033;
+      --panel-soft:#1c2940;
+      --text:#f5f7fb;
+      --muted:#b7c0cf;
+      --gold:#d4af37;
+      --gold-dark:#b8921f;
+      --border:rgba(255,255,255,0.08);
+      --danger:#ff7b7b;
+    }
+
+    *{box-sizing:border-box}
+
+    body{
+      margin:0;
+      font-family:Arial,Helvetica,sans-serif;
+      background:
+        radial-gradient(circle at top right, rgba(212,175,55,0.12), transparent 25%),
+        radial-gradient(circle at left, rgba(87,124,255,0.10), transparent 22%),
+        var(--bg);
+      color:var(--text);
+      min-height:100vh;
+    }
+
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+      padding:18px 24px;
+      border-bottom:1px solid var(--border);
+      background:rgba(11,18,32,0.82);
+      backdrop-filter:blur(12px);
+      position:sticky;
+      top:0;
+      z-index:20;
+    }
+
+    .brand{
+      font-weight:700;
+      letter-spacing:0.02em;
+    }
+
+    .topbar-right{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+
+    .lang-switch{
+      display:flex;
+      gap:8px;
+    }
+
+    .lang-switch button{
+      border:1px solid var(--border);
+      background:transparent;
+      color:var(--text);
+      padding:8px 12px;
+      border-radius:999px;
+      cursor:pointer;
+      transition:0.2s ease;
+    }
+
+    .lang-switch button:hover,
+    .lang-switch button.active{
+      background:var(--gold);
+      color:#07111f;
+      border-color:var(--gold);
+    }
+
+    .top-link{
+      color:var(--text);
+      text-decoration:none;
+      border:1px solid var(--border);
+      padding:8px 12px;
+      border-radius:999px;
+      font-size:0.95rem;
+    }
+
+    .top-link:hover{
+      background:rgba(255,255,255,0.05);
+    }
+
+    .container{
+      max-width:1200px;
+      margin:0 auto;
+      padding:36px 20px 56px;
+    }
+
+    .eyebrow{
+      margin:0 0 10px;
+      color:var(--gold);
+      text-transform:uppercase;
+      letter-spacing:0.14em;
+      font-size:0.78rem;
+      font-weight:700;
+    }
+
+    h1{
+      margin:0 0 10px;
+      font-size:2.2rem;
+      line-height:1.15;
+    }
+
+    .lead{
+      margin:0 0 28px;
+      color:var(--muted);
+      max-width:760px;
+      line-height:1.6;
+    }
+
+    .info-bar{
+      display:flex;
+      justify-content:space-between;
+      gap:16px;
+      align-items:center;
+      flex-wrap:wrap;
+      margin-bottom:26px;
+      padding:16px 18px;
+      border:1px solid var(--border);
+      background:var(--panel-soft);
+      border-radius:16px;
+    }
+
+    .info-bar p{
+      margin:0;
+      color:var(--muted);
+    }
+
+    .topics-grid{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:20px;
+    }
+
+    .topic-card{
+      background:var(--panel);
+      border:1px solid var(--border);
+      border-radius:18px;
+      padding:22px;
+      box-shadow:0 12px 30px rgba(0,0,0,0.22);
+      display:flex;
+      flex-direction:column;
+      min-height:240px;
+    }
+
+    .topic-title{
+      margin:0 0 10px;
+      font-size:1.2rem;
+      line-height:1.3;
+    }
+
+    .topic-description{
+      margin:0 0 18px;
+      color:var(--muted);
+      line-height:1.6;
+      flex:1;
+    }
+
+    .topic-meta{
+      margin:0 0 16px;
+      color:var(--muted);
+      font-size:0.92rem;
+    }
+
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:46px;
+      padding:0 18px;
+      border-radius:12px;
+      border:none;
+      background:var(--gold);
+      color:#07111f;
+      font-weight:700;
+      text-decoration:none;
+      cursor:pointer;
+      transition:0.2s ease;
+    }
+
+    .btn:hover{
+      background:var(--gold-dark);
+    }
+
+    .loading,
+    .empty,
+    .error{
+      margin-top:18px;
+      padding:18px;
+      border-radius:14px;
+      border:1px solid var(--border);
+      background:var(--panel-soft);
+      color:var(--muted);
+    }
+
+    .error{
+      color:var(--danger);
+    }
+
+    @media (max-width: 1000px){
+      .topics-grid{
+        grid-template-columns:repeat(2,1fr);
+      }
+    }
+
+    @media (max-width: 700px){
+      .topics-grid{
+        grid-template-columns:1fr;
+      }
+
+      h1{
+        font-size:1.9rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="topbar">
+    <div class="brand" data-i18n="topics.brand">Football Agent Exam Prep Platform</div>
+
+    <div class="topbar-right">
+      <a class="top-link" href="/agent-academy/dashboard.html" data-i18n="topics.backToDashboard">Back to dashboard</a>
+
+      <div class="lang-switch">
+        <button type="button" data-lang="en" class="active">EN</button>
+        <button type="button" data-lang="fr">FR</button>
+        <button type="button" data-lang="es">ES</button>
+      </div>
+    </div>
+  </div>
+
+  <main class="container">
+    <p class="eyebrow" data-i18n="topics.kicker">Study topics</p>
+    <h1 data-i18n="topics.heading">Choose a topic to start revising</h1>
+    <p class="lead" data-i18n="topics.lead">
+      Select a revision area and begin practising exam-style questions with multilingual support.
+    </p>
+
+    <div class="info-bar">
+      <p id="userEmail"></p>
+      <p><span data-i18n="topics.totalTopicsLabel">Total topics:</span> <strong id="topicsCount">0</strong></p>
+    </div>
+
+    <div id="loadingState" class="loading" data-i18n="topics.loading">Loading study topics...</div>
+    <div id="errorState" class="error" style="display:none;"></div>
+    <div id="emptyState" class="empty" style="display:none;" data-i18n="topics.empty">No topics available yet.</div>
+
+    <div id="topicsGrid" class="topics-grid" style="display:none;"></div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/agent-academy/js/supabase-client.js"></script>
+
+  <script>
+    let translations = {};
+    let currentLang = localStorage.getItem("academyLang") || "en";
+    let currentUser = null;
+    let topicsData = [];
+
+    async function loadLang(lang){
+      try{
+        const res = await fetch(`/agent-academy/i18n/${lang}.json`, { cache: "no-store" });
+
+        if (!res.ok) {
+          throw new Error(`Could not load language file: ${lang}`);
+        }
+
+        translations = await res.json();
+
+        document.querySelectorAll("[data-i18n]").forEach((el) => {
+          const key = el.getAttribute("data-i18n");
+          if (translations[key]) {
+            el.textContent = translations[key];
+          }
+        });
+
+        document.documentElement.lang = lang;
+        currentLang = lang;
+        localStorage.setItem("academyLang", lang);
+
+        document.querySelectorAll(".lang-switch button").forEach((btn) => {
+          btn.classList.toggle("active", btn.dataset.lang === lang);
+        });
+
+        if (translations["topics.pageTitle"]) {
+          document.title = translations["topics.pageTitle"];
+        }
+
+        renderUserEmail();
+        renderTopics();
+      } catch (error) {
+        console.error("Language load error:", error);
+      }
+    }
+
+    function t(key, fallback){
+      return translations[key] || fallback;
+    }
+
+    function renderUserEmail(){
+      const emailLine = document.getElementById("userEmail");
+      if (currentUser && emailLine) {
+        emailLine.textContent = `${t("topics.loggedInAs", "Logged in as:")} ${currentUser.email}`;
+      }
+    }
+
+    function getTopicName(topic){
+      return topic[`name_${currentLang}`] || topic.name_en || "";
+    }
+
+    function getTopicDescription(topic){
+      return topic[`description_${currentLang}`] || topic.description_en || "";
+    }
+
+    function renderTopics(){
+      const grid = document.getElementById("topicsGrid");
+      const loadingState = document.getElementById("loadingState");
+      const emptyState = document.getElementById("emptyState");
+      const count = document.getElementById("topicsCount");
+
+      grid.innerHTML = "";
+      count.textContent = topicsData.length;
+
+      if (topicsData.length === 0) {
+        loadingState.style.display = "none";
+        grid.style.display = "none";
+        emptyState.style.display = "block";
+        return;
+      }
+
+      topicsData.forEach((topic) => {
+        const card = document.createElement("article");
+        card.className = "topic-card";
+
+        card.innerHTML = `
+          <h2 class="topic-title">${getTopicName(topic)}</h2>
+          <p class="topic-description">${getTopicDescription(topic) || t("topics.noDescription", "Topic description coming soon.")}</p>
+          <p class="topic-meta">${t("topics.metaLabel", "Topic slug:")} ${topic.slug}</p>
+          <a class="btn" href="/agent-academy/quiz.html?topic=${encodeURIComponent(topic.slug)}">${t("topics.startButton", "Start topic")}</a>
+        `;
+
+        grid.appendChild(card);
+      });
+
+      loadingState.style.display = "none";
+      emptyState.style.display = "none";
+      grid.style.display = "grid";
+    }
+
+    async function checkUser(){
+      const { data: { session }, error } = await supabaseClient.auth.getSession();
+
+      if (error || !session || !session.user) {
+        window.location.href = "/agent-academy/login.html";
+        return false;
+      }
+
+      currentUser = session.user;
+      renderUserEmail();
+      return true;
+    }
+
+    async function loadTopics(){
+      const loadingState = document.getElementById("loadingState");
+      const errorState = document.getElementById("errorState");
+
+      try{
+        const { data, error } = await supabaseClient
+          .from("topics")
+          .select("*")
+          .eq("is_active", true)
+          .order("sort_order", { ascending: true });
+
+        if (error) {
+          throw error;
+        }
+
+        topicsData = data || [];
+        renderTopics();
+      } catch (error) {
+        console.error("Topics load error:", error);
+        loadingState.style.display = "none";
+        errorState.style.display = "block";
+        errorState.textContent = t("topics.error", "Unable to load topics right now.");
+      }
+    }
+
+    document.querySelectorAll(".lang-switch button").forEach((btn) => {
+      btn.addEventListener("click", async () => {
+        await loadLang(btn.dataset.lang);
+      });
+    });
+
+    window.addEventListener("DOMContentLoaded", async () => {
+      const ok = await checkUser();
+      if (!ok) return;
+
+      await loadLang(currentLang);
+      await loadTopics();
+    });
+  </script>
+</body>
+</html>
