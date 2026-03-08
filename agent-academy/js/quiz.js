@@ -143,26 +143,59 @@ async function loadQuestions() {
       explanation_es,
       reference_label,
       reference_article,
-      difficulty,
-      question_options (
-        id,
-        question_id,
-        is_correct,
-        sort_order,
-        option_text_en,
-        option_text_fr,
-        option_text_es
-      )
+      difficulty
     `)
     .eq("topic_id", state.topic.id)
     .eq("is_active", true);
+
+  console.log("QUESTIONS DATA:", data);
+  console.log("QUESTIONS ERROR:", error);
 
   if (error) {
     throw error;
   }
 
-  state.questions = (data || []).map((q) => {
-    const options = [...(q.question_options || [])].sort(
+  const questions = data || [];
+
+  if (!questions.length) {
+    state.questions = [];
+    if (el.totalLive) el.totalLive.textContent = "0";
+    return;
+  }
+
+  const questionIds = questions.map((q) => q.id);
+
+  const { data: optionsData, error: optionsError } = await db
+    .from("question_options")
+    .select(`
+      id,
+      question_id,
+      is_correct,
+      sort_order,
+      option_text_en,
+      option_text_fr,
+      option_text_es
+    `)
+    .in("question_id", questionIds);
+
+  console.log("OPTIONS DATA:", optionsData);
+  console.log("OPTIONS ERROR:", optionsError);
+
+  if (optionsError) {
+    throw optionsError;
+  }
+
+  const optionsByQuestionId = {};
+
+  (optionsData || []).forEach((option) => {
+    if (!optionsByQuestionId[option.question_id]) {
+      optionsByQuestionId[option.question_id] = [];
+    }
+    optionsByQuestionId[option.question_id].push(option);
+  });
+
+  state.questions = questions.map((q) => {
+    const options = (optionsByQuestionId[q.id] || []).sort(
       (a, b) => (a.sort_order || 0) - (b.sort_order || 0)
     );
 
