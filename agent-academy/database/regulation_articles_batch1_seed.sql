@@ -4,7 +4,6 @@
 
 insert into regulation_articles (
   regulation_id,
-  article_type,
   article_number,
   article_key,
   page_number,
@@ -20,7 +19,6 @@ insert into regulation_articles (
 values
 (
   (select id from regulations where code = 'FFAR'),
-  'article',
   '1',
   'article-1',
   9,
@@ -35,7 +33,6 @@ values
 ),
 (
   (select id from regulations where code = 'FFAR'),
-  'article',
   '2',
   'article-2',
   9,
@@ -50,7 +47,6 @@ values
 ),
 (
   (select id from regulations where code = 'FFAR'),
-  'article',
   '3',
   'article-3',
   10,
@@ -65,7 +61,6 @@ values
 ),
 (
   (select id from regulations where code = 'FFAR'),
-  'article',
   '4',
   'article-4',
   12,
@@ -80,7 +75,6 @@ values
 ),
 (
   (select id from regulations where code = 'FFAR'),
-  'article',
   '5',
   'article-5',
   12,
@@ -95,7 +89,6 @@ values
 ),
 (
   (select id from regulations where code = 'FFAR'),
-  'article',
   '6',
   'article-6',
   13,
@@ -110,7 +103,6 @@ values
 ),
 (
   (select id from regulations where code = 'FFAR'),
-  'article',
   '7',
   'article-7',
   13,
@@ -125,7 +117,6 @@ values
 ),
 (
   (select id from regulations where code = 'FFAR'),
-  'article',
   '8',
   'article-8',
   13,
@@ -140,7 +131,6 @@ values
 ),
 (
   (select id from regulations where code = 'FFAR'),
-  'article',
   '9',
   'article-9',
   14,
@@ -155,7 +145,6 @@ values
 ),
 (
   (select id from regulations where code = 'FFAR'),
-  'article',
   '10',
   'article-10',
   14,
@@ -170,7 +159,6 @@ values
 ),
 (
   (select id from regulations where code = 'FFAR'),
-  'article',
   '11',
   'article-11',
   16,
@@ -185,7 +173,6 @@ values
 ),
 (
   (select id from regulations where code = 'FFAR'),
-  'article',
   '12',
   'article-12',
   16,
@@ -200,7 +187,6 @@ values
 ),
 (
   (select id from regulations where code = 'FFAR'),
-  'article',
   '13',
   'article-13',
   18,
@@ -215,7 +201,6 @@ values
 ),
 (
   (select id from regulations where code = 'FFAR'),
-  'article',
   '14',
   'article-14',
   19,
@@ -230,7 +215,6 @@ values
 ),
 (
   (select id from regulations where code = 'FFAR'),
-  'article',
   '15',
   'article-15',
   21,
@@ -245,7 +229,6 @@ values
 ),
 (
   (select id from regulations where code = 'RSTP'),
-  'article',
   '1',
   'article-1',
   13,
@@ -260,7 +243,6 @@ values
 ),
 (
   (select id from regulations where code = 'RSTP'),
-  'article',
   '2',
   'article-2',
   16,
@@ -275,7 +257,6 @@ values
 ),
 (
   (select id from regulations where code = 'RSTP'),
-  'article',
   '3',
   'article-3',
   16,
@@ -290,7 +271,6 @@ values
 ),
 (
   (select id from regulations where code = 'RSTP'),
-  'article',
   '4',
   'article-4',
   16,
@@ -305,7 +285,6 @@ values
 ),
 (
   (select id from regulations where code = 'RSTP'),
-  'article',
   '5',
   'article-5',
   18,
@@ -320,7 +299,6 @@ values
 ),
 (
   (select id from regulations where code = 'RSTP'),
-  'article',
   '5bis',
   'article-5bis',
   19,
@@ -335,7 +313,6 @@ values
 ),
 (
   (select id from regulations where code = 'RSTP'),
-  'article',
   '6',
   'article-6',
   20,
@@ -350,7 +327,6 @@ values
 ),
 (
   (select id from regulations where code = 'RSTP'),
-  'article',
   '7',
   'article-7',
   21,
@@ -365,7 +341,6 @@ values
 ),
 (
   (select id from regulations where code = 'RSTP'),
-  'article',
   '8',
   'article-8',
   22,
@@ -380,7 +355,6 @@ values
 ),
 (
   (select id from regulations where code = 'RSTP'),
-  'article',
   '9',
   'article-9',
   22,
@@ -395,7 +369,6 @@ values
 ),
 (
   (select id from regulations where code = 'RSTP'),
-  'article',
   '10',
   'article-10',
   23,
@@ -410,7 +383,6 @@ values
 ),
 (
   (select id from regulations where code = 'RSTP'),
-  'article',
   '11',
   'article-11',
   25,
@@ -425,7 +397,6 @@ values
 ),
 (
   (select id from regulations where code = 'RSTP'),
-  'article',
   '12',
   'article-12',
   25,
@@ -440,7 +411,6 @@ values
 ),
 (
   (select id from regulations where code = 'RSTP'),
-  'article',
   '12bis',
   'article-12bis',
   25,
@@ -455,7 +425,6 @@ values
 ),
 (
   (select id from regulations where code = 'RSTP'),
-  'article',
   '13',
   'article-13',
   28,
@@ -470,7 +439,6 @@ values
 ),
 (
   (select id from regulations where code = 'STATUTES'),
-  'article',
   '1',
   'article-1',
   11,
@@ -485,7 +453,6 @@ values
 ),
 (
   (select id from regulations where code = 'STATUTES'),
-  'article',
   '2',
   'article-2',
   11,
@@ -500,7 +467,6 @@ values
 ),
 (
   (select id from regulations where code = 'STATUTES'),
-  'article',
   '3',
   'article-3',
   12,
@@ -515,7 +481,6 @@ values
 ),
 (
   (select id from regulations where code = 'STATUTES'),
-  'article',
   '4',
   'article-4',
   12,
@@ -530,7 +495,6 @@ values
 ),
 (
   (select id from regulations where code = 'STATUTES'),
-  'article',
   '5',
   'article-5',
   12,
@@ -545,7 +509,6 @@ values
 ),
 (
   (select id from regulations where code = 'STATUTES'),
-  'article',
   '6',
   'article-6',
   12,
@@ -560,7 +523,6 @@ values
 ),
 (
   (select id from regulations where code = 'STATUTES'),
-  'article',
   '7',
   'article-7',
   13,
@@ -575,7 +537,6 @@ values
 ),
 (
   (select id from regulations where code = 'STATUTES'),
-  'article',
   '8',
   'article-8',
   13,
@@ -590,7 +551,6 @@ values
 ),
 (
   (select id from regulations where code = 'FCE'),
-  'article',
   '1',
   'article-1',
   10,
@@ -605,7 +565,6 @@ values
 ),
 (
   (select id from regulations where code = 'FCE'),
-  'article',
   '2',
   'article-2',
   10,
@@ -620,7 +579,6 @@ values
 ),
 (
   (select id from regulations where code = 'FCE'),
-  'article',
   '3',
   'article-3',
   10,
@@ -635,7 +593,6 @@ values
 ),
 (
   (select id from regulations where code = 'FCE'),
-  'article',
   '4',
   'article-4',
   10,
@@ -650,7 +607,6 @@ values
 ),
 (
   (select id from regulations where code = 'FCE'),
-  'article',
   '5',
   'article-5',
   11,
@@ -665,7 +621,6 @@ values
 ),
 (
   (select id from regulations where code = 'FCE'),
-  'article',
   '6',
   'article-6',
   13,
@@ -680,7 +635,6 @@ values
 ),
 (
   (select id from regulations where code = 'FDC'),
-  'article',
   '1',
   'article-1',
   7,
@@ -695,7 +649,6 @@ values
 ),
 (
   (select id from regulations where code = 'FDC'),
-  'article',
   '2',
   'article-2',
   7,
@@ -710,7 +663,6 @@ values
 ),
 (
   (select id from regulations where code = 'FDC'),
-  'article',
   '3',
   'article-3',
   7,
@@ -725,7 +677,6 @@ values
 ),
 (
   (select id from regulations where code = 'FDC'),
-  'article',
   '4',
   'article-4',
   7,
@@ -740,7 +691,6 @@ values
 ),
 (
   (select id from regulations where code = 'GUARDIANS'),
-  'section',
   'Principle 1',
   'principle-1',
   12,
@@ -755,7 +705,6 @@ values
 ),
 (
   (select id from regulations where code = 'GUARDIANS'),
-  'section',
   'Step 1',
   'step-1',
   19,
