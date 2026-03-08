@@ -148,6 +148,10 @@ async function loadQuestions() {
       reference_label,
       reference_article,
       reference_url,
+      reference_title,
+      reference_preview_en,
+      reference_preview_fr,
+      reference_preview_es,
       difficulty
     `)
     .eq("topic_id", state.topic.id)
