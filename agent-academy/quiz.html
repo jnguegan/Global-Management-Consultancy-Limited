@@ -421,7 +421,7 @@
       try {
         const { data: topic, error: topicError } = await supabase
           .from("topics")
-          .select("id, slug, title, description")
+          .select("id, slug, name_en, name_fr, name_es, description_en, description_fr, description_es")
           .eq("slug", state.topicSlug)
           .single();
 
