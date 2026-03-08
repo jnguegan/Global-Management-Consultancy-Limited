@@ -31,5 +31,21 @@
   "dashboard.stat2Label": "Average score",
   "dashboard.stat3Label": "Topics completed",
   "dashboard.note": "This platform is an independent exam preparation resource and is not affiliated with or endorsed by FIFA.",
-  "dashboard.loggedInAs": "Logged in as:"
+  "dashboard.loggedInAs": "Logged in as:",
+
+  "topics.pageTitle": "Study Topics — Football Agent Exam Prep Platform",
+  "topics.brand": "Football Agent Exam Prep Platform",
+  "topics.backToDashboard": "Back to dashboard",
+  "topics.kicker": "Study topics",
+  "topics.heading": "Choose a topic to start revising",
+  "topics.lead": "Select a revision area and begin practising exam-style questions with multilingual support.",
+  "topics.totalTopicsLabel": "Total topics:",
+  "topics.loading": "Loading study topics...",
+  "topics.empty": "No topics available yet.",
+  "topics.loggedInAs": "Logged in as:",
+  "topics.startButton": "Start topic",
+  "topics.metaLabel": "Topic slug:",
+  "topics.noDescription": "Topic description coming soon.",
+  "topics.error": "Unable to load topics right now."
 }
+
