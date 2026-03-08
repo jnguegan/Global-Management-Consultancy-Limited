@@ -17,7 +17,8 @@ const state = {
   score: 0,
   attemptId: null,
   startedAt: null,
-  submitted: false
+  submitted: false,
+  canSaveAttempt: false
 };
 
 const el = {
@@ -74,11 +75,11 @@ async function init() {
       return;
     }
 
-    await createQuizAttempt();
-
     hideLoader();
     showQuiz();
     renderQuestion();
+
+    await tryCreateQuizAttempt();
   } catch (error) {
     console.error("Quiz init error:", error);
     showEmpty("Unable to load quiz.");
@@ -108,6 +109,9 @@ async function loadTopic() {
     .eq("slug", state.topicSlug)
     .eq("is_active", true)
     .single();
+
+  console.log("TOPIC DATA:", data);
+  console.log("TOPIC ERROR:", error);
 
   if (error || !data) {
     throw error || new Error("Topic not found");
@@ -208,34 +212,51 @@ async function loadQuestions() {
   if (el.totalLive) el.totalLive.textContent = String(state.questions.length);
 }
 
-async function createQuizAttempt() {
-  const {
-    data: { user },
-    error: userError
-  } = await db.auth.getUser();
+async function tryCreateQuizAttempt() {
+  try {
+    const {
+      data: { user },
+      error: userError
+    } = await db.auth.getUser();
 
-  if (userError) throw userError;
-  if (!user) throw new Error("User not logged in.");
+    console.log("AUTH USER:", user);
+    console.log("AUTH ERROR:", userError);
 
-  state.startedAt = new Date().toISOString();
+    if (userError || !user) {
+      state.canSaveAttempt = false;
+      return;
+    }
 
-  const { data, error } = await db
-    .from("quiz_attempts")
-    .insert({
-      user_id: user.id,
-      topic_id: state.topic.id,
-      started_at: state.startedAt,
-      score: 0,
-      total_questions: state.questions.length,
-      percentage: 0,
-      mode: "practice"
-    })
-    .select("id")
-    .single();
+    state.startedAt = new Date().toISOString();
 
-  if (error) throw error;
+    const { data, error } = await db
+      .from("quiz_attempts")
+      .insert({
+        user_id: user.id,
+        topic_id: state.topic.id,
+        started_at: state.startedAt,
+        score: 0,
+        total_questions: state.questions.length,
+        percentage: 0,
+        mode: "practice"
+      })
+      .select("id")
+      .single();
 
-  state.attemptId = data.id;
+    console.log("ATTEMPT DATA:", data);
+    console.log("ATTEMPT ERROR:", error);
+
+    if (error || !data) {
+      state.canSaveAttempt = false;
+      return;
+    }
+
+    state.attemptId = data.id;
+    state.canSaveAttempt = true;
+  } catch (err) {
+    console.error("tryCreateQuizAttempt error:", err);
+    state.canSaveAttempt = false;
+  }
 }
 
 function renderQuestion() {
@@ -334,12 +355,14 @@ async function submitAnswer() {
     if (el.scoreLive) el.scoreLive.textContent = String(state.score);
   }
 
-  await saveQuizAnswer({
-    attempt_id: state.attemptId,
-    question_id: q.id,
-    selected_option_id: selected.id,
-    is_correct: isCorrect
-  });
+  if (state.canSaveAttempt && state.attemptId) {
+    await saveQuizAnswer({
+      attempt_id: state.attemptId,
+      question_id: q.id,
+      selected_option_id: selected.id,
+      is_correct: isCorrect
+    });
+  }
 
   document.querySelectorAll(".option").forEach((button) => {
     button.disabled = true;
@@ -410,19 +433,21 @@ async function finishQuiz() {
   const percentage = total > 0 ? Math.round((state.score / total) * 100) : 0;
   const finishedAt = new Date().toISOString();
 
-  const { error } = await db
-    .from("quiz_attempts")
-    .update({
-      finished_at: finishedAt,
-      score: state.score,
-      total_questions: total,
-      percentage,
-      mode: "practice"
-    })
-    .eq("id", state.attemptId);
+  if (state.canSaveAttempt && state.attemptId) {
+    const { error } = await db
+      .from("quiz_attempts")
+      .update({
+        finished_at: finishedAt,
+        score: state.score,
+        total_questions: total,
+        percentage,
+        mode: "practice"
+      })
+      .eq("id", state.attemptId);
 
-  if (error) {
-    console.error("Failed to update quiz attempt:", error);
+    if (error) {
+      console.error("Failed to update quiz attempt:", error);
+    }
   }
 
   if (el.progressPercent) el.progressPercent.textContent = "100%";
