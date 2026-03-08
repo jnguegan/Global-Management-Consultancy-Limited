@@ -410,6 +410,11 @@ async function submitAnswer() {
 
   let link = q.reference_url;
 
+// If no URL but we have a page number, generate the viewer link
+if (!link && q.reference_page) {
+  link = `/agent-academy/regulation-viewer.html?doc=ffar-2025.pdf&page=${q.reference_page}`;
+}
+
   if (!link && q.reference_label === "FFAR" && typeof getFFARArticleLink === "function") {
     link = getFFARArticleLink(q.reference_article);
   }
