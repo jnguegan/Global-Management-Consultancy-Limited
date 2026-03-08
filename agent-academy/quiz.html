@@ -1,1 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quiz — Football Agent Exam Prep</title>
+  <style>
+    :root {
+      --bg: #0b1220;
+      --panel: #121a2b;
+      --panel-2: #182236;
+      --text: #e8eefc;
+      --muted: #9fb0d1;
+      --brand: #d4af37;
+      --brand-dark: #a88312;
+      --success: #16a34a;
+      --danger: #dc2626;
+      --border: rgba(255,255,255,0.08);
+      --radius: 18px;
+      --shadow: 0 14px 40px rgba(0,0,0,0.35);
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, Arial, sans-serif;
+      background: linear-gradient(180deg, #08101d 0%, #0d1628 100%);
+      color: var(--text);
+    }
+
+    .container {
+      width: min(960px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 28px 0 60px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      font-weight: 800;
+      letter-spacing: 0.3px;
+      color: var(--brand);
+    }
+
+    .muted { color: var(--muted); }
+
+    .card {
+      background: rgba(18,26,43,0.92);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 24px;
+      backdrop-filter: blur(10px);
+    }
+
+    .quiz-header {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 18px;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(212,175,55,0.12);
+      border: 1px solid rgba(212,175,55,0.22);
+      color: var(--brand);
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .progress-wrap {
+      margin: 18px 0 22px;
+    }
+
+    .progress-meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .progress {
+      height: 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.08);
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--brand) 0%, #f4d67b 100%);
+      transition: width 0.25s ease;
+    }
+
+    h1, h2, h3, p { margin-top: 0; }
+
+    .question-number {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--brand);
+      margin-bottom: 10px;
+    }
+
+    .question-text {
+      font-size: 1.25rem;
+      line-height: 1.5;
+      margin-bottom: 20px;
+    }
+
+    .options {
+      display: grid;
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+
+    .option {
+      width: 100%;
+      text-align: left;
+      border: 1px solid var(--border);
+      background: var(--panel-2);
+      color: var(--text);
+      border-radius: 16px;
+      padding: 16px 18px;
+      cursor: pointer;
+      transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+      font-size: 15px;
+      line-height: 1.45;
+    }
+
+    .option:hover {
+      transform: translateY(-1px);
+      border-color: rgba(212,175,55,0.35);
+    }
+
+    .option.selected {
+      border-color: var(--brand);
+      background: rgba(212,175,55,0.12);
+    }
+
+    .option.correct {
+      border-color: rgba(22,163,74,0.8);
+      background: rgba(22,163,74,0.15);
+    }
+
+    .option.incorrect {
+      border-color: rgba(220,38,38,0.8);
+      background: rgba(220,38,38,0.15);
+    }
+
+    .actions {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      border: 0;
+      border-radius: 14px;
+      padding: 14px 18px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.15s ease, opacity 0.15s ease;
+    }
+
+    .btn:hover { transform: translateY(-1px); }
+    .btn:disabled { opacity: 0.55; cursor: not-allowed; transform: none; }
+
+    .btn-primary {
+      background: linear-gradient(90deg, var(--brand) 0%, #efcf70 100%);
+      color: #121212;
+    }
+
+    .btn-secondary {
+      background: rgba(255,255,255,0.08);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .feedback {
+      margin-top: 18px;
+      padding: 16px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      display: none;
+    }
+
+    .feedback.show { display: block; }
+    .feedback.correct { border-color: rgba(22,163,74,0.35); }
+    .feedback.incorrect { border-color: rgba(220,38,38,0.35); }
+
+    .results {
+      display: none;
+    }
+
+    .results.show {
+      display: block;
+    }
+
+    .score-box {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 14px;
+      margin: 20px 0 24px;
+    }
+
+    .stat {
+      background: var(--panel-2);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
+    }
+
+    .stat .label {
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+
+    .stat .value {
+      font-size: 1.7rem;
+      font-weight: 800;
+    }
+
+    .hidden { display: none !important; }
+
+    .loader, .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--muted);
+    }
+
+    @media (max-width: 720px) {
+      .quiz-header {
+        grid-template-columns: 1fr;
+      }
+      .question-text {
+        font-size: 1.1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="topbar">
+      <div>
+        <div class="brand">Football Agent Exam Prep</div>
+        <div class="muted" id="topicTitle">Loading topic...</div>
+      </div>
+      <a class="btn btn-secondary" href="/agent-academy/topics.html" style="text-decoration:none; display:inline-flex; align-items:center;">← Back to topics</a>
+    </div>
+
+    <div class="card" id="quizCard">
+      <div id="loader" class="loader">Loading quiz questions...</div>
+
+      <div id="quizContent" class="hidden">
+        <div class="quiz-header">
+          <div>
+            <div class="pill" id="topicBadge">Topic</div>
+            <h1 id="quizHeading" style="margin-top:14px; margin-bottom:8px;">Quiz</h1>
+            <p class="muted" id="quizSubheading">Answer each question and track your score live.</p>
+          </div>
+          <div class="pill"><span id="scoreLive">0</span>/<span id="totalLive">0</span> Correct</div>
+        </div>
+
+        <div class="progress-wrap">
+          <div class="progress-meta">
+            <span id="progressLabel">Question 1 of 1</span>
+            <span id="progressPercent">0%</span>
+          </div>
+          <div class="progress"><div class="progress-bar" id="progressBar"></div></div>
+        </div>
+
+        <div id="questionBlock">
+          <div class="question-number" id="questionNumber">Question 1</div>
+          <div class="question-text" id="questionText"></div>
+          <div class="options" id="optionsContainer"></div>
+
+          <div class="feedback" id="feedbackBox">
+            <strong id="feedbackTitle"></strong>
+            <p id="feedbackText" style="margin:10px 0 0;"></p>
+          </div>
+
+          <div class="actions">
+            <button class="btn btn-secondary" id="submitBtn">Submit answer</button>
+            <button class="btn btn-primary" id="nextBtn" disabled>Next question</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="resultsView" class="results">
+        <div class="pill">Quiz completed</div>
+        <h2 style="margin-top:14px;">Your results</h2>
+        <p class="muted">Your attempt has been scored and can now be saved into Supabase.</p>
+
+        <div class="score-box">
+          <div class="stat">
+            <div class="label">Score</div>
+            <div class="value" id="finalScore">0%</div>
+          </div>
+          <div class="stat">
+            <div class="label">Correct answers</div>
+            <div class="value" id="correctAnswers">0</div>
+          </div>
+          <div class="stat">
+            <div class="label">Total questions</div>
+            <div class="value" id="totalQuestions">0</div>
+          </div>
+        </div>
+
+        <div class="actions">
+          <a href="/agent-academy/topics.html" class="btn btn-secondary" style="text-decoration:none; display:inline-flex; align-items:center;">Choose another topic</a>
+          <button class="btn btn-primary" id="retryBtn">Retry this topic</button>
+        </div>
+      </div>
+
+      <div id="emptyState" class="empty-state hidden">
+        No questions found for this topic yet.
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    // --------------------------------------------------
+    // 1. CONFIGURE SUPABASE
+    // --------------------------------------------------
+    const SUPABASE_URL = "YOUR_SUPABASE_URL";
+    const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    // --------------------------------------------------
+    // 2. STATE
+    // --------------------------------------------------
+    const state = {
+      topicSlug: null,
+      topic: null,
+      questions: [],
+      currentIndex: 0,
+      selectedOptionId: null,
+      answers: [],
+      score: 0,
+      submitted: false,
+      startTime: Date.now()
+    };
+
+    // --------------------------------------------------
+    // 3. DOM
+    // --------------------------------------------------
+    const loader = document.getElementById("loader");
+    const quizContent = document.getElementById("quizContent");
+    const emptyState = document.getElementById("emptyState");
+    const resultsView = document.getElementById("resultsView");
+    const topicTitle = document.getElementById("topicTitle");
+    const topicBadge = document.getElementById("topicBadge");
+    const quizHeading = document.getElementById("quizHeading");
+    const questionNumber = document.getElementById("questionNumber");
+    const questionText = document.getElementById("questionText");
+    const optionsContainer = document.getElementById("optionsContainer");
+    const submitBtn = document.getElementById("submitBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const retryBtn = document.getElementById("retryBtn");
+    const scoreLive = document.getElementById("scoreLive");
+    const totalLive = document.getElementById("totalLive");
+    const progressLabel = document.getElementById("progressLabel");
+    const progressPercent = document.getElementById("progressPercent");
+    const progressBar = document.getElementById("progressBar");
+    const feedbackBox = document.getElementById("feedbackBox");
+    const feedbackTitle = document.getElementById("feedbackTitle");
+    const feedbackText = document.getElementById("feedbackText");
+    const finalScore = document.getElementById("finalScore");
+    const correctAnswers = document.getElementById("correctAnswers");
+    const totalQuestions = document.getElementById("totalQuestions");
+
+    // --------------------------------------------------
+    // 4. INIT
+    // --------------------------------------------------
+    document.addEventListener("DOMContentLoaded", init);
+    submitBtn.addEventListener("click", submitCurrentAnswer);
+    nextBtn.addEventListener("click", handleNext);
+    retryBtn.addEventListener("click", resetQuiz);
+
+    async function init() {
+      const params = new URLSearchParams(window.location.search);
+      state.topicSlug = params.get("topic");
+
+      if (!state.topicSlug) {
+        showEmpty("Missing topic slug in URL. Example: quiz.html?topic=ffar-basics");
+        return;
+      }
+
+      await loadTopicAndQuestions();
+    }
+
+    // --------------------------------------------------
+    // 5. LOAD DATA
+    // --------------------------------------------------
+    async function loadTopicAndQuestions() {
+      loader.classList.remove("hidden");
+      emptyState.classList.add("hidden");
+
+      try {
+        const { data: topic, error: topicError } = await supabase
+          .from("topics")
+          .select("id, slug, title, description")
+          .eq("slug", state.topicSlug)
+          .single();
+
+        if (topicError || !topic) throw topicError || new Error("Topic not found");
+        state.topic = topic;
+
+        const { data: questions, error: questionsError } = await supabase
+          .from("questions")
+          .select(`
+            id,
+            topic_id,
+            question_text,
+            explanation,
+            sort_order,
+            options (
+              id,
+              option_text,
+              is_correct,
+              sort_order
+            )
+          `)
+          .eq("topic_id", topic.id)
+          .order("sort_order", { ascending: true });
+
+        if (questionsError) throw questionsError;
+
+        const normalized = (questions || []).map(q => ({
+          ...q,
+          options: (q.options || []).sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0))
+        }));
+
+        state.questions = normalized;
+
+        loader.classList.add("hidden");
+
+        if (!state.questions.length) {
+          showEmpty("No questions found for this topic yet.");
+          return;
+        }
+
+        setupQuizHeader();
+        quizContent.classList.remove("hidden");
+        renderQuestion();
+      } catch (err) {
+        console.error(err);
+        showEmpty("Unable to load quiz questions. Please check your Supabase config and table names.");
+      }
+    }
+
+    function setupQuizHeader() {
+      topicTitle.textContent = state.topic.title;
+      topicBadge.textContent = state.topic.slug;
+      quizHeading.textContent = state.topic.title;
+      totalLive.textContent = state.questions.length;
+    }
+
+    // --------------------------------------------------
+    // 6. RENDER QUESTION
+    // --------------------------------------------------
+    function renderQuestion() {
+      const q = state.questions[state.currentIndex];
+      state.selectedOptionId = null;
+      state.submitted = false;
+
+      questionNumber.textContent = `Question ${state.currentIndex + 1}`;
+      questionText.textContent = q.question_text;
+      progressLabel.textContent = `Question ${state.currentIndex + 1} of ${state.questions.length}`;
+
+      const percent = Math.round((state.currentIndex / state.questions.length) * 100);
+      progressPercent.textContent = `${percent}%`;
+      progressBar.style.width = `${percent}%`;
+
+      feedbackBox.className = "feedback";
+      feedbackTitle.textContent = "";
+      feedbackText.textContent = "";
+
+      submitBtn.disabled = false;
+      nextBtn.disabled = true;
+      nextBtn.textContent = state.currentIndex === state.questions.length - 1 ? "Finish quiz" : "Next question";
+
+      optionsContainer.innerHTML = "";
+      q.options.forEach((option, idx) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "option";
+        btn.dataset.optionId = option.id;
+        btn.innerHTML = `<strong>${String.fromCharCode(65 + idx)}.</strong> ${escapeHtml(option.option_text)}`;
+        btn.addEventListener("click", () => selectOption(option.id));
+        optionsContainer.appendChild(btn);
+      });
+    }
+
+    function selectOption(optionId) {
+      if (state.submitted) return;
+      state.selectedOptionId = optionId;
+
+      document.querySelectorAll(".option").forEach(el => {
+        el.classList.toggle("selected", Number(el.dataset.optionId) === Number(optionId));
+      });
+    }
+
+    // --------------------------------------------------
+    // 7. SUBMIT ANSWER
+    // --------------------------------------------------
+    function submitCurrentAnswer() {
+      if (!state.selectedOptionId) {
+        alert("Please select an answer first.");
+        return;
+      }
+
+      const q = state.questions[state.currentIndex];
+      const selected = q.options.find(opt => Number(opt.id) === Number(state.selectedOptionId));
+      const correct = q.options.find(opt => opt.is_correct);
+      const isCorrect = !!selected?.is_correct;
+
+      state.submitted = true;
+      submitBtn.disabled = true;
+      nextBtn.disabled = false;
+
+      if (isCorrect) state.score += 1;
+      scoreLive.textContent = state.score;
+
+      state.answers.push({
+        question_id: q.id,
+        selected_option_id: selected.id,
+        correct_option_id: correct?.id || null,
+        is_correct: isCorrect
+      });
+
+      document.querySelectorAll(".option").forEach(el => {
+        const id = Number(el.dataset.optionId);
+        el.disabled = true;
+
+        if (correct && id === Number(correct.id)) {
+          el.classList.add("correct");
+        }
+        if (id === Number(selected.id) && !isCorrect) {
+          el.classList.add("incorrect");
+        }
+      });
+
+      feedbackBox.classList.add("show", isCorrect ? "correct" : "incorrect");
+      feedbackTitle.textContent = isCorrect ? "Correct" : "Incorrect";
+      feedbackText.textContent = q.explanation || (isCorrect ? "Well done." : "Review this question and move on.");
+    }
+
+    // --------------------------------------------------
+    // 8. NEXT / FINISH
+    // --------------------------------------------------
+    async function handleNext() {
+      if (!state.submitted) return;
+
+      const isLast = state.currentIndex === state.questions.length - 1;
+      if (isLast) {
+        await finishQuiz();
+        return;
+      }
+
+      state.currentIndex += 1;
+      renderQuestion();
+    }
+
+    async function finishQuiz() {
+      const total = state.questions.length;
+      const percent = Math.round((state.score / total) * 100);
+      const durationSeconds = Math.round((Date.now() - state.startTime) / 1000);
+
+      progressPercent.textContent = "100%";
+      progressBar.style.width = "100%";
+
+      quizContent.classList.add("hidden");
+      resultsView.classList.add("show");
+
+      finalScore.textContent = `${percent}%`;
+      correctAnswers.textContent = state.score;
+      totalQuestions.textContent = total;
+
+      await saveAttempt({
+        topic_id: state.topic.id,
+        score: state.score,
+        total_questions: total,
+        percentage: percent,
+        duration_seconds: durationSeconds,
+        answers_json: state.answers
+      });
+    }
+
+    // --------------------------------------------------
+    // 9. SAVE ATTEMPT
+    // --------------------------------------------------
+    async function saveAttempt(payload) {
+      try {
+        const { data: authData } = await supabase.auth.getUser();
+        const user = authData?.user;
+
+        if (!user) {
+          console.warn("User not logged in; attempt not saved.");
+          return;
+        }
+
+        const { error } = await supabase
+          .from("quiz_attempts")
+          .insert({
+            user_id: user.id,
+            topic_id: payload.topic_id,
+            score: payload.score,
+            total_questions: payload.total_questions,
+            percentage: payload.percentage,
+            duration_seconds: payload.duration_seconds,
+            answers_json: payload.answers_json
+          });
+
+        if (error) {
+          console.error("Failed to save attempt:", error);
+        }
+      } catch (err) {
+        console.error("Unexpected saveAttempt error:", err);
+      }
+    }
+
+    // --------------------------------------------------
+    // 10. RESET
+    // --------------------------------------------------
+    function resetQuiz() {
+      state.currentIndex = 0;
+      state.selectedOptionId = null;
+      state.answers = [];
+      state.score = 0;
+      state.submitted = false;
+      state.startTime = Date.now();
+
+      scoreLive.textContent = "0";
+      resultsView.classList.remove("show");
+      quizContent.classList.remove("hidden");
+      renderQuestion();
+    }
+
+    // --------------------------------------------------
+    // 11. HELPERS
+    // --------------------------------------------------
+    function showEmpty(message) {
+      loader.classList.add("hidden");
+      quizContent.classList.add("hidden");
+      resultsView.classList.remove("show");
+      emptyState.classList.remove("hidden");
+      emptyState.textContent = message;
+    }
+
+    function escapeHtml(str = "") {
+      const div = document.createElement("div");
+      div.textContent = str;
+      return div.innerHTML;
+    }
+  </script>
+</body>
+</html>
 
