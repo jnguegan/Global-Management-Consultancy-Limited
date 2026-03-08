@@ -14,9 +14,8 @@
   "login.button": "Se connecter",
   "login.noAccount": "Vous n'avez pas de compte ?",
   "login.signupLink": "Créez-en un ici",
-  "login.success": "Connexion réussie. Redirection..."
-},
-{
+  "login.success": "Connexion réussie. Redirection...",
+
   "dashboard.pageTitle": "Tableau de bord — Football Agent Exam Prep Platform",
   "dashboard.brand": "Football Agent Exam Prep Platform",
   "dashboard.kicker": "Tableau de bord",
