@@ -318,16 +318,19 @@ async function loadQuestions() {
     optionsByQuestionId[option.question_id].push(option);
   });
 
-  state.questions = orderedQuestions.map((q) => {
-    const options = (optionsByQuestionId[q.id] || []).sort(
-      (a, b) => (a.sort_order || 0) - (b.sort_order || 0)
-    );
+  const enrichedQuestions = orderedQuestions.map((q) => {
+  const options = (optionsByQuestionId[q.id] || []).sort(
+    (a, b) => (a.sort_order || 0) - (b.sort_order || 0)
+  );
 
-    return {
-      ...q,
-      options
-    };
-  });
+  return {
+    ...q,
+    options
+  };
+});
+
+// apply smarter random selection
+state.questions = selectRandomQuestions(enrichedQuestions, state.questionLimit);
 
   state.currentIndex = 0;
   state.selectedOptionId = null;
