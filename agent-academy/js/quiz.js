@@ -491,7 +491,7 @@ async function submitAnswer() {
         "Reference";
 
       const safeLabel = escapeHtml(q.reference_label || "");
-      const safeArticle = escapeHtml(q.reference_article || "");
+      const safeArticle = q.reference_article || "";
       const safeTitle = escapeHtml(q.reference_title || "");
       const safePreview = escapeHtml(getReferencePreview(q));
 
