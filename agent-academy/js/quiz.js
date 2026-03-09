@@ -36,6 +36,15 @@ function shuffleArray(arr) {
   return copy;
 }
 
+function detectMode() {
+  const params = new URLSearchParams(window.location.search);
+  const mode = params.get("mode");
+
+  if (mode === "mock") {
+    state.mode = "mock";
+    state.topicSlug = null;
+  }
+}
 const el = {
   timer: document.getElementById("timer"),
   questionCounter: document.getElementById("questionCounter"),
