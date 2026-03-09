@@ -268,17 +268,16 @@ async function loadQuestions() {
   const optionsByQuestionId = groupBy(options, "question_id");
   const refsByQuestionId = groupBy(references, "question_id");
 
-  state.questions = selected.map(q => {
-    const orderedOptions = (optionsByQuestionId[q.id] || []).sort(
-      (a, b) => (a.sort_order || 0) - (b.sort_order || 0)
-    );
+  state.questions = orderedQuestions.map((q) => {
+  const options = (optionsByQuestionId[q.id] || []).sort(
+    (a, b) => (a.sort_order || 0) - (b.sort_order || 0)
+  );
 
-    return {
-      ...q,
-      options: shuffleArray(orderedOptions),
-      references: refsByQuestionId[q.id] || []
-    };
-  });
+  return {
+    ...q,
+    options: shuffleArray(options)
+  };
+});
 
   state.startedAt = Date.now();
 }
