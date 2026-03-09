@@ -9,124 +9,39 @@ if (!db) {
 
 const state = {
   lang: localStorage.getItem("lang") || "en",
+  mode: "practice", // practice | mock
   topicSlug: null,
   topic: null,
   questions: [],
   currentIndex: 0,
-  selectedOptionId: null,
   score: 0,
   attemptId: null,
   startedAt: null,
   submitted: false,
   canSaveAttempt: false,
-  questionLimit: 10,
-  seenQuestionIds: new Set()
+
+  timeLimitMinutes: 60,
+  remainingSeconds: 60 * 60,
+  timerInterval: null,
+
+  answersByQuestionId: {},
+  flaggedQuestionIds: new Set()
 };
 
 const el = {
-  loader: document.getElementById("loader"),
-  emptyState: document.getElementById("emptyState"),
-  topicTitle: document.getElementById("topicTitle"),
-  topicBadge: document.getElementById("topicBadge"),
-  quizHeading: document.getElementById("quizHeading"),
-  quizSubheading: document.getElementById("quizSubheading"),
-  quizContent: document.getElementById("quizContent"),
-  resultsView: document.getElementById("resultsView"),
-  progressLabel: document.getElementById("progressLabel"),
-  progressPercent: document.getElementById("progressPercent"),
-  progressBar: document.getElementById("progressBar"),
-  questionNumber: document.getElementById("questionNumber"),
+  timer: document.getElementById("timer"),
+  questionCounter: document.getElementById("questionCounter"),
   questionText: document.getElementById("questionText"),
   optionsContainer: document.getElementById("optionsContainer"),
-  feedbackBox: document.getElementById("feedbackBox"),
-  feedbackTitle: document.getElementById("feedbackTitle"),
-  feedbackText: document.getElementById("feedbackText"),
-  scoreLive: document.getElementById("scoreLive"),
-  totalLive: document.getElementById("totalLive"),
-  submitBtn: document.getElementById("submitBtn"),
+  referencesContainer: document.getElementById("referencesContainer"),
+  palette: document.getElementById("palette"),
+  prevBtn: document.getElementById("prevBtn"),
+  flagBtn: document.getElementById("flagBtn"),
   nextBtn: document.getElementById("nextBtn"),
-  retryBtn: document.getElementById("retryBtn")
+  submitBtn: document.getElementById("submitBtn"),
+  resultScreen: document.getElementById("resultScreen")
 };
 
-document.addEventListener("DOMContentLoaded", init);
-
-async function init() {
-  try {
-    if (!db) {
-      showEmpty("Supabase client not found.");
-      return;
-    }
-
-    const params = new URLSearchParams(window.location.search);
-    state.topicSlug = params.get("topic");
-
-    if (!state.topicSlug) {
-      showEmpty("Missing topic in URL. Example: quiz.html?topic=ffar-basics");
-      return;
-    }
-
-    bindEvents();
-    loadSeenQuestionIds();
-    await loadTopic();
-    await loadQuestions();
-
-    if (!state.questions.length) {
-      showEmpty("No questions found for this topic yet.");
-      return;
-    }
-
-    hideLoader();
-    showQuiz();
-    renderQuestion();
-
-    await tryCreateQuizAttempt();
-  } catch (error) {
-    console.error("Quiz init error:", error);
-    showEmpty("Unable to load quiz.");
-  }
-}
-
-function bindEvents() {
-  if (el.submitBtn) el.submitBtn.addEventListener("click", submitAnswer);
-  if (el.nextBtn) el.nextBtn.addEventListener("click", goNext);
-  if (el.retryBtn) el.retryBtn.addEventListener("click", retryQuiz);
-}
-
-function getSeenStorageKey() {
-  return `quiz_seen_${state.topicSlug || "default"}`;
-}
-
-function loadSeenQuestionIds() {
-  try {
-    const raw = sessionStorage.getItem(getSeenStorageKey());
-    const ids = raw ? JSON.parse(raw) : [];
-    state.seenQuestionIds = new Set(ids);
-  } catch (err) {
-    console.warn("Failed to load seen questions:", err);
-    state.seenQuestionIds = new Set();
-  }
-}
-
-function saveSeenQuestionIds() {
-  try {
-    sessionStorage.setItem(
-      getSeenStorageKey(),
-      JSON.stringify([...state.seenQuestionIds])
-    );
-  } catch (err) {
-    console.warn("Failed to save seen questions:", err);
-  }
-}
-
-function resetSeenQuestionIds() {
-  try {
-    sessionStorage.removeItem(getSeenStorageKey());
-  } catch (err) {
-    console.warn("Failed to reset seen questions:", err);
-  }
-  state.seenQuestionIds = new Set();
-}
-
 function shuffleArray(arr) {
   const copy = [...arr];
   for (let i = copy.length - 1; i > 0; i -= 1) {
@@ -136,578 +51,599 @@ function shuffleArray(arr) {
   return copy;
 }
 
-function shuffleArray(arr) {
-  const copy = [...arr];
-  for (let i = copy.length - 1; i > 0; i -= 1) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [copy[i], copy[j]] = [copy[j], copy[i]];
+function groupBy(items, key) {
+  return items.reduce((acc, item) => {
+    const value = item[key];
+    if (!acc[value]) acc[value] = [];
+    acc[value].push(item);
+    return acc;
+  }, {});
+}
+
+function getTextByLang(item, base) {
+  return item[`${base}_${state.lang}`] || item[`${base}_en`] || "";
+}
+
+function getQueryParams() {
+  return new URLSearchParams(window.location.search);
+}
+
+function formatTime(seconds) {
+  const mins = Math.floor(seconds / 60);
+  const secs = seconds % 60;
+  return `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
+}
+
+function parseMode() {
+  const params = getQueryParams();
+  const mode = params.get("mode");
+  const topic = params.get("topic");
+
+  if (mode === "mock") {
+    state.mode = "mock";
+  } else {
+    state.mode = "practice";
   }
-  return copy;
+
+  state.topicSlug = topic || null;
 }
 
-function selectRandomQuestions(allQuestions, limit) {
+async function createAttempt() {
+  if (!db) return;
 
-  // prioritize unseen questions
-  const unseen = allQuestions.filter(q =>
-    !state.seenQuestionIds.has(q.id)
-  );
+  const payload = {
+    mode: state.mode,
+    is_mock: state.mode === "mock",
+    started_at: new Date().toISOString(),
+    time_limit_minutes: state.mode === "mock" ? state.timeLimitMinutes : null
+  };
 
-  // if enough unseen questions exist, use them
-  const pool = unseen.length >= limit ? unseen : allQuestions;
+  if (state.topicSlug) payload.topic_slug = state.topicSlug;
 
-  // shuffle pool
-  const shuffled = shuffleArray(pool);
-
-  // select limit
-  const selected = shuffled.slice(0, Math.min(limit, shuffled.length));
-
-  // mark as seen
-  selected.forEach(q => state.seenQuestionIds.add(q.id));
-
-  saveSeenQuestionIds();
-
-  return selected;
-}
-
-async function loadTopic() {
   const { data, error } = await db
-    .from("topics")
-    .select(`
-      id,
-      slug,
-      is_active,
-      name_en,
-      name_fr,
-      name_es,
-      description_en,
-      description_fr,
-      description_es
-    `)
-    .eq("slug", state.topicSlug)
-    .eq("is_active", true)
+    .from("quiz_attempts")
+    .insert(payload)
+    .select("id")
     .single();
 
-  console.log("TOPIC DATA:", data);
-  console.log("TOPIC ERROR:", error);
-
-  if (error || !data) {
-    throw error || new Error("Topic not found");
-  }
-
-  state.topic = data;
-
-  const topicName = getLocalizedValue(data, "name");
-  const topicDescription = getLocalizedValue(data, "description");
-
-  if (el.topicTitle) el.topicTitle.textContent = topicName || "Topic";
-  if (el.topicBadge) el.topicBadge.textContent = data.slug;
-  if (el.quizHeading) el.quizHeading.textContent = topicName || "Quiz";
-  if (el.quizSubheading) {
-    el.quizSubheading.textContent =
-      topicDescription || "Answer each question and track your score.";
-  }
-}
-
-async function loadQuestions() {
-  const { data: idsData, error: idsError } = await db
-    .from("questions")
-    .select("id")
-    .eq("topic_id", state.topic.id)
-    .eq("is_active", true);
-
-  console.log("QUESTION IDS DATA:", idsData);
-  console.log("QUESTION IDS ERROR:", idsError);
-
-  if (idsError) {
-    throw idsError;
-  }
-
-  const allQuestionIds = (idsData || []).map((q) => q.id);
-
-  if (!allQuestionIds.length) {
-    state.questions = [];
-    if (el.totalLive) el.totalLive.textContent = "0";
+  if (error) {
+    console.warn("Could not create attempt:", error.message);
     return;
   }
 
-  const unseenQuestionIds = allQuestionIds.filter(
-    (id) => !state.seenQuestionIds.has(id)
-  );
+  state.attemptId = data.id;
+  state.canSaveAttempt = true;
+}
 
-  const pool =
-    unseenQuestionIds.length >= state.questionLimit
-      ? unseenQuestionIds
-      : allQuestionIds;
-
-  const selectedQuestionIds = shuffleArray(pool).slice(
-    0,
-    Math.min(state.questionLimit, pool.length)
-  );
-
-  selectedQuestionIds.forEach((id) => state.seenQuestionIds.add(id));
-  saveSeenQuestionIds();
-
-  const { data: questionsData, error: questionsError } = await db
+async function fetchMockQuestionPool() {
+  const { data, error } = await db
     .from("questions")
     .select(`
       id,
       topic_id,
-      is_active,
-      created_at,
       question_text_en,
       question_text_fr,
       question_text_es,
+      question_type,
+      difficulty,
       explanation_en,
       explanation_fr,
       explanation_es,
-      reference_label,
-      reference_article,
-      reference_url,
-      reference_title,
-      reference_page,
-      reference_preview_en,
-      reference_preview_fr,
-      reference_preview_es,
-      difficulty
+      is_active,
+      source_article,
+      source_page,
+      source_note
     `)
-    .in("id", selectedQuestionIds);
+    .eq("is_active", true)
+    .in("question_type", ["standard", "scenario", "calculation", "multi_article"]);
 
-  console.log("QUESTIONS DATA:", questionsData);
-  console.log("QUESTIONS ERROR:", questionsError);
+  if (error) throw error;
+  return data || [];
+}
 
-  if (questionsError) {
-    throw questionsError;
+function pickWeightedMockQuestions(pool, counts = { easy: 12, medium: 20, hard: 8 }) {
+  const easy = shuffleArray(pool.filter(q => q.difficulty === "easy"));
+  const medium = shuffleArray(pool.filter(q => q.difficulty === "medium"));
+  const hard = shuffleArray(pool.filter(q => q.difficulty === "hard"));
+
+  let selected = [
+    ...easy.slice(0, counts.easy),
+    ...medium.slice(0, counts.medium),
+    ...hard.slice(0, counts.hard)
+  ];
+
+  if (selected.length < 40) {
+    const selectedIds = new Set(selected.map(q => q.id));
+    const extra = shuffleArray(pool.filter(q => !selectedIds.has(q.id)));
+    selected = [...selected, ...extra.slice(0, 40 - selected.length)];
   }
 
-  const questionsById = {};
-  (questionsData || []).forEach((q) => {
-    questionsById[q.id] = q;
-  });
+  return shuffleArray(selected).slice(0, 40);
+}
 
-  const orderedQuestions = selectedQuestionIds
-    .map((id) => questionsById[id])
-    .filter(Boolean);
+async function fetchPracticeQuestions(topicSlug) {
+  const { data: topic, error: topicError } = await db
+    .from("topics")
+    .select("id, slug, title_en, title_fr, title_es")
+    .eq("slug", topicSlug)
+    .single();
 
-  const { data: optionsData, error: optionsError } = await db
+  if (topicError) throw topicError;
+
+  state.topic = topic;
+
+  const { data: questions, error } = await db
+    .from("questions")
+    .select(`
+      id,
+      topic_id,
+      question_text_en,
+      question_text_fr,
+      question_text_es,
+      question_type,
+      difficulty,
+      explanation_en,
+      explanation_fr,
+      explanation_es,
+      is_active,
+      source_article,
+      source_page,
+      source_note
+    `)
+    .eq("topic_id", topic.id)
+    .eq("is_active", true);
+
+  if (error) throw error;
+  return questions || [];
+}
+
+async function fetchOptionsForQuestions(questionIds) {
+  const { data, error } = await db
     .from("question_options")
     .select(`
       id,
       question_id,
-      is_correct,
-      sort_order,
       option_text_en,
       option_text_fr,
-      option_text_es
+      option_text_es,
+      is_correct,
+      sort_order
     `)
-    .in("question_id", selectedQuestionIds)
-    .order("sort_order", { ascending: true });
+    .in("question_id", questionIds);
 
-  console.log("OPTIONS DATA:", optionsData);
-  console.log("OPTIONS ERROR:", optionsError);
-
-  if (optionsError) {
-    throw optionsError;
-  }
-
-  const optionsByQuestionId = {};
-
-  (optionsData || []).forEach((option) => {
-    if (!optionsByQuestionId[option.question_id]) {
-      optionsByQuestionId[option.question_id] = [];
-    }
-    optionsByQuestionId[option.question_id].push(option);
-  });
-
-  const enrichedQuestions = orderedQuestions.map((q) => {
-  const options = (optionsByQuestionId[q.id] || []).sort(
-    (a, b) => (a.sort_order || 0) - (b.sort_order || 0)
-  );
-
-  return {
-    ...q,
-    options
-  };
-});
-
-// apply smarter random selection
-state.questions = selectRandomQuestions(enrichedQuestions, state.questionLimit);
-
-  state.currentIndex = 0;
-  state.selectedOptionId = null;
-  state.score = 0;
-  state.submitted = false;
-
-  if (el.totalLive) el.totalLive.textContent = String(state.questions.length);
+  if (error) throw error;
+  return data || [];
 }
 
-async function tryCreateQuizAttempt() {
-  try {
-    const {
-      data: { user },
-      error: userError
-    } = await db.auth.getUser();
+async function fetchReferencesForQuestions(questionIds) {
+  const { data, error } = await db
+    .from("question_references")
+    .select(`
+      id,
+      question_id,
+      reference_label,
+      reference_article,
+      reference_page,
+      reference_title,
+      reference_preview_en,
+      reference_preview_fr,
+      reference_preview_es
+    `)
+    .in("question_id", questionIds);
 
-    console.log("AUTH USER:", user);
-    console.log("AUTH ERROR:", userError);
+  if (error) throw error;
+  return data || [];
+}
 
-    if (userError || !user) {
-      state.canSaveAttempt = false;
-      return;
-    }
+async function loadQuestions() {
+  let selected = [];
 
-    state.startedAt = new Date().toISOString();
-
-    const { data, error } = await db
-      .from("quiz_attempts")
-      .insert({
-        user_id: user.id,
-        topic_id: state.topic.id,
-        started_at: state.startedAt,
-        score: 0,
-        total_questions: state.questions.length,
-        percentage: 0,
-        mode: "practice"
-      })
-      .select("id")
-      .single();
-
-    console.log("ATTEMPT DATA:", data);
-    console.log("ATTEMPT ERROR:", error);
-
-    if (error || !data) {
-      state.canSaveAttempt = false;
-      return;
-    }
-
-    state.attemptId = data.id;
-    state.canSaveAttempt = true;
-  } catch (err) {
-    console.error("tryCreateQuizAttempt error:", err);
-    state.canSaveAttempt = false;
+  if (state.mode === "mock") {
+    const pool = await fetchMockQuestionPool();
+    selected = pickWeightedMockQuestions(pool, {
+      easy: 12,
+      medium: 20,
+      hard: 8
+    });
+  } else {
+    const practicePool = await fetchPracticeQuestions(state.topicSlug);
+    selected = shuffleArray(practicePool);
   }
+
+  const questionIds = selected.map(q => q.id);
+
+  const [options, references] = await Promise.all([
+    fetchOptionsForQuestions(questionIds),
+    fetchReferencesForQuestions(questionIds)
+  ]);
+
+  const optionsByQuestionId = groupBy(options, "question_id");
+  const refsByQuestionId = groupBy(references, "question_id");
+
+  state.questions = selected.map(q => {
+    const orderedOptions = (optionsByQuestionId[q.id] || []).sort(
+      (a, b) => (a.sort_order || 0) - (b.sort_order || 0)
+    );
+
+    return {
+      ...q,
+      options: shuffleArray(orderedOptions),
+      references: refsByQuestionId[q.id] || []
+    };
+  });
+
+  state.startedAt = Date.now();
+}
+
+function renderTimer() {
+  if (!el.timer) return;
+
+  if (state.mode === "mock") {
+    el.timer.textContent = `Time remaining: ${formatTime(state.remainingSeconds)}`;
+  } else {
+    el.timer.textContent = "";
+  }
+}
+
+function startMockTimer() {
+  if (state.mode !== "mock") return;
+
+  clearInterval(state.timerInterval);
+
+  renderTimer();
+
+  state.timerInterval = setInterval(() => {
+    state.remainingSeconds -= 1;
+    renderTimer();
+
+    if (state.remainingSeconds <= 0) {
+      clearInterval(state.timerInterval);
+      submitExam(true);
+    }
+  }, 1000);
+}
+
+function getCurrentQuestion() {
+  return state.questions[state.currentIndex];
+}
+
+function getSavedAnswer(questionId) {
+  return state.answersByQuestionId[questionId] || null;
 }
 
 function renderQuestion() {
-  const q = state.questions[state.currentIndex];
+  const q = getCurrentQuestion();
   if (!q) return;
 
-  state.selectedOptionId = null;
-  state.submitted = false;
-
-  const questionText = getLocalizedValue(q, "question_text");
-  const questionExplanation = getLocalizedValue(q, "explanation");
-
-  if (el.questionNumber) {
-    el.questionNumber.textContent = `Question ${state.currentIndex + 1}`;
+  if (el.questionCounter) {
+    el.questionCounter.textContent = `Question ${state.currentIndex + 1} of ${state.questions.length}`;
   }
 
   if (el.questionText) {
-    el.questionText.textContent = questionText || "";
-  }
-
-  if (el.progressLabel) {
-    el.progressLabel.textContent = `Question ${state.currentIndex + 1} of ${state.questions.length}`;
-  }
-
-  const percent = Math.round((state.currentIndex / state.questions.length) * 100);
-
-  if (el.progressPercent) el.progressPercent.textContent = `${percent}%`;
-  if (el.progressBar) el.progressBar.style.width = `${percent}%`;
-  if (el.scoreLive) el.scoreLive.textContent = String(state.score);
-
-  if (el.feedbackBox) el.feedbackBox.className = "feedback";
-  if (el.feedbackTitle) el.feedbackTitle.textContent = "";
-  if (el.feedbackText) el.feedbackText.textContent = "";
-
-  if (el.submitBtn) el.submitBtn.disabled = false;
-  if (el.nextBtn) {
-    el.nextBtn.disabled = true;
-    el.nextBtn.textContent =
-      state.currentIndex === state.questions.length - 1
-        ? "Finish quiz"
-        : "Next question";
+    el.questionText.textContent = getTextByLang(q, "question_text");
   }
 
   if (el.optionsContainer) {
     el.optionsContainer.innerHTML = "";
+    const savedOptionId = getSavedAnswer(q.id);
 
-    q.options.forEach((option, index) => {
-      const optionText = getLocalizedValue(option, "option_text");
+    q.options.forEach((opt, index) => {
+      const wrapper = document.createElement("label");
+      wrapper.className = "quiz-option";
 
-      const btn = document.createElement("button");
-      btn.type = "button";
-      btn.className = "option";
-      btn.dataset.optionId = option.id;
-      btn.innerHTML = `<strong>${String.fromCharCode(65 + index)}.</strong> ${escapeHtml(optionText || "")}`;
+      const input = document.createElement("input");
+      input.type = "radio";
+      input.name = `question-${q.id}`;
+      input.value = opt.id;
+      input.checked = String(savedOptionId) === String(opt.id);
 
-      btn.addEventListener("click", () => {
-        if (state.submitted) return;
-        selectOption(option.id);
+      input.addEventListener("change", () => {
+        saveAnswerLocally(q.id, opt.id);
       });
 
-      el.optionsContainer.appendChild(btn);
+      const text = document.createElement("span");
+      const letter = ["A", "B", "C", "D"][index] || "";
+      text.textContent = `${letter}. ${getTextByLang(opt, "option_text")}`;
+
+      wrapper.appendChild(input);
+      wrapper.appendChild(text);
+      el.optionsContainer.appendChild(wrapper);
     });
   }
 
-  q._cachedExplanation = questionExplanation || "";
+  renderReferences(q);
+  renderPalette();
+  renderFlagButton();
+  renderNavButtons();
 }
 
-function selectOption(optionId) {
-  state.selectedOptionId = optionId;
+function renderReferences(question) {
+  if (!el.referencesContainer) return;
 
-  document.querySelectorAll(".option").forEach((button) => {
-    button.classList.remove("selected");
-    if (Number(button.dataset.optionId) === Number(optionId)) {
-      button.classList.add("selected");
-    }
+  el.referencesContainer.innerHTML = "";
+
+  (question.references || []).forEach(ref => {
+    const item = document.createElement("div");
+    item.className = "question-reference";
+
+    const preview = getTextByLang(ref, "reference_preview");
+
+    item.innerHTML = `
+      <strong>${ref.reference_label || ""}</strong>
+      ${ref.reference_article ? ` - ${ref.reference_article}` : ""}
+      ${ref.reference_title ? ` - ${ref.reference_title}` : ""}
+      ${ref.reference_page ? ` (p. ${ref.reference_page})` : ""}
+      ${preview ? `<div class="reference-preview">${preview}</div>` : ""}
+    `;
+
+    el.referencesContainer.appendChild(item);
   });
 }
 
-async function submitAnswer() {
-  if (!state.selectedOptionId) {
-    alert("Please select an answer first.");
-    return;
+function saveAnswerLocally(questionId, optionId) {
+  state.answersByQuestionId[questionId] = optionId;
+  renderPalette();
+
+  if (state.canSaveAttempt) {
+    saveAnswerToSupabase(questionId, optionId).catch(err => {
+      console.warn("Could not save answer:", err.message);
+    });
+  }
+}
+
+async function saveAnswerToSupabase(questionId, optionId) {
+  if (!state.attemptId) return;
+
+  const question = state.questions.find(q => q.id === questionId);
+  const chosenOption = question?.options?.find(opt => String(opt.id) === String(optionId));
+
+  await db.from("quiz_answers").upsert({
+    attempt_id: state.attemptId,
+    question_id: questionId,
+    selected_option_id: optionId,
+    flagged: state.flaggedQuestionIds.has(questionId),
+    marked_for_review: state.flaggedQuestionIds.has(questionId),
+    answered_at: new Date().toISOString(),
+    is_correct: chosenOption ? !!chosenOption.is_correct : null
+  }, {
+    onConflict: "attempt_id,question_id"
+  });
+}
+
+function toggleFlag() {
+  const q = getCurrentQuestion();
+  if (!q) return;
+
+  if (state.flaggedQuestionIds.has(q.id)) {
+    state.flaggedQuestionIds.delete(q.id);
+  } else {
+    state.flaggedQuestionIds.add(q.id);
   }
 
-  const q = state.questions[state.currentIndex];
-  const selected = q.options.find(
-    (opt) => Number(opt.id) === Number(state.selectedOptionId)
-  );
-  const correct = q.options.find((opt) => opt.is_correct === true);
-  const isCorrect = !!selected?.is_correct;
+  renderFlagButton();
+  renderPalette();
+
+  if (state.canSaveAttempt) {
+    const selectedOptionId = state.answersByQuestionId[q.id] || null;
+    saveAnswerToSupabase(q.id, selectedOptionId).catch(err => {
+      console.warn("Could not save flag:", err.message);
+    });
+  }
+}
+
+function renderFlagButton() {
+  if (!el.flagBtn) return;
+  const q = getCurrentQuestion();
+  if (!q) return;
+
+  el.flagBtn.textContent = state.flaggedQuestionIds.has(q.id)
+    ? "Unflag"
+    : "Flag for review";
+}
+
+function renderNavButtons() {
+  if (el.prevBtn) el.prevBtn.disabled = state.currentIndex === 0;
+  if (el.nextBtn) el.nextBtn.disabled = state.currentIndex === state.questions.length - 1;
+}
+
+function renderPalette() {
+  if (!el.palette) return;
+
+  el.palette.innerHTML = "";
+
+  state.questions.forEach((q, index) => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.textContent = index + 1;
+    btn.className = "palette-btn";
+
+    const answered = !!state.answersByQuestionId[q.id];
+    const flagged = state.flaggedQuestionIds.has(q.id);
+    const current = index === state.currentIndex;
+
+    if (answered) btn.classList.add("answered");
+    if (flagged) btn.classList.add("flagged");
+    if (current) btn.classList.add("current");
+
+    btn.addEventListener("click", () => {
+      state.currentIndex = index;
+      renderQuestion();
+    });
+
+    el.palette.appendChild(btn);
+  });
+}
+
+function goNext() {
+  if (state.currentIndex < state.questions.length - 1) {
+    state.currentIndex += 1;
+    renderQuestion();
+  }
+}
+
+function goPrev() {
+  if (state.currentIndex > 0) {
+    state.currentIndex -= 1;
+    renderQuestion();
+  }
+}
+
+function calculateScore() {
+  let correct = 0;
+
+  state.questions.forEach(question => {
+    const selectedOptionId = state.answersByQuestionId[question.id];
+    const correctOption = question.options.find(opt => opt.is_correct);
+
+    if (
+      selectedOptionId &&
+      correctOption &&
+      String(selectedOptionId) === String(correctOption.id)
+    ) {
+      correct += 1;
+    }
+  });
+
+  return correct;
+}
+
+function getUnansweredCount() {
+  return state.questions.filter(q => !state.answersByQuestionId[q.id]).length;
+}
+
+function getFlaggedCount() {
+  return state.questions.filter(q => state.flaggedQuestionIds.has(q.id)).length;
+}
+
+async function submitExam(autoSubmitted = false) {
+  if (state.submitted) return;
 
   state.submitted = true;
+  clearInterval(state.timerInterval);
 
-  if (isCorrect) {
-    state.score += 1;
-    if (el.scoreLive) el.scoreLive.textContent = String(state.score);
+  state.score = calculateScore();
+
+  const totalQuestions = state.questions.length;
+  const unansweredCount = getUnansweredCount();
+  const flaggedCount = getFlaggedCount();
+  const answeredCount = totalQuestions - unansweredCount;
+  const percentageScore = totalQuestions
+    ? Number(((state.score / totalQuestions) * 100).toFixed(2))
+    : 0;
+
+  const timeSpentSeconds = state.mode === "mock"
+    ? (state.timeLimitMinutes * 60 - state.remainingSeconds)
+    : Math.floor((Date.now() - state.startedAt) / 1000);
+
+  if (state.attemptId) {
+    try {
+      await db
+        .from("quiz_attempts")
+        .update({
+          submitted_at: new Date().toISOString(),
+          total_questions: totalQuestions,
+          correct_answers: state.score,
+          unanswered_count: unansweredCount,
+          flagged_count: flaggedCount,
+          time_limit_minutes: state.mode === "mock" ? state.timeLimitMinutes : null,
+          time_spent_seconds: timeSpentSeconds,
+          auto_submitted: autoSubmitted,
+          percentage_score: percentageScore
+        })
+        .eq("id", state.attemptId);
+    } catch (err) {
+      console.warn("Could not update attempt:", err.message);
+    }
   }
 
-  if (state.canSaveAttempt && state.attemptId && selected) {
-    await saveQuizAnswer({
-      attempt_id: state.attemptId,
-      question_id: q.id,
-      selected_option_id: selected.id,
-      is_correct: isCorrect
+  renderResults({
+    totalQuestions,
+    answeredCount,
+    unansweredCount,
+    flaggedCount,
+    percentageScore,
+    autoSubmitted,
+    timeSpentSeconds
+  });
+}
+
+function renderResults(stats) {
+  if (!el.resultScreen) return;
+
+  const passMark = 75;
+  const passed = stats.percentageScore >= passMark;
+
+  el.resultScreen.hidden = false;
+  el.resultScreen.innerHTML = `
+    <h2>Mock Exam Result</h2>
+    <p><strong>Score:</strong> ${state.score} / ${stats.totalQuestions}</p>
+    <p><strong>Percentage:</strong> ${stats.percentageScore}%</p>
+    <p><strong>Status:</strong> ${passed ? "Pass" : "Fail"}</p>
+    <p><strong>Answered:</strong> ${stats.answeredCount}</p>
+    <p><strong>Unanswered:</strong> ${stats.unansweredCount}</p>
+    <p><strong>Flagged:</strong> ${stats.flaggedCount}</p>
+    <p><strong>Time spent:</strong> ${formatTime(stats.timeSpentSeconds)}</p>
+    <p><strong>Submission type:</strong> ${stats.autoSubmitted ? "Auto-submitted on time expiry" : "Submitted by user"}</p>
+  `;
+
+  if (el.questionText) el.questionText.innerHTML = "";
+  if (el.optionsContainer) el.optionsContainer.innerHTML = "";
+  if (el.referencesContainer) el.referencesContainer.innerHTML = "";
+  if (el.palette) el.palette.innerHTML = "";
+
+  if (el.prevBtn) el.prevBtn.disabled = true;
+  if (el.nextBtn) el.nextBtn.disabled = true;
+  if (el.flagBtn) el.flagBtn.disabled = true;
+  if (el.submitBtn) el.submitBtn.disabled = true;
+}
+
+function attachEvents() {
+  if (el.prevBtn) {
+    el.prevBtn.addEventListener("click", goPrev);
+  }
+
+  if (el.nextBtn) {
+    el.nextBtn.addEventListener("click", goNext);
+  }
+
+  if (el.flagBtn) {
+    el.flagBtn.addEventListener("click", toggleFlag);
+  }
+
+  if (el.submitBtn) {
+    el.submitBtn.addEventListener("click", () => {
+      const unanswered = getUnansweredCount();
+      const proceed = window.confirm(
+        unanswered > 0
+          ? `You still have ${unanswered} unanswered question(s). Submit anyway?`
+          : "Submit exam now?"
+      );
+
+      if (proceed) {
+        submitExam(false);
+      }
     });
   }
+}
 
-  document.querySelectorAll(".option").forEach((button) => {
-    button.disabled = true;
+async function initQuiz() {
+  try {
+    parseMode();
+    attachEvents();
+    await createAttempt();
+    await loadQuestions();
 
-    const currentId = Number(button.dataset.optionId);
-
-    if (correct && currentId === Number(correct.id)) {
-      button.classList.add("correct");
+    if (state.mode === "mock") {
+      startMockTimer();
     }
 
-    if (selected && currentId === Number(selected.id) && !isCorrect) {
-      button.classList.add("incorrect");
-    }
-  });
-
-  if (el.submitBtn) el.submitBtn.disabled = true;
-  if (el.nextBtn) el.nextBtn.disabled = false;
-
-  if (el.feedbackBox) {
-    el.feedbackBox.className = `feedback show ${isCorrect ? "correct" : "incorrect"}`;
-  }
-
-  if (el.feedbackTitle) {
-    el.feedbackTitle.textContent = isCorrect ? "Correct" : "Incorrect";
-  }
-
-  if (el.feedbackText) {
-    let ref = "";
-
-    if (q.reference_label || q.reference_article) {
-      const refWord =
-        state.lang === "fr"
-          ? "Référence"
-          : state.lang === "es"
-          ? "Referencia"
-          : "Reference";
-
-      const rawLabel = (q.reference_label || "").trim();
-      const rawArticle = (q.reference_article || "").trim();
-      const safeLabel = escapeHtml(rawLabel);
-      const safeArticle = escapeHtml(rawArticle);
-      const safeTitle = escapeHtml(q.reference_title || "");
-      const safePreview = escapeHtml(getReferencePreview(q));
-
-      let link = q.reference_url || "";
-
-      const docMap = window.REGULATION_DOC_MAP || {};
-      const doc = docMap[rawLabel];
-
-      if (!link && doc) {
-        link = q.reference_page
-          ? `/agent-academy/regulation-viewer.html?doc=${encodeURIComponent(doc)}&page=${encodeURIComponent(q.reference_page)}`
-          : `/agent-academy/regulation-viewer.html?doc=${encodeURIComponent(doc)}`;
-      }
-
-      if (!link && rawLabel === "FFAR" && typeof getFFARArticleLink === "function") {
-        link = getFFARArticleLink(q.reference_article);
-      }
-
-      const tooltipHtml =
-        safeTitle || safePreview
-          ? `<span class="ref-tooltip">
-               ${safeTitle ? `<strong>${getReferenceTitleLabel()}:</strong> ${safeTitle}<br>` : ""}
-               ${safePreview ? `<strong>${getReferencePreviewLabel()}:</strong> ${safePreview}` : ""}
-             </span>`
-          : "";
-
-      const refHtml = link
-        ? `<span class="ref-link-wrap">
-             <a href="${link}" target="_blank" rel="noopener noreferrer" class="ref-link">${safeLabel} — ${safeArticle}</a>
-             ${tooltipHtml}
-           </span>`
-        : `${safeLabel} — ${safeArticle}`;
-
-      ref = `<br><br>${refWord}: ${refHtml}.`;
-    }
-
-    el.feedbackText.innerHTML =
-      escapeHtml(
-        q._cachedExplanation ||
-        (isCorrect ? "Well done." : "Review this point carefully.")
-      ) + ref;
-  }
-}
-
-async function saveQuizAnswer(payload) {
-  const { error } = await db.from("quiz_answers").insert({
-    attempt_id: payload.attempt_id,
-    question_id: payload.question_id,
-    selected_option_id: payload.selected_option_id,
-    is_correct: payload.is_correct,
-    answered_at: new Date().toISOString()
-  });
-
-  if (error) {
-    console.error("Failed to save quiz answer:", error);
-  }
-}
-
-async function goNext() {
-  if (!state.submitted) return;
-
-  const isLast = state.currentIndex === state.questions.length - 1;
-
-  if (isLast) {
-    await finishQuiz();
-    return;
-  }
-
-  state.currentIndex += 1;
-  renderQuestion();
-}
-
-async function finishQuiz() {
-  const total = state.questions.length;
-  const percentage = total > 0 ? Math.round((state.score / total) * 100) : 0;
-  const finishedAt = new Date().toISOString();
-
-  if (state.canSaveAttempt && state.attemptId) {
-    const { error } = await db
-      .from("quiz_attempts")
-      .update({
-        finished_at: finishedAt,
-        score: state.score,
-        total_questions: total,
-        percentage,
-        mode: "practice"
-      })
-      .eq("id", state.attemptId);
-
-    if (error) {
-      console.error("Failed to update quiz attempt:", error);
+    renderQuestion();
+  } catch (error) {
+    console.error("Quiz init failed:", error);
+    if (el.questionText) {
+      el.questionText.textContent = "Failed to load quiz.";
     }
   }
-
-  if (el.progressPercent) el.progressPercent.textContent = "100%";
-  if (el.progressBar) el.progressBar.style.width = "100%";
-
-  hideQuiz();
-  showResults();
-
-  const finalScore = document.getElementById("finalScore");
-  const correctAnswers = document.getElementById("correctAnswers");
-  const totalQuestions = document.getElementById("totalQuestions");
-
-  if (finalScore) finalScore.textContent = `${percentage}%`;
-  if (correctAnswers) correctAnswers.textContent = String(state.score);
-  if (totalQuestions) totalQuestions.textContent = String(total);
 }
 
-function retryQuiz() {
-  resetSeenQuestionIds();
-  const url = new URL(window.location.href);
-  url.searchParams.set("topic", state.topicSlug);
-  window.location.href = url.toString();
-}
-
-function getLocalizedValue(obj, baseField) {
-  if (!obj) return "";
-
-  if (state.lang === "fr") return obj[`${baseField}_fr`] || obj[`${baseField}_en`] || "";
-  if (state.lang === "es") return obj[`${baseField}_es`] || obj[`${baseField}_en`] || "";
-
-  return obj[`${baseField}_en`] || "";
-}
-
-function getReferencePreview(q) {
-  if (!q) return "";
-
-  if (state.lang === "fr") return q.reference_preview_fr || q.reference_preview_en || "";
-  if (state.lang === "es") return q.reference_preview_es || q.reference_preview_en || "";
-
-  return q.reference_preview_en || "";
-}
-
-function getReferenceTitleLabel() {
-  if (state.lang === "fr") return "Titre";
-  if (state.lang === "es") return "Título";
-  return "Title";
-}
-
-function getReferencePreviewLabel() {
-  if (state.lang === "fr") return "Aperçu";
-  if (state.lang === "es") return "Resumen";
-  return "Preview";
-}
-
-function escapeHtml(str) {
-  const div = document.createElement("div");
-  div.textContent = str || "";
-  return div.innerHTML;
-}
-
-function hideLoader() {
-  if (el.loader) el.loader.classList.add("hidden");
-}
-
-function showQuiz() {
-  if (el.quizContent) el.quizContent.classList.remove("hidden");
-  if (el.resultsView) el.resultsView.classList.remove("show");
-  if (el.emptyState) el.emptyState.classList.add("hidden");
-}
-
-function hideQuiz() {
-  if (el.quizContent) el.quizContent.classList.add("hidden");
-}
-
-function showResults() {
-  if (el.resultsView) el.resultsView.classList.add("show");
-}
-
-function showEmpty(message) {
-  hideLoader();
-  hideQuiz();
-  if (el.resultsView) el.resultsView.classList.remove("show");
-  if (el.emptyState) {
-    el.emptyState.classList.remove("hidden");
-    el.emptyState.textContent = message;
-  }
-}
+document.addEventListener("DOMContentLoaded", initQuiz);
