@@ -518,19 +518,15 @@ async function submitAnswer() {
         : "";
 
       const articleHtml = link
-        ? `<span class="ref-link-wrap">
-             <a href="${link}" target="_blank" rel="noopener noreferrer" class="ref-link">${safeArticle}</a>
-             ${tooltipHtml}
-           </span>`
-        : safeArticle;
+  ? `<a href="${link}" target="_blank" rel="noopener noreferrer" class="ref-link">${safeArticle}</a>`
+  : safeArticle;
 
-      ref = `<br><br>${refWord}: ${safeLabel} — ${articleHtml}.`;
+ref = `<br><br>${refWord}: ${safeLabel} — ${articleHtml}.`;
     }
 
     el.feedbackText.innerHTML =
       escapeHtml(q._cachedExplanation || (isCorrect ? "Well done." : "Review this point carefully.")) + ref;
   }
-}
 
 async function saveQuizAnswer(payload) {
   const { error } = await db.from("quiz_answers").insert({
