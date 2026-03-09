@@ -484,47 +484,32 @@ async function submitAnswer() {
   if (el.feedbackText) {
     let ref = "";
 
-    if (q.reference_label || q.reference_article) {
-      const refWord =
-        state.lang === "fr" ? "Référence" :
-        state.lang === "es" ? "Referencia" :
-        "Reference";
+  if (q.reference_label || q.reference_article) {
+  const refWord =
+    state.lang === "fr"
+      ? "Référence"
+      : state.lang === "es"
+      ? "Referencia"
+      : "Reference";
 
-      const safeLabel = escapeHtml(q.reference_label || "");
-      const safeArticle = q.reference_article || "";
-      const safeTitle = escapeHtml(q.reference_title || "");
-      const safePreview = escapeHtml(getReferencePreview(q));
+  const rawLabel = (q.reference_label || "").trim();
+  const rawArticle = (q.reference_article || "").trim();
 
-      let link = q.reference_url || "";
+  let link = q.reference_url || "";
 
-      const docMap = window.REGULATION_DOC_MAP || {};
-      const doc = docMap[(q.reference_label || "").trim()];
+  const docMap = window.REGULATION_DOC_MAP || {};
+  const doc = docMap[rawLabel];
 
-      if (!link && doc) {
-  link = q.reference_page
-    ? `/agent-academy/regulation-viewer.html?doc=${encodeURIComponent(doc)}&page=${encodeURIComponent(q.reference_page)}`
-    : `/agent-academy/regulation-viewer.html?doc=${encodeURIComponent(doc)}`;
+  if (!link && doc) {
+    link = q.reference_page
+      ? `/agent-academy/regulation-viewer.html?doc=${encodeURIComponent(doc)}&page=${encodeURIComponent(q.reference_page)}`
+      : `/agent-academy/regulation-viewer.html?doc=${encodeURIComponent(doc)}`;
+  }
+
+  ref = link
+    ? `<br><br>${refWord}: <a href="${link}" target="_blank" rel="noopener noreferrer" class="ref-link">${escapeHtml(rawLabel)} — ${escapeHtml(rawArticle)}</a>.`
+    : `<br><br>${refWord}: ${escapeHtml(rawLabel)} — ${escapeHtml(rawArticle)}.`;
 }
-
-      if (!link && q.reference_label === "FFAR" && typeof getFFARArticleLink === "function") {
-        link = getFFARArticleLink(q.reference_article);
-      }
-
-      const tooltipHtml = (safeTitle || safePreview)
-        ? `
-      <span class="ref-tooltip">
-        ${safeTitle ? `<strong>${getReferenceTitleLabel()}:</strong> ${safeTitle}<br>` : ""}
-        ${safePreview ? `<strong>${getReferencePreviewLabel()}:</strong> ${safePreview}` : ""}
-      </span>
-    `
-        : "";
-
- const articleHtml = link
-  ? `<a href="${link}" target="_blank" rel="noopener noreferrer" class="ref-link">${safeArticle}</a>`
-  : safeArticle;
-
-ref = `<br><br>${refWord}: ${safeLabel} — ${articleHtml}.`;
-    }
 
     el.feedbackText.innerHTML =
       escapeHtml(q._cachedExplanation || (isCorrect ? "Well done." : "Review this point carefully.")) + ref;
