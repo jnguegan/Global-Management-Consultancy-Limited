@@ -149,6 +149,7 @@ async function loadQuestions() {
       reference_article,
       reference_url,
       reference_title,
+      reference_page,
       reference_preview_en,
       reference_preview_fr,
       reference_preview_es,
@@ -397,46 +398,48 @@ async function submitAnswer() {
   if (el.feedbackText) {
     let ref = "";
 
-  if (q.reference_label || q.reference_article) {
-  const refWord =
-    state.lang === "fr" ? "Référence" :
-    state.lang === "es" ? "Referencia" :
-    "Reference";
+    if (q.reference_label || q.reference_article) {
+      const refWord =
+        state.lang === "fr" ? "Référence" :
+        state.lang === "es" ? "Referencia" :
+        "Reference";
 
-  const safeLabel = escapeHtml(q.reference_label || "");
-  const safeArticle = escapeHtml(q.reference_article || "");
-  const safeTitle = escapeHtml(q.reference_title || "");
-  const safePreview = escapeHtml(getReferencePreview(q));
+      const safeLabel = escapeHtml(q.reference_label || "");
+      const safeArticle = escapeHtml(q.reference_article || "");
+      const safeTitle = escapeHtml(q.reference_title || "");
+      const safePreview = escapeHtml(getReferencePreview(q));
 
-  let link = q.reference_url;
+      let link = q.reference_url || "";
 
-// If no URL but we have a page number, generate the viewer link
-if (!link && q.reference_page) {
-  link = `/agent-academy/regulation-viewer.html?doc=ffar-2025.pdf&page=${q.reference_page}`;
-}
+      const docMap = window.REGULATION_DOC_MAP || {};
+      const doc = docMap[(q.reference_label || "").trim()];
 
-  if (!link && q.reference_label === "FFAR" && typeof getFFARArticleLink === "function") {
-    link = getFFARArticleLink(q.reference_article);
-  }
+      if (!link && doc && q.reference_page) {
+        link = `/agent-academy/regulation-viewer.html?doc=${encodeURIComponent(doc)}&page=${encodeURIComponent(q.reference_page)}`;
+      }
 
-  const tooltipHtml = (safeTitle || safePreview)
-    ? `
+      if (!link && q.reference_label === "FFAR" && typeof getFFARArticleLink === "function") {
+        link = getFFARArticleLink(q.reference_article);
+      }
+
+      const tooltipHtml = (safeTitle || safePreview)
+        ? `
       <span class="ref-tooltip">
         ${safeTitle ? `<strong>${getReferenceTitleLabel()}:</strong> ${safeTitle}<br>` : ""}
         ${safePreview ? `<strong>${getReferencePreviewLabel()}:</strong> ${safePreview}` : ""}
       </span>
     `
-    : "";
+        : "";
 
-  const articleHtml = link
-    ? `<span class="ref-link-wrap">
-         <a href="${link}" target="_blank" rel="noopener noreferrer" class="ref-link">${safeArticle}</a>
-         ${tooltipHtml}
-       </span>`
-    : safeArticle;
+      const articleHtml = link
+        ? `<span class="ref-link-wrap">
+             <a href="${link}" target="_blank" rel="noopener noreferrer" class="ref-link">${safeArticle}</a>
+             ${tooltipHtml}
+           </span>`
+        : safeArticle;
 
-  ref = `<br><br>${refWord}: ${safeLabel} — ${articleHtml}.`;
-}
+      ref = `<br><br>${refWord}: ${safeLabel} — ${articleHtml}.`;
+    }
 
     el.feedbackText.innerHTML =
       escapeHtml(q._cachedExplanation || (isCorrect ? "Well done." : "Review this point carefully.")) + ref;
