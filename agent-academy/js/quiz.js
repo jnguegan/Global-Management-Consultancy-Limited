@@ -500,9 +500,11 @@ async function submitAnswer() {
       const docMap = window.REGULATION_DOC_MAP || {};
       const doc = docMap[(q.reference_label || "").trim()];
 
-      if (!link && doc && q.reference_page) {
-        link = `/agent-academy/regulation-viewer.html?doc=${encodeURIComponent(doc)}&page=${encodeURIComponent(q.reference_page)}`;
-      }
+      if (!link && doc) {
+  link = q.reference_page
+    ? `/agent-academy/regulation-viewer.html?doc=${encodeURIComponent(doc)}&page=${encodeURIComponent(q.reference_page)}`
+    : `/agent-academy/regulation-viewer.html?doc=${encodeURIComponent(doc)}`;
+}
 
       if (!link && q.reference_label === "FFAR" && typeof getFFARArticleLink === "function") {
         link = getFFARArticleLink(q.reference_article);
