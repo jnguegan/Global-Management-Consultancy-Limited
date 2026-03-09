@@ -18,7 +18,9 @@ const state = {
   attemptId: null,
   startedAt: null,
   submitted: false,
-  canSaveAttempt: false
+  canSaveAttempt: false,
+  questionLimit: 10,
+  seenQuestionIds: new Set()
 };
 
 const el = {
@@ -43,10 +45,7 @@ const el = {
   totalLive: document.getElementById("totalLive"),
   submitBtn: document.getElementById("submitBtn"),
   nextBtn: document.getElementById("nextBtn"),
-  retryBtn: document.getElementById("retryBtn"),
-  finalScore: document.getElementById("finalScore"),
-  correctAnswers: document.getElementById("correctAnswers"),
-  totalQuestions: document.getElementById("totalQuestions")
+  retryBtn: document.getElementById("retryBtn")
 };
 
 document.addEventListener("DOMContentLoaded", init);
@@ -67,6 +66,7 @@ async function init() {
     }
 
     bindEvents();
+    loadSeenQuestionIds();
     await loadTopic();
     await loadQuestions();
 
@@ -90,6 +90,50 @@ function bindEvents() {
   if (el.submitBtn) el.submitBtn.addEventListener("click", submitAnswer);
   if (el.nextBtn) el.nextBtn.addEventListener("click", goNext);
   if (el.retryBtn) el.retryBtn.addEventListener("click", retryQuiz);
+}
+
+function getSeenStorageKey() {
+  return `quiz_seen_${state.topicSlug || "default"}`;
+}
+
+function loadSeenQuestionIds() {
+  try {
+    const raw = sessionStorage.getItem(getSeenStorageKey());
+    const ids = raw ? JSON.parse(raw) : [];
+    state.seenQuestionIds = new Set(ids);
+  } catch (err) {
+    console.warn("Failed to load seen questions:", err);
+    state.seenQuestionIds = new Set();
+  }
+}
+
+function saveSeenQuestionIds() {
+  try {
+    sessionStorage.setItem(
+      getSeenStorageKey(),
+      JSON.stringify([...state.seenQuestionIds])
+    );
+  } catch (err) {
+    console.warn("Failed to save seen questions:", err);
+  }
+}
+
+function resetSeenQuestionIds() {
+  try {
+    sessionStorage.removeItem(getSeenStorageKey());
+  } catch (err) {
+    console.warn("Failed to reset seen questions:", err);
+  }
+  state.seenQuestionIds = new Set();
+}
+
+function shuffleArray(arr) {
+  const copy = [...arr];
+  for (let i = copy.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy;
 }
 
 async function loadTopic() {
@@ -132,7 +176,45 @@ async function loadTopic() {
 }
 
 async function loadQuestions() {
-  const { data, error } = await db
+  const { data: idsData, error: idsError } = await db
+    .from("questions")
+    .select("id")
+    .eq("topic_id", state.topic.id)
+    .eq("is_active", true);
+
+  console.log("QUESTION IDS DATA:", idsData);
+  console.log("QUESTION IDS ERROR:", idsError);
+
+  if (idsError) {
+    throw idsError;
+  }
+
+  const allQuestionIds = (idsData || []).map((q) => q.id);
+
+  if (!allQuestionIds.length) {
+    state.questions = [];
+    if (el.totalLive) el.totalLive.textContent = "0";
+    return;
+  }
+
+  const unseenQuestionIds = allQuestionIds.filter(
+    (id) => !state.seenQuestionIds.has(id)
+  );
+
+  const pool =
+    unseenQuestionIds.length >= state.questionLimit
+      ? unseenQuestionIds
+      : allQuestionIds;
+
+  const selectedQuestionIds = shuffleArray(pool).slice(
+    0,
+    Math.min(state.questionLimit, pool.length)
+  );
+
+  selectedQuestionIds.forEach((id) => state.seenQuestionIds.add(id));
+  saveSeenQuestionIds();
+
+  const { data: questionsData, error: questionsError } = await db
     .from("questions")
     .select(`
       id,
@@ -155,25 +237,23 @@ async function loadQuestions() {
       reference_preview_es,
       difficulty
     `)
-    .eq("topic_id", state.topic.id)
-    .eq("is_active", true);
+    .in("id", selectedQuestionIds);
 
-  console.log("QUESTIONS DATA:", data);
-  console.log("QUESTIONS ERROR:", error);
+  console.log("QUESTIONS DATA:", questionsData);
+  console.log("QUESTIONS ERROR:", questionsError);
 
-  if (error) {
-    throw error;
+  if (questionsError) {
+    throw questionsError;
   }
 
-  const questions = data || [];
+  const questionsById = {};
+  (questionsData || []).forEach((q) => {
+    questionsById[q.id] = q;
+  });
 
-  if (!questions.length) {
-    state.questions = [];
-    if (el.totalLive) el.totalLive.textContent = "0";
-    return;
-  }
-
-  const questionIds = questions.map((q) => q.id);
+  const orderedQuestions = selectedQuestionIds
+    .map((id) => questionsById[id])
+    .filter(Boolean);
 
   const { data: optionsData, error: optionsError } = await db
     .from("question_options")
@@ -186,7 +266,8 @@ async function loadQuestions() {
       option_text_fr,
       option_text_es
     `)
-    .in("question_id", questionIds);
+    .in("question_id", selectedQuestionIds)
+    .order("sort_order", { ascending: true });
 
   console.log("OPTIONS DATA:", optionsData);
   console.log("OPTIONS ERROR:", optionsError);
@@ -204,7 +285,7 @@ async function loadQuestions() {
     optionsByQuestionId[option.question_id].push(option);
   });
 
-  state.questions = questions.map((q) => {
+  state.questions = orderedQuestions.map((q) => {
     const options = (optionsByQuestionId[q.id] || []).sort(
       (a, b) => (a.sort_order || 0) - (b.sort_order || 0)
     );
@@ -214,6 +295,11 @@ async function loadQuestions() {
       options
     };
   });
+
+  state.currentIndex = 0;
+  state.selectedOptionId = null;
+  state.score = 0;
+  state.submitted = false;
 
   if (el.totalLive) el.totalLive.textContent = String(state.questions.length);
 }
@@ -361,7 +447,7 @@ async function submitAnswer() {
     if (el.scoreLive) el.scoreLive.textContent = String(state.score);
   }
 
-  if (state.canSaveAttempt && state.attemptId) {
+  if (state.canSaveAttempt && state.attemptId && selected) {
     await saveQuizAnswer({
       attempt_id: state.attemptId,
       question_id: q.id,
@@ -502,12 +588,17 @@ async function finishQuiz() {
   hideQuiz();
   showResults();
 
-  if (el.finalScore) el.finalScore.textContent = `${percentage}%`;
-  if (el.correctAnswers) el.correctAnswers.textContent = String(state.score);
-  if (el.totalQuestions) el.totalQuestions.textContent = String(total);
+  const finalScore = document.getElementById("finalScore");
+  const correctAnswers = document.getElementById("correctAnswers");
+  const totalQuestions = document.getElementById("totalQuestions");
+
+  if (finalScore) finalScore.textContent = `${percentage}%`;
+  if (correctAnswers) correctAnswers.textContent = String(state.score);
+  if (totalQuestions) totalQuestions.textContent = String(total);
 }
 
 function retryQuiz() {
+  resetSeenQuestionIds();
   const url = new URL(window.location.href);
   url.searchParams.set("topic", state.topicSlug);
   window.location.href = url.toString();
