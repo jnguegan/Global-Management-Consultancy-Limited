@@ -1,3 +1,4 @@
+
 const db =
   window.supabaseClient ||
   window.sb ||
@@ -27,24 +28,7 @@ const state = {
   answersByQuestionId: {},
   flaggedQuestionIds: new Set()
 };
-function shuffleArray(arr) {
-  const copy = [...arr];
-  for (let i = copy.length - 1; i > 0; i -= 1) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [copy[i], copy[j]] = [copy[j], copy[i]];
-  }
-  return copy;
-}
 
-function detectMode() {
-  const params = new URLSearchParams(window.location.search);
-  const mode = params.get("mode");
-
-  if (mode === "mock") {
-    state.mode = "mock";
-    state.topicSlug = null;
-  }
-}
 const el = {
   timer: document.getElementById("timer"),
   questionCounter: document.getElementById("questionCounter"),
@@ -277,16 +261,17 @@ async function loadQuestions() {
   const optionsByQuestionId = groupBy(options, "question_id");
   const refsByQuestionId = groupBy(references, "question_id");
 
-  state.questions = orderedQuestions.map((q) => {
-  const options = (optionsByQuestionId[q.id] || []).sort(
-    (a, b) => (a.sort_order || 0) - (b.sort_order || 0)
-  );
+  state.questions = selected.map(q => {
+    const orderedOptions = (optionsByQuestionId[q.id] || []).sort(
+      (a, b) => (a.sort_order || 0) - (b.sort_order || 0)
+    );
 
-  return {
-    ...q,
-    options: shuffleArray(options)
-  };
-});
+    return {
+      ...q,
+      options: shuffleArray(orderedOptions),
+      references: refsByQuestionId[q.id] || []
+    };
+  });
 
   state.startedAt = Date.now();
 }
