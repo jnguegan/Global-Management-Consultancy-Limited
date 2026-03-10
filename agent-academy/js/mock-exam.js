@@ -200,15 +200,6 @@
       }
 
       state.questions = buildExamQuestions(pool);
-      
-console.table(
-  state.questions.map((q, index) => ({
-    no: index + 1,
-    questionId: q.id,
-    topicId: q.topicId,
-    text: q.text.slice(0, 80)
-  }))
-);
       state.startedAtMs = Date.now();
       state.endsAtMs = state.startedAtMs + EXAM_DURATION_SECONDS * 1000;
       state.remainingSeconds = EXAM_DURATION_SECONDS;
