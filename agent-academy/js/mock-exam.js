@@ -227,16 +227,7 @@
     el.flagBtn.addEventListener("click", toggleFlagForCurrentQuestion);
     el.submitExamBtn.addEventListener("click", handleManualSubmit);
   }
-  function bindLanguageSwitcher() {
-  document.querySelectorAll("[data-lang]").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const lang = btn.dataset.lang || "en";
-      localStorage.setItem("lang", lang);
-      location.reload();
-    });
-  });
-}
-
+  
   function applyStaticTranslations() {
     document.documentElement.lang = state.lang;
 
