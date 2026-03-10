@@ -1,8 +1,10 @@
 (function () {
   "use strict";
 
-  const db = window.supabaseClient || null;
-
+  const db =
+  window.supabaseClient ||
+  window.sb ||
+  null;
   const EXAM_QUESTION_COUNT = 20;
   const EXAM_DURATION_MINUTES = 60;
   const PASS_MARK_PERCENT = 75;
