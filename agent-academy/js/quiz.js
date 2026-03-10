@@ -106,14 +106,10 @@ function parseMode() {
 }
 
 async function createAttempt() {
-  if (!db) return;
-
-  const payload = {
-    mode: state.mode,
-    is_mock: state.mode === "mock",
-    started_at: new Date().toISOString(),
-    time_limit_minutes: state.mode === "mock" ? state.timeLimitMinutes : null
-  };
+  state.attemptId = null;
+  state.canSaveAttempt = false;
+  return;
+}
 
   if (state.topicSlug) payload.topic_slug = state.topicSlug;
 
