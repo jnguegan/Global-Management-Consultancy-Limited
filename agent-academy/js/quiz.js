@@ -175,7 +175,7 @@ function updateModeUI() {
   }
 
   if (el.nextBtn) {
-    el.nextBtn.textContent = isMock ? "Next question" : "Next question";
+    el.nextBtn.textContent = "Next question";
   }
 
   setElementVisible(el.timer?.parentElement || el.timer, isMock);
@@ -227,11 +227,18 @@ async function fetchPracticeQuestions(topicSlug) {
   const { data: questions, error } = await db
     .from("questions")
     .select("*")
-    .eq("topic_id", topic.id);
+    .eq("topic_id", topic.id)
+    .order("id", { ascending: true });
 
   if (error) throw error;
 
-  return (questions || []).filter((q) => q.is_active !== false);
+  const activeQuestions = (questions || []).filter((q) => q.is_active !== false);
+
+  console.log("Practice topic slug:", topicSlug);
+  console.log("Practice topic:", topic);
+  console.log("Practice questions found:", activeQuestions.length, activeQuestions);
+
+  return activeQuestions;
 }
 
 async function fetchMockQuestionPool() {
@@ -282,12 +289,14 @@ async function loadQuestions() {
     const pool = await fetchMockQuestionPool();
     selected = shuffleArray(pool).slice(0, 40);
   } else {
-    if (!state.topicSlug) {
-      throw new Error("Missing topic slug for practice mode.");
+    const practicePool = await fetchPracticeQuestions(state.topicSlug);
+    selected = shuffleArray(practicePool);
+
+    if (selected.length > 20) {
+      selected = selected.slice(0, 20);
     }
 
-    const practicePool = await fetchPracticeQuestions(state.topicSlug);
-    selected = shuffleArray(practicePool).slice(0, 20);
+    console.log("Practice selected questions:", selected.length, selected);
   }
 
   const questionIds = selected.map((q) => q.id);
