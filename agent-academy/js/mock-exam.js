@@ -11,7 +11,7 @@
   const EXAM_DURATION_SECONDS = EXAM_DURATION_MINUTES * 60;
 
   const state = {
-    lang: localStorage.getItem("lang") || "en",
+    lang: "en",
     questions: [],
     currentIndex: 0,
     answers: {},
@@ -125,107 +125,105 @@
     }
   };
 
-  const el = {
-    loadingState: document.getElementById("loadingState"),
-    errorState: document.getElementById("errorState"),
-    examLayout: document.getElementById("examLayout"),
-    resultScreen: document.getElementById("resultScreen"),
+ const el = {
+  loadingState: document.getElementById("loadingState"),
+  errorState: document.getElementById("errorState"),
+  examLayout: document.getElementById("examLayout"),
+  resultScreen: document.getElementById("resultScreen"),
 
-    pageTitle: document.getElementById("pageTitle"),
-    pageSubtitle: document.getElementById("pageSubtitle"),
-    timer: document.getElementById("timer"),
-    submitExamBtn: document.getElementById("submitExamBtn"),
+  startScreen: document.getElementById("startScreen"),
+  startTitle: document.getElementById("startTitle"),
+  startInstructions: document.getElementById("startInstructions"),
+  startExamBtn: document.getElementById("startExamBtn"),
 
-    questionCounter: document.getElementById("questionCounter"),
-    questionText: document.getElementById("questionText"),
-    optionsContainer: document.getElementById("optionsContainer"),
-    referencesSection: document.getElementById("referencesSection"),
-    referencesTitle: document.getElementById("referencesTitle"),
-    referencesList: document.getElementById("referencesList"),
+  pageTitle: document.getElementById("pageTitle"),
+  pageSubtitle: document.getElementById("pageSubtitle"),
+  timer: document.getElementById("timer"),
+  submitExamBtn: document.getElementById("submitExamBtn"),
 
-    flagBtn: document.getElementById("flagBtn"),
-    prevBtn: document.getElementById("prevBtn"),
-    nextBtn: document.getElementById("nextBtn"),
+  questionCounter: document.getElementById("questionCounter"),
+  questionText: document.getElementById("questionText"),
+  optionsContainer: document.getElementById("optionsContainer"),
+  referencesSection: document.getElementById("referencesSection"),
+  referencesTitle: document.getElementById("referencesTitle"),
+  referencesList: document.getElementById("referencesList"),
 
-    paletteTitle: document.getElementById("paletteTitle"),
-    legendCurrent: document.getElementById("legendCurrent"),
-    legendAnswered: document.getElementById("legendAnswered"),
-    legendFlagged: document.getElementById("legendFlagged"),
-    legendUnanswered: document.getElementById("legendUnanswered"),
+  flagBtn: document.getElementById("flagBtn"),
+  prevBtn: document.getElementById("prevBtn"),
+  nextBtn: document.getElementById("nextBtn"),
 
-    paletteContainer: document.getElementById("paletteContainer"),
-    answeredLabel: document.getElementById("answeredLabel"),
-    unansweredLabel: document.getElementById("unansweredLabel"),
-    flaggedLabel: document.getElementById("flaggedLabel"),
-    answeredCount: document.getElementById("answeredCount"),
-    unansweredCount: document.getElementById("unansweredCount"),
-    flaggedCount: document.getElementById("flaggedCount"),
+  paletteTitle: document.getElementById("paletteTitle"),
+  legendCurrent: document.getElementById("legendCurrent"),
+  legendAnswered: document.getElementById("legendAnswered"),
+  legendFlagged: document.getElementById("legendFlagged"),
+  legendUnanswered: document.getElementById("legendUnanswered"),
 
-    resultTitle: document.getElementById("resultTitle"),
-    resultLead: document.getElementById("resultLead"),
-    resultStatus: document.getElementById("resultStatus"),
-    scoreTitle: document.getElementById("scoreTitle"),
-    percentageTitle: document.getElementById("percentageTitle"),
-    timeSpentTitle: document.getElementById("timeSpentTitle"),
-    answeredTitle: document.getElementById("answeredTitle"),
-    unansweredTitle: document.getElementById("unansweredTitle"),
-    flaggedTitle: document.getElementById("flaggedTitle"),
-    resultScore: document.getElementById("resultScore"),
-    resultPercentage: document.getElementById("resultPercentage"),
-    resultTimeSpent: document.getElementById("resultTimeSpent"),
-    resultAnswered: document.getElementById("resultAnswered"),
-    resultUnanswered: document.getElementById("resultUnanswered"),
-    resultFlagged: document.getElementById("resultFlagged")
-  };
+  paletteContainer: document.getElementById("paletteContainer"),
+  answeredLabel: document.getElementById("answeredLabel"),
+  unansweredLabel: document.getElementById("unansweredLabel"),
+  flaggedLabel: document.getElementById("flaggedLabel"),
+  answeredCount: document.getElementById("answeredCount"),
+  unansweredCount: document.getElementById("unansweredCount"),
+  flaggedCount: document.getElementById("flaggedCount"),
 
+  resultTitle: document.getElementById("resultTitle"),
+  resultLead: document.getElementById("resultLead"),
+  resultStatus: document.getElementById("resultStatus"),
+  scoreTitle: document.getElementById("scoreTitle"),
+  percentageTitle: document.getElementById("percentageTitle"),
+  timeSpentTitle: document.getElementById("timeSpentTitle"),
+  answeredTitle: document.getElementById("answeredTitle"),
+  unansweredTitle: document.getElementById("unansweredTitle"),
+  flaggedTitle: document.getElementById("flaggedTitle"),
+  resultScore: document.getElementById("resultScore"),
+  resultPercentage: document.getElementById("resultPercentage"),
+  resultTimeSpent: document.getElementById("resultTimeSpent"),
+  resultAnswered: document.getElementById("resultAnswered"),
+  resultUnanswered: document.getElementById("resultUnanswered"),
+  resultFlagged: document.getElementById("resultFlagged")
+};
   document.addEventListener("DOMContentLoaded", initMockExam);
 
   async function initMockExam() {
-    applyStaticTranslations();
-    bindEvents();
-  
-    if (!db) {
-      showError(t("supabaseMissing"));
-      return;
-    }
+  bindEvents();
+  bindStartScreenLanguage();
+  applyStartScreenTranslations();
 
-    try {
-      setLoading(true);
-
-      const pool = await loadQuestionPool();
-
-      if (!Array.isArray(pool) || pool.length < EXAM_QUESTION_COUNT) {
-        showError(t("notEnoughQuestions", { count: EXAM_QUESTION_COUNT }));
-        return;
-      }
-
-      state.questions = buildExamQuestions(pool);
-      state.startedAtMs = Date.now();
-      state.endsAtMs = state.startedAtMs + EXAM_DURATION_SECONDS * 1000;
-      state.remainingSeconds = EXAM_DURATION_SECONDS;
-      state.visited[getCurrentQuestion().id] = true;
-
-      state.attemptId = await createMockAttempt();
-
-      renderPalette();
-      renderCurrentQuestion();
-      updateSidebarCounts();
-      showExam();
-      startTimer();
-    } catch (error) {
-      console.error("Mock exam init error:", error);
-      showError(error.message || t("genericError"));
-    } finally {
-      setLoading(false);
-    }
-  }
-
+  el.loadingState.classList.add("hidden");
+  el.errorState.classList.add("hidden");
+  el.examLayout.classList.add("hidden");
+  el.resultScreen.classList.add("hidden");
+  el.startScreen.classList.remove("hidden");
+}
+  function applyStartScreenTranslations() {
+  document.documentElement.lang = state.lang;
+  el.startTitle.textContent = t("startTitle");
+  el.startInstructions.textContent = t("startInstructions");
+  el.startExamBtn.textContent = t("startExam");
+}
   function bindEvents() {
-    el.prevBtn.addEventListener("click", goToPreviousQuestion);
-    el.nextBtn.addEventListener("click", goToNextQuestion);
-    el.flagBtn.addEventListener("click", toggleFlagForCurrentQuestion);
-    el.submitExamBtn.addEventListener("click", handleManualSubmit);
-  }
+  el.prevBtn.addEventListener("click", goToPreviousQuestion);
+  el.nextBtn.addEventListener("click", goToNextQuestion);
+  el.flagBtn.addEventListener("click", toggleFlagForCurrentQuestion);
+  el.submitExamBtn.addEventListener("click", handleManualSubmit);
+  el.startExamBtn.addEventListener("click", startMockExam);
+}
+
+  function bindStartScreenLanguage() {
+  document.querySelectorAll("[data-start-lang]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const lang = btn.dataset.startLang || "en";
+      state.lang = lang;
+
+      document.querySelectorAll("[data-start-lang]").forEach((b) => {
+        b.classList.remove("is-active");
+      });
+
+      btn.classList.add("is-active");
+      applyStartScreenTranslations();
+    });
+  });
+}
   
   function applyStaticTranslations() {
     document.documentElement.lang = state.lang;
