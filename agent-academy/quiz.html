@@ -223,6 +223,7 @@
       gap: 14px;
       margin: 20px 0 24px;
     }
+
     .stat {
       background: var(--panel-2);
       border: 1px solid var(--border);
@@ -247,40 +248,6 @@
       text-align: center;
       padding: 40px 20px;
       color: var(--muted);
-    }
-
-    /* Reference hover preview */
-
-    .ref-link-wrap {
-      position: relative;
-      display: inline-block;
-    }
-
-    .ref-link {
-      color: var(--brand);
-      text-decoration: underline;
-      cursor: pointer;
-    }
-
-    .ref-tooltip {
-      display: none;
-      position: absolute;
-      left: 0;
-      bottom: calc(100% + 8px);
-      width: min(360px, 80vw);
-      background: #10192c;
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 12px;
-      padding: 12px 14px;
-      color: var(--text);
-      box-shadow: 0 12px 30px rgba(0,0,0,0.35);
-      z-index: 20;
-      line-height: 1.45;
-      font-size: 14px;
-    }
-
-    .ref-link-wrap:hover .ref-tooltip {
-      display: block;
     }
 
     @media (max-width: 720px) {
@@ -323,10 +290,6 @@
 
     <div class="card" id="quizCard">
       <div id="loader" class="loader">Loading quiz questions...</div>
-      <div class="mock-topbar">
-  <div id="questionCounter"></div>
-  <div id="timer"></div>
-</div>
 
       <div id="quizContent" class="hidden">
         <div class="quiz-header">
@@ -354,9 +317,7 @@
         <div id="questionBlock">
           <div class="question-number" id="questionNumber">Question 1</div>
           <div class="question-text" id="questionText"></div>
-         <div class="options" id="optionsContainer"></div>
-
-          <div id="palette" class="question-palette"></div>
+          <div class="options" id="optionsContainer"></div>
 
           <div class="feedback" id="feedbackBox">
             <strong id="feedbackTitle"></strong>
@@ -364,12 +325,9 @@
           </div>
 
           <div class="actions">
-        <button class="btn btn-secondary" id="submitBtn">Submit answer</button>
-
-        <button class="btn btn-warning" id="flagBtn">Flag question</button>
-
-        <button class="btn btn-primary" id="nextBtn" disabled>Next question</button>
-        </div>
+            <button class="btn btn-secondary" id="submitBtn">Submit answer</button>
+            <button class="btn btn-primary" id="nextBtn" disabled>Next question</button>
+          </div>
         </div>
       </div>
 
@@ -421,7 +379,7 @@ function setLang(lang){
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="/agent-academy/js/supabase-client.js"></script>
 <script src="/agent-academy/js/guard.js"></script>
-<script src="/agent-academy/js/regulation-map.js"></script>
+<script src="/agent-academy/js/ffar-map.js"></script>
 <script src="/agent-academy/js/quiz.js"></script>
   
 </body>
