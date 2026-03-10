@@ -183,8 +183,7 @@
   async function initMockExam() {
     applyStaticTranslations();
     bindEvents();
-    bindLanguageSwitcher();
-
+  
     if (!db) {
       showError(t("supabaseMissing"));
       return;
