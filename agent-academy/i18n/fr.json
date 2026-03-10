@@ -46,5 +46,8 @@
   "topics.startButton": "Commencer ce thème",
   "topics.metaLabel": "Identifiant du thème :",
   "topics.noDescription": "Description du thème à venir.",
-  "topics.error": "Impossible de charger les thèmes pour le moment."
+  "topics.error": "Impossible de charger les thèmes pour le moment.",
+  startTitle: "Instructions de l’examen blanc",
+startInstructions: "Sélectionnez la langue souhaitée pour cet examen. Une fois prêt, cliquez sur Commencer l’examen pour charger les questions et démarrer l’examen blanc chronométré. Vous disposerez de 60 minutes pour répondre à 20 questions. La langue choisie restera la même pendant tout l’examen.",
+startExam: "Commencer l’examen"
 }
