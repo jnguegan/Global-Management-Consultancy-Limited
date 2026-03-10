@@ -1,4 +1,3 @@
-
 const db =
   window.supabaseClient ||
   window.sb ||
@@ -137,34 +136,16 @@ function shuffleArray(arr) {
   return copy;
 }
 
-function shuffleArray(arr) {
-  const copy = [...arr];
-  for (let i = copy.length - 1; i > 0; i -= 1) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [copy[i], copy[j]] = [copy[j], copy[i]];
-  }
-  return copy;
-}
-
 function selectRandomQuestions(allQuestions, limit) {
-
-  // prioritize unseen questions
   const unseen = allQuestions.filter(q =>
     !state.seenQuestionIds.has(q.id)
   );
 
-  // if enough unseen questions exist, use them
   const pool = unseen.length >= limit ? unseen : allQuestions;
-
-  // shuffle pool
   const shuffled = shuffleArray(pool);
-
-  // select limit
   const selected = shuffled.slice(0, Math.min(limit, shuffled.length));
 
-  // mark as seen
   selected.forEach(q => state.seenQuestionIds.add(q.id));
-
   saveSeenQuestionIds();
 
   return selected;
@@ -530,8 +511,19 @@ async function submitAnswer() {
       const rawArticle = (q.reference_article || "").trim();
       const safeLabel = escapeHtml(rawLabel);
       const safeArticle = escapeHtml(rawArticle);
-      const safeTitle = escapeHtml(q.reference_title || "");
-      const safePreview = escapeHtml(getReferencePreview(q));
+
+      const rawTitle = (q.reference_title || "").trim();
+      const rawPreview = (getReferencePreview(q) || "").trim();
+
+      let tooltipText = "";
+      if (rawTitle) {
+        tooltipText += `${getReferenceTitleLabel()}: ${rawTitle}`;
+      }
+      if (rawPreview) {
+        tooltipText += `${tooltipText ? "\n" : ""}${getReferencePreviewLabel()}: ${rawPreview}`;
+      }
+
+      const safeTooltip = escapeHtml(tooltipText);
 
       let link = q.reference_url || "";
 
@@ -548,20 +540,13 @@ async function submitAnswer() {
         link = getFFARArticleLink(q.reference_article);
       }
 
-      const tooltipHtml =
-        safeTitle || safePreview
-          ? `<span class="ref-tooltip">
-               ${safeTitle ? `<strong>${getReferenceTitleLabel()}:</strong> ${safeTitle}<br>` : ""}
-               ${safePreview ? `<strong>${getReferencePreviewLabel()}:</strong> ${safePreview}` : ""}
-             </span>`
-          : "";
+      let refHtml = `${safeLabel} — ${safeArticle}`;
 
-      const refHtml = link
-        ? `<span class="ref-link-wrap">
-             <a href="${link}" target="_blank" rel="noopener noreferrer" class="ref-link">${safeLabel} — ${safeArticle}</a>
-             ${tooltipHtml}
-           </span>`
-        : `${safeLabel} — ${safeArticle}`;
+      if (link) {
+        refHtml = `<a href="${link}" target="_blank" rel="noopener noreferrer" class="ref-link" title="${safeTooltip}">${safeLabel} — ${safeArticle}</a>`;
+      } else if (safeTooltip) {
+        refHtml = `<span class="ref-link" title="${safeTooltip}">${safeLabel} — ${safeArticle}</span>`;
+      }
 
       ref = `<br><br>${refWord}: ${refHtml}.`;
     }
