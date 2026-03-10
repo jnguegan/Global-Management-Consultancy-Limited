@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mock Exam | Agent Academy</title>
+
+  <style>
+    :root {
+      --bg: #0b1220;
+      --panel: #111a2b;
+      --panel-2: #162238;
+      --text: #edf2f7;
+      --muted: #9fb0c7;
+      --line: #22314d;
+      --primary: #2f6fed;
+      --primary-2: #1f5ad1;
+      --success: #11875d;
+      --danger: #c23b3b;
+      --warning: #b67b00;
+      --flag: #7c3aed;
+      --white: #ffffff;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: linear-gradient(180deg, #0b1220 0%, #0d1526 100%);
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .page {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 20px;
+      padding: 16px 18px;
+      background: rgba(17, 26, 43, 0.9);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(8px);
+    }
+
+    .topbar-left h1 {
+      margin: 0 0 6px 0;
+      font-size: 24px;
+    }
+
+    .topbar-left p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .timer {
+      min-width: 120px;
+      text-align: center;
+      padding: 10px 14px;
+      border-radius: 12px;
+      background: var(--panel-2);
+      border: 1px solid var(--line);
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    .timer.is-warning {
+      color: #ffd166;
+      border-color: #7d5a00;
+    }
+
+    .timer.is-danger {
+      color: #ff8b8b;
+      border-color: #7f2d2d;
+    }
+
+    .btn {
+      appearance: none;
+      border: 1px solid transparent;
+      border-radius: 12px;
+      padding: 10px 14px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 700;
+      transition: 0.2s ease;
+    }
+
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: var(--white);
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-2);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--text);
+      border-color: var(--line);
+    }
+
+    .btn-secondary:hover {
+      background: #182338;
+    }
+
+    .btn-danger {
+      background: var(--danger);
+      color: var(--white);
+    }
+
+    .btn-flag {
+      background: transparent;
+      color: #d7c6ff;
+      border-color: #5b32b5;
+    }
+
+    .btn-flag.is-active {
+      background: rgba(124, 58, 237, 0.18);
+      color: #f0e9ff;
+      border-color: #8b5cf6;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 330px;
+      gap: 20px;
+    }
+
+    .card {
+      background: rgba(17, 26, 43, 0.9);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 20px;
+    }
+
+    .loader,
+    .error {
+      text-align: center;
+      padding: 50px 20px;
+      color: var(--muted);
+    }
+
+    .error {
+      color: #ff9b9b;
+    }
+
+    .question-meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+
+    .question-counter {
+      font-size: 14px;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .question-text {
+      font-size: 22px;
+      line-height: 1.5;
+      margin: 0 0 20px 0;
+    }
+
+    .options {
+      display: grid;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .option {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 14px 16px;
+      background: #121d31;
+      cursor: pointer;
+      transition: 0.2s ease;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      width: 100%;
+      text-align: left;
+      color: var(--text);
+    }
+
+    .option:hover {
+      border-color: #35548a;
+      background: #15213a;
+    }
+
+    .option.is-selected {
+      border-color: var(--primary);
+      background: rgba(47, 111, 237, 0.16);
+    }
+
+    .option-letter {
+      width: 28px;
+      height: 28px;
+      border-radius: 999px;
+      background: #0e1728;
+      border: 1px solid #30435f;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 700;
+      flex: 0 0 auto;
+      margin-top: 1px;
+    }
+
+    .option-text {
+      flex: 1;
+      line-height: 1.5;
+    }
+
+    .references {
+      margin-top: 20px;
+      border-top: 1px solid var(--line);
+      padding-top: 16px;
+    }
+
+    .references h3 {
+      margin: 0 0 10px 0;
+      font-size: 15px;
+      color: var(--muted);
+    }
+
+    .references ul {
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    .references li {
+      margin-bottom: 8px;
+    }
+
+    .references a {
+      color: #9bc2ff;
+      text-decoration: none;
+    }
+
+    .references a:hover {
+      text-decoration: underline;
+    }
+
+    .question-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-top: 24px;
+      flex-wrap: wrap;
+    }
+
+    .sidebar-title {
+      margin: 0 0 12px 0;
+      font-size: 18px;
+    }
+
+    .legend {
+      display: grid;
+      gap: 10px;
+      margin-bottom: 16px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .legend-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .legend-box {
+      width: 18px;
+      height: 18px;
+      border-radius: 6px;
+      border: 1px solid var(--line);
+      background: #101a2c;
+      flex: 0 0 auto;
+    }
+
+    .legend-box.answered {
+      background: rgba(17, 135, 93, 0.22);
+      border-color: #1f8c67;
+    }
+
+    .legend-box.current {
+      background: rgba(47, 111, 237, 0.25);
+      border-color: var(--primary);
+    }
+
+    .legend-box.flagged {
+      background: rgba(124, 58, 237, 0.22);
+      border-color: #8b5cf6;
+    }
+
+    .legend-box.unanswered {
+      background: #101a2c;
+      border-color: #465a7f;
+    }
+
+    .palette {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .palette-btn {
+      border: 1px solid #3a4e74;
+      background: #101a2c;
+      color: var(--text);
+      border-radius: 10px;
+      min-height: 44px;
+      cursor: pointer;
+      font-weight: 700;
+      transition: 0.2s ease;
+      position: relative;
+    }
+
+    .palette-btn:hover {
+      background: #16233d;
+    }
+
+    .palette-btn.is-current {
+      border-color: var(--primary);
+      background: rgba(47, 111, 237, 0.2);
+    }
+
+    .palette-btn.is-answered {
+      border-color: #1f8c67;
+      background: rgba(17, 135, 93, 0.18);
+    }
+
+    .palette-btn.is-flagged::after {
+      content: "⚑";
+      position: absolute;
+      top: 3px;
+      right: 6px;
+      font-size: 11px;
+      color: #c9b1ff;
+    }
+
+    .summary {
+      margin-top: 18px;
+      display: grid;
+      gap: 10px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .result-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 20px;
+    }
+
+    .result-box {
+      background: #121d31;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 18px;
+    }
+
+    .result-box h3 {
+      margin: 0 0 8px 0;
+      font-size: 14px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .result-box p {
+      margin: 0;
+      font-size: 24px;
+      font-weight: 800;
+    }
+
+    .result-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 10px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-weight: 800;
+      font-size: 14px;
+    }
+
+    .result-status.pass {
+      background: rgba(17, 135, 93, 0.18);
+      color: #8ff0c5;
+      border: 1px solid #1f8c67;
+    }
+
+    .result-status.fail {
+      background: rgba(194, 59, 59, 0.18);
+      color: #ffaaaa;
+      border: 1px solid #a93737;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    @media (max-width: 1024px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .page {
+        padding: 14px;
+      }
+
+      .topbar {
+        padding: 14px;
+      }
+
+      .question-text {
+        font-size: 19px;
+      }
+
+      .result-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .palette {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .result-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="topbar">
+      <div class="topbar-left">
+        <h1 id="pageTitle">FIFA Football Agent Mock Exam</h1>
+        <p id="pageSubtitle">20 questions • 60 minutes • Pass mark: 75%</p>
+      </div>
+
+      <div class="topbar-right">
+        <div id="timer" class="timer">60:00</div>
+        <button id="submitExamBtn" class="btn btn-danger" type="button">Submit Exam</button>
+      </div>
+    </header>
+
+    <div id="loadingState" class="card loader">Loading mock exam...</div>
+    <div id="errorState" class="card error hidden"></div>
+
+    <div id="examLayout" class="layout hidden">
+      <main class="card">
+        <div class="question-meta">
+          <div id="questionCounter" class="question-counter">Question 1 of 20</div>
+          <button id="flagBtn" class="btn btn-flag" type="button">⚑ Flag for review</button>
+        </div>
+
+        <h2 id="questionText" class="question-text"></h2>
+
+        <div id="optionsContainer" class="options"></div>
+
+        <section id="referencesSection" class="references hidden">
+          <h3 id="referencesTitle">Regulation references</h3>
+          <ul id="referencesList"></ul>
+        </section>
+
+        <div class="question-nav">
+          <button id="prevBtn" class="btn btn-secondary" type="button">Previous</button>
+          <button id="nextBtn" class="btn btn-primary" type="button">Next</button>
+        </div>
+      </main>
+
+      <aside class="card">
+        <h2 id="paletteTitle" class="sidebar-title">Question Palette</h2>
+
+        <div class="legend">
+          <div class="legend-row">
+            <span class="legend-box current"></span>
+            <span id="legendCurrent">Current</span>
+          </div>
+          <div class="legend-row">
+            <span class="legend-box answered"></span>
+            <span id="legendAnswered">Answered</span>
+          </div>
+          <div class="legend-row">
+            <span class="legend-box flagged"></span>
+            <span id="legendFlagged">Flagged</span>
+          </div>
+          <div class="legend-row">
+            <span class="legend-box unanswered"></span>
+            <span id="legendUnanswered">Unanswered</span>
+          </div>
+        </div>
+
+        <div id="paletteContainer" class="palette"></div>
+
+        <div class="summary">
+          <div><strong id="answeredLabel">Answered:</strong> <span id="answeredCount">0</span></div>
+          <div><strong id="unansweredLabel">Unanswered:</strong> <span id="unansweredCount">20</span></div>
+          <div><strong id="flaggedLabel">Flagged:</strong> <span id="flaggedCount">0</span></div>
+        </div>
+      </aside>
+    </div>
+
+    <section id="resultScreen" class="card hidden">
+      <h2 id="resultTitle">Mock Exam Result</h2>
+      <p id="resultLead" style="color: var(--muted); margin-top: 8px;"></p>
+
+      <div id="resultStatus" class="result-status"></div>
+
+      <div class="result-grid">
+        <div class="result-box">
+          <h3 id="scoreTitle">Score</h3>
+          <p id="resultScore">0 / 20</p>
+        </div>
+
+        <div class="result-box">
+          <h3 id="percentageTitle">Percentage</h3>
+          <p id="resultPercentage">0%</p>
+        </div>
+
+        <div class="result-box">
+          <h3 id="timeSpentTitle">Time Spent</h3>
+          <p id="resultTimeSpent">00:00</p>
+        </div>
+
+        <div class="result-box">
+          <h3 id="answeredTitle">Answered</h3>
+          <p id="resultAnswered">0</p>
+        </div>
+
+        <div class="result-box">
+          <h3 id="unansweredTitle">Unanswered</h3>
+          <p id="resultUnanswered">0</p>
+        </div>
+
+        <div class="result-box">
+          <h3 id="flaggedTitle">Flagged</h3>
+          <p id="resultFlagged">0</p>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script src="/agent-academy/js/mock-exam.js"></script>
+</body>
+</html>
