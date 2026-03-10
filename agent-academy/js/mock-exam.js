@@ -184,7 +184,7 @@
 };
   document.addEventListener("DOMContentLoaded", initMockExam);
 
-  async function initMockExam() {
+ async function initMockExam() {
   bindEvents();
   bindStartScreenLanguage();
   applyStartScreenTranslations();
@@ -195,13 +195,61 @@
   el.resultScreen.classList.add("hidden");
   el.startScreen.classList.remove("hidden");
 }
-  function applyStartScreenTranslations() {
+
+function applyStartScreenTranslations() {
   document.documentElement.lang = state.lang;
   el.startTitle.textContent = t("startTitle");
   el.startInstructions.textContent = t("startInstructions");
   el.startExamBtn.textContent = t("startExam");
 }
-  function bindEvents() {
+
+async function startMockExam() {
+
+  if (!db) {
+    showError(t("supabaseMissing"));
+    return;
+  }
+
+  try {
+    el.startScreen.classList.add("hidden");
+    setLoading(true);
+
+    const pool = await loadQuestionPool();
+
+    if (!Array.isArray(pool) || pool.length < EXAM_QUESTION_COUNT) {
+      showError(t("notEnoughQuestions", { count: EXAM_QUESTION_COUNT }));
+      return;
+    }
+
+    state.questions = buildExamQuestions(pool);
+    state.currentIndex = 0;
+    state.answers = {};
+    state.flagged = {};
+    state.visited = {};
+    state.submitted = false;
+    state.submitting = false;
+
+    state.startedAtMs = Date.now();
+    state.endsAtMs = state.startedAtMs + EXAM_DURATION_SECONDS * 1000;
+    state.remainingSeconds = EXAM_DURATION_SECONDS;
+
+    state.attemptId = await createMockAttempt();
+
+    renderPalette();
+    renderCurrentQuestion();
+    updateSidebarCounts();
+    showExam();
+    startTimer();
+
+  } catch (error) {
+    console.error("Mock exam start error:", error);
+    showError(error.message || t("genericError"));
+  } finally {
+    setLoading(false);
+  }
+}
+
+function bindEvents() {
   el.prevBtn.addEventListener("click", goToPreviousQuestion);
   el.nextBtn.addEventListener("click", goToNextQuestion);
   el.flagBtn.addEventListener("click", toggleFlagForCurrentQuestion);
