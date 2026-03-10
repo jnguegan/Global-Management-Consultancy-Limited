@@ -1,4 +1,3 @@
-
 const db =
   window.supabaseClient ||
   window.sb ||
@@ -94,30 +93,14 @@ async function createAttempt() {
   state.canSaveAttempt = false;
   return;
 }
+
 async function fetchMockQuestionPool() {
   const { data, error } = await db
     .from("questions")
-    .select(`
-      id,
-      topic_id,
-      question_text_en,
-      question_text_fr,
-      question_text_es,
-      question_type,
-      difficulty,
-      explanation_en,
-      explanation_fr,
-      explanation_es,
-      is_active,
-      source_article,
-      source_page,
-      source_note
-    `)
-    .eq("is_active", true)
-    .in("question_type", ["standard", "scenario", "calculation", "multi_article"]);
+    .select("*");
 
   if (error) throw error;
-  return data || [];
+  return (data || []).filter((q) => q.is_active !== false);
 }
 
 function pickWeightedMockQuestions(pool, counts = { easy: 12, medium: 20, hard: 8 }) {
@@ -143,7 +126,7 @@ function pickWeightedMockQuestions(pool, counts = { easy: 12, medium: 20, hard: 
 async function fetchPracticeQuestions(topicSlug) {
   const { data: topic, error: topicError } = await db
     .from("topics")
-    .select("id, slug, title_en, title_fr, title_es")
+    .select("*")
     .eq("slug", topicSlug)
     .single();
 
@@ -153,27 +136,11 @@ async function fetchPracticeQuestions(topicSlug) {
 
   const { data: questions, error } = await db
     .from("questions")
-    .select(`
-      id,
-      topic_id,
-      question_text_en,
-      question_text_fr,
-      question_text_es,
-      question_type,
-      difficulty,
-      explanation_en,
-      explanation_fr,
-      explanation_es,
-      is_active,
-      source_article,
-      source_page,
-      source_note
-    `)
-    .eq("topic_id", topic.id)
-    .eq("is_active", true);
+    .select("*")
+    .eq("topic_id", topic.id);
 
   if (error) throw error;
-  return questions || [];
+  return (questions || []).filter((q) => q.is_active !== false);
 }
 
 async function fetchOptionsForQuestions(questionIds) {
