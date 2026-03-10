@@ -140,6 +140,7 @@
   pageSubtitle: document.getElementById("pageSubtitle"),
   timer: document.getElementById("timer"),
   submitExamBtn: document.getElementById("submitExamBtn"),
+  activeLanguageBadge: document.getElementById("activeLanguageBadge"),
 
   questionCounter: document.getElementById("questionCounter"),
   questionText: document.getElementById("questionText"),
@@ -201,6 +202,15 @@ function applyStartScreenTranslations() {
   el.startTitle.textContent = t("startTitle");
   el.startInstructions.textContent = t("startInstructions");
   el.startExamBtn.textContent = t("startExam");
+}
+  function updateActiveLanguageBadge() {
+  const labels = {
+    en: "Language: EN",
+    fr: "Langue : FR",
+    es: "Idioma: ES"
+  };
+
+  el.activeLanguageBadge.textContent = labels[state.lang] || "Language: EN";
 }
 
 async function startMockExam() {
@@ -298,6 +308,7 @@ function bindEvents() {
     el.answeredTitle.textContent = t("answered");
     el.unansweredTitle.textContent = t("unanswered");
     el.flaggedTitle.textContent = t("flaggedLabel");
+     updateActiveLanguageBadge();
   }
 
   async function loadQuestionPool() {
