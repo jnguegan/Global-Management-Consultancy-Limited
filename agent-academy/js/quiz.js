@@ -12,6 +12,7 @@ const state = {
   mode: "practice", // practice | mock
   topicSlug: null,
   topic: null,
+  topicsById: {},
   questions: [],
   currentIndex: 0,
   score: 0,
@@ -20,42 +21,46 @@ const state = {
   submitted: false,
   canSaveAttempt: false,
 
+  // mock exam
   timeLimitMinutes: 60,
   remainingSeconds: 60 * 60,
   timerInterval: null,
-
   answersByQuestionId: {},
-  flaggedQuestionIds: new Set()
+  flaggedQuestionIds: new Set(),
+
+  // practice mode
+  practiceResultsByQuestionId: {}
 };
-function shuffleArray(arr) {
-  const copy = [...arr];
-  for (let i = copy.length - 1; i > 0; i -= 1) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [copy[i], copy[j]] = [copy[j], copy[i]];
-  }
-  return copy;
-}
 
-function detectMode() {
-  const params = new URLSearchParams(window.location.search);
-  const mode = params.get("mode");
-
-  if (mode === "mock") {
-    state.mode = "mock";
-    state.topicSlug = null;
-  }
-}
 const el = {
+  loader: document.getElementById("loader"),
+  quizContent: document.getElementById("quizContent"),
+  quizCard: document.getElementById("quizCard"),
+
+  topicBadge: document.getElementById("topicBadge"),
+  quizHeading: document.getElementById("quizHeading"),
+  quizSubheading: document.getElementById("quizSubheading"),
+
   timer: document.getElementById("timer"),
   questionCounter: document.getElementById("questionCounter"),
+
+  questionBlock: document.getElementById("questionBlock"),
+  questionNumber: document.getElementById("questionNumber"),
   questionText: document.getElementById("questionText"),
   optionsContainer: document.getElementById("optionsContainer"),
   referencesContainer: document.getElementById("referencesContainer"),
+
+  feedbackBox: document.getElementById("feedbackBox"),
+  feedbackTitle: document.getElementById("feedbackTitle"),
+  feedbackText: document.getElementById("feedbackText"),
+
   palette: document.getElementById("palette"),
+
   prevBtn: document.getElementById("prevBtn"),
   flagBtn: document.getElementById("flagBtn"),
   nextBtn: document.getElementById("nextBtn"),
   submitBtn: document.getElementById("submitBtn"),
+
   resultScreen: document.getElementById("resultScreen")
 };
 
@@ -77,18 +82,8 @@ function groupBy(items, key) {
   }, {});
 }
 
-function getTextByLang(item, base) {
-  return item[`${base}_${state.lang}`] || item[`${base}_en`] || "";
-}
-
 function getQueryParams() {
   return new URLSearchParams(window.location.search);
-}
-
-function formatTime(seconds) {
-  const mins = Math.floor(seconds / 60);
-  const secs = seconds % 60;
-  return `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
 }
 
 function parseMode() {
@@ -96,13 +91,100 @@ function parseMode() {
   const mode = params.get("mode");
   const topic = params.get("topic");
 
-  if (mode === "mock") {
-    state.mode = "mock";
-  } else {
-    state.mode = "practice";
+  state.mode = mode === "mock" ? "mock" : "practice";
+  state.topicSlug = topic || null;
+}
+
+function formatTime(seconds) {
+  const mins = Math.floor(seconds / 60);
+  const secs = Math.max(0, seconds % 60);
+  return `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
+}
+
+function isCorrectOption(opt) {
+  return opt?.is_correct === true || opt?.is_correct === 1 || opt?.is_correct === "true";
+}
+
+function getTextByLang(item, base) {
+  if (!item) return "";
+
+  const langKey = `${base}_${state.lang}`;
+  const enKey = `${base}_en`;
+
+  if (item[langKey]) return item[langKey];
+  if (item[enKey]) return item[enKey];
+  if (item[base]) return item[base];
+
+  return "";
+}
+
+function getQuestionText(question) {
+  return (
+    getTextByLang(question, "question_text") ||
+    getTextByLang(question, "text") ||
+    question.question ||
+    ""
+  );
+}
+
+function getOptionText(option) {
+  return (
+    getTextByLang(option, "option_text") ||
+    getTextByLang(option, "text") ||
+    option.label ||
+    ""
+  );
+}
+
+function getTopicTitle(topic) {
+  return (
+    getTextByLang(topic, "title") ||
+    getTextByLang(topic, "name") ||
+    topic?.slug ||
+    "Quiz"
+  );
+}
+
+function getExplanationText(question) {
+  return (
+    getTextByLang(question, "explanation") ||
+    getTextByLang(question, "feedback") ||
+    ""
+  );
+}
+
+function showLoader(show) {
+  if (el.loader) {
+    el.loader.style.display = show ? "block" : "none";
+  }
+  if (el.quizContent) {
+    el.quizContent.classList.toggle("hidden", show);
+  }
+}
+
+function setElementVisible(element, visible, displayValue = "") {
+  if (!element) return;
+  element.style.display = visible ? displayValue : "none";
+}
+
+function updateModeUI() {
+  const isMock = state.mode === "mock";
+
+  if (el.submitBtn) {
+    el.submitBtn.textContent = isMock ? "Submit Exam" : "Submit answer";
   }
 
-  state.topicSlug = topic || null;
+  if (el.nextBtn) {
+    el.nextBtn.textContent = isMock ? "Next question" : "Next question";
+  }
+
+  setElementVisible(el.timer?.parentElement || el.timer, isMock);
+  setElementVisible(el.palette, isMock);
+  setElementVisible(el.flagBtn, isMock, "inline-flex");
+
+  if (!isMock) {
+    renderTimer();
+  }
 }
 
 async function createAttempt() {
@@ -111,117 +193,65 @@ async function createAttempt() {
   return;
 }
 
-  if (state.topicSlug) payload.topic_slug = state.topicSlug;
+async function fetchAllTopicsMap() {
+  try {
+    const { data, error } = await db
+      .from("topics")
+      .select("*");
 
-  const { data, error } = await db
-    .from("quiz_attempts")
-    .insert(payload)
-    .select("id")
-    .single();
+    if (error) throw error;
 
-  if (error) {
-    console.warn("Could not create attempt:", error.message);
-    return;
+    const map = {};
+    (data || []).forEach((topic) => {
+      map[topic.id] = topic;
+    });
+    state.topicsById = map;
+  } catch (error) {
+    console.warn("Could not load topics map:", error.message);
+    state.topicsById = {};
   }
-
-  state.attemptId = data.id;
-  state.canSaveAttempt = true;
-}
-
-async function fetchMockQuestionPool() {
-  const { data, error } = await db
-    .from("questions")
-    .select(`
-      id,
-      topic_id,
-      question_text_en,
-      question_text_fr,
-      question_text_es,
-      question_type,
-      difficulty,
-      explanation_en,
-      explanation_fr,
-      explanation_es,
-      is_active,
-      source_article,
-      source_page,
-      source_note
-    `)
-    .eq("is_active", true)
-    .in("question_type", ["standard", "scenario", "calculation", "multi_article"]);
-
-  if (error) throw error;
-  return data || [];
-}
-
-function pickWeightedMockQuestions(pool, counts = { easy: 12, medium: 20, hard: 8 }) {
-  const easy = shuffleArray(pool.filter(q => q.difficulty === "easy"));
-  const medium = shuffleArray(pool.filter(q => q.difficulty === "medium"));
-  const hard = shuffleArray(pool.filter(q => q.difficulty === "hard"));
-
-  let selected = [
-    ...easy.slice(0, counts.easy),
-    ...medium.slice(0, counts.medium),
-    ...hard.slice(0, counts.hard)
-  ];
-
-  if (selected.length < 40) {
-    const selectedIds = new Set(selected.map(q => q.id));
-    const extra = shuffleArray(pool.filter(q => !selectedIds.has(q.id)));
-    selected = [...selected, ...extra.slice(0, 40 - selected.length)];
-  }
-
-  return shuffleArray(selected).slice(0, 40);
 }
 
 async function fetchPracticeQuestions(topicSlug) {
   const { data: topic, error: topicError } = await db
     .from("topics")
-    .select("id, slug, title_en, title_fr, title_es")
+    .select("*")
     .eq("slug", topicSlug)
     .single();
 
   if (topicError) throw topicError;
 
   state.topic = topic;
+  state.topicsById = { [topic.id]: topic };
 
   const { data: questions, error } = await db
     .from("questions")
-    .select(`
-      id,
-      topic_id,
-      question_text_en,
-      question_text_fr,
-      question_text_es,
-      question_type,
-      difficulty,
-      explanation_en,
-      explanation_fr,
-      explanation_es,
-      is_active,
-      source_article,
-      source_page,
-      source_note
-    `)
-    .eq("topic_id", topic.id)
-    .eq("is_active", true);
+    .select("*")
+    .eq("topic_id", topic.id);
 
   if (error) throw error;
-  return questions || [];
+
+  return (questions || []).filter((q) => q.is_active !== false);
+}
+
+async function fetchMockQuestionPool() {
+  await fetchAllTopicsMap();
+
+  const { data, error } = await db
+    .from("questions")
+    .select("*");
+
+  if (error) throw error;
+
+  return (data || []).filter((q) => q.is_active !== false);
 }
 
 async function fetchOptionsForQuestions(questionIds) {
+  if (!questionIds.length) return [];
+
   const { data, error } = await db
     .from("question_options")
-    .select(`
-      id,
-      question_id,
-      option_text_en,
-      option_text_fr,
-      option_text_es,
-      is_correct,
-      sort_order
-    `)
+    .select("*")
     .in("question_id", questionIds);
 
   if (error) throw error;
@@ -229,23 +259,20 @@ async function fetchOptionsForQuestions(questionIds) {
 }
 
 async function fetchReferencesForQuestions(questionIds) {
-  const { data, error } = await db
-    .from("question_references")
-    .select(`
-      id,
-      question_id,
-      reference_label,
-      reference_article,
-      reference_page,
-      reference_title,
-      reference_preview_en,
-      reference_preview_fr,
-      reference_preview_es
-    `)
-    .in("question_id", questionIds);
+  if (!questionIds.length) return [];
 
-  if (error) throw error;
-  return data || [];
+  try {
+    const { data, error } = await db
+      .from("question_references")
+      .select("*")
+      .in("question_id", questionIds);
+
+    if (error) throw error;
+    return data || [];
+  } catch (error) {
+    console.warn("Could not load references:", error.message);
+    return [];
+  }
 }
 
 async function loadQuestions() {
@@ -253,17 +280,17 @@ async function loadQuestions() {
 
   if (state.mode === "mock") {
     const pool = await fetchMockQuestionPool();
-    selected = pickWeightedMockQuestions(pool, {
-      easy: 12,
-      medium: 20,
-      hard: 8
-    });
+    selected = shuffleArray(pool).slice(0, 40);
   } else {
+    if (!state.topicSlug) {
+      throw new Error("Missing topic slug for practice mode.");
+    }
+
     const practicePool = await fetchPracticeQuestions(state.topicSlug);
-    selected = shuffleArray(practicePool);
+    selected = shuffleArray(practicePool).slice(0, 20);
   }
 
-  const questionIds = selected.map(q => q.id);
+  const questionIds = selected.map((q) => q.id);
 
   const [options, references] = await Promise.all([
     fetchOptionsForQuestions(questionIds),
@@ -273,16 +300,17 @@ async function loadQuestions() {
   const optionsByQuestionId = groupBy(options, "question_id");
   const refsByQuestionId = groupBy(references, "question_id");
 
-  state.questions = orderedQuestions.map((q) => {
-  const options = (optionsByQuestionId[q.id] || []).sort(
-    (a, b) => (a.sort_order || 0) - (b.sort_order || 0)
-  );
+  state.questions = selected.map((q) => {
+    const orderedOptions = (optionsByQuestionId[q.id] || []).sort(
+      (a, b) => (a.sort_order || 0) - (b.sort_order || 0)
+    );
 
-  return {
-    ...q,
-    options: shuffleArray(options)
-  };
-});
+    return {
+      ...q,
+      options: shuffleArray(orderedOptions),
+      references: refsByQuestionId[q.id] || []
+    };
+  });
 
   state.startedAt = Date.now();
 }
@@ -301,7 +329,6 @@ function startMockTimer() {
   if (state.mode !== "mock") return;
 
   clearInterval(state.timerInterval);
-
   renderTimer();
 
   state.timerInterval = setInterval(() => {
@@ -323,50 +350,44 @@ function getSavedAnswer(questionId) {
   return state.answersByQuestionId[questionId] || null;
 }
 
-function renderQuestion() {
-  const q = getCurrentQuestion();
-  if (!q) return;
+function getCorrectOption(question) {
+  return (question.options || []).find(isCorrectOption) || null;
+}
 
-  if (el.questionCounter) {
-    el.questionCounter.textContent = `Question ${state.currentIndex + 1} of ${state.questions.length}`;
+function renderHeader() {
+  if (!el.topicBadge || !el.quizHeading || !el.quizSubheading) return;
+
+  if (state.mode === "mock") {
+    el.topicBadge.textContent = "Mock Exam";
+    el.quizHeading.textContent = "FIFA Football Agent Mock Exam";
+    el.quizSubheading.textContent = "Timed exam mode. No instant feedback. Review flagged questions before submitting.";
+    return;
   }
 
-  if (el.questionText) {
-    el.questionText.textContent = getTextByLang(q, "question_text");
+  const title = getTopicTitle(state.topic);
+  el.topicBadge.textContent = title;
+  el.quizHeading.textContent = title;
+  el.quizSubheading.textContent = "Answer each question and track your score live.";
+}
+
+function renderFeedback({ title = "", text = "", show = false, isCorrect = null }) {
+  if (!el.feedbackBox || !el.feedbackTitle || !el.feedbackText) return;
+
+  if (!show) {
+    el.feedbackBox.style.display = "none";
+    el.feedbackTitle.textContent = "";
+    el.feedbackText.textContent = "";
+    el.feedbackBox.classList.remove("correct", "incorrect");
+    return;
   }
 
-  if (el.optionsContainer) {
-    el.optionsContainer.innerHTML = "";
-    const savedOptionId = getSavedAnswer(q.id);
+  el.feedbackBox.style.display = "block";
+  el.feedbackTitle.textContent = title;
+  el.feedbackText.textContent = text;
 
-    q.options.forEach((opt, index) => {
-      const wrapper = document.createElement("label");
-      wrapper.className = "quiz-option";
-
-      const input = document.createElement("input");
-      input.type = "radio";
-      input.name = `question-${q.id}`;
-      input.value = opt.id;
-      input.checked = String(savedOptionId) === String(opt.id);
-
-      input.addEventListener("change", () => {
-        saveAnswerLocally(q.id, opt.id);
-      });
-
-      const text = document.createElement("span");
-      const letter = ["A", "B", "C", "D"][index] || "";
-      text.textContent = `${letter}. ${getTextByLang(opt, "option_text")}`;
-
-      wrapper.appendChild(input);
-      wrapper.appendChild(text);
-      el.optionsContainer.appendChild(wrapper);
-    });
-  }
-
-  renderReferences(q);
-  renderPalette();
-  renderFlagButton();
-  renderNavButtons();
+  el.feedbackBox.classList.remove("correct", "incorrect");
+  if (isCorrect === true) el.feedbackBox.classList.add("correct");
+  if (isCorrect === false) el.feedbackBox.classList.add("incorrect");
 }
 
 function renderReferences(question) {
@@ -374,11 +395,14 @@ function renderReferences(question) {
 
   el.referencesContainer.innerHTML = "";
 
-  (question.references || []).forEach(ref => {
+  (question.references || []).forEach((ref) => {
     const item = document.createElement("div");
     item.className = "question-reference";
 
-    const preview = getTextByLang(ref, "reference_preview");
+    const preview =
+      getTextByLang(ref, "reference_preview") ||
+      ref.reference_preview ||
+      "";
 
     item.innerHTML = `
       <strong>${ref.reference_label || ""}</strong>
@@ -392,75 +416,33 @@ function renderReferences(question) {
   });
 }
 
-function saveAnswerLocally(questionId, optionId) {
-  state.answersByQuestionId[questionId] = optionId;
-  renderPalette();
-
-  if (state.canSaveAttempt) {
-    saveAnswerToSupabase(questionId, optionId).catch(err => {
-      console.warn("Could not save answer:", err.message);
-    });
-  }
-}
-
-async function saveAnswerToSupabase(questionId, optionId) {
-  if (!state.attemptId) return;
-
-  const question = state.questions.find(q => q.id === questionId);
-  const chosenOption = question?.options?.find(opt => String(opt.id) === String(optionId));
-
-  await db.from("quiz_answers").upsert({
-    attempt_id: state.attemptId,
-    question_id: questionId,
-    selected_option_id: optionId,
-    flagged: state.flaggedQuestionIds.has(questionId),
-    marked_for_review: state.flaggedQuestionIds.has(questionId),
-    answered_at: new Date().toISOString(),
-    is_correct: chosenOption ? !!chosenOption.is_correct : null
-  }, {
-    onConflict: "attempt_id,question_id"
-  });
-}
-
-function toggleFlag() {
-  const q = getCurrentQuestion();
-  if (!q) return;
-
-  if (state.flaggedQuestionIds.has(q.id)) {
-    state.flaggedQuestionIds.delete(q.id);
-  } else {
-    state.flaggedQuestionIds.add(q.id);
-  }
-
-  renderFlagButton();
-  renderPalette();
-
-  if (state.canSaveAttempt) {
-    const selectedOptionId = state.answersByQuestionId[q.id] || null;
-    saveAnswerToSupabase(q.id, selectedOptionId).catch(err => {
-      console.warn("Could not save flag:", err.message);
-    });
-  }
-}
-
 function renderFlagButton() {
   if (!el.flagBtn) return;
+
+  if (state.mode !== "mock") {
+    el.flagBtn.style.display = "none";
+    return;
+  }
+
+  el.flagBtn.style.display = "";
   const q = getCurrentQuestion();
   if (!q) return;
 
   el.flagBtn.textContent = state.flaggedQuestionIds.has(q.id)
-    ? "Unflag"
-    : "Flag for review";
-}
-
-function renderNavButtons() {
-  if (el.prevBtn) el.prevBtn.disabled = state.currentIndex === 0;
-  if (el.nextBtn) el.nextBtn.disabled = state.currentIndex === state.questions.length - 1;
+    ? "Unflag question"
+    : "Flag question";
 }
 
 function renderPalette() {
   if (!el.palette) return;
 
+  if (state.mode !== "mock") {
+    el.palette.innerHTML = "";
+    el.palette.style.display = "none";
+    return;
+  }
+
+  el.palette.style.display = "";
   el.palette.innerHTML = "";
 
   state.questions.forEach((q, index) => {
@@ -486,7 +468,138 @@ function renderPalette() {
   });
 }
 
+function renderNavButtons() {
+  if (el.prevBtn) {
+    if (state.mode === "mock") {
+      el.prevBtn.style.display = "";
+      el.prevBtn.disabled = state.currentIndex === 0;
+    } else {
+      el.prevBtn.style.display = "none";
+    }
+  }
+
+  if (el.nextBtn) {
+    if (state.mode === "mock") {
+      el.nextBtn.disabled = state.currentIndex === state.questions.length - 1;
+    } else {
+      const q = getCurrentQuestion();
+      const result = q ? state.practiceResultsByQuestionId[q.id] : null;
+      el.nextBtn.disabled = !result?.submitted;
+      el.nextBtn.textContent =
+        state.currentIndex === state.questions.length - 1
+          ? "View results"
+          : "Next question";
+    }
+  }
+}
+
+function renderQuestion() {
+  const q = getCurrentQuestion();
+  if (!q) return;
+
+  renderHeader();
+
+  if (el.questionCounter) {
+    el.questionCounter.textContent = `Question ${state.currentIndex + 1} of ${state.questions.length}`;
+  }
+
+  if (el.questionNumber) {
+    el.questionNumber.textContent = `Question ${state.currentIndex + 1}`;
+  }
+
+  if (el.questionText) {
+    el.questionText.textContent = getQuestionText(q);
+  }
+
+  if (el.optionsContainer) {
+    el.optionsContainer.innerHTML = "";
+    const savedOptionId = getSavedAnswer(q.id);
+    const practiceResult = state.practiceResultsByQuestionId[q.id];
+    const disableInputs = state.mode === "practice" && practiceResult?.submitted;
+
+    (q.options || []).forEach((opt, index) => {
+      const wrapper = document.createElement("label");
+      wrapper.className = "quiz-option";
+
+      const input = document.createElement("input");
+      input.type = "radio";
+      input.name = `question-${q.id}`;
+      input.value = opt.id;
+      input.checked = String(savedOptionId) === String(opt.id);
+      input.disabled = disableInputs;
+
+      input.addEventListener("change", () => {
+        saveAnswerLocally(q.id, opt.id);
+      });
+
+      const text = document.createElement("span");
+      const letter = ["A", "B", "C", "D"][index] || "";
+      text.textContent = `${letter}. ${getOptionText(opt)}`;
+
+      wrapper.appendChild(input);
+      wrapper.appendChild(text);
+      el.optionsContainer.appendChild(wrapper);
+    });
+  }
+
+  if (state.mode === "practice") {
+    const result = state.practiceResultsByQuestionId[q.id];
+
+    if (result?.submitted) {
+      renderFeedback({
+        title: result.correct ? "Correct" : "Incorrect",
+        text: result.feedbackText || "",
+        show: true,
+        isCorrect: result.correct
+      });
+    } else {
+      renderFeedback({ show: false });
+    }
+  } else {
+    renderFeedback({ show: false });
+  }
+
+  renderReferences(q);
+  renderPalette();
+  renderFlagButton();
+  renderNavButtons();
+  renderTimer();
+}
+
+function saveAnswerLocally(questionId, optionId) {
+  state.answersByQuestionId[questionId] = optionId;
+  renderPalette();
+
+  if (state.mode === "mock") {
+    renderNavButtons();
+  }
+}
+
+function toggleFlag() {
+  if (state.mode !== "mock") return;
+
+  const q = getCurrentQuestion();
+  if (!q) return;
+
+  if (state.flaggedQuestionIds.has(q.id)) {
+    state.flaggedQuestionIds.delete(q.id);
+  } else {
+    state.flaggedQuestionIds.add(q.id);
+  }
+
+  renderFlagButton();
+  renderPalette();
+}
+
 function goNext() {
+  if (state.mode === "practice") {
+    const isLast = state.currentIndex === state.questions.length - 1;
+    if (isLast) {
+      submitPracticeResults();
+      return;
+    }
+  }
+
   if (state.currentIndex < state.questions.length - 1) {
     state.currentIndex += 1;
     renderQuestion();
@@ -494,18 +607,60 @@ function goNext() {
 }
 
 function goPrev() {
+  if (state.mode !== "mock") return;
+
   if (state.currentIndex > 0) {
     state.currentIndex -= 1;
     renderQuestion();
   }
 }
 
+function submitPracticeAnswer() {
+  const q = getCurrentQuestion();
+  if (!q) return;
+
+  if (state.practiceResultsByQuestionId[q.id]?.submitted) {
+    return;
+  }
+
+  const selectedOptionId = state.answersByQuestionId[q.id];
+  if (!selectedOptionId) {
+    window.alert("Please select an answer first.");
+    return;
+  }
+
+  const correctOption = getCorrectOption(q);
+  const isCorrect =
+    !!selectedOptionId &&
+    !!correctOption &&
+    String(selectedOptionId) === String(correctOption.id);
+
+  if (isCorrect) {
+    state.score += 1;
+  }
+
+  const explanation = getExplanationText(q);
+  const feedbackText = explanation || (
+    isCorrect
+      ? "Well done. That is the correct answer."
+      : "That is not correct. Review the regulation reference and explanation."
+  );
+
+  state.practiceResultsByQuestionId[q.id] = {
+    submitted: true,
+    correct: isCorrect,
+    feedbackText
+  };
+
+  renderQuestion();
+}
+
 function calculateScore() {
   let correct = 0;
 
-  state.questions.forEach(question => {
+  state.questions.forEach((question) => {
     const selectedOptionId = state.answersByQuestionId[question.id];
-    const correctOption = question.options.find(opt => opt.is_correct);
+    const correctOption = getCorrectOption(question);
 
     if (
       selectedOptionId &&
@@ -520,11 +675,89 @@ function calculateScore() {
 }
 
 function getUnansweredCount() {
-  return state.questions.filter(q => !state.answersByQuestionId[q.id]).length;
+  return state.questions.filter((q) => !state.answersByQuestionId[q.id]).length;
 }
 
 function getFlaggedCount() {
-  return state.questions.filter(q => state.flaggedQuestionIds.has(q.id)).length;
+  return state.questions.filter((q) => state.flaggedQuestionIds.has(q.id)).length;
+}
+
+function calculateWeakTopics() {
+  const topicStats = {};
+
+  state.questions.forEach((question) => {
+    const topicId = question.topic_id;
+    const selectedOptionId = state.answersByQuestionId[question.id];
+    const correctOption = getCorrectOption(question);
+
+    const isCorrect =
+      selectedOptionId &&
+      correctOption &&
+      String(selectedOptionId) === String(correctOption.id);
+
+    if (!topicStats[topicId]) {
+      topicStats[topicId] = {
+        topicId,
+        title: getTopicTitle(state.topicsById[topicId] || {}),
+        total: 0,
+        correct: 0,
+        wrong: 0
+      };
+    }
+
+    topicStats[topicId].total += 1;
+
+    if (isCorrect) {
+      topicStats[topicId].correct += 1;
+    } else {
+      topicStats[topicId].wrong += 1;
+    }
+  });
+
+  return Object.values(topicStats).sort((a, b) => b.wrong - a.wrong);
+}
+
+function renderResultsScreen(html) {
+  if (!el.resultScreen) return;
+
+  el.resultScreen.hidden = false;
+  el.resultScreen.innerHTML = html;
+}
+
+function disableQuizInteraction() {
+  if (el.questionText) el.questionText.innerHTML = "";
+  if (el.optionsContainer) el.optionsContainer.innerHTML = "";
+  if (el.referencesContainer) el.referencesContainer.innerHTML = "";
+  if (el.palette) el.palette.innerHTML = "";
+
+  if (el.prevBtn) el.prevBtn.disabled = true;
+  if (el.nextBtn) el.nextBtn.disabled = true;
+  if (el.flagBtn) el.flagBtn.disabled = true;
+  if (el.submitBtn) el.submitBtn.disabled = true;
+}
+
+function submitPracticeResults() {
+  if (state.submitted) return;
+
+  state.submitted = true;
+
+  const totalQuestions = state.questions.length;
+  const answeredCount = Object.values(state.practiceResultsByQuestionId).filter((r) => r.submitted).length;
+  const percentageScore = totalQuestions
+    ? Number(((state.score / totalQuestions) * 100).toFixed(2))
+    : 0;
+
+  renderResultsScreen(`
+    <div class="result-card">
+      <h2>Practice Quiz Result</h2>
+      <p><strong>Score:</strong> ${state.score} / ${totalQuestions}</p>
+      <p><strong>Percentage:</strong> ${percentageScore}%</p>
+      <p><strong>Answered:</strong> ${answeredCount}</p>
+      <p><strong>Topic:</strong> ${getTopicTitle(state.topic)}</p>
+    </div>
+  `);
+
+  disableQuizInteraction();
 }
 
 async function submitExam(autoSubmitted = false) {
@@ -547,66 +780,54 @@ async function submitExam(autoSubmitted = false) {
     ? (state.timeLimitMinutes * 60 - state.remainingSeconds)
     : Math.floor((Date.now() - state.startedAt) / 1000);
 
-  if (state.attemptId) {
-    try {
-      await db
-        .from("quiz_attempts")
-        .update({
-          submitted_at: new Date().toISOString(),
-          total_questions: totalQuestions,
-          correct_answers: state.score,
-          unanswered_count: unansweredCount,
-          flagged_count: flaggedCount,
-          time_limit_minutes: state.mode === "mock" ? state.timeLimitMinutes : null,
-          time_spent_seconds: timeSpentSeconds,
-          auto_submitted: autoSubmitted,
-          percentage_score: percentageScore
-        })
-        .eq("id", state.attemptId);
-    } catch (err) {
-      console.warn("Could not update attempt:", err.message);
-    }
-  }
+  const passMark = 75;
+  const passed = percentageScore >= passMark;
+  const weakTopics = calculateWeakTopics();
 
-  renderResults({
-    totalQuestions,
-    answeredCount,
-    unansweredCount,
-    flaggedCount,
-    percentageScore,
-    autoSubmitted,
-    timeSpentSeconds
-  });
+  const weakTopicsHtml = weakTopics.length
+    ? weakTopics.map((t) => `
+        <p><strong>${t.title || `Topic ${t.topicId}`}</strong> — Correct: ${t.correct}/${t.total}, Wrong: ${t.wrong}</p>
+      `).join("")
+    : "<p>No topic data available.</p>";
+
+  renderResultsScreen(`
+    <div class="result-card">
+      <h2>Mock Exam Result</h2>
+      <p><strong>Score:</strong> ${state.score} / ${totalQuestions}</p>
+      <p><strong>Percentage:</strong> ${percentageScore}%</p>
+      <p><strong>Status:</strong> ${passed ? "Pass" : "Fail"}</p>
+      <p><strong>Answered:</strong> ${answeredCount}</p>
+      <p><strong>Unanswered:</strong> ${unansweredCount}</p>
+      <p><strong>Flagged:</strong> ${flaggedCount}</p>
+      <p><strong>Time spent:</strong> ${formatTime(timeSpentSeconds)}</p>
+      <p><strong>Submission type:</strong> ${autoSubmitted ? "Auto-submitted on time expiry" : "Submitted by user"}</p>
+
+      <hr style="margin: 16px 0;">
+
+      <h3>Weak Topic Analysis</h3>
+      ${weakTopicsHtml}
+    </div>
+  `);
+
+  disableQuizInteraction();
 }
 
-function renderResults(stats) {
-  if (!el.resultScreen) return;
+function handleSubmitButton() {
+  if (state.mode === "mock") {
+    const unanswered = getUnansweredCount();
+    const proceed = window.confirm(
+      unanswered > 0
+        ? `You still have ${unanswered} unanswered question(s). Submit exam anyway?`
+        : "Submit exam now?"
+    );
 
-  const passMark = 75;
-  const passed = stats.percentageScore >= passMark;
+    if (proceed) {
+      submitExam(false);
+    }
+    return;
+  }
 
-  el.resultScreen.hidden = false;
-  el.resultScreen.innerHTML = `
-    <h2>Mock Exam Result</h2>
-    <p><strong>Score:</strong> ${state.score} / ${stats.totalQuestions}</p>
-    <p><strong>Percentage:</strong> ${stats.percentageScore}%</p>
-    <p><strong>Status:</strong> ${passed ? "Pass" : "Fail"}</p>
-    <p><strong>Answered:</strong> ${stats.answeredCount}</p>
-    <p><strong>Unanswered:</strong> ${stats.unansweredCount}</p>
-    <p><strong>Flagged:</strong> ${stats.flaggedCount}</p>
-    <p><strong>Time spent:</strong> ${formatTime(stats.timeSpentSeconds)}</p>
-    <p><strong>Submission type:</strong> ${stats.autoSubmitted ? "Auto-submitted on time expiry" : "Submitted by user"}</p>
-  `;
-
-  if (el.questionText) el.questionText.innerHTML = "";
-  if (el.optionsContainer) el.optionsContainer.innerHTML = "";
-  if (el.referencesContainer) el.referencesContainer.innerHTML = "";
-  if (el.palette) el.palette.innerHTML = "";
-
-  if (el.prevBtn) el.prevBtn.disabled = true;
-  if (el.nextBtn) el.nextBtn.disabled = true;
-  if (el.flagBtn) el.flagBtn.disabled = true;
-  if (el.submitBtn) el.submitBtn.disabled = true;
+  submitPracticeAnswer();
 }
 
 function attachEvents() {
@@ -623,38 +844,44 @@ function attachEvents() {
   }
 
   if (el.submitBtn) {
-    el.submitBtn.addEventListener("click", () => {
-      const unanswered = getUnansweredCount();
-      const proceed = window.confirm(
-        unanswered > 0
-          ? `You still have ${unanswered} unanswered question(s). Submit anyway?`
-          : "Submit exam now?"
-      );
-
-      if (proceed) {
-        submitExam(false);
-      }
-    });
+    el.submitBtn.addEventListener("click", handleSubmitButton);
   }
 }
 
 async function initQuiz() {
   try {
+    showLoader(true);
     parseMode();
+    updateModeUI();
     attachEvents();
     await createAttempt();
     await loadQuestions();
+
+    if (!state.questions.length) {
+      throw new Error("No questions found.");
+    }
 
     if (state.mode === "mock") {
       startMockTimer();
     }
 
     renderQuestion();
+    showLoader(false);
   } catch (error) {
     console.error("Quiz init failed:", error);
+    showLoader(false);
+
     if (el.questionText) {
       el.questionText.textContent = "Failed to load quiz.";
     }
+
+    renderResultsScreen(`
+      <div class="result-card">
+        <h2>Quiz Error</h2>
+        <p>The quiz could not be loaded.</p>
+        <p>${error?.message || "Unknown error"}</p>
+      </div>
+    `);
   }
 }
 
