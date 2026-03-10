@@ -486,7 +486,29 @@
       </div>
     </header>
 
-    <div id="loadingState" class="card loader">Loading mock exam...</div>
+    <section id="startScreen" class="card">
+  <h2 id="startTitle">Mock Exam Instructions</h2>
+
+  <p id="startInstructions">
+    Select your preferred language for this exam.
+    Once you are ready, click Start Exam to load the questions and begin the timed mock exam.
+    You will have 60 minutes to complete 20 questions.
+    Your selected language will remain fixed for the entire exam.
+  </p>
+
+  <div class="lang-switch" id="startLangSwitch">
+    <button type="button" class="lang-btn" data-start-lang="en">EN</button>
+    <button type="button" class="lang-btn" data-start-lang="fr">FR</button>
+    <button type="button" class="lang-btn" data-start-lang="es">ES</button>
+  </div>
+
+  <div style="margin-top: 16px;">
+    <button id="startExamBtn" class="btn btn-primary" type="button">Start Exam</button>
+  </div>
+</section>
+
+    
+    <div id="loadingState" class="card loader hidden">Loading mock exam...</div>
     <div id="errorState" class="card error hidden"></div>
 
     <div id="examLayout" class="layout hidden">
