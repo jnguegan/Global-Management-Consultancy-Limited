@@ -46,6 +46,10 @@
   "topics.startButton": "Start topic",
   "topics.metaLabel": "Topic slug:",
   "topics.noDescription": "Topic description coming soon.",
-  "topics.error": "Unable to load topics right now."
+  "topics.error": "Unable to load topics right now.",
+
+startTitle: "Mock Exam Instructions",
+startInstructions: "Select your preferred language for this exam. Once you are ready, click Start Exam to load the questions and begin the timed mock exam. You will have 60 minutes to complete 20 questions. Your selected language will remain fixed for the entire exam.",
+startExam: "Start Exam"
 }
 
