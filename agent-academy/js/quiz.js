@@ -90,32 +90,10 @@ function parseMode() {
 }
 
 async function createAttempt() {
-  if (!db) return;
-
-  const payload = {
-    mode: state.mode,
-    is_mock: state.mode === "mock",
-    started_at: new Date().toISOString(),
-    time_limit_minutes: state.mode === "mock" ? state.timeLimitMinutes : null
-  };
-
-  if (state.topicSlug) payload.topic_slug = state.topicSlug;
-
-  const { data, error } = await db
-    .from("quiz_attempts")
-    .insert(payload)
-    .select("id")
-    .single();
-
-  if (error) {
-    console.warn("Could not create attempt:", error.message);
-    return;
-  }
-
-  state.attemptId = data.id;
-  state.canSaveAttempt = true;
+  state.attemptId = null;
+  state.canSaveAttempt = false;
+  return;
 }
-
 async function fetchMockQuestionPool() {
   const { data, error } = await db
     .from("questions")
