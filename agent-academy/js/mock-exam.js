@@ -135,6 +135,7 @@
   };
 
  const el = {
+   examTopbar: document.getElementById("examTopbar"),
   loadingState: document.getElementById("loadingState"),
   errorState: document.getElementById("errorState"),
   examLayout: document.getElementById("examLayout"),
@@ -204,6 +205,7 @@
   el.examLayout.classList.add("hidden");
   el.resultScreen.classList.add("hidden");
   el.startScreen.classList.remove("hidden");
+   el.examTopbar.classList.add("hidden");
 }
 
 function applyStartScreenTranslations() {
@@ -231,6 +233,7 @@ async function startMockExam() {
 
   try {
     el.startScreen.classList.add("hidden");
+    el.examTopbar.classList.remove("hidden");
     setLoading(true);
 
     const pool = await loadQuestionPool();
