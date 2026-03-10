@@ -836,19 +836,19 @@
     }, 0);
   }
 
-  function getLocalizedQuestionText(row) {
-    return getLocalizedValue(row, [
-      `question_text_${state.lang}`,
-      `text_${state.lang}`,
-      `title_${state.lang}`,
-      `question_${state.lang}`,
-      "question_text",
-      "text",
-      "title",
-      "question",
-      "body"
-    ]);
+function getLocalizedQuestionText(row) {
+
+  if (state.lang === "fr") {
+    return (row.question_text_fr || row.question_text_en || "").trim();
   }
+
+  if (state.lang === "es") {
+    return (row.question_text_es || row.question_text_en || "").trim();
+  }
+
+  return (row.question_text_en || "").trim();
+
+}
 
   function getLocalizedOptionText(row) {
     return getLocalizedValue(row, [
