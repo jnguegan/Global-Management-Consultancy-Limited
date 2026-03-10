@@ -46,4 +46,7 @@
   "topics.metaLabel": "Slug del tema:",
   "topics.noDescription": "Descripción del tema próximamente.",
   "topics.error": "No es posible cargar los temas en este momento."
+  startTitle: "Instrucciones del examen simulacro",
+startInstructions: "Seleccione el idioma que desea utilizar para este examen. Cuando esté listo, haga clic en Comenzar examen para cargar las preguntas e iniciar el simulacro cronometrado. Dispondrá de 60 minutos para responder 20 preguntas. El idioma seleccionado permanecerá fijo durante todo el examen.",
+startExam: "Comenzar examen"
 }
