@@ -65,6 +65,7 @@ async function init() {
       return;
     }
 
+    injectReferenceTooltipStyles();
     bindEvents();
     loadSeenQuestionIds();
     await loadTopic();
@@ -84,6 +85,69 @@ async function init() {
     console.error("Quiz init error:", error);
     showEmpty("Unable to load quiz.");
   }
+}
+
+function injectReferenceTooltipStyles() {
+  if (document.getElementById("ref-tooltip-styles")) return;
+
+  const style = document.createElement("style");
+  style.id = "ref-tooltip-styles";
+  style.textContent = `
+    .ref-link-wrap{
+      position:relative;
+      display:inline-block;
+      vertical-align:baseline;
+    }
+
+    .ref-link{
+      text-decoration:underline;
+      cursor:pointer;
+    }
+
+    .ref-tooltip{
+      position:absolute;
+      left:50%;
+      bottom:calc(100% + 8px);
+      transform:translateX(-50%);
+      min-width:180px;
+      max-width:280px;
+      width:max-content;
+      background:#111827;
+      color:#fff;
+      padding:8px 10px;
+      border-radius:8px;
+      font-size:12px;
+      line-height:1.35;
+      box-shadow:0 8px 22px rgba(0,0,0,.18);
+      white-space:normal;
+      word-break:break-word;
+      opacity:0;
+      visibility:hidden;
+      pointer-events:none;
+      transition:opacity .18s ease, visibility .18s ease, transform .18s ease;
+      z-index:999;
+      text-align:left;
+    }
+
+    .ref-tooltip::after{
+      content:"";
+      position:absolute;
+      left:50%;
+      top:100%;
+      transform:translateX(-50%);
+      border-width:6px;
+      border-style:solid;
+      border-color:#111827 transparent transparent transparent;
+    }
+
+    .ref-link-wrap:hover .ref-tooltip,
+    .ref-link-wrap:focus-within .ref-tooltip{
+      opacity:1;
+      visibility:visible;
+      transform:translateX(-50%) translateY(-2px);
+    }
+  `;
+  document.head.appendChild(style);
 }
 
 function bindEvents() {
@@ -511,19 +575,8 @@ async function submitAnswer() {
       const rawArticle = (q.reference_article || "").trim();
       const safeLabel = escapeHtml(rawLabel);
       const safeArticle = escapeHtml(rawArticle);
-
-      const rawTitle = (q.reference_title || "").trim();
-      const rawPreview = (getReferencePreview(q) || "").trim();
-
-      let tooltipText = "";
-      if (rawTitle) {
-        tooltipText += `${getReferenceTitleLabel()}: ${rawTitle}`;
-      }
-      if (rawPreview) {
-        tooltipText += `${tooltipText ? "\n" : ""}${getReferencePreviewLabel()}: ${rawPreview}`;
-      }
-
-      const safeTooltip = escapeHtml(tooltipText);
+      const safeTitle = escapeHtml(q.reference_title || "");
+      const safePreview = escapeHtml(getReferencePreview(q));
 
       let link = q.reference_url || "";
 
@@ -540,13 +593,25 @@ async function submitAnswer() {
         link = getFFARArticleLink(q.reference_article);
       }
 
-      let refHtml = `${safeLabel} — ${safeArticle}`;
+      const tooltipHtml =
+        safeTitle || safePreview
+          ? `<span class="ref-tooltip">
+               ${safeTitle ? `<strong>${getReferenceTitleLabel()}:</strong> ${safeTitle}${safePreview ? "<br>" : ""}` : ""}
+               ${safePreview ? `<strong>${getReferencePreviewLabel()}:</strong> ${safePreview}` : ""}
+             </span>`
+          : "";
 
-      if (link) {
-        refHtml = `<a href="${link}" target="_blank" rel="noopener noreferrer" class="ref-link" title="${safeTooltip}">${safeLabel} — ${safeArticle}</a>`;
-      } else if (safeTooltip) {
-        refHtml = `<span class="ref-link" title="${safeTooltip}">${safeLabel} — ${safeArticle}</span>`;
-      }
+      const linkedLabel = `${safeLabel} — ${safeArticle}`;
+
+      const refHtml = link
+        ? `<span class="ref-link-wrap">
+             <a href="${link}" target="_blank" rel="noopener noreferrer" class="ref-link">${linkedLabel}</a>
+             ${tooltipHtml}
+           </span>`
+        : `<span class="ref-link-wrap">
+             <span class="ref-link">${linkedLabel}</span>
+             ${tooltipHtml}
+           </span>`;
 
       ref = `<br><br>${refWord}: ${refHtml}.`;
     }
