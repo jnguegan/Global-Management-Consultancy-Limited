@@ -57,7 +57,10 @@
       notEnoughQuestions: "Not enough questions found to start the mock exam. At least {count} questions are required.",
       supabaseMissing: "Supabase client not found. Please make sure window.supabaseClient is loaded before mock-exam.js.",
       genericError: "Something went wrong.",
-      submitError: "There was a problem submitting the exam: {message}"
+      submitError: "There was a problem submitting the exam: {message}",
+      startTitle: "Select your language",
+    startInstructions: "Select your preferred language for this exam. Once you are ready, click Start Exam to load the questions and begin the timed mock exam. You will have 60 minutes to complete 20 questions. Your selected language will remain fixed for the entire exam.",
+    startExam: "Start Exam"
     },
     fr: {
       pageTitle: "Examen blanc d’agent de football FIFA",
@@ -89,7 +92,10 @@
       notEnoughQuestions: "Nombre de questions insuffisant pour lancer l’examen blanc. Au moins {count} questions sont requises.",
       supabaseMissing: "Client Supabase introuvable. Vérifiez que window.supabaseClient est bien chargé avant mock-exam.js.",
       genericError: "Une erreur s’est produite.",
-      submitError: "Un problème est survenu lors de la soumission de l’examen : {message}"
+      submitError: "Un problème est survenu lors de la soumission de l’examen : {message}",
+      startTitle: "Sélectionnez votre langue",
+    startInstructions: "Sélectionnez la langue souhaitée pour cet examen. Une fois prêt, cliquez sur Commencer l’examen pour charger les questions et démarrer l’examen blanc chronométré. Vous disposerez de 60 minutes pour répondre à 20 questions. La langue choisie restera la même pendant tout l’examen.",
+    startExam: "Commencer l’examen"
     },
     es: {
       pageTitle: "Examen simulacro de agente de fútbol FIFA",
@@ -121,7 +127,10 @@
       notEnoughQuestions: "No hay suficientes preguntas para iniciar el simulacro. Se requieren al menos {count} preguntas.",
       supabaseMissing: "No se encontró el cliente de Supabase. Asegúrate de que window.supabaseClient esté cargado antes de mock-exam.js.",
       genericError: "Ha ocurrido un error.",
-      submitError: "Hubo un problema al entregar el examen: {message}"
+      submitError: "Hubo un problema al entregar el examen: {message}",
+      startTitle: "Seleccione su idioma",
+    startInstructions: "Seleccione el idioma que desea utilizar para este examen. Cuando esté listo, haga clic en Comenzar examen para cargar las preguntas e iniciar el simulacro cronometrado. Dispondrá de 60 minutos para responder 20 preguntas. El idioma seleccionado permanecerá fijo durante todo el examen.",
+    startExam: "Comenzar examen",
     }
   };
 
