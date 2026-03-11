@@ -235,8 +235,8 @@ resultTitle: "Résultat de l’examen blanc"
  async function initMockExam() {
   bindEvents();
   bindStartScreenLanguage();
-  applyStartScreenTranslations();
-
+ 
+   applyStartScreenTranslations();
   el.loadingState.classList.add("hidden");
   el.errorState.classList.add("hidden");
   el.examLayout.classList.add("hidden");
@@ -250,7 +250,9 @@ function applyStartScreenTranslations() {
   el.startTitle.textContent = t("startTitle");
   el.startInstructions.textContent = t("startInstructions");
   el.startExamBtn.textContent = t("startExam");
+  updateActiveLanguageBadge();
 }
+  
   function updateActiveLanguageBadge() {
   const labels = {
     en: "Language: EN",
