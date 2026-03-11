@@ -242,8 +242,14 @@ resultTitle: "Résultat de l’examen blanc"
 
 function applyStartScreenTranslations() {
   document.documentElement.lang = state.lang;
-  el.startTitle.textContent = t("startTitle");
-  el.startInstructions.textContent = t("startInstructions");
+ el.startTitle.textContent = t("startTitle");
+ el.startInstructions.innerHTML = `
+<p><strong>English:</strong> You are about to start the FIFA Football Agent Mock Exam delivered by Global Management Consultancy Limited. Please select your preferred language to begin. Once you click Start Exam, the questions will load and the timed exam will begin. You will have 60 minutes to complete 20 questions. Your selected language will remain fixed for the entire exam and cannot be changed once the exam has started.</p>
+
+<p><strong>Français :</strong> Vous êtes sur le point de commencer l’examen blanc d’agent de football FIFA proposé par Global Management Consultancy Limited. Veuillez sélectionner votre langue préférée pour commencer. Une fois que vous cliquez sur Commencer l’examen, les questions se chargeront et l’examen chronométré débutera. Vous disposerez de 60 minutes pour répondre à 20 questions. La langue sélectionnée restera fixe pendant toute la durée de l’examen et ne pourra pas être modifiée après le début de l’examen.</p>
+
+<p><strong>Español:</strong> Está a punto de comenzar el examen simulacro de agente de fútbol FIFA ofrecido por Global Management Consultancy Limited. Seleccione su idioma preferido para comenzar. Una vez que haga clic en Comenzar examen, se cargarán las preguntas y comenzará el examen cronometrado. Dispondrá de 60 minutos para responder 20 preguntas. El idioma seleccionado permanecerá fijo durante todo el examen y no podrá modificarse una vez iniciado el examen.</p>
+`;
   el.startExamBtn.textContent = t("startExam");
   updateActiveLanguageBadge();
 }
