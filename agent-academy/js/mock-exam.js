@@ -95,7 +95,20 @@
       submitError: "Un problème est survenu lors de la soumission de l’examen : {message}",
       startTitle: "Sélectionnez votre langue",
     startInstructions: "Sélectionnez la langue souhaitée pour cet examen. Une fois prêt, cliquez sur Commencer l’examen pour charger les questions et démarrer l’examen blanc chronométré. Vous disposerez de 60 minutes pour répondre à 20 questions. La langue choisie restera la même pendant tout l’examen.",
-    startExam: "Commencer l’examen"
+    startExam: "Commencer l’examen",
+      paletteTitle: "Palette des questions",
+current: "Actuelle",
+answered: "Répondues",
+unanswered: "Sans réponse",
+flaggedLabel: "Marquées",
+submitExam: "Soumettre l’examen",
+referencesTitle: "Références réglementaires",
+previous: "Précédent",
+next: "Suivant",
+score: "Score",
+percentage: "Pourcentage",
+timeSpent: "Temps utilisé",
+resultTitle: "Résultat de l’examen blanc"
     },
     es: {
       pageTitle: "Examen simulacro de agente de fútbol FIFA",
@@ -131,6 +144,30 @@
       startTitle: "Seleccione su idioma",
     startInstructions: "Seleccione el idioma que desea utilizar para este examen. Cuando esté listo, haga clic en Comenzar examen para cargar las preguntas e iniciar el simulacro cronometrado. Dispondrá de 60 minutos para responder 20 preguntas. El idioma seleccionado permanecerá fijo durante todo el examen.",
     startExam: "Comenzar examen",
+       pageTitle: "Examen simulacro de agente de fútbol FIFA",
+  pageSubtitle: "20 preguntas • 60 minutos • Nota mínima para aprobar: 75%",
+  loading: "Cargando examen...",
+
+  startTitle: "Seleccione su idioma",
+  startInstructions: "Seleccione el idioma que desea utilizar para este examen. Cuando esté listo, haga clic en Comenzar examen para cargar las preguntas e iniciar el simulacro cronometrado. Dispondrá de 60 minutos para responder 20 preguntas. El idioma seleccionado permanecerá fijo durante todo el examen.",
+  startExam: "Comenzar examen",
+
+  paletteTitle: "Panel de preguntas",
+  current: "Actual",
+  answered: "Respondidas",
+  unanswered: "Sin responder",
+  flaggedLabel: "Marcadas",
+
+  submitExam: "Entregar examen",
+  referencesTitle: "Referencias reglamentarias",
+
+  previous: "Anterior",
+  next: "Siguiente",
+
+  score: "Puntuación",
+  percentage: "Porcentaje",
+  timeSpent: "Tiempo empleado",
+  resultTitle: "Resultado del simulacro",
     }
   };
 
@@ -909,18 +946,19 @@ function getLocalizedQuestionText(row) {
 
 }
 
-  function getLocalizedOptionText(row) {
-    return getLocalizedValue(row, [
-      `option_text_${state.lang}`,
-      `text_${state.lang}`,
-      `label_${state.lang}`,
-      `answer_text_${state.lang}`,
-      "option_text",
-      "text",
-      "label",
-      "answer_text"
-    ]);
+ function getLocalizedOptionText(row) {
+
+  if (state.lang === "fr") {
+    return (row.option_text_fr || row.option_text_en || "").trim();
   }
+
+  if (state.lang === "es") {
+    return (row.option_text_es || row.option_text_en || "").trim();
+  }
+
+  return (row.option_text_en || "").trim();
+
+}
 
   function getLocalizedReferenceLabel(row) {
     return getLocalizedValue(row, [
