@@ -325,7 +325,8 @@ function bindEvents() {
   document.querySelectorAll("[data-start-lang]").forEach((btn) => {
     btn.addEventListener("click", () => {
       const lang = btn.dataset.startLang || "en";
-      state.lang = lang;
+   state.lang = lang;
+  localStorage.setItem("mock_exam_lang", lang);
 
       document.querySelectorAll("[data-start-lang]").forEach((b) => {
         b.classList.remove("is-active");
