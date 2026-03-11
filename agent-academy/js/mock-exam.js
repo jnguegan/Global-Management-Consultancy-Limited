@@ -264,6 +264,8 @@ function applyStartScreenTranslations() {
 }
 
 async function startMockExam() {
+   document.documentElement.lang = state.lang;
+  updateActiveLanguageBadge();
 
   if (!db) {
     showError(t("supabaseMissing"));
