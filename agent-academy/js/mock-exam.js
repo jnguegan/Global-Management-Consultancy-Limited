@@ -264,7 +264,8 @@ function applyStartScreenTranslations() {
 }
 
 async function startMockExam() {
-   document.documentElement.lang = state.lang;
+  document.documentElement.lang = state.lang;
+  applyStaticTranslations();
   updateActiveLanguageBadge();
 
   if (!db) {
@@ -364,38 +365,39 @@ function bindEvents() {
      updateActiveLanguageBadge();
   }
 
-  async function loadQuestionPool() {
-    const questions = await fetchQuestions();
-    const questionIds = questions.map((q) => q.id);
+ async function loadQuestionPool() {
+  const questions = await fetchQuestions();
+  const questionIds = questions.map((q) => q.id);
 
-    const [optionsRows, referenceRows] = await Promise.all([
-      fetchOptions(questionIds),
-      fetchReferences(questionIds)
-    ]);
+  const [optionsRows, referenceRows] = await Promise.all([
+    fetchOptions(questionIds),
+    fetchReferences(questionIds)
+  ]);
 
-    const optionsByQuestionId = groupBy(optionsRows, "question_id");
-    const referencesByQuestionId = groupBy(referenceRows, "question_id");
+  const optionsByQuestionId = groupBy(optionsRows, "question_id");
+  const referencesByQuestionId = groupBy(referenceRows, "question_id");
 
-    return questions.map((question) => {
-      const options = (optionsByQuestionId[question.id] || [])
-        .map((row) => normalizeOptionRow(row))
-        .filter((opt) => opt.text);
+  return questions.map((question) => {
+    const options = (optionsByQuestionId[question.id] || [])
+      .map((row) => normalizeOptionRow(row))
+      .filter((opt) => {
+        const text = getLocalizedOptionText(opt.raw || {});
+        return !!text;
+      });
 
-      const references = (referencesByQuestionId[question.id] || [])
-        .map((row) => normalizeReferenceRow(row))
-        .filter((ref) => ref.label || ref.url);
+    const references = (referencesByQuestionId[question.id] || [])
+      .map((row) => normalizeReferenceRow(row))
+      .filter((ref) => ref.label || ref.url);
 
-      return {
-        id: question.id,
-        topicId: question.topic_id || null,
-        text: getLocalizedQuestionText(question),
-        raw: question,
-        options,
-        references
-      };
-    }).filter((q) => q.text && q.options.length >= 2);
-  }
-
+    return {
+      id: question.id,
+      topicId: question.topic_id || null,
+      raw: question,
+      options,
+      references
+    };
+  }).filter((q) => getLocalizedQuestionText(q.raw || {}).trim() && q.options.length >= 2);
+}
   async function fetchQuestions() {
     const { data, error } = await db
       .from("questions")
@@ -463,7 +465,7 @@ function bindEvents() {
       total: state.questions.length
     });
 
-    el.questionText.textContent = question.text;
+   el.questionText.textContent = getLocalizedQuestionText(question.raw || {});
 
     renderOptions(question);
     renderReferences(question);
@@ -496,7 +498,7 @@ function bindEvents() {
 
       const text = document.createElement("span");
       text.className = "option-text";
-      text.textContent = option.text;
+     text.textContent = getLocalizedOptionText(option.raw || {});
 
       optionButton.appendChild(letter);
       optionButton.appendChild(text);
@@ -988,15 +990,15 @@ function getLocalizedQuestionText(row) {
     return "";
   }
 
-  function normalizeOptionRow(row) {
-    return {
-      id: row.id,
-      questionId: row.question_id,
-      text: getLocalizedOptionText(row),
-      isCorrect: !!row.is_correct,
-      sortOrder: Number(row.sort_order || 0)
-    };
-  }
+ function normalizeOptionRow(row) {
+  return {
+    id: row.id,
+    questionId: row.question_id,
+    raw: row,
+    isCorrect: !!row.is_correct,
+    sortOrder: Number(row.sort_order || 0)
+  };
+}
 
   function normalizeReferenceRow(row) {
     return {
