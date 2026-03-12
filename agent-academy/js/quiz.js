@@ -45,7 +45,11 @@ const el = {
   totalLive: document.getElementById("totalLive"),
   submitBtn: document.getElementById("submitBtn"),
   nextBtn: document.getElementById("nextBtn"),
-  retryBtn: document.getElementById("retryBtn")
+  retryBtn: document.getElementById("retryBtn"),
+    
+  questionReferencePanel: document.getElementById("questionReferencePanel"),
+  questionReferenceMeta: document.getElementById("questionReferenceMeta"),
+  questionReferenceLink: document.getElementById("questionReferenceLink"),
 };
 
 document.addEventListener("DOMContentLoaded", init);
@@ -493,6 +497,10 @@ function renderQuestion() {
   }
 
   q._cachedExplanation = questionExplanation || "";
+
+if (el.questionReferencePanel) {
+  el.questionReferencePanel.classList.add("hidden");
+}
 }
 
 function selectOption(optionId) {
@@ -621,6 +629,9 @@ async function submitAnswer() {
         q._cachedExplanation ||
         (isCorrect ? "Well done." : "Review this point carefully.")
       ) + ref;
+  }
+  if (typeof renderReferencePanel === "function") {
+    renderReferencePanel(q);
   }
 }
 
