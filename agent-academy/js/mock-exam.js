@@ -637,12 +637,31 @@
 const unanswered = state.questions.length - answered;
 const flagged = countFlagged();
 
-const confirmed = window.confirm(
-  `${t("submitConfirm")}\n\n` +
-  `${t("answered")}: ${answered}\n` +
-  `${t("unanswered")}: ${unanswered}\n` +
-  `${t("flaggedLabel")}: ${flagged}`
-);
+if (unanswered > 0) {
+
+  const review = window.confirm(
+    `${t("submitConfirm")}\n\n` +
+    `${t("answered")}: ${answered}\n` +
+    `${t("unanswered")}: ${unanswered}\n` +
+    `${t("flaggedLabel")}: ${flagged}\n\n` +
+    `You still have unanswered questions.\n\n` +
+    `Press OK to review them or Cancel to submit anyway.`
+  );
+
+  if (review) {
+    const firstUnansweredIndex = state.questions.findIndex(q => !state.answers[q.id]);
+    if (firstUnansweredIndex >= 0) {
+      goToQuestion(firstUnansweredIndex);
+      return;
+    }
+  }
+
+} else {
+
+  const confirmed = window.confirm(t("submitConfirm"));
+  if (!confirmed) return;
+
+}
     if (!confirmed) return;
 
     stopTimer();
