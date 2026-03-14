@@ -419,7 +419,7 @@
     return Array.isArray(data) ? data : [];
   }
 
- function buildExamQuestions(pool) {
+function buildExamQuestions(pool) {
   const REGULATION_WEIGHTS = {
     FFAR: 10,
     RSTP: 8,
@@ -430,6 +430,12 @@
   };
 
   const TARGET_SCENARIO_COUNT = 8;
+  const RECENT_EXAM_IDS_KEY = "mock_exam_recent_question_ids";
+  const RECENT_EXAM_LIMIT = 60;
+
+  const recentQuestionIds = new Set(
+    JSON.parse(localStorage.getItem(RECENT_EXAM_IDS_KEY) || "[]")
+  );
 
   const scoredPool = shuffleArray([...pool]).map((question) => {
     const raw = question.raw || {};
@@ -496,10 +502,15 @@
       score += 1;
     }
 
+    if (!recentQuestionIds.has(question.id)) {
+      score += 20;
+    }
+
     return {
       ...question,
       __score: score,
-      __isScenario: isScenario
+      __isScenario: isScenario,
+      __isRecent: recentQuestionIds.has(question.id)
     };
   });
 
@@ -548,6 +559,13 @@
 
   const finalQuestions = shuffleArray(selected).slice(0, EXAM_QUESTION_COUNT);
 
+  const updatedRecentIds = [
+    ...finalQuestions.map((q) => q.id),
+    ...Array.from(recentQuestionIds)
+  ].filter((id, index, arr) => arr.indexOf(id) === index).slice(0, RECENT_EXAM_LIMIT);
+
+  localStorage.setItem(RECENT_EXAM_IDS_KEY, JSON.stringify(updatedRecentIds));
+
   return finalQuestions.map((question) => {
     const sortedOptions = [...question.options].sort((a, b) => {
       return (a.sortOrder || 0) - (b.sortOrder || 0);
@@ -559,7 +577,6 @@
     };
   });
 }
-
   function renderCurrentQuestion() {
     const question = getCurrentQuestion();
     if (!question) return;
