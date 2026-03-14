@@ -1,17 +1,16 @@
 (function () {
   "use strict";
 
-  const db =
-  window.supabaseClient ||
-  window.sb ||
-  null;
+  const db = window.supabaseClient || window.sb || null;
+
   const EXAM_QUESTION_COUNT = 20;
   const EXAM_DURATION_MINUTES = 60;
-  const PASS_MARK_PERCENT = 75;
   const EXAM_DURATION_SECONDS = EXAM_DURATION_MINUTES * 60;
+  const PASS_MARK_PERCENT = 75;
+  const LANGUAGE_STORAGE_KEY = "mock_exam_lang";
 
   const state = {
-    lang: "en",
+    lang: localStorage.getItem(LANGUAGE_STORAGE_KEY) || "en",
     questions: [],
     currentIndex: 0,
     answers: {},
@@ -48,6 +47,9 @@
       score: "Score",
       percentage: "Percentage",
       timeSpent: "Time Spent",
+      answeredTitle: "Answered",
+      unansweredTitle: "Unanswered",
+      flaggedTitle: "Flagged",
       pass: "PASS",
       fail: "FAIL",
       passMark: "Pass mark",
@@ -58,9 +60,11 @@
       supabaseMissing: "Supabase client not found. Please make sure window.supabaseClient is loaded before mock-exam.js.",
       genericError: "Something went wrong.",
       submitError: "There was a problem submitting the exam: {message}",
-      startTitle: "Select your language",
-    startInstructions: "You are about to start the FIFA Football Agent Mock Exam delivered by Global Management Consultancy Limited. Please select your preferred language to begin. Once you click Start Exam, the questions will load and the timed exam will begin. You will have 60 minutes to complete 20 questions. Your selected language will remain fixed for the entire exam and cannot be changed once the exam has started.",
-    startExam: "Start Exam"
+      startTitle: "Mock Exam Instructions",
+      startInstructions:
+        "Select your preferred language for this exam. Once you are ready, click Start Exam to load the questions and begin the timed mock exam. You will have 60 minutes to complete 20 questions. Your selected language will remain fixed for the entire exam.",
+      startExam: "Start Exam",
+      languageBadge: "Language: EN"
     },
     fr: {
       pageTitle: "Examen blanc d’agent de football FIFA",
@@ -83,6 +87,9 @@
       score: "Score",
       percentage: "Pourcentage",
       timeSpent: "Temps utilisé",
+      answeredTitle: "Répondues",
+      unansweredTitle: "Sans réponse",
+      flaggedTitle: "Marquées",
       pass: "ADMIS",
       fail: "ÉCHEC",
       passMark: "Note de passage",
@@ -93,21 +100,11 @@
       supabaseMissing: "Client Supabase introuvable. Vérifiez que window.supabaseClient est bien chargé avant mock-exam.js.",
       genericError: "Une erreur s’est produite.",
       submitError: "Un problème est survenu lors de la soumission de l’examen : {message}",
-      startTitle: "Sélectionnez votre langue",
-    startInstructions: "Vous êtes sur le point de commencer l’examen blanc d’agent de football FIFA proposé par Global Management Consultancy Limited. Veuillez sélectionner votre langue préférée pour commencer. Une fois que vous cliquez sur Commencer l’examen, les questions se chargeront et l’examen chronométré débutera. Vous disposerez de 60 minutes pour répondre à 20 questions. La langue sélectionnée restera fixe pendant toute la durée de l’examen et ne pourra pas être modifiée après le début de l’examen.",    startExam: "Commencer l’examen",
-      paletteTitle: "Palette des questions",
-current: "Actuelle",
-answered: "Répondues",
-unanswered: "Sans réponse",
-flaggedLabel: "Marquées",
-submitExam: "Soumettre l’examen",
-referencesTitle: "Références réglementaires",
-previous: "Précédent",
-next: "Suivant",
-score: "Score",
-percentage: "Pourcentage",
-timeSpent: "Temps utilisé",
-resultTitle: "Résultat de l’examen blanc"
+      startTitle: "Instructions de l’examen blanc",
+      startInstructions:
+        "Sélectionnez votre langue préférée pour cet examen. Lorsque vous êtes prêt, cliquez sur Commencer l’examen pour charger les questions et démarrer l’examen chronométré. Vous disposerez de 60 minutes pour répondre à 20 questions. La langue choisie restera fixe pendant toute la durée de l’examen.",
+      startExam: "Commencer l’examen",
+      languageBadge: "Langue : FR"
     },
     es: {
       pageTitle: "Examen simulacro de agente de fútbol FIFA",
@@ -130,6 +127,9 @@ resultTitle: "Résultat de l’examen blanc"
       score: "Puntuación",
       percentage: "Porcentaje",
       timeSpent: "Tiempo empleado",
+      answeredTitle: "Respondidas",
+      unansweredTitle: "Sin responder",
+      flaggedTitle: "Marcadas",
       pass: "APROBADO",
       fail: "SUSPENSO",
       passMark: "Nota mínima",
@@ -140,208 +140,128 @@ resultTitle: "Résultat de l’examen blanc"
       supabaseMissing: "No se encontró el cliente de Supabase. Asegúrate de que window.supabaseClient esté cargado antes de mock-exam.js.",
       genericError: "Ha ocurrido un error.",
       submitError: "Hubo un problema al entregar el examen: {message}",
-      startTitle: "Seleccione su idioma",
-      startInstructions: "Está a punto de comenzar el examen simulacro de agente de fútbol FIFA ofrecido por Global Management Consultancy Limited. Seleccione su idioma preferido para comenzar. Una vez que haga clic en Comenzar examen, se cargarán las preguntas y comenzará el examen cronometrado. Dispondrá de 60 minutos para responder 20 preguntas. El idioma seleccionado permanecerá fijo durante todo el examen y no podrá modificarse una vez iniciado el examen.",
+      startTitle: "Instrucciones del examen simulacro",
+      startInstructions:
+        "Seleccione su idioma preferido para este examen. Cuando esté listo, haga clic en Comenzar examen para cargar las preguntas e iniciar el examen cronometrado. Dispondrá de 60 minutos para responder 20 preguntas. El idioma seleccionado permanecerá fijo durante todo el examen.",
       startExam: "Comenzar examen",
-      pageTitle: "Examen simulacro de agente de fútbol FIFA",
-      pageSubtitle: "20 preguntas • 60 minutos • Nota mínima para aprobar: 75%",
-      loading: "Cargando examen...",
-
-  paletteTitle: "Panel de preguntas",
-  current: "Actual",
-  answered: "Respondidas",
-  unanswered: "Sin responder",
-  flaggedLabel: "Marcadas",
-
-  submitExam: "Entregar examen",
-  referencesTitle: "Referencias reglamentarias",
-
-  previous: "Anterior",
-  next: "Siguiente",
-
-  score: "Puntuación",
-  percentage: "Porcentaje",
-  timeSpent: "Tiempo empleado",
-  resultTitle: "Resultado del simulacro",
+      languageBadge: "Idioma: ES"
     }
   };
 
- const el = {
-   examTopbar: document.getElementById("examTopbar"),
-  loadingState: document.getElementById("loadingState"),
-  errorState: document.getElementById("errorState"),
-  examLayout: document.getElementById("examLayout"),
-  resultScreen: document.getElementById("resultScreen"),
+  const el = {
+    examTopbar: document.getElementById("examTopbar"),
+    loadingState: document.getElementById("loadingState"),
+    errorState: document.getElementById("errorState"),
+    examLayout: document.getElementById("examLayout"),
+    resultScreen: document.getElementById("resultScreen"),
 
-  startScreen: document.getElementById("startScreen"),
-  startTitle: document.getElementById("startTitle"),
-  startInstructions: document.getElementById("startInstructions"),
-  startExamBtn: document.getElementById("startExamBtn"),
+    startScreen: document.getElementById("startScreen"),
+    startTitle: document.getElementById("startTitle"),
+    startInstructions: document.getElementById("startInstructions"),
+    startExamBtn: document.getElementById("startExamBtn"),
 
-  pageTitle: document.getElementById("pageTitle"),
-  pageSubtitle: document.getElementById("pageSubtitle"),
-  timer: document.getElementById("timer"),
-  submitExamBtn: document.getElementById("submitExamBtn"),
-  activeLanguageBadge: document.getElementById("activeLanguageBadge"),
+    pageTitle: document.getElementById("pageTitle"),
+    pageSubtitle: document.getElementById("pageSubtitle"),
+    timer: document.getElementById("timer"),
+    submitExamBtn: document.getElementById("submitExamBtn"),
+    activeLanguageBadge: document.getElementById("activeLanguageBadge"),
 
-  questionCounter: document.getElementById("questionCounter"),
-  questionText: document.getElementById("questionText"),
-  optionsContainer: document.getElementById("optionsContainer"),
-  referencesSection: document.getElementById("referencesSection"),
-  referencesTitle: document.getElementById("referencesTitle"),
-  referencesList: document.getElementById("referencesList"),
+    questionCounter: document.getElementById("questionCounter"),
+    questionText: document.getElementById("questionText"),
+    optionsContainer: document.getElementById("optionsContainer"),
+    referencesSection: document.getElementById("referencesSection"),
+    referencesTitle: document.getElementById("referencesTitle"),
+    referencesList: document.getElementById("referencesList"),
 
-  flagBtn: document.getElementById("flagBtn"),
-  prevBtn: document.getElementById("prevBtn"),
-  nextBtn: document.getElementById("nextBtn"),
+    flagBtn: document.getElementById("flagBtn"),
+    prevBtn: document.getElementById("prevBtn"),
+    nextBtn: document.getElementById("nextBtn"),
 
-  paletteTitle: document.getElementById("paletteTitle"),
-  legendCurrent: document.getElementById("legendCurrent"),
-  legendAnswered: document.getElementById("legendAnswered"),
-  legendFlagged: document.getElementById("legendFlagged"),
-  legendUnanswered: document.getElementById("legendUnanswered"),
+    paletteTitle: document.getElementById("paletteTitle"),
+    legendCurrent: document.getElementById("legendCurrent"),
+    legendAnswered: document.getElementById("legendAnswered"),
+    legendFlagged: document.getElementById("legendFlagged"),
+    legendUnanswered: document.getElementById("legendUnanswered"),
 
-  paletteContainer: document.getElementById("paletteContainer"),
-  answeredLabel: document.getElementById("answeredLabel"),
-  unansweredLabel: document.getElementById("unansweredLabel"),
-  flaggedLabel: document.getElementById("flaggedLabel"),
-  answeredCount: document.getElementById("answeredCount"),
-  unansweredCount: document.getElementById("unansweredCount"),
-  flaggedCount: document.getElementById("flaggedCount"),
+    paletteContainer: document.getElementById("paletteContainer"),
+    answeredLabel: document.getElementById("answeredLabel"),
+    unansweredLabel: document.getElementById("unansweredLabel"),
+    flaggedLabel: document.getElementById("flaggedLabel"),
+    answeredCount: document.getElementById("answeredCount"),
+    unansweredCount: document.getElementById("unansweredCount"),
+    flaggedCount: document.getElementById("flaggedCount"),
 
-  resultTitle: document.getElementById("resultTitle"),
-  resultLead: document.getElementById("resultLead"),
-  resultStatus: document.getElementById("resultStatus"),
-  scoreTitle: document.getElementById("scoreTitle"),
-  percentageTitle: document.getElementById("percentageTitle"),
-  timeSpentTitle: document.getElementById("timeSpentTitle"),
-  answeredTitle: document.getElementById("answeredTitle"),
-  unansweredTitle: document.getElementById("unansweredTitle"),
-  flaggedTitle: document.getElementById("flaggedTitle"),
-  resultScore: document.getElementById("resultScore"),
-  resultPercentage: document.getElementById("resultPercentage"),
-  resultTimeSpent: document.getElementById("resultTimeSpent"),
-  resultAnswered: document.getElementById("resultAnswered"),
-  resultUnanswered: document.getElementById("resultUnanswered"),
-  resultFlagged: document.getElementById("resultFlagged")
-};
+    resultTitle: document.getElementById("resultTitle"),
+    resultLead: document.getElementById("resultLead"),
+    resultStatus: document.getElementById("resultStatus"),
+    scoreTitle: document.getElementById("scoreTitle"),
+    percentageTitle: document.getElementById("percentageTitle"),
+    timeSpentTitle: document.getElementById("timeSpentTitle"),
+    answeredTitle: document.getElementById("answeredTitle"),
+    unansweredTitle: document.getElementById("unansweredTitle"),
+    flaggedTitle: document.getElementById("flaggedTitle"),
+    resultScore: document.getElementById("resultScore"),
+    resultPercentage: document.getElementById("resultPercentage"),
+    resultTimeSpent: document.getElementById("resultTimeSpent"),
+    resultAnswered: document.getElementById("resultAnswered"),
+    resultUnanswered: document.getElementById("resultUnanswered"),
+    resultFlagged: document.getElementById("resultFlagged")
+  };
+
   document.addEventListener("DOMContentLoaded", initMockExam);
 
- async function initMockExam() {
-  bindEvents();
-  bindStartScreenLanguage();
- 
-   applyStartScreenTranslations();
-  el.loadingState.classList.add("hidden");
-  el.errorState.classList.add("hidden");
-  el.examLayout.classList.add("hidden");
-  el.resultScreen.classList.add("hidden");
-  el.startScreen.classList.remove("hidden");
-   el.examTopbar.classList.add("hidden");
-}
-
-function applyStartScreenTranslations() {
-  document.documentElement.lang = state.lang;
- el.startTitle.textContent = t("startTitle");
- el.startInstructions.innerHTML = `
-<p><strong>English:</strong> You are about to start the FIFA Football Agent Mock Exam delivered by Global Management Consultancy Limited. Please select your preferred language to begin. Once you click Start Exam, the questions will load and the timed exam will begin. You will have 60 minutes to complete 20 questions. Your selected language will remain fixed for the entire exam and cannot be changed once the exam has started.</p>
-
-<p><strong>Français :</strong> Vous êtes sur le point de commencer l’examen blanc d’agent de football FIFA proposé par Global Management Consultancy Limited. Veuillez sélectionner votre langue préférée pour commencer. Une fois que vous cliquez sur Commencer l’examen, les questions se chargeront et l’examen chronométré débutera. Vous disposerez de 60 minutes pour répondre à 20 questions. La langue sélectionnée restera fixe pendant toute la durée de l’examen et ne pourra pas être modifiée après le début de l’examen.</p>
-
-<p><strong>Español:</strong> Está a punto de comenzar el examen simulacro de agente de fútbol FIFA ofrecido por Global Management Consultancy Limited. Seleccione su idioma preferido para comenzar. Una vez que haga clic en Comenzar examen, se cargarán las preguntas y comenzará el examen cronometrado. Dispondrá de 60 minutos para responder 20 preguntas. El idioma seleccionado permanecerá fijo durante todo el examen y no podrá modificarse una vez iniciado el examen.</p>
-`;
-  el.startExamBtn.textContent = t("startExam");
-  updateActiveLanguageBadge();
-}
-  
-  function updateActiveLanguageBadge() {
-  const labels = {
-    en: "Language: EN",
-    fr: "Langue : FR",
-    es: "Idioma: ES"
-  };
-
-  el.activeLanguageBadge.textContent = labels[state.lang] || "Language: EN";
-}
-
-async function startMockExam() {
-  document.documentElement.lang = state.lang;
-  applyStaticTranslations();
-  updateActiveLanguageBadge();
-
-  if (!db) {
-    showError(t("supabaseMissing"));
-    return;
-  }
-
-  try {
-    el.startScreen.classList.add("hidden");
-    el.examTopbar.classList.remove("hidden");
-    setLoading(true);
-
-    const pool = await loadQuestionPool();
-
-    if (!Array.isArray(pool) || pool.length < EXAM_QUESTION_COUNT) {
-      showError(t("notEnoughQuestions", { count: EXAM_QUESTION_COUNT }));
-      return;
-    }
-
-    state.questions = buildExamQuestions(pool);
-    state.currentIndex = 0;
-    state.answers = {};
-    state.flagged = {};
-    state.visited = {};
-    state.submitted = false;
-    state.submitting = false;
-
-    state.startedAtMs = Date.now();
-    state.endsAtMs = state.startedAtMs + EXAM_DURATION_SECONDS * 1000;
-    state.remainingSeconds = EXAM_DURATION_SECONDS;
-
-    state.attemptId = await createMockAttempt();
-
-    renderPalette();
-    renderCurrentQuestion();
-    updateSidebarCounts();
-    showExam();
-    startTimer();
-
-  } catch (error) {
-    console.error("Mock exam start error:", error);
-    showError(error.message || t("genericError"));
-  } finally {
+  function initMockExam() {
+    bindEvents();
+    bindStartScreenLanguage();
+    applyStartScreenTranslations();
     setLoading(false);
+    el.errorState.classList.add("hidden");
+    el.examLayout.classList.add("hidden");
+    el.resultScreen.classList.add("hidden");
+    el.startScreen.classList.remove("hidden");
+    el.examTopbar.classList.add("hidden");
   }
-}
 
-function bindEvents() {
-  el.prevBtn.addEventListener("click", goToPreviousQuestion);
-  el.nextBtn.addEventListener("click", goToNextQuestion);
-  el.flagBtn.addEventListener("click", toggleFlagForCurrentQuestion);
-  el.submitExamBtn.addEventListener("click", handleManualSubmit);
-  el.startExamBtn.addEventListener("click", startMockExam);
-}
+  function bindEvents() {
+    el.prevBtn.addEventListener("click", goToPreviousQuestion);
+    el.nextBtn.addEventListener("click", goToNextQuestion);
+    el.flagBtn.addEventListener("click", toggleFlagForCurrentQuestion);
+    el.submitExamBtn.addEventListener("click", handleManualSubmit);
+    el.startExamBtn.addEventListener("click", startMockExam);
+  }
 
   function bindStartScreenLanguage() {
-  document.querySelectorAll("[data-start-lang]").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const lang = btn.dataset.startLang || "en";
-   state.lang = lang;
-  localStorage.setItem("mock_exam_lang", lang);
+    document.querySelectorAll("[data-start-lang]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const lang = btn.dataset.startLang || "en";
+        state.lang = lang;
+        localStorage.setItem(LANGUAGE_STORAGE_KEY, lang);
 
-      document.querySelectorAll("[data-start-lang]").forEach((b) => {
-        b.classList.remove("is-active");
+        document.querySelectorAll("[data-start-lang]").forEach((b) => {
+          b.classList.remove("is-active");
+        });
+
+        btn.classList.add("is-active");
+        applyStartScreenTranslations();
       });
-
-      btn.classList.add("is-active");
-      applyStartScreenTranslations();
     });
-  });
-}
-  
+
+    const active = document.querySelector(`[data-start-lang="${state.lang}"]`);
+    if (active) {
+      active.classList.add("is-active");
+    }
+  }
+
+  function applyStartScreenTranslations() {
+    document.documentElement.lang = state.lang;
+    el.startTitle.textContent = t("startTitle");
+    el.startInstructions.textContent = t("startInstructions");
+    el.startExamBtn.textContent = t("startExam");
+    updateActiveLanguageBadge();
+  }
+
   function applyStaticTranslations() {
     document.documentElement.lang = state.lang;
-
     el.pageTitle.textContent = t("pageTitle");
     el.pageSubtitle.textContent = t("pageSubtitle");
     el.loadingState.textContent = t("loading");
@@ -361,45 +281,101 @@ function bindEvents() {
     el.scoreTitle.textContent = t("score");
     el.percentageTitle.textContent = t("percentage");
     el.timeSpentTitle.textContent = t("timeSpent");
-    el.answeredTitle.textContent = t("answered");
-    el.unansweredTitle.textContent = t("unanswered");
-    el.flaggedTitle.textContent = t("flaggedLabel");
-     updateActiveLanguageBadge();
+    el.answeredTitle.textContent = t("answeredTitle");
+    el.unansweredTitle.textContent = t("unansweredTitle");
+    el.flaggedTitle.textContent = t("flaggedTitle");
+    updateActiveLanguageBadge();
   }
 
- async function loadQuestionPool() {
-  const questions = await fetchQuestions();
-  const questionIds = questions.map((q) => q.id);
+  function updateActiveLanguageBadge() {
+    el.activeLanguageBadge.textContent = t("languageBadge");
+  }
 
-  const [optionsRows, referenceRows] = await Promise.all([
-    fetchOptions(questionIds),
-    fetchReferences(questionIds)
-  ]);
+  async function startMockExam() {
+    if (!db) {
+      showError(t("supabaseMissing"));
+      return;
+    }
 
-  const optionsByQuestionId = groupBy(optionsRows, "question_id");
-  const referencesByQuestionId = groupBy(referenceRows, "question_id");
+    try {
+      setLoading(true);
+      el.errorState.classList.add("hidden");
+      el.resultScreen.classList.add("hidden");
+      el.startScreen.classList.add("hidden");
+      el.examTopbar.classList.remove("hidden");
 
-  return questions.map((question) => {
-    const options = (optionsByQuestionId[question.id] || [])
-      .map((row) => normalizeOptionRow(row))
-      .filter((opt) => {
-        const text = getLocalizedOptionText(opt.raw || {});
-        return !!text;
+      applyStaticTranslations();
+
+      const pool = await loadQuestionPool();
+
+      if (!Array.isArray(pool) || pool.length < EXAM_QUESTION_COUNT) {
+        showError(t("notEnoughQuestions", { count: EXAM_QUESTION_COUNT }));
+        return;
+      }
+
+      state.questions = buildExamQuestions(pool);
+      state.currentIndex = 0;
+      state.answers = {};
+      state.flagged = {};
+      state.visited = {};
+      state.submitted = false;
+      state.submitting = false;
+      state.remainingSeconds = EXAM_DURATION_SECONDS;
+      state.startedAtMs = Date.now();
+      state.endsAtMs = state.startedAtMs + EXAM_DURATION_SECONDS * 1000;
+
+      state.questions.forEach((q) => {
+        state.visited[q.id] = false;
       });
 
-    const references = (referencesByQuestionId[question.id] || [])
-      .map((row) => normalizeReferenceRow(row))
-      .filter((ref) => ref.label || ref.url);
+      state.attemptId = await createMockAttempt();
 
-    return {
-      id: question.id,
-      topicId: question.topic_id || null,
-      raw: question,
-      options,
-      references
-    };
-  }).filter((q) => getLocalizedQuestionText(q.raw || {}).trim() && q.options.length >= 2);
-}
+      renderPalette();
+      renderCurrentQuestion();
+      updateSidebarCounts();
+      showExam();
+      startTimer();
+    } catch (error) {
+      console.error("Mock exam start error:", error);
+      showError(error.message || t("genericError"));
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function loadQuestionPool() {
+    const questions = await fetchQuestions();
+    const questionIds = questions.map((q) => q.id);
+
+    const [optionsRows, referenceRows] = await Promise.all([
+      fetchOptions(questionIds),
+      fetchReferences(questionIds)
+    ]);
+
+    const optionsByQuestionId = groupBy(optionsRows, "question_id");
+    const referencesByQuestionId = groupBy(referenceRows, "question_id");
+
+    return questions
+      .map((question) => {
+        const options = (optionsByQuestionId[question.id] || [])
+          .map(normalizeOptionRow)
+          .filter((opt) => !!getLocalizedOptionText(opt.raw || {}));
+
+        const references = (referencesByQuestionId[question.id] || [])
+          .map(normalizeReferenceRow)
+          .filter((ref) => ref.label || ref.url);
+
+        return {
+          id: question.id,
+          topicId: question.topic_id || null,
+          raw: question,
+          options,
+          references
+        };
+      })
+      .filter((q) => getLocalizedQuestionText(q.raw || "").trim() && q.options.length >= 4);
+  }
+
   async function fetchQuestions() {
     const { data, error } = await db
       .from("questions")
@@ -446,29 +422,26 @@ function bindEvents() {
   function buildExamQuestions(pool) {
     const selected = shuffleArray([...pool]).slice(0, EXAM_QUESTION_COUNT);
 
-    return selected.map((question) => {
-      const sortedOptions = [...question.options].sort((a, b) => {
-        return (a.sortOrder || 0) - (b.sortOrder || 0);
-      });
-
-      return {
-        ...question,
-        options: shuffleArray(sortedOptions)
-      };
-    });
+    return selected.map((question) => ({
+      ...question,
+      options: shuffleArray(
+        [...question.options].sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0))
+      )
+    }));
   }
 
   function renderCurrentQuestion() {
     const question = getCurrentQuestion();
     if (!question) return;
 
+    state.visited[question.id] = true;
+
     el.questionCounter.textContent = t("questionOf", {
       current: state.currentIndex + 1,
       total: state.questions.length
     });
 
-   el.questionText.textContent = getLocalizedQuestionText(question.raw || {});
-
+    el.questionText.textContent = getLocalizedQuestionText(question.raw || {});
     renderOptions(question);
     renderReferences(question);
     renderFlagButton(question);
@@ -485,9 +458,12 @@ function bindEvents() {
       const optionButton = document.createElement("button");
       optionButton.type = "button";
       optionButton.className = "option";
+
       if (selectedOptionId === option.id) {
         optionButton.classList.add("is-selected");
       }
+
+      optionButton.disabled = state.submitted;
 
       optionButton.addEventListener("click", () => {
         if (state.submitted) return;
@@ -500,7 +476,7 @@ function bindEvents() {
 
       const text = document.createElement("span");
       text.className = "option-text";
-     text.textContent = getLocalizedOptionText(option.raw || {});
+      text.textContent = getLocalizedOptionText(option.raw || {});
 
       optionButton.appendChild(letter);
       optionButton.appendChild(text);
@@ -543,11 +519,12 @@ function bindEvents() {
     const isFlagged = !!state.flagged[question.id];
     el.flagBtn.classList.toggle("is-active", isFlagged);
     el.flagBtn.textContent = isFlagged ? t("flagged") : t("flag");
+    el.flagBtn.disabled = state.submitted;
   }
 
   function renderNavButtons() {
-    el.prevBtn.disabled = state.currentIndex <= 0;
-    el.nextBtn.disabled = state.currentIndex >= state.questions.length - 1;
+    el.prevBtn.disabled = state.submitted || state.currentIndex <= 0;
+    el.nextBtn.disabled = state.submitted || state.currentIndex >= state.questions.length - 1;
   }
 
   function renderPalette() {
@@ -558,6 +535,7 @@ function bindEvents() {
       btn.type = "button";
       btn.className = "palette-btn";
       btn.textContent = String(index + 1);
+      btn.disabled = state.submitted;
 
       const isCurrent = index === state.currentIndex;
       const isAnswered = !!state.answers[question.id];
@@ -600,24 +578,23 @@ function bindEvents() {
   }
 
   function goToPreviousQuestion() {
-    if (state.currentIndex <= 0 || state.submitted) return;
+    if (state.submitted || state.currentIndex <= 0) return;
     goToQuestion(state.currentIndex - 1);
   }
 
   function goToNextQuestion() {
-    if (state.currentIndex >= state.questions.length - 1 || state.submitted) return;
+    if (state.submitted || state.currentIndex >= state.questions.length - 1) return;
     goToQuestion(state.currentIndex + 1);
   }
 
   function goToQuestion(index) {
     if (index < 0 || index >= state.questions.length) return;
     state.currentIndex = index;
-    const question = getCurrentQuestion();
-    if (question) state.visited[question.id] = true;
     renderCurrentQuestion();
   }
 
   function startTimer() {
+    stopTimer();
     updateTimerUI();
 
     state.timerInterval = window.setInterval(() => {
@@ -731,7 +708,7 @@ function bindEvents() {
   async function createMockAttempt() {
     const startedAtIso = new Date().toISOString();
 
-    const attempts = [
+    const payloads = [
       {
         mode: "mock_exam",
         started_at: startedAtIso,
@@ -752,7 +729,7 @@ function bindEvents() {
       }
     ];
 
-    for (const payload of attempts) {
+    for (const payload of payloads) {
       const { data, error } = await db
         .from("quiz_attempts")
         .insert(payload)
@@ -779,8 +756,6 @@ function bindEvents() {
     let response = await db.from("quiz_answers").insert(fullRows);
     if (!response.error) return;
 
-    console.warn("Full answer insert failed, retrying with reduced payload:", response.error.message);
-
     const reducedRows = answerRows.map((row) => ({
       attempt_id: row.attempt_id,
       question_id: row.question_id,
@@ -790,8 +765,6 @@ function bindEvents() {
 
     response = await db.from("quiz_answers").insert(reducedRows);
     if (!response.error) return;
-
-    console.warn("Reduced answer insert failed, retrying with minimal payload:", response.error.message);
 
     const minimalRows = answerRows.map((row) => ({
       attempt_id: row.attempt_id,
@@ -810,7 +783,7 @@ function bindEvents() {
 
     const completedAtIso = new Date().toISOString();
 
-    const updatePayloads = [
+    const payloads = [
       {
         completed_at: completedAtIso,
         score: result.score,
@@ -835,7 +808,7 @@ function bindEvents() {
       }
     ];
 
-    for (const payload of updatePayloads) {
+    for (const payload of payloads) {
       const { error } = await db
         .from("quiz_attempts")
         .update(payload)
@@ -878,11 +851,9 @@ function bindEvents() {
     el.prevBtn.disabled = true;
     el.nextBtn.disabled = true;
     el.flagBtn.disabled = true;
-
     Array.from(el.optionsContainer.querySelectorAll("button")).forEach((btn) => {
       btn.disabled = true;
     });
-
     Array.from(el.paletteContainer.querySelectorAll("button")).forEach((btn) => {
       btn.disabled = true;
     });
@@ -890,15 +861,12 @@ function bindEvents() {
 
   function unlockExamUI() {
     if (state.submitted) return;
-
     el.submitExamBtn.disabled = false;
     el.flagBtn.disabled = false;
     renderNavButtons();
-
     Array.from(el.optionsContainer.querySelectorAll("button")).forEach((btn) => {
       btn.disabled = false;
     });
-
     Array.from(el.paletteContainer.querySelectorAll("button")).forEach((btn) => {
       btn.disabled = false;
     });
@@ -940,33 +908,25 @@ function bindEvents() {
     }, 0);
   }
 
-function getLocalizedQuestionText(row) {
-
-  if (state.lang === "fr") {
-    return (row.question_text_fr || row.question_text_en || "").trim();
+  function getLocalizedQuestionText(row) {
+    if (state.lang === "fr") {
+      return (row.question_text_fr || row.question_text_en || "").trim();
+    }
+    if (state.lang === "es") {
+      return (row.question_text_es || row.question_text_en || "").trim();
+    }
+    return (row.question_text_en || "").trim();
   }
 
-  if (state.lang === "es") {
-    return (row.question_text_es || row.question_text_en || "").trim();
+  function getLocalizedOptionText(row) {
+    if (state.lang === "fr") {
+      return (row.option_text_fr || row.option_text_en || "").trim();
+    }
+    if (state.lang === "es") {
+      return (row.option_text_es || row.option_text_en || "").trim();
+    }
+    return (row.option_text_en || "").trim();
   }
-
-  return (row.question_text_en || "").trim();
-
-}
-
- function getLocalizedOptionText(row) {
-
-  if (state.lang === "fr") {
-    return (row.option_text_fr || row.option_text_en || "").trim();
-  }
-
-  if (state.lang === "es") {
-    return (row.option_text_es || row.option_text_en || "").trim();
-  }
-
-  return (row.option_text_en || "").trim();
-
-}
 
   function getLocalizedReferenceLabel(row) {
     return getLocalizedValue(row, [
@@ -992,15 +952,15 @@ function getLocalizedQuestionText(row) {
     return "";
   }
 
- function normalizeOptionRow(row) {
-  return {
-    id: row.id,
-    questionId: row.question_id,
-    raw: row,
-    isCorrect: !!row.is_correct,
-    sortOrder: Number(row.sort_order || 0)
-  };
-}
+  function normalizeOptionRow(row) {
+    return {
+      id: row.id,
+      questionId: row.question_id,
+      raw: row,
+      isCorrect: !!row.is_correct,
+      sortOrder: Number(row.sort_order || 0)
+    };
+  }
 
   function normalizeReferenceRow(row) {
     return {
