@@ -223,7 +223,27 @@
 
       "cookies.4.title": "4. Third-party cookies",
       "cookies.4.text": "Some third-party services (such as embedded content or analytics providers) may set cookies. Where used, they are subject to the third party’s policies.",
+      "cookies.4.title": "4. Third-party cookies",
+"cookies.4.text": "Some third-party services (such as embedded content or analytics providers) may set cookies. Where used, they are subject to the third party’s policies.",
 
+"gateway.kicker": "Global Management Consultancy Limited",
+"gateway.title": "Consultancy, Finance and Professional Learning",
+"gateway.lead": "Select the area most relevant to your needs. Global Management Consultancy Limited brings together advisory services, international financial solutions and professional education through three distinct entry points.",
+
+"gateway.consultancy.title": "Consultancy Services & Football Agency",
+"gateway.consultancy.text": "Strategic advisory, football agency support, representation services and cross-border business guidance for professionals, clubs, athletes and international operators.",
+"gateway.consultancy.cta": "Enter Consultancy",
+"gateway.consultancy.meta": "Advisory • Agency • International Support",
+
+"gateway.finance.title": "Global Sport Finance",
+"gateway.finance.text": "Banking access, multi-currency support, international payments, FX solutions and prepaid card infrastructure tailored to sport, business and global mobility.",
+"gateway.finance.cta": "Enter Finance",
+"gateway.finance.meta": "Accounts • Cards • Payments • FX",
+
+"gateway.academy.title": "Academy & Learning",
+"gateway.academy.text": "Professional education, FIFA Football Agent exam preparation, FIFA mock exams, revision tools and premium digital resources designed for serious learners.",
+"gateway.academy.cta": "Enter Academy",
+"gateway.academy.meta": "FIFA Exam Prep • FIFA Mock Exams • Digital Resources"
 
     },
 
@@ -442,6 +462,27 @@
 
       "cookies.4.title": "4. Cookies tiers",
       "cookies.4.text": "Certains services tiers (tels que du contenu intégré ou des fournisseurs d’analyses) peuvent déposer des cookies. Le cas échéant, ils sont soumis aux politiques de ces tiers.",
+      "cookies.4.title": "4. Cookies tiers",
+"cookies.4.text": "Certains services tiers (tels que du contenu intégré ou des fournisseurs d’analyses) peuvent déposer des cookies. Le cas échéant, ils sont soumis aux politiques de ces tiers.",
+
+"gateway.kicker": "Global Management Consultancy Limited",
+"gateway.title": "Conseil, finance et formation professionnelle",
+"gateway.lead": "Sélectionnez l’activité la plus adaptée à vos besoins. Global Management Consultancy Limited réunit les services de conseil, les solutions financières internationales et la formation professionnelle à travers trois points d’entrée distincts.",
+
+"gateway.consultancy.title": "Services de conseil et agence de football",
+"gateway.consultancy.text": "Conseil stratégique, accompagnement en agence de football, services de représentation et accompagnement transfrontalier pour professionnels, clubs, athlètes et opérateurs internationaux.",
+"gateway.consultancy.cta": "Accéder au conseil",
+"gateway.consultancy.meta": "Conseil • Agence • Accompagnement international",
+
+"gateway.finance.title": "Global Sport Finance",
+"gateway.finance.text": "Accès bancaire, support multi-devises, paiements internationaux, solutions de change et infrastructure de cartes prépayées adaptées au sport, aux entreprises et à la mobilité internationale.",
+"gateway.finance.cta": "Accéder à la finance",
+"gateway.finance.meta": "Comptes • Cartes • Paiements • Change",
+
+"gateway.academy.title": "Académie et formation",
+"gateway.academy.text": "Formation professionnelle, préparation à l’examen d’agent de football FIFA, examens blancs FIFA, outils de révision et ressources numériques premium pour les apprenants sérieux.",
+"gateway.academy.cta": "Accéder à l’académie",
+"gateway.academy.meta": "Préparation examen FIFA • Examens blancs FIFA • Ressources numériques"
 
 
     },
@@ -661,7 +702,27 @@
 
       "cookies.4.title": "4. Cookies de terceros",
       "cookies.4.text": "Algunos servicios de terceros (como contenido incrustado o proveedores de analítica) pueden establecer cookies. Cuando se utilicen, estarán sujetos a las políticas del tercero correspondiente.",
+      "cookies.4.title": "4. Cookies de terceros",
+"cookies.4.text": "Algunos servicios de terceros (como contenido incrustado o proveedores de analítica) pueden establecer cookies. Cuando se utilicen, estarán sujetos a las políticas del tercero correspondiente.",
 
+"gateway.kicker": "Global Management Consultancy Limited",
+"gateway.title": "Consultoría, finanzas y aprendizaje profesional",
+"gateway.lead": "Seleccione el área más relevante para sus necesidades. Global Management Consultancy Limited reúne servicios de consultoría, soluciones financieras internacionales y educación profesional a través de tres puntos de entrada distintos.",
+
+"gateway.consultancy.title": "Servicios de consultoría y agencia de fútbol",
+"gateway.consultancy.text": "Asesoría estratégica, apoyo en agencia de fútbol, servicios de representación y orientación internacional para profesionales, clubes, atletas y operadores globales.",
+"gateway.consultancy.cta": "Entrar en consultoría",
+"gateway.consultancy.meta": "Asesoría • Agencia • Soporte internacional",
+
+"gateway.finance.title": "Global Sport Finance",
+"gateway.finance.text": "Acceso bancario, soporte multimoneda, pagos internacionales, soluciones de divisas e infraestructura de tarjetas prepago adaptadas al deporte, a los negocios y a la movilidad global.",
+"gateway.finance.cta": "Entrar en finanzas",
+"gateway.finance.meta": "Cuentas • Tarjetas • Pagos • Divisas",
+
+"gateway.academy.title": "Academia y aprendizaje",
+"gateway.academy.text": "Educación profesional, preparación para el examen de agente de fútbol FIFA, exámenes simulados FIFA, herramientas de repaso y recursos digitales premium diseñados para estudiantes serios.",
+"gateway.academy.cta": "Entrar en la academia",
+"gateway.academy.meta": "Preparación examen FIFA • Exámenes simulados FIFA • Recursos digitales"
     }
   };
 
