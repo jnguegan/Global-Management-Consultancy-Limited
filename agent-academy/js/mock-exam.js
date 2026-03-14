@@ -419,16 +419,146 @@
     return Array.isArray(data) ? data : [];
   }
 
-  function buildExamQuestions(pool) {
-    const selected = shuffleArray([...pool]).slice(0, EXAM_QUESTION_COUNT);
+ function buildExamQuestions(pool) {
+  const REGULATION_WEIGHTS = {
+    FFAR: 10,
+    RSTP: 8,
+    FCE: 6,
+    FDC: 6,
+    STATUTES: 5,
+    GUARDIANS: 1
+  };
 
-    return selected.map((question) => ({
+  const TARGET_SCENARIO_COUNT = 8;
+
+  const scoredPool = shuffleArray([...pool]).map((question) => {
+    const raw = question.raw || {};
+    const regulationCode = String(
+      raw.regulation_code ||
+      raw.source_regulation_code ||
+      raw.regulation ||
+      ""
+    ).trim().toUpperCase();
+
+    const articleNumber = String(
+      raw.article_number ||
+      raw.source_article ||
+      raw.reference_article ||
+      ""
+    ).trim();
+
+    const questionText = getLocalizedQuestionText(raw).toLowerCase();
+
+    const scenarioSignals = [
+      "a player",
+      "a club",
+      "an agent",
+      "a football agent",
+      "a professional player",
+      "a coach",
+      "a minor",
+      "a federation",
+      "a member association",
+      "un jugador",
+      "un club",
+      "un agente",
+      "una jugadora",
+      "un futbolista",
+      "un menor",
+      "une joueuse",
+      "un joueur",
+      "un agent",
+      "un club",
+      "un mineur"
+    ];
+
+    const isScenario =
+      scenarioSignals.some((signal) => questionText.includes(signal)) ||
+      /\baccording to fifa regulations\b/i.test(questionText) ||
+      /\bunder the ffar\b/i.test(questionText) ||
+      /\bunder fifa regulations\b/i.test(questionText);
+
+    let score = 0;
+
+    score += REGULATION_WEIGHTS[regulationCode] || 0;
+
+    if (articleNumber) {
+      const rootArticle = String(articleNumber).split(".")[0];
+      if (regulationCode === "FFAR" && ["12", "13", "14", "15", "16"].includes(rootArticle)) {
+        score += 3;
+      }
+      if (regulationCode === "RSTP" && ["19", "20", "21", "24"].includes(rootArticle)) {
+        score += 2;
+      }
+    }
+
+    if (isScenario) {
+      score += 1;
+    }
+
+    return {
       ...question,
-      options: shuffleArray(
-        [...question.options].sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0))
-      )
-    }));
+      __score: score,
+      __isScenario: isScenario
+    };
+  });
+
+  const scenarioQuestions = scoredPool
+    .filter((q) => q.__isScenario)
+    .sort((a, b) => b.__score - a.__score);
+
+  const nonScenarioQuestions = scoredPool
+    .filter((q) => !q.__isScenario)
+    .sort((a, b) => b.__score - a.__score);
+
+  const selected = [];
+  const usedIds = new Set();
+
+  const takeQuestions = (source, maxCount) => {
+    for (const question of source) {
+      if (selected.length >= EXAM_QUESTION_COUNT) break;
+      if (maxCount <= 0) break;
+      if (usedIds.has(question.id)) continue;
+
+      selected.push(question);
+      usedIds.add(question.id);
+      maxCount -= 1;
+    }
+  };
+
+  takeQuestions(scenarioQuestions, TARGET_SCENARIO_COUNT);
+
+  for (const question of nonScenarioQuestions) {
+    if (selected.length >= EXAM_QUESTION_COUNT) break;
+    if (usedIds.has(question.id)) continue;
+
+    selected.push(question);
+    usedIds.add(question.id);
   }
+
+  if (selected.length < EXAM_QUESTION_COUNT) {
+    for (const question of scenarioQuestions) {
+      if (selected.length >= EXAM_QUESTION_COUNT) break;
+      if (usedIds.has(question.id)) continue;
+
+      selected.push(question);
+      usedIds.add(question.id);
+    }
+  }
+
+  const finalQuestions = shuffleArray(selected).slice(0, EXAM_QUESTION_COUNT);
+
+  return finalQuestions.map((question) => {
+    const sortedOptions = [...question.options].sort((a, b) => {
+      return (a.sortOrder || 0) - (b.sortOrder || 0);
+    });
+
+    return {
+      ...question,
+      options: shuffleArray(sortedOptions)
+    };
+  });
+}
 
   function renderCurrentQuestion() {
     const question = getCurrentQuestion();
