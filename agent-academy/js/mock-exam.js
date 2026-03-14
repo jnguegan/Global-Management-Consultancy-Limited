@@ -633,7 +633,16 @@
   async function handleManualSubmit() {
     if (state.submitted || state.submitting) return;
 
-    const confirmed = window.confirm(t("submitConfirm"));
+    const answered = countAnswered();
+const unanswered = state.questions.length - answered;
+const flagged = countFlagged();
+
+const confirmed = window.confirm(
+  `${t("submitConfirm")}\n\n` +
+  `${t("answered")}: ${answered}\n` +
+  `${t("unanswered")}: ${unanswered}\n` +
+  `${t("flaggedLabel")}: ${flagged}`
+);
     if (!confirmed) return;
 
     stopTimer();
