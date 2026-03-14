@@ -74,7 +74,137 @@
       }
       .langLabel{ display:none; }
       .langToggle{ padding: 6px; }
+     }
+
+    .heroGateway {
+      min-height: calc(100vh - 110px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
+
+    .heroGateway .heroOverlay {
+      width: 100%;
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 48px 24px 40px;
+      text-align: center;
+    }
+
+    .gatewayKicker {
+      display: inline-block;
+      margin-bottom: 14px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      opacity: 0.8;
+    }
+
+    .gatewayTitle {
+      margin: 0 0 14px;
+      font-size: clamp(34px, 5vw, 58px);
+      line-height: 1.08;
+    }
+
+    .gatewayLead {
+      max-width: 880px;
+      margin: 0 auto 28px;
+      font-size: 18px;
+      line-height: 1.7;
+    }
+
+    .gatewayGrid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 22px;
+      max-width: 1100px;
+      margin: 34px auto 0;
+      align-items: stretch;
+    }
+
+    .gatewayCard {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 245px;
+      padding: 28px 26px;
+      border-radius: 24px;
+      background: rgba(255,255,255,0.90);
+      border: 1px solid rgba(0,0,0,0.08);
+      box-shadow: 0 18px 40px rgba(0,0,0,0.10);
+      text-align: left;
+    }
+
+    .gatewayCard h2 {
+      margin: 0 0 12px;
+      font-size: 28px;
+      line-height: 1.2;
+    }
+
+    .gatewayCard p {
+      margin: 0 0 22px;
+      font-size: 16px;
+      line-height: 1.65;
+      color: rgba(0,0,0,0.78);
+    }
+
+    .gatewayCard.centerCard {
+      grid-column: 1 / -1;
+      max-width: 540px;
+      width: 100%;
+      justify-self: center;
+    }
+
+    .gatewayBtn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: fit-content;
+      min-width: 210px;
+      padding: 14px 20px;
+      border-radius: 999px;
+      text-decoration: none;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      transition: 0.2s ease;
+    }
+
+    .gatewayBtn.primary {
+      background: #0f172a;
+      color: #ffffff;
+    }
+
+    .gatewayBtn.primary:hover {
+      transform: translateY(-1px);
+      opacity: 0.94;
+    }
+
+    .gatewayMeta {
+      margin-top: 10px;
+      font-size: 13px;
+      opacity: 0.68;
+    }
+
+    @media (max-width: 900px) {
+      .heroGateway {
+        min-height: auto;
+      }
+
+      .gatewayGrid {
+        grid-template-columns: 1fr;
+      }
+
+      .gatewayCard.centerCard {
+        grid-column: auto;
+        max-width: none;
+      }
+
+      .gatewayCard {
+        min-height: auto;
+      }
+    }
+
   </style>
 </head>
 
@@ -114,46 +244,57 @@
   </div>
 </nav>
 
-<header class="hero heroImage">
+<header class="hero heroImage heroGateway">
   <div class="heroOverlay">
-    <span class="kicker" data-i18n="hero.kicker">International · Football · Finance</span>
+    <span class="gatewayKicker" data-i18n="gateway.kicker">Global Management Consultancy Limited</span>
 
-    <h1 class="h1" data-i18n="hero.title">
-      Global Sport Finance and Football Agency Services
+    <h1 class="gatewayTitle" data-i18n="gateway.title">
+      Consultancy, Finance and Professional Learning
     </h1>
 
-    <p class="lead" data-i18n="hero.p1">
-      <strong>Global Management Consultancy Limited</strong> is an international advisory and services firm operating at the intersection of professional football and cross-border financial infrastructure.
+    <p class="gatewayLead" data-i18n="gateway.lead">
+      Select the area most relevant to your needs. Global Management Consultancy Limited brings together advisory services, international financial solutions and professional education through three distinct entry points.
     </p>
 
-    <p class="lead" data-i18n="hero.p2">
-      We provide specialised football agency services and modern financial solutions through <strong>Global Sport Finance</strong>, supporting professional football clubs, agencies and players with multi-currency accounts, foreign exchange, international payments and card-based expense management.
-    </p>
+    <div class="gatewayGrid">
+      <article class="gatewayCard">
+        <div>
+          <h2 data-i18n="gateway.consultancy.title">Consultancy Services &amp; Football Agency</h2>
+          <p data-i18n="gateway.consultancy.text">
+            Strategic advisory, football agency support, representation services and cross-border business guidance for professionals, clubs, athletes and international operators.
+          </p>
+        </div>
+        <div>
+          <a class="gatewayBtn primary" href="services.html" data-i18n="gateway.consultancy.cta">Enter Consultancy</a>
+          <div class="gatewayMeta" data-i18n="gateway.consultancy.meta">Advisory • Agency • International Support</div>
+        </div>
+      </article>
 
-    <p class="lead" data-i18n="hero.p3">
-      Football is inherently international. Salaries, bonuses, transfers, sponsorship revenues and operating costs move across countries and currencies every day. Generic banking and payment solutions are rarely designed for this reality. Global Management Consultancy Limited was created to address this gap by combining sports industry expertise with modern financial services built specifically for international football operations.
-    </p>
+      <article class="gatewayCard">
+        <div>
+          <h2 data-i18n="gateway.finance.title">Global Sport Finance</h2>
+          <p data-i18n="gateway.finance.text">
+            Banking access, multi-currency support, international payments, FX solutions and prepaid card infrastructure tailored to sport, business and global mobility.
+          </p>
+        </div>
+        <div>
+          <a class="gatewayBtn primary" href="finance.html" data-i18n="gateway.finance.cta">Enter Finance</a>
+          <div class="gatewayMeta" data-i18n="gateway.finance.meta">Accounts • Cards • Payments • FX</div>
+        </div>
+      </article>
 
-    <p class="lead" data-i18n="hero.p4">
-      Through <strong>Global Sport Finance</strong>, we deliver integrated treasury workflows, FX optimisation, cross-border payments and operational spending controls, helping clubs and agencies manage their financial operations efficiently while supporting players with practical tools for international living, travel and career mobility.
-    </p>
-
-    <p class="lead" data-i18n="hero.p5">
-      Our football agency services complement this financial infrastructure by providing professional representation, career strategy, contract negotiation support and club relations within the global game.
-    </p>
-
-    <p class="lead" data-i18n="hero.p6">
-      Our work is international by design and compliance-driven by structure. All payment services, e-money accounts, card issuing and foreign exchange services are delivered in partnership with FCA and EU regulated financial institutions, ensuring secure, compliant and scalable solutions for our international clients.
-    </p>
-
-    <p class="lead" data-i18n="hero.p7">
-      Global Management Consultancy Limited combines football industry expertise and institutional-grade financial infrastructure to support the modern realities of the global football ecosystem.
-    </p>
-
-    <div class="actions">
-      <a class="btn primary" href="finance.html" data-i18n="cta.finance">Explore Global Sport Finance</a>
-      <a class="btn" href="services.html" data-i18n="cta.services">View services</a>
-      <a class="btn" href="contact.html" data-i18n="cta.contact">Contact</a>
+      <article class="gatewayCard centerCard">
+        <div>
+          <h2 data-i18n="gateway.academy.title">Academy &amp; Learning</h2>
+          <p data-i18n="gateway.academy.text">
+            text: "Professional education, FIFA Football Agent exam preparation, FIFA mock exams, revision tools and premium digital resources designed for serious learners.",
+          </p>
+        </div>
+        <div>
+          <a class="gatewayBtn primary" href="/agent-academy/" data-i18n="gateway.academy.cta">Enter Academy</a>
+          <div class="gatewayMeta" data-i18n="gateway.academy.meta">Exam Prep • E-learning • Digital Resources</div>
+        </div>
+      </article>
     </div>
   </div>
 </header>
@@ -220,6 +361,7 @@
 
 </body>
 </html>
+
 
 
 
