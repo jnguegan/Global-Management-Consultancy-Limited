@@ -243,7 +243,40 @@
 "gateway.academy.title": "Academy & Learning",
 "gateway.academy.text": "Professional education, FIFA Football Agent exam preparation, FIFA mock exams, revision tools and premium digital resources designed for serious learners.",
 "gateway.academy.cta": "Enter Academy",
-"gateway.academy.meta": "FIFA Exam Prep • FIFA Mock Exams • Digital Resources"
+"gateway.academy.meta": "FIFA Exam Prep • FIFA Mock Exams • Digital Resources",
+       "upgrade.pageTitle": "Agent Academy Upgrade",
+
+"upgrade.title": "Choose the right level of access",
+"upgrade.subtitle": "Agent Academy is built for serious candidates preparing for the FIFA Football Agent Exam.",
+
+"upgrade.priceNote": "One-time payment",
+
+"upgrade.starter.title": "Starter",
+"upgrade.starter.f1": "Limited practice quiz access",
+"upgrade.starter.f2": "Selected sample questions",
+"upgrade.starter.f3": "Preview access to the online playbook",
+"upgrade.starter.f4": "Academy account access",
+
+"upgrade.pro.title": "Professional",
+"upgrade.pro.f1": "Full practice quiz access",
+"upgrade.pro.f2": "Full FIFA mock exam access",
+"upgrade.pro.f3": "Scenario questions and exam simulation",
+"upgrade.pro.f4": "Full online playbook access",
+"upgrade.pro.f5": "Structured exam preparation",
+
+"upgrade.premium.title": "Premium Intensive",
+"upgrade.premium.f1": "Everything in Professional",
+"upgrade.premium.f2": "Advanced exam strategy",
+"upgrade.premium.f3": "Priority access to new tools",
+"upgrade.premium.f4": "Premium preparation support",
+
+"upgrade.chooseStarter": "Choose Starter",
+"upgrade.chooseProfessional": "Choose Professional",
+"upgrade.choosePremium": "Choose Premium",
+
+"upgrade.noteTitle": "Important",
+"upgrade.noteText": "Free accounts only provide limited preview access. Full mock exams, the full question bank and the complete playbook are available through premium access."
+
 
     },
 
@@ -482,7 +515,40 @@
 "gateway.academy.title": "Académie et formation",
 "gateway.academy.text": "Formation professionnelle, préparation à l’examen d’agent de football FIFA, examens blancs FIFA, outils de révision et ressources numériques premium pour les apprenants sérieux.",
 "gateway.academy.cta": "Accéder à l’académie",
-"gateway.academy.meta": "Préparation examen FIFA • Examens blancs FIFA • Ressources numériques"
+"gateway.academy.meta": "Préparation examen FIFA • Examens blancs FIFA • Ressources numériques",
+       "upgrade.pageTitle": "Mise à niveau Agent Academy",
+
+"upgrade.title": "Choisissez le niveau d'accès adapté",
+"upgrade.subtitle": "Agent Academy est conçu pour les candidats sérieux préparant l'examen d'agent FIFA.",
+
+"upgrade.priceNote": "Paiement unique",
+
+"upgrade.starter.title": "Starter",
+"upgrade.starter.f1": "Accès limité au quiz d'entraînement",
+"upgrade.starter.f2": "Questions d'exemple sélectionnées",
+"upgrade.starter.f3": "Aperçu du playbook en ligne",
+"upgrade.starter.f4": "Accès au compte Academy",
+
+"upgrade.pro.title": "Professionnel",
+"upgrade.pro.f1": "Accès complet au quiz d'entraînement",
+"upgrade.pro.f2": "Accès complet aux examens blancs FIFA",
+"upgrade.pro.f3": "Questions scénarisées et simulation d'examen",
+"upgrade.pro.f4": "Accès complet au playbook en ligne",
+"upgrade.pro.f5": "Environnement structuré de préparation à l'examen",
+
+"upgrade.premium.title": "Premium Intensif",
+"upgrade.premium.f1": "Tout le contenu du plan Professionnel",
+"upgrade.premium.f2": "Stratégie avancée de préparation à l'examen",
+"upgrade.premium.f3": "Accès prioritaire aux nouveaux outils",
+"upgrade.premium.f4": "Support premium de préparation",
+
+"upgrade.chooseStarter": "Choisir Starter",
+"upgrade.chooseProfessional": "Choisir Professionnel",
+"upgrade.choosePremium": "Choisir Premium",
+
+"upgrade.noteTitle": "Important",
+"upgrade.noteText": "Les comptes gratuits donnent uniquement accès à un aperçu limité. Les examens blancs complets, la banque complète de questions et le playbook complet sont disponibles via l'accès premium."
+
 
 
     },
@@ -722,7 +788,41 @@
 "gateway.academy.title": "Academia y aprendizaje",
 "gateway.academy.text": "Educación profesional, preparación para el examen de agente de fútbol FIFA, exámenes simulados FIFA, herramientas de repaso y recursos digitales premium diseñados para estudiantes serios.",
 "gateway.academy.cta": "Entrar en la academia",
-"gateway.academy.meta": "Preparación examen FIFA • Exámenes simulados FIFA • Recursos digitales"
+"gateway.academy.meta": "Preparación examen FIFA • Exámenes simulados FIFA • Recursos digitales",
+
+"upgrade.pageTitle": "Actualización Agent Academy",
+
+"upgrade.title": "Elige el nivel de acceso adecuado",
+"upgrade.subtitle": "Agent Academy está diseñado para candidatos serios que preparan el examen de agente FIFA.",
+
+"upgrade.priceNote": "Pago único",
+
+"upgrade.starter.title": "Starter",
+"upgrade.starter.f1": "Acceso limitado al quiz de práctica",
+"upgrade.starter.f2": "Preguntas de ejemplo seleccionadas",
+"upgrade.starter.f3": "Vista previa del playbook en línea",
+"upgrade.starter.f4": "Acceso a la cuenta Academy",
+
+"upgrade.pro.title": "Profesional",
+"upgrade.pro.f1": "Acceso completo al quiz de práctica",
+"upgrade.pro.f2": "Acceso completo a los exámenes simulados FIFA",
+"upgrade.pro.f3": "Preguntas de escenarios y simulación de examen",
+"upgrade.pro.f4": "Acceso completo al playbook en línea",
+"upgrade.pro.f5": "Entorno estructurado de preparación para el examen",
+
+"upgrade.premium.title": "Premium Intensivo",
+"upgrade.premium.f1": "Todo lo incluido en Profesional",
+"upgrade.premium.f2": "Estrategia avanzada de examen",
+"upgrade.premium.f3": "Acceso prioritario a nuevas herramientas",
+"upgrade.premium.f4": "Soporte premium de preparación",
+
+"upgrade.chooseStarter": "Elegir Starter",
+"upgrade.chooseProfessional": "Elegir Profesional",
+"upgrade.choosePremium": "Elegir Premium",
+
+"upgrade.noteTitle": "Importante",
+"upgrade.noteText": "Las cuentas gratuitas solo proporcionan acceso de vista previa limitado. Los exámenes simulados completos, el banco completo de preguntas y el playbook completo están disponibles mediante acceso premium."
+
     }
   };
 
