@@ -271,17 +271,16 @@ if (access.plan === "free") {
 
 const { data: idsData, error: idsError } = await db
   .from(table)
-  .select("id");
-  
-    .eq("topic_id", state.topic.id)
-    .eq("is_active", true);
+  .select("id")
+  .eq("topic_id", state.topic.id)
+  .eq("is_active", true);
 
-  console.log("QUESTION IDS DATA:", idsData);
-  console.log("QUESTION IDS ERROR:", idsError);
+console.log("QUESTION IDS DATA:", idsData);
+console.log("QUESTION IDS ERROR:", idsError);
 
-  if (idsError) {
-    throw idsError;
-  }
+if (idsError) {
+  throw idsError;
+}
 
   const allQuestionIds = (idsData || []).map((q) => q.id);
 
