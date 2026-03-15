@@ -481,10 +481,22 @@ function setLang(lang){
 }
 </script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="/agent-academy/js/supabase-client.js"></script>
+<script src="/agent-academy/js/supabase-client.js"></script>
+<script src="/agent-academy/js/auth.js"></script>
 <script src="/agent-academy/js/guard.js"></script>
-<script src="/agent-academy/js/ffar-map.js"></script>
-<script src="/agent-academy/js/quiz.js?v=3"></script>
-  
+
+<script>
+  document.addEventListener("DOMContentLoaded", async () => {
+    const guard = window.AgentAcademyGuard;
+    if (!guard || !guard.requirePaidAccess) return;
+
+    await guard.requirePaidAccess({
+      loginUrl: "/agent-academy/login.html",
+      upgradeUrl: "/agent-academy/upgrade.html"
+    });
+  });
+</script>
+
+<script src="/agent-academy/js/quiz.js"></script>
 </body>
 </html>
