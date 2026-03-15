@@ -173,7 +173,8 @@
 "launch.label": "Launch note:",
 "launch.text": "for version 1, the essential live components are the Academy entry page, sign in, sign up, practice quiz, FIFA mock exam and the online playbook. Dashboard, results tracking and advanced user profile pages can be layered in after initial launch.",
 
-"footer.brand": "Agent Academy"
+"footer.brand": "Agent Academy",
+  "upgrade.freePreviewButton": "Start Free Preview"
 
 }
 
