@@ -1,279 +1,570 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Upgrade Access | Agent Academy | GlobalMGM</title>
 
-<title data-i18n="upgrade.pageTitle">Agent Academy Upgrade</title>
+  <style>
+    :root {
+      --bg-1: #07101d;
+      --bg-2: #0c1628;
+      --panel: rgba(255,255,255,0.06);
+      --panel-strong: rgba(255,255,255,0.09);
+      --border: rgba(255,255,255,0.12);
+      --text: #edf3ff;
+      --muted: rgba(237,243,255,0.76);
+      --gold: #d4af37;
+      --gold-soft: rgba(212,175,55,0.16);
+      --gold-strong: rgba(212,175,55,0.25);
+      --success: #dff7d6;
+      --shadow: 0 24px 80px rgba(0,0,0,0.34);
+      --radius-xl: 24px;
+      --radius-lg: 18px;
+      --max-width: 1240px;
+    }
 
-<meta name="description"
-content="Upgrade your Agent Academy access to unlock FIFA mock exams, the full question bank and the online playbook."
-/>
+    * {
+      box-sizing: border-box;
+    }
 
-<link rel="stylesheet" href="/assets/css/style.css">
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: Inter, Arial, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(212,175,55,0.10), transparent 26%),
+        radial-gradient(circle at bottom right, rgba(212,175,55,0.08), transparent 22%),
+        linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 100%);
+      color: var(--text);
+    }
 
-<style>
+    body {
+      min-height: 100vh;
+    }
 
-.page{
-max-width:1100px;
-margin:auto;
-padding:40px 20px;
-}
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
 
-.hero{
-text-align:center;
-margin-bottom:40px;
-}
+    .page-shell {
+      min-height: 100vh;
+      padding: 28px 18px 40px;
+    }
 
-.hero h1{
-font-size:44px;
-margin-bottom:12px;
-}
+    .container {
+      max-width: var(--max-width);
+      margin: 0 auto;
+    }
 
-.hero p{
-max-width:700px;
-margin:auto;
-opacity:.8;
-}
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
 
-.pricing-grid{
-display:grid;
-grid-template-columns:repeat(3,1fr);
-gap:26px;
-margin-top:30px;
-}
+    .brand {
+      color: var(--gold);
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
 
-.plan{
-border:1px solid rgba(0,0,0,.08);
-border-radius:16px;
-padding:28px;
-background:#fff;
-box-shadow:0 8px 24px rgba(0,0,0,.06);
-display:flex;
-flex-direction:column;
-}
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
 
-.plan h2{
-font-size:26px;
-margin-bottom:10px;
-}
+    .lang-switch {
+      display: inline-flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
 
-.price{
-font-size:42px;
-font-weight:700;
-margin-bottom:10px;
-}
+    .lang-btn,
+    .top-btn,
+    .plan-btn {
+      appearance: none;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.05);
+      color: var(--text);
+      border-radius: 999px;
+      padding: 10px 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
+    }
 
-.plan ul{
-padding-left:18px;
-margin-top:14px;
-line-height:1.7;
-}
+    .lang-btn:hover,
+    .top-btn:hover,
+    .plan-btn:hover {
+      transform: translateY(-1px);
+      border-color: rgba(212,175,55,0.45);
+      background: rgba(255,255,255,0.08);
+    }
 
-.plan li{
-margin-bottom:6px;
-}
+    .hero {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 20px;
+      margin-bottom: 22px;
+    }
 
-.plan button{
-margin-top:auto;
-padding:12px 18px;
-border-radius:10px;
-border:none;
-background:#1e73be;
-color:white;
-font-weight:600;
-cursor:pointer;
-}
+    .hero-card,
+    .side-card,
+    .plan-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+    }
 
-.plan button:hover{
-opacity:.9;
-}
+    .hero-card {
+      padding: 30px;
+    }
 
-.featured{
-border:2px solid #1e73be;
-}
+    .hero-kicker {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: var(--gold-soft);
+      border: 1px solid rgba(212,175,55,0.28);
+      color: #fff2c8;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
 
-.note{
-margin-top:40px;
-padding:20px;
-border-radius:12px;
-background:#f6f8fb;
-font-size:15px;
-}
+    .hero-card h1 {
+      margin: 0 0 14px;
+      font-size: clamp(32px, 5vw, 54px);
+      line-height: 1.03;
+    }
 
-@media(max-width:900px){
+    .hero-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 18px;
+      line-height: 1.78;
+      max-width: 760px;
+    }
 
-.pricing-grid{
-grid-template-columns:1fr;
-}
+    .hero-points {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 24px;
+    }
 
-}
+    .hero-point {
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.045);
+      border: 1px solid rgba(255,255,255,0.07);
+    }
 
-</style>
+    .hero-point strong {
+      display: block;
+      font-size: 15px;
+      margin-bottom: 6px;
+    }
 
+    .hero-point span {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .side-card {
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .side-card h2 {
+      margin: 0 0 10px;
+      font-size: 22px;
+    }
+
+    .side-card p {
+      margin: 0 0 16px;
+      color: var(--muted);
+      line-height: 1.75;
+    }
+
+    .side-list {
+      display: grid;
+      gap: 10px;
+      margin: 8px 0 20px;
+    }
+
+    .side-list-item {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      color: var(--muted);
+      line-height: 1.65;
+      font-size: 15px;
+    }
+
+    .side-list-item::before {
+      content: "•";
+      color: var(--gold);
+      font-weight: 900;
+      margin-top: -1px;
+    }
+
+    .section-head {
+      margin: 0 0 14px;
+    }
+
+    .section-head h2 {
+      margin: 0;
+      font-size: 28px;
+    }
+
+    .section-head p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      line-height: 1.75;
+      font-size: 16px;
+    }
+
+    .plans-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 18px;
+    }
+
+    .plan-card {
+      padding: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .plan-card.featured {
+      border-color: rgba(212,175,55,0.38);
+      background:
+        linear-gradient(180deg, rgba(212,175,55,0.07), rgba(255,255,255,0.04)),
+        var(--panel-strong);
+      transform: translateY(-2px);
+    }
+
+    .plan-badge {
+      display: inline-flex;
+      min-height: 28px;
+      align-items: center;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(212,175,55,0.12);
+      border: 1px solid rgba(212,175,55,0.24);
+      color: #ffefb5;
+      font-size: 12px;
+      font-weight: 800;
+      margin-bottom: 16px;
+    }
+
+    .plan-title {
+      font-size: 26px;
+      font-weight: 800;
+      margin: 0 0 8px;
+    }
+
+    .plan-price {
+      font-size: 42px;
+      font-weight: 900;
+      color: var(--gold);
+      line-height: 1;
+      margin: 0 0 8px;
+    }
+
+    .plan-price-note {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+
+    .plan-lead {
+      color: var(--text);
+      font-weight: 700;
+      line-height: 1.7;
+      margin-bottom: 16px;
+    }
+
+    .plan-features {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 20px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .plan-features li {
+      color: var(--muted);
+      line-height: 1.65;
+      padding-left: 18px;
+      position: relative;
+    }
+
+    .plan-features li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 10px;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--gold);
+    }
+
+    .plan-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      min-height: 48px;
+      background: rgba(255,255,255,0.06);
+    }
+
+    .plan-card.featured .plan-btn {
+      background: linear-gradient(135deg, rgba(212,175,55,0.20), rgba(212,175,55,0.10));
+      border-color: rgba(212,175,55,0.42);
+      color: #fff4cf;
+    }
+
+    .note-strip {
+      margin-top: 22px;
+      padding: 18px 20px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.045);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: var(--muted);
+      line-height: 1.75;
+    }
+
+    .footer {
+      margin-top: 28px;
+      padding-top: 18px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    @media (max-width: 1100px) {
+      .hero {
+        grid-template-columns: 1fr;
+      }
+
+      .plans-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .page-shell {
+        padding: 20px 14px 30px;
+      }
+
+      .hero-points {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-card,
+      .side-card,
+      .plan-card {
+        border-radius: 20px;
+      }
+    }
+  </style>
 </head>
-
 <body>
+  <div class="page-shell">
+    <div class="container">
 
-<div class="page">
+      <div class="topbar">
+        <div class="brand" data-i18n="upgrade.brand">GlobalMGM · Agent Academy</div>
 
-<div class="hero">
+        <div class="topbar-right">
+          <a class="top-btn" href="/agent-academy/index.html" data-i18n="upgrade.back">Back to Academy</a>
 
-<h1 data-i18n="upgrade.title">
-Choose the right level of access
-</h1>
+          <div class="lang-switch">
+            <button type="button" class="lang-btn" onclick="setLang('en')">EN</button>
+            <button type="button" class="lang-btn" onclick="setLang('fr')">FR</button>
+            <button type="button" class="lang-btn" onclick="setLang('es')">ES</button>
+          </div>
+        </div>
+      </div>
 
-<p data-i18n="upgrade.subtitle">
-Agent Academy is built for serious candidates preparing for the FIFA Football Agent Exam.
-</p>
+      <section class="hero">
+        <div class="hero-card">
+          <div class="hero-kicker" data-i18n="upgrade.kicker">Upgrade Access</div>
+          <h1 data-i18n="upgrade.title">Choose the plan that matches your FIFA exam ambition.</h1>
+          <p data-i18n="upgrade.lead">
+            Agent Academy is built for serious candidates. Unlock structured revision, premium study tools and a stronger preparation path designed for a high-value professional exam.
+          </p>
 
-</div>
+          <div class="hero-points">
+            <div class="hero-point">
+              <strong data-i18n="upgrade.point1Title">Premium exam preparation</strong>
+              <span data-i18n="upgrade.point1Text">Structured, serious and multilingual preparation for a niche professional qualification.</span>
+            </div>
 
+            <div class="hero-point">
+              <strong data-i18n="upgrade.point2Title">Built for real candidates</strong>
+              <span data-i18n="upgrade.point2Text">Designed for users preparing with intent, not casual free browsing.</span>
+            </div>
 
-<div class="pricing-grid">
+            <div class="hero-point">
+              <strong data-i18n="upgrade.point3Title">More than a static PDF</strong>
+              <span data-i18n="upgrade.point3Text">A learning environment with guided tools, online playbook access and evolving premium resources.</span>
+            </div>
+          </div>
+        </div>
 
-<!-- Starter -->
+        <aside class="side-card">
+          <div>
+            <h2 data-i18n="upgrade.sideTitle">What paid access is preparing for</h2>
+            <p data-i18n="upgrade.sideLead">
+              This platform is being structured so that premium members can progressively access the most valuable preparation tools.
+            </p>
 
-<div class="plan">
+            <div class="side-list">
+              <div class="side-list-item" data-i18n="upgrade.sideItem1">Full premium mock exam access</div>
+              <div class="side-list-item" data-i18n="upgrade.sideItem2">Premium topic quiz access</div>
+              <div class="side-list-item" data-i18n="upgrade.sideItem3">Structured online playbook and references</div>
+              <div class="side-list-item" data-i18n="upgrade.sideItem4">Higher-value guided preparation pathway</div>
+            </div>
+          </div>
 
-<h2 data-i18n="upgrade.starter.title">Starter</h2>
+          <a class="top-btn" href="/agent-academy/login.html" data-i18n="upgrade.alreadyAccount">Already have an account? Log in</a>
+        </aside>
+      </section>
 
-<div class="price">£149</div>
+      <div class="section-head">
+        <h2 data-i18n="upgrade.plansHeading">Plans</h2>
+        <p data-i18n="upgrade.plansLead">Select the access level that best suits your preparation intensity and support expectations.</p>
+      </div>
 
-<p data-i18n="upgrade.priceNote">
-One-time payment
-</p>
+      <section class="plans-grid">
 
-<ul>
+        <article class="plan-card">
+          <div class="plan-badge" data-i18n="upgrade.starterBadge">Entry premium access</div>
+          <h3 class="plan-title" data-i18n="upgrade.starterTitle">Starter</h3>
+          <div class="plan-price">£149</div>
+          <div class="plan-price-note" data-i18n="upgrade.priceNote">One-time access tier before taxes</div>
+          <div class="plan-lead" data-i18n="upgrade.starterLead">For candidates who want a serious first premium step beyond free signup.</div>
 
-<li data-i18n="upgrade.starter.f1">
-Limited practice quiz access
-</li>
+          <ul class="plan-features">
+            <li data-i18n="upgrade.starterFeature1">Premium entry-level access pathway</li>
+            <li data-i18n="upgrade.starterFeature2">Stronger commitment than free-only access</li>
+            <li data-i18n="upgrade.starterFeature3">Built for focused early-stage preparation</li>
+            <li data-i18n="upgrade.starterFeature4">Clear upgrade path to more intensive support</li>
+          </ul>
 
-<li data-i18n="upgrade.starter.f2">
-Selected sample questions
-</li>
+          <a class="plan-btn" href="/agent-academy/signup.html?plan=starter" data-i18n="upgrade.starterButton">Choose Starter</a>
+        </article>
 
-<li data-i18n="upgrade.starter.f3">
-Preview access to the online playbook
-</li>
+        <article class="plan-card featured">
+          <div class="plan-badge" data-i18n="upgrade.proBadge">Most balanced option</div>
+          <h3 class="plan-title" data-i18n="upgrade.proTitle">Professional</h3>
+          <div class="plan-price">£395</div>
+          <div class="plan-price-note" data-i18n="upgrade.priceNote">One-time access tier before taxes</div>
+          <div class="plan-lead" data-i18n="upgrade.proLead">For serious candidates who want the strongest balance of value, depth and preparation intent.</div>
 
-<li data-i18n="upgrade.starter.f4">
-Academy account access
-</li>
+          <ul class="plan-features">
+            <li data-i18n="upgrade.proFeature1">Positioned as the core premium preparation offer</li>
+            <li data-i18n="upgrade.proFeature2">Built for committed candidates preparing properly</li>
+            <li data-i18n="upgrade.proFeature3">Suitable for deeper use of premium academy tools</li>
+            <li data-i18n="upgrade.proFeature4">Ideal midpoint between affordability and intensity</li>
+          </ul>
 
-</ul>
+          <a class="plan-btn" href="/agent-academy/signup.html?plan=professional" data-i18n="upgrade.proButton">Choose Professional</a>
+        </article>
 
-<button data-i18n="upgrade.chooseStarter">
-Choose Starter
-</button>
+        <article class="plan-card">
+          <div class="plan-badge" data-i18n="upgrade.premiumBadge">Highest intensity tier</div>
+          <h3 class="plan-title" data-i18n="upgrade.premiumTitle">Premium Intensive</h3>
+          <div class="plan-price">£895</div>
+          <div class="plan-price-note" data-i18n="upgrade.priceNote">One-time access tier before taxes</div>
+          <div class="plan-lead" data-i18n="upgrade.premiumLead">For candidates seeking the highest-value preparation tier in a serious professional niche.</div>
 
-</div>
+          <ul class="plan-features">
+            <li data-i18n="upgrade.premiumFeature1">Premium positioning aligned with specialist exam prep value</li>
+            <li data-i18n="upgrade.premiumFeature2">Best suited to candidates wanting the highest commitment level</li>
+            <li data-i18n="upgrade.premiumFeature3">Strong premium signal versus low-ticket generic courses</li>
+            <li data-i18n="upgrade.premiumFeature4">Designed for intensive preparation journeys</li>
+          </ul>
 
+          <a class="plan-btn" href="/agent-academy/signup.html?plan=premium_intensive" data-i18n="upgrade.premiumButton">Choose Premium Intensive</a>
+        </article>
+      </section>
 
-<!-- Professional -->
+      <div class="note-strip" data-i18n="upgrade.note">
+        Free signup alone does not unlock the full Agent Academy. Paid access is intended to control premium value, preserve serious positioning and structure the learning journey properly.
+      </div>
 
-<div class="plan featured">
+      <div class="footer" data-i18n="upgrade.footer">
+        Agent Academy by GlobalMGM
+      </div>
+    </div>
+  </div>
 
-<h2 data-i18n="upgrade.pro.title">Professional</h2>
+  <script>
+    let translations = {};
+    let currentLang = localStorage.getItem("lang") || "en";
 
-<div class="price">£395</div>
+    function applyTranslations() {
+      document.documentElement.lang = currentLang;
 
-<p data-i18n="upgrade.priceNote">
-One-time payment
-</p>
+      document.querySelectorAll("[data-i18n]").forEach((el) => {
+        const key = el.getAttribute("data-i18n");
+        if (translations[key]) {
+          el.textContent = translations[key];
+        }
+      });
 
-<ul>
+      if (translations["upgrade.pageTitle"]) {
+        document.title = translations["upgrade.pageTitle"];
+      }
+    }
 
-<li data-i18n="upgrade.pro.f1">
-Full practice quiz access
-</li>
+    async function loadLang(lang) {
+      try {
+        const res = await fetch(`/agent-academy/i18n/${lang}.json`, { cache: "no-store" });
 
-<li data-i18n="upgrade.pro.f2">
-Full FIFA mock exam access
-</li>
+        if (!res.ok) {
+          throw new Error(`Could not load language file: ${lang}`);
+        }
 
-<li data-i18n="upgrade.pro.f3">
-Scenario questions and exam simulation
-</li>
+        translations = await res.json();
+        currentLang = lang;
+        localStorage.setItem("lang", lang);
+        applyTranslations();
+      } catch (error) {
+        console.error("Language load error:", error);
+      }
+    }
 
-<li data-i18n="upgrade.pro.f4">
-Full online playbook access
-</li>
+    function setLang(lang) {
+      loadLang(lang);
+    }
 
-<li data-i18n="upgrade.pro.f5">
-Structured exam preparation
-</li>
-
-</ul>
-
-<button data-i18n="upgrade.chooseProfessional">
-Choose Professional
-</button>
-
-</div>
-
-
-<!-- Premium -->
-
-<div class="plan">
-
-<h2 data-i18n="upgrade.premium.title">Premium Intensive</h2>
-
-<div class="price">£895</div>
-
-<p data-i18n="upgrade.priceNote">
-One-time payment
-</p>
-
-<ul>
-
-<li data-i18n="upgrade.premium.f1">
-Everything in Professional
-</li>
-
-<li data-i18n="upgrade.premium.f2">
-Advanced exam strategy
-</li>
-
-<li data-i18n="upgrade.premium.f3">
-Priority access to new tools
-</li>
-
-<li data-i18n="upgrade.premium.f4">
-Premium preparation support
-</li>
-
-</ul>
-
-<button data-i18n="upgrade.choosePremium">
-Choose Premium
-</button>
-
-</div>
-
-</div>
-
-
-<div class="note">
-
-<strong data-i18n="upgrade.noteTitle">
-Important
-</strong>
-
-<p data-i18n="upgrade.noteText">
-Free accounts only provide limited preview access. Full mock exams, the full question bank and the complete playbook are available through premium access.
-</p>
-
-</div>
-
-
-</div>
-
-
-<!-- i18n system -->
-
-<script src="/assets/js/i18n.js"></script>
-
+    document.addEventListener("DOMContentLoaded", () => {
+      loadLang(currentLang);
+    });
+  </script>
 </body>
 </html>
