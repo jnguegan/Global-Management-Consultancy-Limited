@@ -122,8 +122,58 @@
 "countdown.seconds": "Seconds",
 
 "upgrade.plansHeading": "Plans",
-"upgrade.plansLead": "Select the access level that best suits your preparation intensity and support expectations."
+"upgrade.plansLead": "Select the access level that best suits your preparation intensity and support expectations.",
+"seo.title": "Agent Academy | Global Management Consultancy Limited",
+"seo.description": "Agent Academy by Global Management Consultancy Limited: FIFA mock exams, practice quizzes, online playbook, and professional football agent learning resources.",
 
+"brand.sub": "Agent Academy",
+
+"nav.signIn": "Sign In",
+"nav.createAccount": "Create Account",
+
+"hero.eyebrow": "Professional Football Agent Learning",
+"hero.title": "Welcome to Agent Academy",
+"hero.text": "Access FIFA mock exams, practice quizzes, the online football agent playbook, and structured learning resources designed for serious candidates and practising professionals.",
+"hero.ctaMock": "Start FIFA Mock Exam",
+"hero.ctaQuiz": "Open Practice Quiz",
+
+"cards.mock.title": "FIFA Mock Exams",
+"cards.mock.text": "Sit a timed exam simulation with weighted question selection, regulation coverage, scenario questions, and anti-repeat logic built around your growing question bank.",
+"cards.mock.metaLabel": "Best for:",
+"cards.mock.metaText": "exam simulation and pressure testing",
+"cards.mock.cta": "Enter Mock Exams",
+
+"cards.quiz.title": "Practice Quiz",
+"cards.quiz.text": "Revise by topic, question type, and regulation area through interactive practice mode. Ideal for daily study, fast revision and targeted repetition.",
+"cards.quiz.metaLabel": "Best for:",
+"cards.quiz.metaText": "day-to-day revision and topic drilling",
+"cards.quiz.cta": "Enter Practice Quiz",
+
+"cards.playbook.title": "Online Playbook / E-book",
+"cards.playbook.text": "Access the Football Agent Exam & Regulations Playbook as a structured online resource. This will evolve into a linked digital reading experience with references, source material, practical examples and navigation across the regulatory framework.",
+"cards.playbook.metaLabel": "Best for:",
+"cards.playbook.metaText": "structured reading, revision and reference study",
+"cards.playbook.cta": "Open Playbook",
+
+"cards.signIn.title": "Sign In",
+"cards.signIn.text": "Existing users can access their Academy area, continue their study journey, and later review their saved activity and premium resources.",
+"cards.signIn.metaLabel": "Access:",
+"cards.signIn.metaText": "returning learners",
+"cards.signIn.cta": "Go to Sign In",
+
+"cards.signup.title": "Create Account",
+"cards.signup.text": "New users can create an Academy account to unlock free resources first, with paid courses, playbook access and premium learning layers added progressively.",
+"cards.signup.metaLabel": "Access:",
+"cards.signup.metaText": "new learners and future members",
+"cards.signup.cta": "Create Account",
+
+"upgrade.plansHeading": "Plans",
+"upgrade.plansLead": "Select the access level that best suits your preparation intensity and support expectations.",
+
+"launch.label": "Launch note:",
+"launch.text": "for version 1, the essential live components are the Academy entry page, sign in, sign up, practice quiz, FIFA mock exam and the online playbook. Dashboard, results tracking and advanced user profile pages can be layered in after initial launch.",
+
+"footer.brand": "Agent Academy"
 
 }
 
