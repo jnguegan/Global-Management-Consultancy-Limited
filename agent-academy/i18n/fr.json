@@ -124,8 +124,60 @@
 "countdown.seconds": "Secondes",
 
 "upgrade.plansHeading": "Offres",
-"upgrade.plansLead": "Sélectionnez le niveau d’accès qui correspond le mieux à l’intensité de votre préparation et à vos besoins."
+"upgrade.plansLead": "Sélectionnez le niveau d’accès qui correspond le mieux à l’intensité de votre préparation et à vos besoins.",
 
+"seo.title": "Agent Academy | Global Management Consultancy Limited",
+"seo.description": "Agent Academy par Global Management Consultancy Limited : examens blancs FIFA, quiz d’entraînement, playbook en ligne et ressources professionnelles de formation pour agents de football.",
+
+"brand.sub": "Agent Academy",
+
+"nav.signIn": "Se connecter",
+"nav.createAccount": "Créer un compte",
+
+"hero.eyebrow": "Formation professionnelle d’agent de football",
+"hero.title": "Bienvenue sur Agent Academy",
+"hero.text": "Accédez à des examens blancs FIFA, des quiz d’entraînement, au playbook en ligne de l’agent de football et à des ressources d’apprentissage structurées conçues pour les candidats sérieux et les professionnels en activité.",
+"hero.ctaMock": "Commencer l’examen blanc FIFA",
+"hero.ctaQuiz": "Ouvrir le quiz d’entraînement",
+
+"cards.mock.title": "Examens blancs FIFA",
+"cards.mock.text": "Passez une simulation d’examen chronométrée avec une sélection pondérée des questions, une couverture réglementaire complète, des questions de scénario et une logique anti-répétition construite autour de votre banque de questions en expansion.",
+"cards.mock.metaLabel": "Idéal pour :",
+"cards.mock.metaText": "la simulation d’examen et les tests sous pression",
+"cards.mock.cta": "Accéder aux examens blancs",
+
+"cards.quiz.title": "Quiz d’entraînement",
+"cards.quiz.text": "Révisez par thème, type de question et domaine réglementaire via un mode d’entraînement interactif. Idéal pour l’étude quotidienne, la révision rapide et la répétition ciblée.",
+"cards.quiz.metaLabel": "Idéal pour :",
+"cards.quiz.metaText": "la révision quotidienne et le travail ciblé par thème",
+"cards.quiz.cta": "Accéder au quiz d’entraînement",
+
+"cards.playbook.title": "Playbook en ligne / E-book",
+"cards.playbook.text": "Accédez au Playbook de l’examen d’agent de football et des règlements sous forme de ressource en ligne structurée. Il évoluera vers une expérience de lecture numérique liée avec références, sources, exemples pratiques et navigation à travers le cadre réglementaire.",
+"cards.playbook.metaLabel": "Idéal pour :",
+"cards.playbook.metaText": "la lecture structurée, la révision et l’étude de référence",
+"cards.playbook.cta": "Ouvrir le playbook",
+
+"cards.signIn.title": "Se connecter",
+"cards.signIn.text": "Les utilisateurs existants peuvent accéder à leur espace Academy, poursuivre leur parcours d’étude et, plus tard, consulter leur activité sauvegardée et leurs ressources premium.",
+"cards.signIn.metaLabel": "Accès :",
+"cards.signIn.metaText": "apprenants existants",
+"cards.signIn.cta": "Aller à la connexion",
+
+"cards.signup.title": "Créer un compte",
+"cards.signup.text": "Les nouveaux utilisateurs peuvent créer un compte Academy pour débloquer d’abord des ressources gratuites, puis accéder progressivement à des cours payants, au playbook et à des couches d’apprentissage premium.",
+"cards.signup.metaLabel": "Accès :",
+"cards.signup.metaText": "nouveaux apprenants et futurs membres",
+"cards.signup.cta": "Créer un compte",
+
+"upgrade.plansHeading": "Formules",
+"upgrade.plansLead": "Sélectionnez le niveau d’accès qui correspond le mieux à l’intensité de votre préparation et à vos attentes en matière d’accompagnement.",
+
+"launch.label": "Note de lancement :",
+"launch.text": "pour la version 1, les composants essentiels en ligne sont la page d’entrée de l’Academy, la connexion, l’inscription, le quiz d’entraînement, l’examen blanc FIFA et le playbook en ligne. Le tableau de bord, le suivi des résultats et les pages avancées de profil utilisateur pourront être ajoutés après le lancement initial.",
+
+"footer.brand": "Agent Academy"
+  
 
 }
 
