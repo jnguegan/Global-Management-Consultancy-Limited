@@ -490,9 +490,8 @@ function setLang(lang){
     const guard = window.AgentAcademyGuard;
     if (!guard || !guard.requirePaidAccess) return;
 
-    await guard.requirePlan("starter", {
-  loginUrl: "/agent-academy/login.html",
-  upgradeUrl: "/agent-academy/upgrade.html"
+    const access = await guard.requireLogin({
+  loginUrl: "/agent-academy/login.html"
 });
 
   });
