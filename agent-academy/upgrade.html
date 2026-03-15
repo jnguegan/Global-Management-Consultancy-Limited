@@ -388,6 +388,13 @@
         border-radius: 20px;
       }
     }
+  .lang-btn.is-active {
+  background: linear-gradient(135deg, rgba(212,175,55,0.22), rgba(212,175,55,0.10));
+  border-color: rgba(212,175,55,0.55);
+  color: #fff4cf;
+  box-shadow: 0 0 0 1px rgba(212,175,55,0.18) inset;
+}
+    
   </style>
 </head>
 <body>
@@ -401,10 +408,10 @@
           <a class="top-btn" href="/agent-academy/index.html" data-i18n="upgrade.back">Back to Academy</a>
 
           <div class="lang-switch">
-            <button type="button" class="lang-btn" onclick="setLang('en')">EN</button>
-            <button type="button" class="lang-btn" onclick="setLang('fr')">FR</button>
-            <button type="button" class="lang-btn" onclick="setLang('es')">ES</button>
-          </div>
+  <button type="button" class="lang-btn" data-lang-btn="en" onclick="setLang('en')">EN</button>
+  <button type="button" class="lang-btn" data-lang-btn="fr" onclick="setLang('fr')">FR</button>
+  <button type="button" class="lang-btn" data-lang-btn="es" onclick="setLang('es')">ES</button>
+</div>
         </div>
       </div>
 
@@ -573,19 +580,24 @@
     let currentLang = localStorage.getItem("lang") || "en";
 
     function applyTranslations() {
-      document.documentElement.lang = currentLang;
+  document.documentElement.lang = currentLang;
 
-      document.querySelectorAll("[data-i18n]").forEach((el) => {
-        const key = el.getAttribute("data-i18n");
-        if (translations[key]) {
-          el.textContent = translations[key];
-        }
-      });
-
-      if (translations["upgrade.pageTitle"]) {
-        document.title = translations["upgrade.pageTitle"];
-      }
+  document.querySelectorAll("[data-i18n]").forEach((el) => {
+    const key = el.getAttribute("data-i18n");
+    if (translations[key]) {
+      el.textContent = translations[key];
     }
+  });
+
+  document.querySelectorAll("[data-lang-btn]").forEach((btn) => {
+    btn.classList.toggle("is-active", btn.getAttribute("data-lang-btn") === currentLang);
+  });
+
+  if (translations["upgrade.pageTitle"]) {
+    document.title = translations["upgrade.pageTitle"];
+  }
+}
+
 
     async function loadLang(lang) {
       try {
