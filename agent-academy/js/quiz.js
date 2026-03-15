@@ -271,8 +271,13 @@ if (access.plan === "free") {
 
 let idsQuery = db
   .from(table)
-  .select("id")
-  .eq("is_active", true);
+  .select("id");
+
+if (access.plan !== "free") {
+  idsQuery = idsQuery
+    .eq("topic_id", state.topic.id)
+    .eq("is_active", true);
+}
 
 if (access.plan !== "free") {
   idsQuery = idsQuery.eq("topic_id", state.topic.id);
