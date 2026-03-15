@@ -49,6 +49,16 @@
     "topics.error": "Impossible de charger les thèmes pour le moment.",
   "startTitle": "Instructions de l’examen blanc",
   "startInstructions": "Sélectionnez la langue souhaitée pour cet examen. Une fois prêt, cliquez sur Commencer l’examen pour charger les questions et démarrer l’examen blanc chronométré. Vous disposerez de 60 minutes pour répondre à 20 questions. La langue choisie restera la même pendant tout l’examen.",
-  "startExam": "Commencer l’examen"
+  "startExam": "Commencer l’examen",
+
+  "upgrade.heading": "Améliorer votre accès",
+"upgrade.lead": "Choisissez l'offre qui correspond le mieux à votre préparation.",
+"upgrade.starterTitle": "Starter",
+"upgrade.proTitle": "Professionnel",
+"upgrade.premiumTitle": "Premium Intensif",
+"upgrade.starterButton": "Commencer avec Starter",
+"upgrade.proButton": "Choisir Professionnel",
+"upgrade.premiumButton": "Rejoindre Premium"
+
 }
 
