@@ -259,9 +259,17 @@ async function loadTopic() {
 }
 
 async function loadQuestions() {
-  const { data: idsData, error: idsError } = await db
-    .from("questions")
-    .select("id")
+  const access = await AgentAcademyGuard.getAccessState();
+
+const table =
+  access.plan === "free"
+    ? "preview_quiz_questions"
+    : "questions";
+
+const { data: idsData, error: idsError } = await db
+  .from(table)
+  .select("id");
+  
     .eq("topic_id", state.topic.id)
     .eq("is_active", true);
 
