@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Agent Academy Playbook</title>
+
+<style>
+
+:root{
+  --bg:#0b1220;
+  --panel:#162033;
+  --text:#f5f7fb;
+  --muted:#b7c0cf;
+  --gold:#d4af37;
+  --border:rgba(255,255,255,0.08);
+}
+
+body{
+  margin:0;
+  font-family:Arial,Helvetica,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+}
+
+.topbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:16px 24px;
+  border-bottom:1px solid var(--border);
+  background:#121a2b;
+}
+
+.brand{
+  font-weight:700;
+}
+
+.lang-switch button{
+  margin-left:6px;
+  padding:6px 10px;
+  border-radius:6px;
+  border:1px solid var(--border);
+  background:transparent;
+  color:white;
+  cursor:pointer;
+}
+
+.layout{
+  display:grid;
+  grid-template-columns:280px 1fr;
+  min-height:calc(100vh - 60px);
+}
+
+.sidebar{
+  border-right:1px solid var(--border);
+  padding:20px;
+}
+
+.sidebar h3{
+  margin-top:0;
+}
+
+.article-link{
+  display:block;
+  padding:8px 0;
+  cursor:pointer;
+  color:var(--muted);
+}
+
+.article-link:hover{
+  color:var(--gold);
+}
+
+.content{
+  padding:40px;
+  max-width:900px;
+}
+
+.article-title{
+  font-size:28px;
+  margin-bottom:20px;
+}
+
+.article-text{
+  line-height:1.7;
+  margin-bottom:30px;
+}
+
+.explanation{
+  padding:20px;
+  background:var(--panel);
+  border-radius:10px;
+  margin-bottom:30px;
+}
+
+.actions a{
+  margin-right:12px;
+  padding:10px 16px;
+  border-radius:8px;
+  background:var(--gold);
+  color:#07111f;
+  text-decoration:none;
+  font-weight:700;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="topbar">
+
+<div class="brand">Agent Academy Playbook</div>
+
+<div class="lang-switch">
+<button data-lang="en">EN</button>
+<button data-lang="fr">FR</button>
+<button data-lang="es">ES</button>
+</div>
+
+</div>
+
+
+<div class="layout">
+
+<div class="sidebar">
+
+<h3>Playbook</h3>
+
+<div id="articleList"></div>
+
+</div>
+
+
+<div class="content">
+
+<div id="articleContent">
+
+<h2 class="article-title">Select a section</h2>
+
+<p class="article-text">
+Choose a playbook article from the left.
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+
+const supabase = window.supabase.createClient(
+"https://ysaxtuvuzqkyfmganven.supabase.co",
+"sb_publishable_esfhuUEIcUJEL6z9zryRAA_FGMmUHlw"
+);
+
+let lang = localStorage.getItem("lang") || "en";
+
+document.querySelectorAll("[data-lang]").forEach(btn=>{
+btn.onclick=()=>{
+lang = btn.dataset.lang;
+localStorage.setItem("lang",lang);
+loadArticle(currentArticle);
+};
+});
+
+
+let currentArticle = null;
+
+
+async function loadSidebar(){
+
+const {data} = await supabase
+.from("playbook_sections")
+.select("id,title_en,title_fr,title_es")
+.order("sort_order");
+
+const list = document.getElementById("articleList");
+
+list.innerHTML="";
+
+data.forEach(section=>{
+
+const a = document.createElement("div");
+
+a.className="article-link";
+
+a.textContent =
+lang==="fr"?section.title_fr:
+lang==="es"?section.title_es:
+section.title_en;
+
+a.onclick=()=>loadArticle(section.id);
+
+list.appendChild(a);
+
+});
+
+}
+
+
+
+async function loadArticle(id){
+
+currentArticle=id;
+
+const {data} = await supabase
+.from("playbook_sections")
+.select("*")
+.eq("id",id)
+.single();
+
+if(!data) return;
+
+const title =
+lang==="fr"?data.title_fr:
+lang==="es"?data.title_es:
+data.title_en;
+
+const text =
+lang==="fr"?data.text_fr:
+lang==="es"?data.text_es:
+data.text_en;
+
+const explanation =
+lang==="fr"?data.explanation_fr:
+lang==="es"?data.explanation_es:
+data.explanation_en;
+
+document.getElementById("articleContent").innerHTML=`
+
+<h2 class="article-title">${title}</h2>
+
+<div class="article-text">${text}</div>
+
+<div class="explanation">
+<h3>Explanation</h3>
+<p>${explanation}</p>
+</div>
+
+<div class="actions">
+
+<a href="/agent-academy/regulation-viewer.html?doc=${data.regulation_pdf}&page=${data.regulation_page}">
+Open Regulation
+</a>
+
+<a href="/agent-academy/quiz.html?topic=${data.topic_slug}">
+Practice Questions
+</a>
+
+</div>
+
+`;
+
+}
+
+
+
+loadSidebar();
+
+</script>
+
+</body>
+</html>
