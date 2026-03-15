@@ -113,7 +113,16 @@
 "upgrade.premiumFeature4": "Designed for intensive preparation journeys",
 "upgrade.premiumButton": "Choose Premium Intensive",
 
-"upgrade.note": "Free signup alone does not unlock the full Agent Academy. Paid access is intended to control premium value, preserve serious positioning and structure the learning journey properly."
+"countdown.title": "Countdown to the next FIFA Football Agent Exam",
+"countdown.lead": "The FIFA Football Agent exam is held only once per year. Serious candidates prepare before the exam window closes.",
+"countdown.date": "Next exam window: 28–30 April 2026",
+"countdown.days": "Days",
+"countdown.hours": "Hours",
+"countdown.minutes": "Minutes",
+"countdown.seconds": "Seconds",
+
+"upgrade.plansHeading": "Plans",
+"upgrade.plansLead": "Select the access level that best suits your preparation intensity and support expectations."
 
 
 }
