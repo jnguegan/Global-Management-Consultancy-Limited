@@ -3,351 +3,779 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dashboard — Football Agent Exam Prep Platform</title>
+  <title>Agent Academy Dashboard | GlobalMGM</title>
 
   <style>
     :root{
-      --bg:#0b1220;
-      --panel:#162033;
-      --panel-soft:#1c2940;
-      --text:#f5f7fb;
-      --muted:#b7c0cf;
+      --bg-1:#07101d;
+      --bg-2:#0c1628;
+      --panel:rgba(255,255,255,0.06);
+      --panel-strong:rgba(255,255,255,0.09);
+      --border:rgba(255,255,255,0.10);
+      --text:#edf3ff;
+      --muted:rgba(237,243,255,0.72);
       --gold:#d4af37;
-      --gold-dark:#b8921f;
-      --border:rgba(255,255,255,0.08);
-      --danger:#ff7b7b;
+      --gold-soft:rgba(212,175,55,0.16);
+      --gold-strong:rgba(212,175,55,0.30);
+      --green:#b8efb0;
+      --red:#ff8d8d;
+      --blue:#8eb7ff;
+      --shadow:0 24px 80px rgba(0,0,0,0.34);
+      --radius-xl:26px;
+      --radius-lg:20px;
+      --radius-md:16px;
+      --max-width:1280px;
     }
 
     *{box-sizing:border-box}
 
-    body{
+    html,body{
       margin:0;
-      font-family:Arial,Helvetica,sans-serif;
+      padding:0;
+      font-family:Inter,Arial,sans-serif;
       background:
-        radial-gradient(circle at top right, rgba(212,175,55,0.12), transparent 25%),
-        radial-gradient(circle at left, rgba(87,124,255,0.10), transparent 22%),
-        var(--bg);
+        radial-gradient(circle at top left, rgba(212,175,55,0.12), transparent 26%),
+        radial-gradient(circle at bottom right, rgba(142,183,255,0.10), transparent 24%),
+        linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 100%);
       color:var(--text);
+    }
+
+    body{min-height:100vh}
+
+    a{
+      color:inherit;
+      text-decoration:none;
+    }
+
+    .page-shell{
       min-height:100vh;
+      padding:28px 18px 38px;
+    }
+
+    .container{
+      max-width:var(--max-width);
+      margin:0 auto;
     }
 
     .topbar{
       display:flex;
-      align-items:center;
       justify-content:space-between;
+      align-items:center;
       gap:16px;
-      padding:18px 24px;
-      border-bottom:1px solid var(--border);
-      background:rgba(11,18,32,0.82);
-      backdrop-filter:blur(12px);
-      position:sticky;
-      top:0;
-      z-index:20;
+      flex-wrap:wrap;
+      margin-bottom:22px;
     }
 
     .brand{
-      font-weight:700;
-      letter-spacing:0.02em;
+      color:var(--gold);
+      font-weight:800;
+      letter-spacing:0.04em;
+      text-transform:uppercase;
+    }
+
+    .topbar-right{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
     }
 
     .lang-switch{
-      display:flex;
+      display:inline-flex;
       gap:8px;
+      flex-wrap:wrap;
     }
 
-    .lang-switch button{
+    .lang-btn,
+    .action-btn,
+    .tool-btn{
+      appearance:none;
       border:1px solid var(--border);
-      background:transparent;
+      background:rgba(255,255,255,0.05);
       color:var(--text);
-      padding:8px 12px;
       border-radius:999px;
-      cursor:pointer;
-      transition:0.2s ease;
-    }
-
-    .lang-switch button:hover,
-    .lang-switch button.active{
-      background:var(--gold);
-      color:#07111f;
-      border-color:var(--gold);
-    }
-
-    .container{
-      max-width:1100px;
-      margin:0 auto;
-      padding:36px 20px 56px;
-    }
-
-    .eyebrow{
-      margin:0 0 10px;
-      color:var(--gold);
-      text-transform:uppercase;
-      letter-spacing:0.14em;
-      font-size:0.78rem;
+      padding:10px 16px;
       font-weight:700;
+      cursor:pointer;
+      transition:0.18s ease;
     }
 
-    h1{
-      margin:0 0 10px;
-      font-size:2.2rem;
-      line-height:1.15;
+    .lang-btn:hover,
+    .action-btn:hover,
+    .tool-btn:hover{
+      transform:translateY(-1px);
+      border-color:rgba(212,175,55,0.45);
+      background:rgba(255,255,255,0.08);
     }
 
-    .lead{
-      margin:0 0 28px;
-      color:var(--muted);
-      max-width:700px;
-      line-height:1.6;
+    .lang-btn.is-active{
+      background:linear-gradient(135deg, rgba(212,175,55,0.22), rgba(212,175,55,0.10));
+      border-color:rgba(212,175,55,0.55);
+      color:#fff4cf;
+      box-shadow:0 0 0 1px rgba(212,175,55,0.18) inset;
     }
 
-    .grid{
+    .hero-grid{
       display:grid;
-      grid-template-columns:repeat(3,1fr);
+      grid-template-columns:1.25fr 0.75fr;
       gap:20px;
+      margin-bottom:20px;
     }
 
-    .card{
+    .panel{
       background:var(--panel);
       border:1px solid var(--border);
-      border-radius:18px;
-      padding:22px;
-      box-shadow:0 12px 30px rgba(0,0,0,0.22);
+      border-radius:var(--radius-xl);
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(10px);
     }
 
-    .card h2{
-      margin:0 0 10px;
-      font-size:1.15rem;
+    .hero-panel{
+      padding:30px;
+      position:relative;
+      overflow:hidden;
     }
 
-    .card p{
-      margin:0 0 14px;
-      color:var(--muted);
-      line-height:1.6;
+    .hero-panel::after{
+      content:"";
+      position:absolute;
+      inset:auto -80px -80px auto;
+      width:240px;
+      height:240px;
+      border-radius:50%;
+      background:radial-gradient(circle, rgba(212,175,55,0.18), transparent 68%);
+      pointer-events:none;
     }
 
-    .btn{
+    .plan-chip{
       display:inline-flex;
       align-items:center;
-      justify-content:center;
-      min-height:46px;
-      padding:0 18px;
-      border-radius:12px;
-      border:none;
-      background:var(--gold);
-      color:#07111f;
+      gap:8px;
+      padding:8px 12px;
+      border-radius:999px;
+      background:var(--gold-soft);
+      border:1px solid rgba(212,175,55,0.28);
+      color:#fff1c5;
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:0.08em;
+      text-transform:uppercase;
+      margin-bottom:16px;
+    }
+
+    .hero-panel h1{
+      margin:0 0 12px;
+      font-size:clamp(32px,5vw,52px);
+      line-height:1.04;
+    }
+
+    .hero-panel .lead{
+      margin:0;
+      max-width:760px;
+      color:var(--muted);
+      line-height:1.78;
+      font-size:18px;
+    }
+
+    .hero-actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      margin-top:22px;
+    }
+
+    .hero-mini-stats{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:12px;
+      margin-top:24px;
+    }
+
+    .mini-stat{
+      padding:16px;
+      border-radius:18px;
+      background:rgba(255,255,255,0.04);
+      border:1px solid rgba(255,255,255,0.08);
+    }
+
+    .mini-stat-label{
+      display:block;
+      color:var(--muted);
+      font-size:12px;
+      text-transform:uppercase;
+      letter-spacing:0.08em;
+      margin-bottom:8px;
+      font-weight:800;
+    }
+
+    .mini-stat-value{
+      font-size:26px;
+      font-weight:900;
+      color:var(--gold);
+      line-height:1;
+    }
+
+    .side-panel{
+      padding:24px;
+      display:flex;
+      flex-direction:column;
+      gap:16px;
+    }
+
+    .user-card{
+      padding:18px;
+      border-radius:20px;
+      background:rgba(255,255,255,0.04);
+      border:1px solid rgba(255,255,255,0.08);
+    }
+
+    .user-card-label{
+      display:block;
+      color:var(--muted);
+      font-size:12px;
+      text-transform:uppercase;
+      letter-spacing:0.08em;
+      margin-bottom:8px;
+      font-weight:800;
+    }
+
+    .user-card-value{
+      font-size:16px;
+      line-height:1.5;
       font-weight:700;
-      text-decoration:none;
-      cursor:pointer;
-      transition:0.2s ease;
-    }
-
-    .btn:hover{
-      background:var(--gold-dark);
-    }
-
-    .btn-outline{
-      background:transparent;
-      color:var(--text);
-      border:1px solid var(--border);
-    }
-
-    .btn-outline:hover{
-      background:rgba(255,255,255,0.05);
-    }
-
-    .account-line{
-      font-size:0.96rem;
-      color:var(--text);
       word-break:break-word;
     }
 
-    .empty-stats{
+    .ring-panel{
       display:grid;
-      grid-template-columns:repeat(3,1fr);
-      gap:14px;
-      margin-top:26px;
+      place-items:center;
+      padding:12px 0 4px;
     }
 
-    .stat{
-      background:var(--panel-soft);
-      border:1px solid var(--border);
-      border-radius:16px;
-      padding:18px;
+    .progress-ring{
+      position:relative;
+      width:190px;
+      height:190px;
     }
 
-    .stat-label{
-      color:var(--muted);
-      font-size:0.9rem;
+    .progress-ring svg{
+      width:190px;
+      height:190px;
+      transform:rotate(-90deg);
+    }
+
+    .progress-ring .ring-track{
+      stroke:rgba(255,255,255,0.10);
+      stroke-width:12;
+      fill:none;
+    }
+
+    .progress-ring .ring-progress{
+      stroke:var(--gold);
+      stroke-width:12;
+      fill:none;
+      stroke-linecap:round;
+      transition:stroke-dashoffset 0.4s ease;
+    }
+
+    .ring-center{
+      position:absolute;
+      inset:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex-direction:column;
+      text-align:center;
+      padding:16px;
+    }
+
+    .ring-percent{
+      font-size:34px;
+      font-weight:900;
+      color:var(--gold);
+      line-height:1;
       margin-bottom:8px;
     }
 
-    .stat-value{
-      font-size:1.6rem;
-      font-weight:700;
-    }
-
-    .footer-note{
-      margin-top:28px;
+    .ring-label{
       color:var(--muted);
-      font-size:0.95rem;
+      font-size:13px;
+      line-height:1.5;
+      max-width:120px;
     }
 
-    @media (max-width: 900px){
-      .grid,
-      .empty-stats{
+    .stats-grid{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:18px;
+      margin-bottom:20px;
+    }
+
+    .stat-card{
+      padding:22px;
+      min-height:128px;
+    }
+
+    .stat-kicker{
+      display:block;
+      color:var(--muted);
+      font-size:12px;
+      text-transform:uppercase;
+      letter-spacing:0.08em;
+      margin-bottom:12px;
+      font-weight:800;
+    }
+
+    .stat-value{
+      font-size:40px;
+      line-height:1;
+      font-weight:900;
+      margin-bottom:10px;
+      color:var(--gold);
+    }
+
+    .stat-note{
+      color:var(--muted);
+      line-height:1.6;
+      font-size:14px;
+    }
+
+    .main-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:20px;
+      margin-bottom:20px;
+    }
+
+    .section-panel{
+      padding:24px;
+    }
+
+    .section-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-end;
+      gap:16px;
+      flex-wrap:wrap;
+      margin-bottom:18px;
+    }
+
+    .section-head h2{
+      margin:0;
+      font-size:26px;
+      line-height:1.1;
+    }
+
+    .section-head p{
+      margin:8px 0 0;
+      color:var(--muted);
+      line-height:1.7;
+      font-size:15px;
+      max-width:720px;
+    }
+
+    .progress-list{
+      display:grid;
+      gap:14px;
+    }
+
+    .progress-row{
+      padding:16px;
+      border-radius:18px;
+      background:rgba(255,255,255,0.04);
+      border:1px solid rgba(255,255,255,0.08);
+    }
+
+    .progress-row-top{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      margin-bottom:10px;
+      flex-wrap:wrap;
+    }
+
+    .progress-title{
+      font-weight:800;
+    }
+
+    .progress-value{
+      color:var(--gold);
+      font-weight:800;
+      font-size:14px;
+    }
+
+    .progress-bar{
+      width:100%;
+      height:10px;
+      border-radius:999px;
+      background:rgba(255,255,255,0.08);
+      overflow:hidden;
+    }
+
+    .progress-fill{
+      height:100%;
+      border-radius:999px;
+      background:linear-gradient(90deg, rgba(212,175,55,0.75), rgba(212,175,55,1));
+      width:0%;
+      transition:width 0.4s ease;
+    }
+
+    .tools-grid{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:18px;
+    }
+
+    .tool-card{
+      padding:22px;
+      min-height:250px;
+      display:flex;
+      flex-direction:column;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .tool-card::after{
+      content:"";
+      position:absolute;
+      inset:auto -55px -55px auto;
+      width:140px;
+      height:140px;
+      border-radius:50%;
+      background:radial-gradient(circle, rgba(212,175,55,0.10), transparent 70%);
+      pointer-events:none;
+    }
+
+    .tool-badge{
+      display:inline-flex;
+      align-self:flex-start;
+      min-height:28px;
+      align-items:center;
+      padding:6px 10px;
+      border-radius:999px;
+      background:rgba(212,175,55,0.12);
+      border:1px solid rgba(212,175,55,0.24);
+      color:#ffefb5;
+      font-size:12px;
+      font-weight:800;
+      margin-bottom:14px;
+    }
+
+    .tool-title{
+      margin:0 0 10px;
+      font-size:22px;
+      line-height:1.2;
+    }
+
+    .tool-text{
+      margin:0 0 18px;
+      color:var(--muted);
+      line-height:1.75;
+      flex:1;
+    }
+
+    .tool-requirement{
+      font-size:13px;
+      color:var(--muted);
+      margin-bottom:14px;
+      line-height:1.5;
+    }
+
+    .tool-btn{
+      display:inline-flex;
+      align-self:flex-start;
+      justify-content:center;
+      align-items:center;
+      min-width:150px;
+    }
+
+    .tool-btn.primary{
+      background:linear-gradient(135deg, rgba(212,175,55,0.22), rgba(212,175,55,0.10));
+      border-color:rgba(212,175,55,0.46);
+      color:#fff4cf;
+    }
+
+    .footer{
+      margin-top:28px;
+      padding-top:18px;
+      border-top:1px solid rgba(255,255,255,0.08);
+      color:var(--muted);
+      font-size:14px;
+    }
+
+    @media (max-width: 1200px){
+      .stats-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .tools-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    }
+
+    @media (max-width: 1040px){
+      .hero-grid,
+      .main-grid{
         grid-template-columns:1fr;
       }
+    }
 
-      h1{
-        font-size:1.9rem;
+    @media (max-width: 760px){
+      .page-shell{padding:20px 14px 28px}
+      .hero-mini-stats{grid-template-columns:1fr}
+      .stats-grid,
+      .tools-grid{grid-template-columns:1fr}
+      .hero-panel,
+      .side-panel,
+      .stat-card,
+      .section-panel,
+      .tool-card{
+        border-radius:20px;
       }
     }
   </style>
 </head>
 <body>
+  <div class="page-shell">
+    <div class="container">
 
-  <div class="topbar">
-    <div class="brand" data-i18n="dashboard.brand">Football Agent Exam Prep Platform</div>
+      <div class="topbar">
+        <div class="brand">GlobalMGM · Agent Academy</div>
 
-    <div class="lang-switch">
-      <button type="button" data-lang="en" class="active">EN</button>
-      <button type="button" data-lang="fr">FR</button>
-      <button type="button" data-lang="es">ES</button>
+        <div class="topbar-right">
+          <a href="/agent-academy/index.html" class="action-btn" id="backBtn">Back to Academy</a>
+
+          <div class="lang-switch">
+            <button type="button" class="lang-btn" data-lang-btn="en">EN</button>
+            <button type="button" class="lang-btn" data-lang-btn="fr">FR</button>
+            <button type="button" class="lang-btn" data-lang-btn="es">ES</button>
+          </div>
+
+          <button type="button" class="action-btn" id="logoutBtn">Log out</button>
+        </div>
+      </div>
+
+      <section class="hero-grid">
+        <div class="panel hero-panel">
+          <div class="plan-chip" id="planChip">Free Preview</div>
+          <h1 id="pageTitle">Your premium preparation dashboard</h1>
+          <p class="lead" id="pageLead">
+            Track your progress, see what your current plan unlocks and continue your FIFA exam preparation through the right study tools.
+          </p>
+
+          <div class="hero-actions">
+            <a href="/agent-academy/topics.html" class="action-btn" id="topicsQuickBtn">Open Topics</a>
+            <a href="/agent-academy/upgrade.html" class="action-btn" id="upgradeQuickBtn">Upgrade Access</a>
+          </div>
+
+          <div class="hero-mini-stats">
+            <div class="mini-stat">
+              <span class="mini-stat-label" id="mini1Label">Current plan</span>
+              <div class="mini-stat-value" id="mini1Value">Free</div>
+            </div>
+            <div class="mini-stat">
+              <span class="mini-stat-label" id="mini2Label">Unlocked tools</span>
+              <div class="mini-stat-value" id="mini2Value">1</div>
+            </div>
+            <div class="mini-stat">
+              <span class="mini-stat-label" id="mini3Label">Exam readiness</span>
+              <div class="mini-stat-value" id="mini3Value">12%</div>
+            </div>
+          </div>
+        </div>
+
+        <aside class="panel side-panel">
+          <div class="user-card">
+            <span class="user-card-label" id="userNameLabel">Name</span>
+            <div class="user-card-value" id="userNameValue">—</div>
+          </div>
+
+          <div class="user-card">
+            <span class="user-card-label" id="userEmailLabel">Email</span>
+            <div class="user-card-value" id="userEmailValue">—</div>
+          </div>
+
+          <div class="user-card">
+            <span class="user-card-label" id="userPlanLabel">Access level</span>
+            <div class="user-card-value" id="userPlanValue">Free</div>
+          </div>
+
+          <div class="ring-panel">
+            <div class="progress-ring">
+              <svg viewBox="0 0 190 190" aria-hidden="true">
+                <circle class="ring-track" cx="95" cy="95" r="70"></circle>
+                <circle class="ring-progress" id="ringProgress" cx="95" cy="95" r="70"></circle>
+              </svg>
+              <div class="ring-center">
+                <div class="ring-percent" id="ringPercent">12%</div>
+                <div class="ring-label" id="ringLabel">Preparation coverage</div>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </section>
+
+      <section class="stats-grid">
+        <article class="panel stat-card">
+          <span class="stat-kicker" id="stat1Label">Questions answered</span>
+          <div class="stat-value" id="stat1Value">0</div>
+          <div class="stat-note" id="stat1Note">Your answered-question volume will appear here as your academy activity grows.</div>
+        </article>
+
+        <article class="panel stat-card">
+          <span class="stat-kicker" id="stat2Label">Average score</span>
+          <div class="stat-value" id="stat2Value">0%</div>
+          <div class="stat-note" id="stat2Note">Your average score becomes more meaningful as you complete more practice sets.</div>
+        </article>
+
+        <article class="panel stat-card">
+          <span class="stat-kicker" id="stat3Label">Topics completed</span>
+          <div class="stat-value" id="stat3Value">0</div>
+          <div class="stat-note" id="stat3Note">Completed topics will help signal your readiness across FIFA regulations.</div>
+        </article>
+
+        <article class="panel stat-card">
+          <span class="stat-kicker" id="stat4Label">Mock exams taken</span>
+          <div class="stat-value" id="stat4Value">0</div>
+          <div class="stat-note" id="stat4Note">Timed exam attempts will appear here once your plan unlocks the simulator.</div>
+        </article>
+      </section>
+
+      <section class="main-grid">
+        <div class="panel section-panel">
+          <div class="section-head">
+            <div>
+              <h2 id="progressTitle">Progress by study area</h2>
+              <p id="progressLead">Your visible progress bars help you spot which areas are developing first and where you still need more structured preparation.</p>
+            </div>
+          </div>
+
+          <div class="progress-list">
+            <div class="progress-row">
+              <div class="progress-row-top">
+                <div class="progress-title" id="prog1Title">FFAR & Representation</div>
+                <div class="progress-value" id="prog1Value">18%</div>
+              </div>
+              <div class="progress-bar"><div class="progress-fill" id="prog1Fill" style="width:18%"></div></div>
+            </div>
+
+            <div class="progress-row">
+              <div class="progress-row-top">
+                <div class="progress-title" id="prog2Title">RSTP & Transfers</div>
+                <div class="progress-value" id="prog2Value">10%</div>
+              </div>
+              <div class="progress-bar"><div class="progress-fill" id="prog2Fill" style="width:10%"></div></div>
+            </div>
+
+            <div class="progress-row">
+              <div class="progress-row-top">
+                <div class="progress-title" id="prog3Title">Ethics, Governance & Discipline</div>
+                <div class="progress-value" id="prog3Value">7%</div>
+              </div>
+              <div class="progress-bar"><div class="progress-fill" id="prog3Fill" style="width:7%"></div></div>
+            </div>
+
+            <div class="progress-row">
+              <div class="progress-row-top">
+                <div class="progress-title" id="prog4Title">Exam strategy readiness</div>
+                <div class="progress-value" id="prog4Value">12%</div>
+              </div>
+              <div class="progress-bar"><div class="progress-fill" id="prog4Fill" style="width:12%"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel section-panel">
+          <div class="section-head">
+            <div>
+              <h2 id="summaryTitle">Access summary</h2>
+              <p id="summaryLead">Your current plan determines which premium preparation tools are already open and which upgrades will unlock the next stage.</p>
+            </div>
+          </div>
+
+          <div class="progress-list">
+            <div class="progress-row">
+              <div class="progress-row-top">
+                <div class="progress-title" id="sum1Title">Starter layer</div>
+                <div class="progress-value" id="sum1Value">Locked</div>
+              </div>
+              <div class="progress-bar"><div class="progress-fill" id="sum1Fill" style="width:0%"></div></div>
+            </div>
+
+            <div class="progress-row">
+              <div class="progress-row-top">
+                <div class="progress-title" id="sum2Title">Professional layer</div>
+                <div class="progress-value" id="sum2Value">Locked</div>
+              </div>
+              <div class="progress-bar"><div class="progress-fill" id="sum2Fill" style="width:0%"></div></div>
+            </div>
+
+            <div class="progress-row">
+              <div class="progress-row-top">
+                <div class="progress-title" id="sum3Title">Premium layer</div>
+                <div class="progress-value" id="sum3Value">Locked</div>
+              </div>
+              <div class="progress-bar"><div class="progress-fill" id="sum3Fill" style="width:0%"></div></div>
+            </div>
+
+            <div class="progress-row">
+              <div class="progress-row-top">
+                <div class="progress-title" id="sum4Title">Current exam-cycle readiness</div>
+                <div class="progress-value" id="sum4Value">12%</div>
+              </div>
+              <div class="progress-bar"><div class="progress-fill" id="sum4Fill" style="width:12%"></div></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel section-panel">
+        <div class="section-head">
+          <div>
+            <h2 id="toolsTitle">Your study tools</h2>
+            <p id="toolsLead">Each tool card below reflects your current access tier. Premium progression should be obvious the moment you land on the dashboard.</p>
+          </div>
+        </div>
+
+        <div class="tools-grid">
+          <article class="panel tool-card">
+            <div class="tool-badge" id="tool1Badge">Available</div>
+            <h3 class="tool-title" id="tool1Title">Topics Catalogue</h3>
+            <p class="tool-text" id="tool1Text">Browse the structure of the curriculum and see the study areas covered across the academy.</p>
+            <div class="tool-requirement" id="tool1Req">Available to all logged-in users</div>
+            <a href="/agent-academy/topics.html" class="tool-btn primary" id="tool1Btn">Open topics</a>
+          </article>
+
+          <article class="panel tool-card">
+            <div class="tool-badge" id="tool2Badge">Starter+</div>
+            <h3 class="tool-title" id="tool2Title">Topic Quiz</h3>
+            <p class="tool-text" id="tool2Text">Practice regulation-based questions by topic and build structured exam confidence over time.</p>
+            <div class="tool-requirement" id="tool2Req">Starter plan or above required</div>
+            <a href="/agent-academy/upgrade.html" class="tool-btn" id="tool2Btn">Unlock with Starter</a>
+          </article>
+
+          <article class="panel tool-card">
+            <div class="tool-badge" id="tool3Badge">Professional+</div>
+            <h3 class="tool-title" id="tool3Title">Mock Exam Simulator</h3>
+            <p class="tool-text" id="tool3Text">Enter the timed exam environment with question palette, review flags and session-style pressure.</p>
+            <div class="tool-requirement" id="tool3Req">Professional plan or above required</div>
+            <a href="/agent-academy/upgrade.html" class="tool-btn" id="tool3Btn">Upgrade to Professional</a>
+          </article>
+
+          <article class="panel tool-card">
+            <div class="tool-badge" id="tool4Badge">Premium</div>
+            <h3 class="tool-title" id="tool4Title">Intensive Preparation</h3>
+            <p class="tool-text" id="tool4Text">Advanced high-intensity preparation modules reserved for the highest-value tier of the academy.</p>
+            <div class="tool-requirement" id="tool4Req">Premium plan required</div>
+            <a href="/agent-academy/upgrade.html" class="tool-btn" id="tool4Btn">Upgrade to Premium</a>
+          </article>
+        </div>
+      </section>
+
+      <div class="footer" id="footerText">Agent Academy by GlobalMGM</div>
     </div>
   </div>
 
-  <main class="container">
-    <p class="eyebrow" data-i18n="dashboard.kicker">Dashboard</p>
-    <h1 data-i18n="dashboard.heading">Welcome to your learning dashboard</h1>
-    <p class="lead" data-i18n="dashboard.lead">
-      Continue your revision, access your study topics, and track your exam preparation progress.
-    </p>
-
-    <div class="grid">
-      <section class="card">
-        <h2 data-i18n="dashboard.studyTitle">Start studying</h2>
-        <p data-i18n="dashboard.studyText">
-          Browse your study topics and begin answering practice questions.
-        </p>
-        <a class="btn" href="/agent-academy/topics.html" data-i18n="dashboard.studyButton">Browse study topics</a>
-      </section>
-
-      <section class="card">
-        <h2 data-i18n="dashboard.accountTitle">Account</h2>
-        <p class="account-line" id="userEmail"></p>
-        <button class="btn btn-outline" id="logoutBtn" data-i18n="dashboard.logout">Logout</button>
-      </section>
-
-      <section class="card">
-        <h2 data-i18n="dashboard.progressTitle">Progress overview</h2>
-        <p data-i18n="dashboard.progressText">
-          Your statistics and topic performance will appear here as soon as you start answering questions.
-        </p>
-      </section>
-    </div>
-
-    <div class="empty-stats">
-      <div class="stat">
-        <div class="stat-label" data-i18n="dashboard.stat1Label">Questions answered</div>
-        <div class="stat-value">0</div>
-      </div>
-
-      <div class="stat">
-        <div class="stat-label" data-i18n="dashboard.stat2Label">Average score</div>
-        <div class="stat-value">0%</div>
-      </div>
-
-      <div class="stat">
-        <div class="stat-label" data-i18n="dashboard.stat3Label">Topics completed</div>
-        <div class="stat-value">0</div>
-      </div>
-    </div>
-
-    <p class="footer-note" data-i18n="dashboard.note">
-      This platform is an independent exam preparation resource and is not affiliated with or endorsed by FIFA.
-    </p>
-  </main>
-
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="/agent-academy/js/supabase-client.js"></script>
-
- <script>
-  let translations = {};
-  let currentLang = localStorage.getItem("academyLang") || "en";
-
-  async function loadLang(lang){
-    try{
-      const res = await fetch(`/agent-academy/i18n/${lang}.json`, { cache: "no-store" });
-
-      if (!res.ok) {
-        throw new Error(`Could not load language file: ${lang}`);
-      }
-
-      translations = await res.json();
-
-      document.querySelectorAll("[data-i18n]").forEach((el) => {
-        const key = el.getAttribute("data-i18n");
-        if (translations[key]) {
-          el.textContent = translations[key];
-        }
-      });
-
-      document.documentElement.lang = lang;
-      currentLang = lang;
-      localStorage.setItem("academyLang", lang);
-
-      document.querySelectorAll(".lang-switch button").forEach((btn) => {
-        btn.classList.toggle("active", btn.dataset.lang === lang);
-      });
-
-      if (translations["dashboard.pageTitle"]) {
-        document.title = translations["dashboard.pageTitle"];
-      }
-    } catch (error) {
-      console.error("Language load error:", error);
-    }
-  }
-
-  function t(key, fallback){
-    return translations[key] || fallback;
-  }
-
-  async function loadUser(){
-    try {
-      const { data: { session }, error } = await supabaseClient.auth.getSession();
-
-      if (error || !session || !session.user) {
-        window.location.href = "/agent-academy/login.html";
-        return;
-      }
-
-      const emailLine = document.getElementById("userEmail");
-      if (emailLine) {
-        emailLine.textContent = `${t("dashboard.loggedInAs", "Logged in as:")} ${session.user.email}`;
-      }
-    } catch (error) {
-      console.error("User load error:", error);
-    }
-  }
-
-  async function logout(){
-    await supabaseClient.auth.signOut();
-    window.location.href = "/agent-academy/login.html";
-  }
-
-  document.getElementById("logoutBtn").addEventListener("click", logout);
-
-  document.querySelectorAll(".lang-switch button").forEach((btn) => {
-    btn.addEventListener("click", async () => {
-      await loadLang(btn.dataset.lang);
-      await loadUser();
-    });
-  });
-
-  window.addEventListener("DOMContentLoaded", async () => {
-    await loadLang(currentLang);
-    await loadUser();
-  });
-</script>
+  <script src="/agent-academy/js/auth.js"></script>
+  <script src="/agent-academy/js/guard.js"></script>
+  <script src="/agent-academy/js/dashboard.js"></script>
 </body>
 </html>
