@@ -613,7 +613,8 @@
 
           <a class="plan-btn" href="/agent-academy/signup.html?plan=starter" data-i18n="upgrade.starterButton">Choose Starter</a>
           <a class="plan-btn secondary"
-         href="/agent-academy/signup.html?plan=free"
+         href="#"
+         id="freePreviewBtn"
          data-i18n="upgrade.freePreviewButton">
         Start Free Preview
         </a>
@@ -773,6 +774,40 @@
       updateCountdown();
       setInterval(updateCountdown, 1000);
     });
+
+document.getElementById("freePreviewBtn")?.addEventListener("click", async (e) => {
+  e.preventDefault();
+
+  const db = window.supabaseClient || window.sb || null;
+
+  if (!db) {
+    window.location.href = "/agent-academy/login.html";
+    return;
+  }
+
+  const { data: { user } } = await db.auth.getUser();
+
+  if (!user) {
+    window.location.href = "/agent-academy/login.html";
+    return;
+  }
+
+  // Replace academy_access with your real access table name if different
+  const { error } = await db
+    .from("academy_access")
+    .upsert({
+      user_id: user.id,
+      plan: "free"
+    }, { onConflict: "user_id" });
+
+  if (error) {
+    console.error("Free preview access error:", error);
+    return;
+  }
+
+  window.location.href = "/agent-academy/dashboard.html";
+});
+      
   </script>
 
 
