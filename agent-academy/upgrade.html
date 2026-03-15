@@ -629,135 +629,51 @@
     document.addEventListener("DOMContentLoaded", () => {
       loadLang(currentLang);
     });
-  </script>
-<!-- FIFA EXAM COUNTDOWN -->
 <script>
-
 function getNextExamDate() {
   const now = new Date();
   const currentYear = now.getFullYear();
 
-  const examDates = [
-    new Date(`${currentYear}-04-28T09:00:00`),
-    new Date(`${currentYear + 1}-04-28T09:00:00`)
-  ];
+  const thisYearExam = new Date(`${currentYear}-04-28T09:00:00`);
+  const nextYearExam = new Date(`${currentYear + 1}-04-28T09:00:00`);
 
-  for (const examDate of examDates) {
-    if (examDate.getTime() > now.getTime()) {
-      return examDate;
-    }
-  }
-
-  return new Date(`${currentYear + 1}-04-28T09:00:00`);
+  return thisYearExam > now ? thisYearExam : nextYearExam;
 }
 
 let nextExamDate = getNextExamDate();
 
-function pad(value) {
-  return String(value).padStart(2, "0");
+function pad(v){
+  return String(v).padStart(2,"0");
 }
 
-function updateCountdown() {
+function updateCountdown(){
+
   const now = new Date().getTime();
   const diff = nextExamDate.getTime() - now;
 
-  if (diff <= 0) {
+  if(diff <= 0){
     nextExamDate = getNextExamDate();
     return;
   }
 
-  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-  const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-  const minutes = Math.floor((diff / (1000 * 60)) % 60);
+  const days = Math.floor(diff / (1000*60*60*24));
+  const hours = Math.floor((diff / (1000*60*60)) % 24);
+  const minutes = Math.floor((diff / (1000*60)) % 60);
   const seconds = Math.floor((diff / 1000) % 60);
 
-  const daysEl = document.getElementById("days");
-  const hoursEl = document.getElementById("hours");
-  const minutesEl = document.getElementById("minutes");
-  const secondsEl = document.getElementById("seconds");
+  const d = document.getElementById("days");
+  const h = document.getElementById("hours");
+  const m = document.getElementById("minutes");
+  const s = document.getElementById("seconds");
 
-  if (daysEl) daysEl.textContent = pad(days);
-  if (hoursEl) hoursEl.textContent = pad(hours);
-  if (minutesEl) minutesEl.textContent = pad(minutes);
-  if (secondsEl) secondsEl.textContent = pad(seconds);
+  if(d) d.textContent = pad(days);
+  if(h) h.textContent = pad(hours);
+  if(m) m.textContent = pad(minutes);
+  if(s) s.textContent = pad(seconds);
 }
 
-setInterval(updateCountdown, 1000);
+setInterval(updateCountdown,1000);
 updateCountdown();
-
-</script>
-
-  <script>
-  function getNextExamDate() {
-    const now = new Date();
-    const currentYear = now.getFullYear();
-
-    const examDates = [
-      new Date(`${currentYear}-04-28T09:00:00`),
-      new Date(`${currentYear + 1}-04-28T09:00:00`)
-    ];
-
-    for (const examDate of examDates) {
-      if (examDate.getTime() > now.getTime()) {
-        return examDate;
-      }
-    }
-
-    return new Date(`${currentYear + 1}-04-28T09:00:00`);
-  }
-
-  let nextExamDate = getNextExamDate();
-
-  function pad(value) {
-    return String(value).padStart(2, "0");
-  }
-
-  function updateExamDateText() {
-    const examDateEl = document.querySelector("[data-i18n='countdown.date']");
-    if (!examDateEl) return;
-
-    const year = nextExamDate.getFullYear();
-    const lang = localStorage.getItem("lang") || "en";
-
-    const dateText = {
-      en: `Next exam window: 28–30 April ${year}`,
-      fr: `Prochaine session : 28–30 avril ${year}`,
-      es: `Próxima convocatoria: 28–30 abril ${year}`
-    };
-
-    examDateEl.textContent = dateText[lang] || dateText.en;
-  }
-
-  function updateCountdown() {
-    const now = new Date().getTime();
-    const diff = nextExamDate.getTime() - now;
-
-    if (diff <= 0) {
-      nextExamDate = getNextExamDate();
-      updateExamDateText();
-      return;
-    }
-
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-    const minutes = Math.floor((diff / (1000 * 60)) % 60);
-    const seconds = Math.floor((diff / 1000) % 60);
-
-    const daysEl = document.getElementById("days");
-    const hoursEl = document.getElementById("hours");
-    const minutesEl = document.getElementById("minutes");
-    const secondsEl = document.getElementById("seconds");
-
-    if (daysEl) daysEl.textContent = pad(days);
-    if (hoursEl) hoursEl.textContent = pad(hours);
-    if (minutesEl) minutesEl.textContent = pad(minutes);
-    if (secondsEl) secondsEl.textContent = pad(seconds);
-
-    updateExamDateText();
-  }
-
-  setInterval(updateCountdown, 1000);
-  updateCountdown();
 </script>
 
   
