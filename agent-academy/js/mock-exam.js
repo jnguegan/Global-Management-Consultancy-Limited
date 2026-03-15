@@ -378,8 +378,17 @@
 
   async function fetchQuestions() {
     const { data, error } = await db
-      .from("questions")
-      .select("*");
+      
+      const access = await AgentAcademyGuard.getAccessState();
+
+const table =
+  access.plan === "free"
+    ? "preview_mock_questions"
+    : "questions";
+
+const { data, error } = await db
+  .from(table)
+  .select("*");
 
     if (error) {
       throw new Error(`Unable to load questions: ${error.message}`);
