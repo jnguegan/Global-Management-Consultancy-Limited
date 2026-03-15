@@ -1,4 +1,16 @@
 (function () {
+  const PLAN_RANK = {
+    free: 0,
+    starter: 1,
+    professional: 2,
+    premium: 3,
+    premium_intensive: 3
+  };
+
+  function hasRequiredPlan(userPlan, requiredPlan) {
+    return (PLAN_RANK[userPlan] || 0) >= (PLAN_RANK[requiredPlan] || 0);
+  }
+
   function normalizePlan(value) {
     if (!value) return "free";
 
@@ -110,7 +122,11 @@
 
     const paidByProfile =
       isPaidPlan(profileAccess.plan) &&
-      (profileAccess.subscriptionStatus === "active" || profileAccess.subscriptionStatus === "trialing" || profileAccess.subscriptionStatus === "");
+      (
+        profileAccess.subscriptionStatus === "active" ||
+        profileAccess.subscriptionStatus === "trialing" ||
+        profileAccess.subscriptionStatus === ""
+      );
 
     return {
       isLoggedIn: true,
@@ -153,13 +169,34 @@
     return access;
   }
 
+  async function requirePlan(requiredPlan, options = {}) {
+    const loginUrl = options.loginUrl || "/agent-academy/login.html";
+    const upgradeUrl = options.upgradeUrl || "/agent-academy/upgrade.html";
+
+    const access = await getAccessState();
+
+    if (!access.isLoggedIn) {
+      window.location.href = loginUrl;
+      return null;
+    }
+
+    if (!hasRequiredPlan(access.plan, requiredPlan)) {
+      window.location.href = `${upgradeUrl}?required=${encodeURIComponent(requiredPlan)}`;
+      return null;
+    }
+
+    return access;
+  }
+
   window.AgentAcademyGuard = {
+    PLAN_RANK,
+    hasRequiredPlan,
     normalizePlan,
     isPaidPlan,
     getProfileAccess,
     getAccessState,
     requireLogin,
-    requirePaidAccess
+    requirePaidAccess,
+    requirePlan
   };
 })();
-
