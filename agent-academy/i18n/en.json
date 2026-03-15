@@ -49,7 +49,17 @@
     "topics.error": "Unable to load topics right now.",
   "startTitle": "Mock Exam Instructions",
   "startInstructions": "Select your preferred language for this exam. Once you are ready, click Start Exam to load the questions and begin the timed mock exam. You will have 60 minutes to complete 20 questions. Your selected language will remain fixed for the entire exam.",
-  "startExam": "Start Exam"
+  "startExam": "Start Exam",
+
+  "upgrade.heading": "Upgrade Your Access",
+"upgrade.lead": "Choose the plan that best fits your preparation.",
+"upgrade.starterTitle": "Starter",
+"upgrade.proTitle": "Professional",
+"upgrade.premiumTitle": "Premium Intensive",
+"upgrade.starterButton": "Start with Starter",
+"upgrade.proButton": "Choose Professional",
+"upgrade.premiumButton": "Join Premium"
+
 }
 
 
