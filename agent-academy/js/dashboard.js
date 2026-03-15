@@ -71,8 +71,37 @@ const AgentAcademyDashboard = (() => {
       rstp: "RSTP & Transfers",
       ethics: "Ethics, Governance & Discipline",
       strategy: "Exam strategy readiness",
-      brand: "GlobalMGM · Agent Academy"
+      brand: "GlobalMGM · Agent Academy",
+
+      milestoneLabel: "Next Preparation Milestone",
+      milestoneFreeTitle: "Unlock Starter Preparation",
+      milestoneFreeDescription: "Starter unlocks structured learning tools and the first full training layer.",
+      milestoneFreeBenefit1: "300 regulation quiz questions",
+      milestoneFreeBenefit2: "Full playbook access",
+      milestoneFreeBenefit3: "Structured topic training",
+      milestoneFreeBtn: "Unlock Starter",
+
+      milestoneStarterTitle: "Upgrade to Professional",
+      milestoneStarterDescription: "Professional unlocks the full question bank and unlimited mock exams.",
+      milestoneStarterBenefit1: "Full 2000-question bank",
+      milestoneStarterBenefit2: "Unlimited mock exams",
+      milestoneStarterBenefit3: "Full exam simulator",
+      milestoneStarterBtn: "Upgrade to Professional",
+
+      milestoneProfessionalTitle: "Upgrade to Premium",
+      milestoneProfessionalDescription: "Premium unlocks the highest-value preparation layer.",
+      milestoneProfessionalBenefit1: "Advanced scenario simulations",
+      milestoneProfessionalBenefit2: "Intensive preparation modules",
+      milestoneProfessionalBenefit3: "Highest-level readiness tools",
+      milestoneProfessionalBtn: "Upgrade to Premium",
+
+      milestonePremiumTitle: "Full Academy Access",
+      milestonePremiumDescription: "You have unlocked the complete preparation environment.",
+      milestonePremiumBenefit1: "Full question bank access",
+      milestonePremiumBenefit2: "Unlimited mock exams",
+      milestonePremiumBenefit3: "Intensive preparation modules"
     },
+
     fr: {
       pageTitle: "Votre tableau de bord premium de préparation",
       pageLead: "Suivez vos progrès, voyez ce que votre offre actuelle débloque et poursuivez votre préparation à l’examen FIFA avec les bons outils.",
@@ -137,8 +166,37 @@ const AgentAcademyDashboard = (() => {
       rstp: "RSTP et transferts",
       ethics: "Éthique, gouvernance et discipline",
       strategy: "Préparation stratégique",
-      brand: "GlobalMGM · Agent Academy"
+      brand: "GlobalMGM · Agent Academy",
+
+      milestoneLabel: "Prochaine étape de préparation",
+      milestoneFreeTitle: "Débloquer Starter",
+      milestoneFreeDescription: "Starter débloque des outils d’apprentissage structurés et le premier niveau complet de préparation.",
+      milestoneFreeBenefit1: "300 questions de quiz réglementaires",
+      milestoneFreeBenefit2: "Accès complet au playbook",
+      milestoneFreeBenefit3: "Formation structurée par thème",
+      milestoneFreeBtn: "Débloquer Starter",
+
+      milestoneStarterTitle: "Passer à Professional",
+      milestoneStarterDescription: "Professional débloque la banque complète de questions et les examens blancs illimités.",
+      milestoneStarterBenefit1: "Banque complète de 2000 questions",
+      milestoneStarterBenefit2: "Examens blancs illimités",
+      milestoneStarterBenefit3: "Simulateur d’examen complet",
+      milestoneStarterBtn: "Passer à Professional",
+
+      milestoneProfessionalTitle: "Passer à Premium",
+      milestoneProfessionalDescription: "Premium débloque le niveau de préparation à la plus forte valeur.",
+      milestoneProfessionalBenefit1: "Simulations avancées basées sur des scénarios",
+      milestoneProfessionalBenefit2: "Modules de préparation intensive",
+      milestoneProfessionalBenefit3: "Outils de préparation du plus haut niveau",
+      milestoneProfessionalBtn: "Passer à Premium",
+
+      milestonePremiumTitle: "Accès complet à l’Academy",
+      milestonePremiumDescription: "Vous avez débloqué l’environnement complet de préparation.",
+      milestonePremiumBenefit1: "Accès complet à la banque de questions",
+      milestonePremiumBenefit2: "Examens blancs illimités",
+      milestonePremiumBenefit3: "Modules de préparation intensive"
     },
+
     es: {
       pageTitle: "Tu panel premium de preparación",
       pageLead: "Sigue tu progreso, ve lo que desbloquea tu plan actual y continúa tu preparación del examen FIFA con las herramientas adecuadas.",
@@ -203,7 +261,35 @@ const AgentAcademyDashboard = (() => {
       rstp: "RSTP y transferencias",
       ethics: "Ética, gobernanza y disciplina",
       strategy: "Preparación estratégica",
-      brand: "GlobalMGM · Agent Academy"
+      brand: "GlobalMGM · Agent Academy",
+
+      milestoneLabel: "Próximo hito de preparación",
+      milestoneFreeTitle: "Desbloquear Starter",
+      milestoneFreeDescription: "Starter desbloquea herramientas de aprendizaje estructurado y la primera capa completa de preparación.",
+      milestoneFreeBenefit1: "300 preguntas de cuestionario reglamentario",
+      milestoneFreeBenefit2: "Acceso completo al playbook",
+      milestoneFreeBenefit3: "Formación estructurada por temas",
+      milestoneFreeBtn: "Desbloquear Starter",
+
+      milestoneStarterTitle: "Subir a Professional",
+      milestoneStarterDescription: "Professional desbloquea el banco completo de preguntas y los exámenes simulados ilimitados.",
+      milestoneStarterBenefit1: "Banco completo de 2000 preguntas",
+      milestoneStarterBenefit2: "Exámenes simulados ilimitados",
+      milestoneStarterBenefit3: "Simulador de examen completo",
+      milestoneStarterBtn: "Subir a Professional",
+
+      milestoneProfessionalTitle: "Subir a Premium",
+      milestoneProfessionalDescription: "Premium desbloquea la capa de preparación de mayor valor.",
+      milestoneProfessionalBenefit1: "Simulaciones avanzadas por escenarios",
+      milestoneProfessionalBenefit2: "Módulos de preparación intensiva",
+      milestoneProfessionalBenefit3: "Herramientas de preparación del más alto nivel",
+      milestoneProfessionalBtn: "Subir a Premium",
+
+      milestonePremiumTitle: "Acceso completo a la Academy",
+      milestonePremiumDescription: "Has desbloqueado el entorno completo de preparación.",
+      milestonePremiumBenefit1: "Acceso completo al banco de preguntas",
+      milestonePremiumBenefit2: "Exámenes simulados ilimitados",
+      milestonePremiumBenefit3: "Módulos de preparación intensiva"
     }
   };
 
@@ -240,6 +326,12 @@ const AgentAcademyDashboard = (() => {
     });
 
     el.brand = document.querySelector(".brand");
+
+    el.milestoneLabel = document.querySelector(".milestone-label");
+    el.milestoneTitle = document.getElementById("milestone-title");
+    el.milestoneDescription = document.getElementById("milestone-description");
+    el.milestoneBenefits = document.getElementById("milestone-benefits");
+    el.milestoneButton = document.getElementById("milestone-button");
   }
 
   function setLangButtons() {
@@ -347,6 +439,10 @@ const AgentAcademyDashboard = (() => {
     el.tool4Title.textContent = txt("tool4Title");
     el.tool4Text.textContent = txt("tool4Text");
 
+    if (el.milestoneLabel) {
+      el.milestoneLabel.textContent = txt("milestoneLabel");
+    }
+
     el.footerText.textContent = txt("footer");
 
     setLangButtons();
@@ -399,6 +495,66 @@ const AgentAcademyDashboard = (() => {
       el.tool4Btn.href = "/agent-academy/upgrade.html?required=premium";
       el.tool4Btn.classList.remove("primary");
     }
+  }
+
+  function renderMilestone(plan) {
+    if (!el.milestoneTitle || !el.milestoneDescription || !el.milestoneBenefits || !el.milestoneButton) return;
+
+    const p = String(plan || "free").toLowerCase();
+
+    if (el.milestoneLabel) {
+      el.milestoneLabel.textContent = txt("milestoneLabel");
+    }
+
+    el.milestoneButton.style.display = "";
+
+    if (p === "starter") {
+      el.milestoneTitle.textContent = txt("milestoneStarterTitle");
+      el.milestoneDescription.textContent = txt("milestoneStarterDescription");
+      el.milestoneBenefits.innerHTML = `
+        <li>${txt("milestoneStarterBenefit1")}</li>
+        <li>${txt("milestoneStarterBenefit2")}</li>
+        <li>${txt("milestoneStarterBenefit3")}</li>
+      `;
+      el.milestoneButton.textContent = txt("milestoneStarterBtn");
+      el.milestoneButton.href = "/agent-academy/upgrade.html?required=professional";
+      return;
+    }
+
+    if (p === "professional") {
+      el.milestoneTitle.textContent = txt("milestoneProfessionalTitle");
+      el.milestoneDescription.textContent = txt("milestoneProfessionalDescription");
+      el.milestoneBenefits.innerHTML = `
+        <li>${txt("milestoneProfessionalBenefit1")}</li>
+        <li>${txt("milestoneProfessionalBenefit2")}</li>
+        <li>${txt("milestoneProfessionalBenefit3")}</li>
+      `;
+      el.milestoneButton.textContent = txt("milestoneProfessionalBtn");
+      el.milestoneButton.href = "/agent-academy/upgrade.html?required=premium";
+      return;
+    }
+
+    if (p === "premium" || p === "premium_intensive") {
+      el.milestoneTitle.textContent = txt("milestonePremiumTitle");
+      el.milestoneDescription.textContent = txt("milestonePremiumDescription");
+      el.milestoneBenefits.innerHTML = `
+        <li>${txt("milestonePremiumBenefit1")}</li>
+        <li>${txt("milestonePremiumBenefit2")}</li>
+        <li>${txt("milestonePremiumBenefit3")}</li>
+      `;
+      el.milestoneButton.style.display = "none";
+      return;
+    }
+
+    el.milestoneTitle.textContent = txt("milestoneFreeTitle");
+    el.milestoneDescription.textContent = txt("milestoneFreeDescription");
+    el.milestoneBenefits.innerHTML = `
+      <li>${txt("milestoneFreeBenefit1")}</li>
+      <li>${txt("milestoneFreeBenefit2")}</li>
+      <li>${txt("milestoneFreeBenefit3")}</li>
+    `;
+    el.milestoneButton.textContent = txt("milestoneFreeBtn");
+    el.milestoneButton.href = "/agent-academy/upgrade.html?required=starter";
   }
 
   function renderAccess() {
@@ -460,6 +616,7 @@ const AgentAcademyDashboard = (() => {
 
     setRing(vm.readiness);
     renderPlanAwareCards(plan);
+    renderMilestone(plan);
   }
 
   function bindEvents() {
