@@ -575,38 +575,33 @@
     </div>
   </div>
 
-  <script>
+    <script>
     let translations = {};
     let currentLang = localStorage.getItem("lang") || "en";
 
     function applyTranslations() {
-  document.documentElement.lang = currentLang;
+      document.documentElement.lang = currentLang;
 
-  document.querySelectorAll("[data-i18n]").forEach((el) => {
-    const key = el.getAttribute("data-i18n");
-    if (translations[key]) {
-      el.textContent = translations[key];
-    }
-  });
+      document.querySelectorAll("[data-i18n]").forEach((el) => {
+        const key = el.getAttribute("data-i18n");
+        if (translations[key]) {
+          el.textContent = translations[key];
+        }
+      });
 
-  document.querySelectorAll("[data-lang-btn]").forEach((btn) => {
-    btn.classList.toggle("is-active", btn.getAttribute("data-lang-btn") === currentLang);
-  });
+      document.querySelectorAll("[data-lang-btn]").forEach((btn) => {
+        btn.classList.toggle("is-active", btn.getAttribute("data-lang-btn") === currentLang);
+      });
 
-  if (translations["upgrade.pageTitle"]) {
-    document.title = translations["upgrade.pageTitle"];
-  }
-}
+      if (translations["upgrade.pageTitle"]) {
+        document.title = translations["upgrade.pageTitle"];
+      }
 
-
-    function setLang(lang) {
-  loadLang(lang).then(() => {
-    if (typeof updateExamDateText === "function") {
       updateExamDateText();
     }
-  });
-}
 
+    async function loadLang(lang) {
+      try {
         const res = await fetch(`/agent-academy/i18n/${lang}.json`, { cache: "no-store" });
 
         if (!res.ok) {
@@ -626,55 +621,71 @@
       loadLang(lang);
     }
 
+    function getNextExamDate() {
+      const now = new Date();
+      const currentYear = now.getFullYear();
+
+      const thisYearExam = new Date(`${currentYear}-04-28T09:00:00`);
+      const nextYearExam = new Date(`${currentYear + 1}-04-28T09:00:00`);
+
+      return thisYearExam > now ? thisYearExam : nextYearExam;
+    }
+
+    let nextExamDate = getNextExamDate();
+
+    function pad(v) {
+      return String(v).padStart(2, "0");
+    }
+
+    function updateExamDateText() {
+      const examDateEl = document.querySelector("[data-i18n='countdown.date']");
+      if (!examDateEl) return;
+
+      const year = nextExamDate.getFullYear();
+
+      const dateText = {
+        en: `Next exam window: 28–30 April ${year}`,
+        fr: `Prochaine session : 28–30 avril ${year}`,
+        es: `Próxima convocatoria: 28–30 abril ${year}`
+      };
+
+      examDateEl.textContent = dateText[currentLang] || dateText.en;
+    }
+
+    function updateCountdown() {
+      const now = new Date().getTime();
+      let diff = nextExamDate.getTime() - now;
+
+      if (diff <= 0) {
+        nextExamDate = getNextExamDate();
+        diff = nextExamDate.getTime() - now;
+      }
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((diff / (1000 * 60)) % 60);
+      const seconds = Math.floor((diff / 1000) % 60);
+
+      const d = document.getElementById("days");
+      const h = document.getElementById("hours");
+      const m = document.getElementById("minutes");
+      const s = document.getElementById("seconds");
+
+      if (d) d.textContent = pad(days);
+      if (h) h.textContent = pad(hours);
+      if (m) m.textContent = pad(minutes);
+      if (s) s.textContent = pad(seconds);
+
+      updateExamDateText();
+    }
+
     document.addEventListener("DOMContentLoaded", () => {
       loadLang(currentLang);
+      updateCountdown();
+      setInterval(updateCountdown, 1000);
     });
-<script>
-function getNextExamDate() {
-  const now = new Date();
-  const currentYear = now.getFullYear();
+  </script>
 
-  const thisYearExam = new Date(`${currentYear}-04-28T09:00:00`);
-  const nextYearExam = new Date(`${currentYear + 1}-04-28T09:00:00`);
-
-  return thisYearExam > now ? thisYearExam : nextYearExam;
-}
-
-let nextExamDate = getNextExamDate();
-
-function pad(v){
-  return String(v).padStart(2,"0");
-}
-
-function updateCountdown(){
-
-  const now = new Date().getTime();
-  const diff = nextExamDate.getTime() - now;
-
-  if(diff <= 0){
-    nextExamDate = getNextExamDate();
-    return;
-  }
-
-  const days = Math.floor(diff / (1000*60*60*24));
-  const hours = Math.floor((diff / (1000*60*60)) % 24);
-  const minutes = Math.floor((diff / (1000*60)) % 60);
-  const seconds = Math.floor((diff / 1000) % 60);
-
-  const d = document.getElementById("days");
-  const h = document.getElementById("hours");
-  const m = document.getElementById("minutes");
-  const s = document.getElementById("seconds");
-
-  if(d) d.textContent = pad(days);
-  if(h) h.textContent = pad(hours);
-  if(m) m.textContent = pad(minutes);
-  if(s) s.textContent = pad(seconds);
-}
-
-setInterval(updateCountdown,1000);
-updateCountdown();
-</script>
 
   
 </body>
