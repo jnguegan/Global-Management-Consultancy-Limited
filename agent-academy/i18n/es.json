@@ -111,7 +111,19 @@
 "upgrade.premiumFeature4": "Diseñado para preparación intensiva",
 "upgrade.premiumButton": "Elegir Premium Intensivo",
 
-"upgrade.note": "El registro gratuito no desbloquea el acceso completo a Agent Academy. El acceso de pago mantiene el valor premium y estructura el proceso de aprendizaje."
+"upgrade.note": "El registro gratuito no desbloquea el acceso completo a Agent Academy. El acceso de pago mantiene el valor premium y estructura el proceso de aprendizaje.",
+
+  "countdown.title": "Cuenta atrás para el próximo examen de agente de fútbol de la FIFA",
+"countdown.lead": "El examen de agente de fútbol de la FIFA se celebra solo una vez al año. Los candidatos serios se preparan antes de que cierre la ventana del examen.",
+"countdown.date": "Próxima convocatoria: 28–30 abril 2026",
+"countdown.days": "Días",
+"countdown.hours": "Horas",
+"countdown.minutes": "Minutos",
+"countdown.seconds": "Segundos",
+
+"upgrade.plansHeading": "Planes",
+"upgrade.plansLead": "Selecciona el nivel de acceso que mejor se adapte a la intensidad de tu preparación y a tus necesidades de estudio."
+
 
 
 }
