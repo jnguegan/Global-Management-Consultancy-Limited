@@ -261,10 +261,13 @@ async function loadTopic() {
 async function loadQuestions() {
   const access = await AgentAcademyGuard.getAccessState();
 
-const table =
-  access.plan === "free"
-    ? "preview_quiz_questions"
-    : "questions";
+let table = "questions";
+
+if (access.plan === "free") {
+  table = "preview_quiz_questions";
+} else if (access.plan === "starter") {
+  table = "starter_quiz_questions";
+}
 
 const { data: idsData, error: idsError } = await db
   .from(table)
