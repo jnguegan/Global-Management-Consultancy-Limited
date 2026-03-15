@@ -58,7 +58,63 @@
 "upgrade.premiumTitle": "Premium Intensive",
 "upgrade.starterButton": "Start with Starter",
 "upgrade.proButton": "Choose Professional",
-"upgrade.premiumButton": "Join Premium"
+"upgrade.premiumButton": "Join Premium",
+
+  "upgrade.kicker": "Upgrade Access",
+"upgrade.title": "Choose the plan that matches your FIFA exam ambition.",
+"upgrade.lead": "Choose the plan that best fits your preparation.",
+
+"upgrade.point1Title": "Premium exam preparation",
+"upgrade.point1Text": "Structured, serious and multilingual preparation for a niche professional qualification.",
+
+"upgrade.point2Title": "Built for real candidates",
+"upgrade.point2Text": "Designed for users preparing with intent, not casual free browsing.",
+
+"upgrade.point3Title": "More than a static PDF",
+"upgrade.point3Text": "A learning environment with guided tools, online playbook access and evolving premium resources.",
+
+"upgrade.sideTitle": "What paid access is preparing for",
+"upgrade.sideLead": "This platform is being structured so that premium members can progressively access the most valuable preparation tools.",
+
+"upgrade.sideItem1": "Full premium mock exam access",
+"upgrade.sideItem2": "Premium topic quiz access",
+"upgrade.sideItem3": "Structured online playbook and references",
+"upgrade.sideItem4": "Higher-value guided preparation pathway",
+
+"upgrade.alreadyAccount": "Already have an account? Log in",
+
+"upgrade.plansHeading": "Plans",
+"upgrade.plansLead": "Select the access level that best suits your preparation intensity and support expectations.",
+
+"upgrade.starterBadge": "Entry premium access",
+"upgrade.starterTitle": "Starter",
+"upgrade.starterLead": "For candidates who want a serious first premium step beyond free signup.",
+"upgrade.starterFeature1": "Premium entry-level access pathway",
+"upgrade.starterFeature2": "Stronger commitment than free-only access",
+"upgrade.starterFeature3": "Built for focused early-stage preparation",
+"upgrade.starterFeature4": "Clear upgrade path to more intensive support",
+"upgrade.starterButton": "Start with Starter",
+
+"upgrade.proBadge": "Most balanced option",
+"upgrade.proTitle": "Professional",
+"upgrade.proLead": "For serious candidates who want the strongest balance of value, depth and preparation intent.",
+"upgrade.proFeature1": "Positioned as the core premium preparation offer",
+"upgrade.proFeature2": "Built for committed candidates preparing properly",
+"upgrade.proFeature3": "Suitable for deeper use of premium academy tools",
+"upgrade.proFeature4": "Ideal midpoint between affordability and intensity",
+"upgrade.proButton": "Choose Professional",
+
+"upgrade.premiumBadge": "Highest intensity tier",
+"upgrade.premiumTitle": "Premium Intensive",
+"upgrade.premiumLead": "For candidates seeking the highest-value preparation tier in a serious professional niche.",
+"upgrade.premiumFeature1": "Premium positioning aligned with specialist exam prep value",
+"upgrade.premiumFeature2": "Best suited to candidates wanting the highest commitment level",
+"upgrade.premiumFeature3": "Strong premium signal versus low-ticket generic courses",
+"upgrade.premiumFeature4": "Designed for intensive preparation journeys",
+"upgrade.premiumButton": "Choose Premium Intensive",
+
+"upgrade.note": "Free signup alone does not unlock the full Agent Academy. Paid access is intended to control premium value, preserve serious positioning and structure the learning journey properly."
+
 
 }
 
