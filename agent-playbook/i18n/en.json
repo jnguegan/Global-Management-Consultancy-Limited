@@ -3,33 +3,36 @@
     "title": "Football Agent Exam & Regulations Playbook | Global Management Consultancy Limited",
     "description": "A multilingual professional guide for football agent exam revision and regulatory understanding, by Global Management Consultancy Limited."
   },
+
   "hero": {
     "badge": "Global Management Consultancy Limited",
     "title": "The Football Agent Exam & Regulations Playbook",
-      "credibility": "Written by a licensed football agent and industry advisor.",
-    "subtitle": "A professional guide designed to help candidates revise for football agent exams and help practising agents refresh their knowledge of the regulatory framework.",
-    "ctaPrimary": "Join the Priority List",
-    "ctaSecondary": "Explore the Guide",
+    "credibility": "Written by a licensed football agent and industry advisor.",
+    "subtitle": "A structured knowledge resource designed to help candidates prepare for football agent exams and help practising agents refresh their understanding of the regulatory framework.",
+    "ctaPrimary": "Start learning",
+    "ctaSecondary": "Explore the Playbook",
     "card1Label": "Format",
-    "card1Value": "Digital Ebook",
+    "card1Value": "Digital Playbook",
     "card2Label": "Languages",
     "card2Value": "English • Français • Español"
-  
   },
+
   "panel": {
-    "kicker": "Coming Soon",
-    "title": "Study smarter. Work sharper.",
-    "text": "Built for aspiring candidates, practising agents, lawyers, club executives, and anyone seeking a clear understanding of modern football agent rules.",
-    "feature1": "Clear explanations of key football agent rules",
-    "feature2": "Structured exam revision support",
-    "feature3": "Practical scenarios for real-world use",
-    "feature4": "Quick-reference summaries and memory aids"
+    "kicker": "Academy Playbook",
+    "title": "Structured knowledge for serious candidates.",
+    "text": "The Playbook forms the knowledge foundation of the Agent Academy. It explains the regulatory framework behind the FIFA Football Agent Exam and helps candidates connect regulations, concepts, and practical scenarios.",
+    "feature1": "Clear explanations of FIFA football agent regulations",
+    "feature2": "Structured learning linked to exam topics",
+    "feature3": "Practical context for real football industry situations",
+    "feature4": "Direct links between regulations, explanations, and exam questions"
   },
+
   "why": {
     "kicker": "Why this guide",
     "title": "A serious professional resource, not just another summary",
     "text": "Most readers do not need more raw regulation text. They need structure, clarity, memory aids, and practical context they can revisit before exams, meetings, negotiations, and compliance reviews."
   },
+
   "modules": {
     "1": {
       "title": "Module 1 — The Football Agent Landscape",
@@ -48,33 +51,36 @@
       "text": "Real-world examples illustrating how regulations apply in day-to-day football agency practice."
     }
   },
+
   "pricing": {
-    "kicker": "Suggested launch pricing",
-    "title": "Commercial positioning",
-    "text": "Start with a strong entry offer for the ebook, then add a higher-value tier with revision extras, mock questions, and practical tools.",
+    "kicker": "Playbook access",
+    "title": "Access depends on your academy plan",
+    "text": "The Playbook is integrated into the Agent Academy learning environment. Some sections are available as free previews, while full access is unlocked through the academy study plans.",
     "standard": {
-      "title": "Standard Ebook",
-      "price": "£29",
-      "text": "Core digital guide for revision and professional refresh."
+      "title": "Free Preview",
+      "price": "Free",
+      "text": "A limited preview of the playbook to explore how the learning system works."
     },
     "pro": {
-      "title": "Pro Revision Pack",
-      "price": "£49",
-      "text": "Ebook plus revision questions, memory prompts, and practical checklists."
+      "title": "Starter Access",
+      "price": "Starter Plan",
+      "text": "Unlock the first structured learning layer including key playbook sections and guided topic study."
     },
     "premium": {
-      "title": "Premium Bundle",
-      "price": "£89",
-      "text": "Future bundle with ebook, mock exams, templates, and short video explainers."
+      "title": "Professional Access",
+      "price": "Professional Plan",
+      "text": "Full playbook access integrated with quizzes, mock exams, and advanced preparation tools."
     }
   },
+
   "waitlist": {
-    "kicker": "Pre-launch",
-    "title": "Join the priority list",
-    "text": "Receive launch updates, early access pricing, and a free revision summary.",
-    "noteTitle": "Good launch strategy:",
-    "noteText": "Start collecting interest before the ebook is finished. This gives you a list of warm buyers ahead of launch."
+    "kicker": "Playbook preview",
+    "title": "Start exploring the Playbook",
+    "text": "The Playbook forms the knowledge foundation of the Agent Academy. You can begin with a limited preview or unlock the full learning system through the academy plans.",
+    "noteTitle": "How to use the Playbook:",
+    "noteText": "The best learning path combines reading the playbook explanations, practising quiz questions, and testing your knowledge through mock exams."
   },
+
   "form": {
     "name": "Full name",
     "email": "Email",
@@ -85,14 +91,16 @@
     "option3": "Lawyer / advisor",
     "option4": "Club executive / staff",
     "option5": "Other",
-    "submit": "Notify me at launch",
+    "submit": "Start learning",
     "validationError": "Please complete all fields.",
-    "success": "Thank you. Your interest has been recorded."
+    "success": "Your information has been received."
   },
+
   "disclaimer": {
     "title": "Important notice",
     "text": "This publication is an independent educational resource produced under Global Management Consultancy Limited. It is not affiliated with, endorsed by, or officially connected to FIFA."
   },
+
   "footer": {
     "text": "Independent educational resource for football industry professionals."
   }
