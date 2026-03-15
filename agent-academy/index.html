@@ -428,272 +428,194 @@
     </footer>
   </div>
 
-  <script>
-    document.getElementById("year").textContent = new Date().getFullYear();
+ <script>
+  document.getElementById("year").textContent = new Date().getFullYear();
 
-    const DEFAULT_LANG = "en";
-    const STORAGE_KEY = "agentAcademyLang";
+  let translations = {};
+  let currentLang = localStorage.getItem("lang") || "en";
 
-    const INLINE_I18N = {
-      en: {
-        seo: {
-          title: "Agent Academy | Global Management Consultancy Limited",
-          description: "Agent Academy by Global Management Consultancy Limited: FIFA mock exams, practice quizzes, online playbook, and professional football agent learning resources."
-        },
-        brand: {
-          sub: "Agent Academy"
-        },
-        nav: {
-          signIn: "Sign In",
-          createAccount: "Create Account"
-        },
-        hero: {
-          eyebrow: "Professional Football Agent Learning",
-          title: "Welcome to Agent Academy",
-          text: "Access FIFA mock exams, practice quizzes, the online football agent playbook, and structured learning resources designed for serious candidates and practising professionals.",
-          ctaMock: "Start FIFA Mock Exam",
-          ctaQuiz: "Open Practice Quiz"
-        },
-        cards: {
-          mock: {
-            title: "FIFA Mock Exams",
-            text: "Sit a timed exam simulation with weighted question selection, regulation coverage, scenario questions, and anti-repeat logic built around your growing question bank.",
-            metaLabel: "Best for:",
-            metaText: "exam simulation and pressure testing",
-            cta: "Enter Mock Exams"
-          },
-          quiz: {
-            title: "Practice Quiz",
-            text: "Revise by topic, question type, and regulation area through interactive practice mode. Ideal for daily study, fast revision and targeted repetition.",
-            metaLabel: "Best for:",
-            metaText: "day-to-day revision and topic drilling",
-            cta: "Enter Practice Quiz"
-          },
-          playbook: {
-            title: "Online Playbook / E-book",
-            text: "Access the Football Agent Exam & Regulations Playbook as a structured online resource. This will evolve into a linked digital reading experience with references, source material, practical examples and navigation across the regulatory framework.",
-            metaLabel: "Best for:",
-            metaText: "structured reading, revision and reference study",
-            cta: "Open Playbook"
-          },
-          signIn: {
-            title: "Sign In",
-            text: "Existing users can access their Academy area, continue their study journey, and later review their saved activity and premium resources.",
-            metaLabel: "Access:",
-            metaText: "returning learners",
-            cta: "Go to Sign In"
-          },
-          signup: {
-            title: "Create Account",
-            text: "New users can create an Academy account to unlock free resources first, with paid courses, playbook access and premium learning layers added progressively.",
-            metaLabel: "Access:",
-            metaText: "new learners and future members",
-            cta: "Create Account"
-          }
-        },
-        launch: {
-          label: "Launch note:",
-          text: "for version 1, the essential live components are the Academy entry page, sign in, sign up, practice quiz, FIFA mock exam and the online playbook. Dashboard, results tracking and advanced user profile pages can be layered in after initial launch."
-        },
-        footer: {
-          brand: "Agent Academy"
-        }
-      },
-      fr: {
-        seo: {
-          title: "Agent Academy | Global Management Consultancy Limited",
-          description: "Agent Academy par Global Management Consultancy Limited : examens blancs FIFA, quiz d’entraînement, playbook en ligne et ressources professionnelles de formation pour agents de football."
-        },
-        brand: {
-          sub: "Agent Academy"
-        },
-        nav: {
-          signIn: "Se connecter",
-          createAccount: "Créer un compte"
-        },
-        hero: {
-          eyebrow: "Formation professionnelle d’agent de football",
-          title: "Bienvenue sur Agent Academy",
-          text: "Accédez à des examens blancs FIFA, des quiz d’entraînement, au playbook en ligne de l’agent de football et à des ressources d’apprentissage structurées conçues pour les candidats sérieux et les professionnels en activité.",
-          ctaMock: "Commencer l’examen blanc FIFA",
-          ctaQuiz: "Ouvrir le quiz d’entraînement"
-        },
-        cards: {
-          mock: {
-            title: "Examens blancs FIFA",
-            text: "Passez une simulation d’examen chronométrée avec une sélection pondérée des questions, une couverture réglementaire complète, des questions de scénario et une logique anti-répétition construite autour de votre banque de questions en expansion.",
-            metaLabel: "Idéal pour :",
-            metaText: "la simulation d’examen et les tests sous pression",
-            cta: "Accéder aux examens blancs"
-          },
-          quiz: {
-            title: "Quiz d’entraînement",
-            text: "Révisez par thème, type de question et domaine réglementaire via un mode d’entraînement interactif. Idéal pour l’étude quotidienne, la révision rapide et la répétition ciblée.",
-            metaLabel: "Idéal pour :",
-            metaText: "la révision quotidienne et le travail ciblé par thème",
-            cta: "Accéder au quiz d’entraînement"
-          },
-          playbook: {
-            title: "Playbook en ligne / E-book",
-            text: "Accédez au Playbook de l’examen d’agent de football et des règlements sous forme de ressource en ligne structurée. Il évoluera vers une expérience de lecture numérique liée avec références, sources, exemples pratiques et navigation à travers le cadre réglementaire.",
-            metaLabel: "Idéal pour :",
-            metaText: "la lecture structurée, la révision et l’étude de référence",
-            cta: "Ouvrir le playbook"
-          },
-          signIn: {
-            title: "Se connecter",
-            text: "Les utilisateurs existants peuvent accéder à leur espace Academy, poursuivre leur parcours d’étude et, plus tard, consulter leur activité sauvegardée et leurs ressources premium.",
-            metaLabel: "Accès :",
-            metaText: "apprenants existants",
-            cta: "Aller à la connexion"
-          },
-          signup: {
-            title: "Créer un compte",
-            text: "Les nouveaux utilisateurs peuvent créer un compte Academy pour débloquer d’abord des ressources gratuites, puis accéder progressivement à des cours payants, au playbook et à des couches d’apprentissage premium.",
-            metaLabel: "Accès :",
-            metaText: "nouveaux apprenants et futurs membres",
-            cta: "Créer un compte"
-          }
-        },
-        launch: {
-          label: "Note de lancement :",
-          text: "pour la version 1, les composants essentiels en ligne sont la page d’entrée de l’Academy, la connexion, l’inscription, le quiz d’entraînement, l’examen blanc FIFA et le playbook en ligne. Le tableau de bord, le suivi des résultats et les pages avancées de profil utilisateur pourront être ajoutés après le lancement initial."
-        },
-        footer: {
-          brand: "Agent Academy"
-        }
-      },
-      es: {
-        seo: {
-          title: "Agent Academy | Global Management Consultancy Limited",
-          description: "Agent Academy de Global Management Consultancy Limited: exámenes simulados FIFA, cuestionarios de práctica, playbook online y recursos profesionales de aprendizaje para agentes de fútbol."
-        },
-        brand: {
-          sub: "Agent Academy"
-        },
-        nav: {
-          signIn: "Iniciar sesión",
-          createAccount: "Crear cuenta"
-        },
-        hero: {
-          eyebrow: "Formación profesional para agentes de fútbol",
-          title: "Bienvenido a Agent Academy",
-          text: "Accede a exámenes simulados FIFA, cuestionarios de práctica, al playbook online del agente de fútbol y a recursos de aprendizaje estructurados diseñados para candidatos serios y profesionales en activo.",
-          ctaMock: "Iniciar examen simulado FIFA",
-          ctaQuiz: "Abrir cuestionario de práctica"
-        },
-        cards: {
-          mock: {
-            title: "Exámenes simulados FIFA",
-            text: "Realiza una simulación de examen cronometrada con selección ponderada de preguntas, cobertura reglamentaria, preguntas de escenario y lógica anti-repetición construida alrededor de tu banco de preguntas en crecimiento.",
-            metaLabel: "Ideal para:",
-            metaText: "simulación de examen y prueba bajo presión",
-            cta: "Entrar en exámenes simulados"
-          },
-          quiz: {
-            title: "Cuestionario de práctica",
-            text: "Repasa por tema, tipo de pregunta y área reglamentaria mediante un modo de práctica interactivo. Ideal para estudio diario, revisión rápida y repetición dirigida.",
-            metaLabel: "Ideal para:",
-            metaText: "revisión diaria y práctica por temas",
-            cta: "Entrar en cuestionario de práctica"
-          },
-          playbook: {
-            title: "Playbook online / E-book",
-            text: "Accede al Playbook del examen de agente de fútbol y reglamentos como un recurso online estructurado. Esto evolucionará hacia una experiencia de lectura digital enlazada con referencias, material fuente, ejemplos prácticos y navegación a través del marco regulatorio.",
-            metaLabel: "Ideal para:",
-            metaText: "lectura estructurada, revisión y estudio de referencia",
-            cta: "Abrir playbook"
-          },
-          signIn: {
-            title: "Iniciar sesión",
-            text: "Los usuarios existentes pueden acceder a su área Academy, continuar su recorrido de estudio y más adelante revisar su actividad guardada y sus recursos premium.",
-            metaLabel: "Acceso:",
-            metaText: "usuarios recurrentes",
-            cta: "Ir a iniciar sesión"
-          },
-          signup: {
-            title: "Crear cuenta",
-            text: "Los nuevos usuarios pueden crear una cuenta Academy para desbloquear primero recursos gratuitos, con cursos de pago, acceso al playbook y capas de aprendizaje premium añadidas progresivamente.",
-            metaLabel: "Acceso:",
-            metaText: "nuevos estudiantes y futuros miembros",
-            cta: "Crear cuenta"
-          }
-        },
-        launch: {
-          label: "Nota de lanzamiento:",
-          text: "para la versión 1, los componentes esenciales en vivo son la página de entrada de Academy, inicio de sesión, registro, cuestionario de práctica, examen simulado FIFA y el playbook online. El panel, el seguimiento de resultados y las páginas avanzadas de perfil de usuario pueden añadirse después del lanzamiento inicial."
-        },
-        footer: {
-          brand: "Agent Academy"
-        }
+  const INLINE_I18N = {
+    en: {
+      "seo.title": "Agent Academy | Global Management Consultancy Limited",
+      "seo.description": "Agent Academy by Global Management Consultancy Limited: FIFA mock exams, practice quizzes, online playbook, and professional football agent learning resources.",
+      "brand.sub": "Agent Academy",
+      "nav.signIn": "Sign In",
+      "nav.createAccount": "Create Account",
+      "hero.eyebrow": "Professional Football Agent Learning",
+      "hero.title": "Welcome to Agent Academy",
+      "hero.text": "Access FIFA mock exams, practice quizzes, the online football agent playbook, and structured learning resources designed for serious candidates and practising professionals.",
+      "hero.ctaMock": "Start FIFA Mock Exam",
+      "hero.ctaQuiz": "Open Practice Quiz",
+      "cards.mock.title": "FIFA Mock Exams",
+      "cards.mock.text": "Sit a timed exam simulation with weighted question selection, regulation coverage, scenario questions, and anti-repeat logic built around your growing question bank.",
+      "cards.mock.metaLabel": "Best for:",
+      "cards.mock.metaText": "exam simulation and pressure testing",
+      "cards.mock.cta": "Enter Mock Exams",
+      "cards.quiz.title": "Practice Quiz",
+      "cards.quiz.text": "Revise by topic, question type, and regulation area through interactive practice mode. Ideal for daily study, fast revision and targeted repetition.",
+      "cards.quiz.metaLabel": "Best for:",
+      "cards.quiz.metaText": "day-to-day revision and topic drilling",
+      "cards.quiz.cta": "Enter Practice Quiz",
+      "cards.playbook.title": "Online Playbook / E-book",
+      "cards.playbook.text": "Access the Football Agent Exam & Regulations Playbook as a structured online resource. This will evolve into a linked digital reading experience with references, source material, practical examples and navigation across the regulatory framework.",
+      "cards.playbook.metaLabel": "Best for:",
+      "cards.playbook.metaText": "structured reading, revision and reference study",
+      "cards.playbook.cta": "Open Playbook",
+      "cards.signIn.title": "Sign In",
+      "cards.signIn.text": "Existing users can access their Academy area, continue their study journey, and later review their saved activity and premium resources.",
+      "cards.signIn.metaLabel": "Access:",
+      "cards.signIn.metaText": "returning learners",
+      "cards.signIn.cta": "Go to Sign In",
+      "cards.signup.title": "Create Account",
+      "cards.signup.text": "New users can create an Academy account to unlock free resources first, with paid courses, playbook access and premium learning layers added progressively.",
+      "cards.signup.metaLabel": "Access:",
+      "cards.signup.metaText": "new learners and future members",
+      "cards.signup.cta": "Create Account",
+      "launch.label": "Launch note:",
+      "launch.text": "for version 1, the essential live components are the Academy entry page, sign in, sign up, practice quiz, FIFA mock exam and the online playbook. Dashboard, results tracking and advanced user profile pages can be layered in after initial launch.",
+      "footer.brand": "Agent Academy"
+    },
+    fr: {
+      "seo.title": "Agent Academy | Global Management Consultancy Limited",
+      "seo.description": "Agent Academy par Global Management Consultancy Limited : examens blancs FIFA, quiz d’entraînement, playbook en ligne et ressources professionnelles de formation pour agents de football.",
+      "brand.sub": "Agent Academy",
+      "nav.signIn": "Se connecter",
+      "nav.createAccount": "Créer un compte",
+      "hero.eyebrow": "Formation professionnelle d’agent de football",
+      "hero.title": "Bienvenue sur Agent Academy",
+      "hero.text": "Accédez à des examens blancs FIFA, des quiz d’entraînement, au playbook en ligne de l’agent de football et à des ressources d’apprentissage structurées conçues pour les candidats sérieux et les professionnels en activité.",
+      "hero.ctaMock": "Commencer l’examen blanc FIFA",
+      "hero.ctaQuiz": "Ouvrir le quiz d’entraînement",
+      "cards.mock.title": "Examens blancs FIFA",
+      "cards.mock.text": "Passez une simulation d’examen chronométrée avec une sélection pondérée des questions, une couverture réglementaire complète, des questions de scénario et une logique anti-répétition construite autour de votre banque de questions en expansion.",
+      "cards.mock.metaLabel": "Idéal pour :",
+      "cards.mock.metaText": "la simulation d’examen et les tests sous pression",
+      "cards.mock.cta": "Accéder aux examens blancs",
+      "cards.quiz.title": "Quiz d’entraînement",
+      "cards.quiz.text": "Révisez par thème, type de question et domaine réglementaire via un mode d’entraînement interactif. Idéal pour l’étude quotidienne, la révision rapide et la répétition ciblée.",
+      "cards.quiz.metaLabel": "Idéal pour :",
+      "cards.quiz.metaText": "la révision quotidienne et le travail ciblé par thème",
+      "cards.quiz.cta": "Accéder au quiz d’entraînement",
+      "cards.playbook.title": "Playbook en ligne / E-book",
+      "cards.playbook.text": "Accédez au Playbook de l’examen d’agent de football et des règlements sous forme de ressource en ligne structurée. Il évoluera vers une expérience de lecture numérique liée avec références, sources, exemples pratiques et navigation à travers le cadre réglementaire.",
+      "cards.playbook.metaLabel": "Idéal pour :",
+      "cards.playbook.metaText": "la lecture structurée, la révision et l’étude de référence",
+      "cards.playbook.cta": "Ouvrir le playbook",
+      "cards.signIn.title": "Se connecter",
+      "cards.signIn.text": "Les utilisateurs existants peuvent accéder à leur espace Academy, poursuivre leur parcours d’étude et, plus tard, consulter leur activité sauvegardée et leurs ressources premium.",
+      "cards.signIn.metaLabel": "Accès :",
+      "cards.signIn.metaText": "apprenants existants",
+      "cards.signIn.cta": "Aller à la connexion",
+      "cards.signup.title": "Créer un compte",
+      "cards.signup.text": "Les nouveaux utilisateurs peuvent créer un compte Academy pour débloquer d’abord des ressources gratuites, puis accéder progressivement à des cours payants, au playbook et à des couches d’apprentissage premium.",
+      "cards.signup.metaLabel": "Accès :",
+      "cards.signup.metaText": "nouveaux apprenants et futurs membres",
+      "cards.signup.cta": "Créer un compte",
+      "launch.label": "Note de lancement :",
+      "launch.text": "pour la version 1, les composants essentiels en ligne sont la page d’entrée de l’Academy, la connexion, l’inscription, le quiz d’entraînement, l’examen blanc FIFA et le playbook en ligne. Le tableau de bord, le suivi des résultats et les pages avancées de profil utilisateur pourront être ajoutés après le lancement initial.",
+      "footer.brand": "Agent Academy"
+    },
+    es: {
+      "seo.title": "Agent Academy | Global Management Consultancy Limited",
+      "seo.description": "Agent Academy de Global Management Consultancy Limited: exámenes simulados FIFA, cuestionarios de práctica, playbook online y recursos profesionales de aprendizaje para agentes de fútbol.",
+      "brand.sub": "Agent Academy",
+      "nav.signIn": "Iniciar sesión",
+      "nav.createAccount": "Crear cuenta",
+      "hero.eyebrow": "Formación profesional para agentes de fútbol",
+      "hero.title": "Bienvenido a Agent Academy",
+      "hero.text": "Accede a exámenes simulados FIFA, cuestionarios de práctica, al playbook online del agente de fútbol y a recursos de aprendizaje estructurados diseñados para candidatos serios y profesionales en activo.",
+      "hero.ctaMock": "Iniciar examen simulado FIFA",
+      "hero.ctaQuiz": "Abrir cuestionario de práctica",
+      "cards.mock.title": "Exámenes simulados FIFA",
+      "cards.mock.text": "Realiza una simulación de examen cronometrada con selección ponderada de preguntas, cobertura reglamentaria, preguntas de escenario y lógica anti-repetición construida alrededor de tu banco de preguntas en crecimiento.",
+      "cards.mock.metaLabel": "Ideal para:",
+      "cards.mock.metaText": "simulación de examen y prueba bajo presión",
+      "cards.mock.cta": "Entrar en exámenes simulados",
+      "cards.quiz.title": "Cuestionario de práctica",
+      "cards.quiz.text": "Repasa por tema, tipo de pregunta y área reglamentaria mediante un modo de práctica interactivo. Ideal para estudio diario, revisión rápida y repetición dirigida.",
+      "cards.quiz.metaLabel": "Ideal para:",
+      "cards.quiz.metaText": "revisión diaria y práctica por temas",
+      "cards.quiz.cta": "Entrar en cuestionario de práctica",
+      "cards.playbook.title": "Playbook online / E-book",
+      "cards.playbook.text": "Accede al Playbook del examen de agente de fútbol y reglamentos como un recurso online estructurado. Esto evolucionará hacia una experiencia de lectura digital enlazada con referencias, material fuente, ejemplos prácticos y navegación a través del marco regulatorio.",
+      "cards.playbook.metaLabel": "Ideal para:",
+      "cards.playbook.metaText": "lectura estructurada, revisión y estudio de referencia",
+      "cards.playbook.cta": "Abrir playbook",
+      "cards.signIn.title": "Iniciar sesión",
+      "cards.signIn.text": "Los usuarios existentes pueden acceder a su área Academy, continuar su recorrido de estudio y más adelante revisar su actividad guardada y sus recursos premium.",
+      "cards.signIn.metaLabel": "Acceso:",
+      "cards.signIn.metaText": "usuarios recurrentes",
+      "cards.signIn.cta": "Ir a iniciar sesión",
+      "cards.signup.title": "Crear cuenta",
+      "cards.signup.text": "Los nuevos usuarios pueden crear una cuenta Academy para desbloquear primero recursos gratuitos, con cursos de pago, acceso al playbook y capas de aprendizaje premium añadidas progresivamente.",
+      "cards.signup.metaLabel": "Acceso:",
+      "cards.signup.metaText": "nuevos estudiantes y futuros miembros",
+      "cards.signup.cta": "Crear cuenta",
+      "launch.label": "Nota de lanzamiento:",
+      "launch.text": "para la versión 1, los componentes esenciales en vivo son la página de entrada de Academy, inicio de sesión, registro, cuestionario de práctica, examen simulado FIFA y el playbook online. El panel, el seguimiento de resultados y las páginas avanzadas de perfil de usuario pueden añadirse después del lanzamiento inicial.",
+      "footer.brand": "Agent Academy"
+    }
+  };
+
+  function applyTranslations() {
+    document.documentElement.lang = currentLang;
+
+    document.querySelectorAll("[data-i18n]").forEach((el) => {
+      const key = el.getAttribute("data-i18n");
+      if (translations[key]) {
+        el.textContent = translations[key];
       }
-    };
+    });
 
-    function getNestedValue(obj, path) {
-      return path.split(".").reduce((acc, key) => {
-        return acc && typeof acc === "object" ? acc[key] : undefined;
-      }, obj);
+    document.querySelectorAll("[data-lang]").forEach((btn) => {
+      btn.classList.toggle("is-active", btn.getAttribute("data-lang") === currentLang);
+      btn.setAttribute("aria-pressed", btn.getAttribute("data-lang") === currentLang ? "true" : "false");
+    });
+
+    if (translations["seo.title"]) {
+      document.title = translations["seo.title"];
     }
 
-    async function loadTranslations(lang) {
-      try {
-        const response = await fetch(`/agent-academy/i18n/${lang}.json`, { cache: "no-store" });
-        if (!response.ok) throw new Error(`Missing ${lang}.json`);
-        return await response.json();
-      } catch (error) {
-        return INLINE_I18N[lang] || INLINE_I18N[DEFAULT_LANG];
-      }
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription && translations["seo.description"]) {
+      metaDescription.setAttribute("content", translations["seo.description"]);
     }
+  }
 
-    function updateLanguageButtons(lang) {
-      document.querySelectorAll("[data-lang]").forEach((btn) => {
-        const isActive = btn.dataset.lang === lang;
-        btn.classList.toggle("is-active", isActive);
-        btn.setAttribute("aria-pressed", isActive ? "true" : "false");
-      });
-    }
+  async function loadLang(lang) {
+    try {
+      const res = await fetch(`/agent-academy/i18n/${lang}.json`, { cache: "no-store" });
 
-    function applyTranslations(dict, lang) {
-      const safeDict = dict || INLINE_I18N[DEFAULT_LANG];
-
-      document.documentElement.setAttribute("lang", lang);
-
-      if (safeDict.seo?.title) {
-        document.title = safeDict.seo.title;
+      if (!res.ok) {
+        throw new Error(`Could not load language file: ${lang}`);
       }
 
-      const metaDescription = document.querySelector('meta[name="description"]');
-      if (metaDescription && safeDict.seo?.description) {
-        metaDescription.setAttribute("content", safeDict.seo.description);
-      }
-
-      document.querySelectorAll("[data-i18n]").forEach((node) => {
-        const key = node.getAttribute("data-i18n");
-        const value = getNestedValue(safeDict, key);
-
-        if (typeof value === "string") {
-          node.textContent = value;
-        }
-      });
-
-      updateLanguageButtons(lang);
+      translations = await res.json();
+      currentLang = lang;
+      localStorage.setItem("lang", lang);
+      applyTranslations();
+    } catch (error) {
+      console.error("Language load error:", error);
+      translations = INLINE_I18N[lang] || INLINE_I18N.en;
+      currentLang = lang;
+      localStorage.setItem("lang", lang);
+      applyTranslations();
     }
+  }
 
-    async function setLanguage(lang) {
-      const selectedLang = INLINE_I18N[lang] ? lang : DEFAULT_LANG;
-      localStorage.setItem(STORAGE_KEY, selectedLang);
-      const dict = await loadTranslations(selectedLang);
-      applyTranslations(dict, selectedLang);
-    }
+  function setLang(lang) {
+    loadLang(lang);
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    loadLang(currentLang);
 
     document.querySelectorAll("[data-lang]").forEach((btn) => {
       btn.addEventListener("click", () => {
-        setLanguage(btn.dataset.lang || DEFAULT_LANG);
+        setLang(btn.getAttribute("data-lang"));
       });
     });
-
-    const savedLang = localStorage.getItem(STORAGE_KEY) || DEFAULT_LANG;
-    setLanguage(savedLang);
-  </script>
+  });
+</script>
 </body>
 </html>
