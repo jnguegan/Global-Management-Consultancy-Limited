@@ -58,7 +58,63 @@
 "upgrade.premiumTitle": "Premium Intensif",
 "upgrade.starterButton": "Commencer avec Starter",
 "upgrade.proButton": "Choisir Professionnel",
-"upgrade.premiumButton": "Rejoindre Premium"
+"upgrade.premiumButton": "Rejoindre Premium",
+
+  "upgrade.kicker": "Améliorer l'accès",
+"upgrade.title": "Choisissez l'offre qui correspond à votre ambition pour l'examen d'agent FIFA.",
+"upgrade.lead": "Choisissez l'offre qui correspond le mieux à votre préparation.",
+
+"upgrade.point1Title": "Préparation premium à l'examen",
+"upgrade.point1Text": "Une préparation structurée, sérieuse et multilingue pour une qualification professionnelle de niche.",
+
+"upgrade.point2Title": "Conçu pour de vrais candidats",
+"upgrade.point2Text": "Pensé pour les utilisateurs qui se préparent sérieusement, pas pour une navigation gratuite occasionnelle.",
+
+"upgrade.point3Title": "Plus qu'un simple PDF",
+"upgrade.point3Text": "Un environnement d'apprentissage avec outils guidés, accès au playbook en ligne et ressources premium évolutives.",
+
+"upgrade.sideTitle": "Ce que prépare l'accès payant",
+"upgrade.sideLead": "Cette plateforme est structurée pour permettre aux membres premium d'accéder progressivement aux outils de préparation les plus précieux.",
+
+"upgrade.sideItem1": "Accès complet aux examens blancs premium",
+"upgrade.sideItem2": "Accès premium aux quiz par thème",
+"upgrade.sideItem3": "Playbook structuré et références en ligne",
+"upgrade.sideItem4": "Parcours de préparation guidé à forte valeur",
+
+"upgrade.alreadyAccount": "Vous avez déjà un compte ? Se connecter",
+
+"upgrade.plansHeading": "Offres",
+"upgrade.plansLead": "Sélectionnez le niveau d'accès correspondant à l'intensité de votre préparation.",
+
+"upgrade.starterBadge": "Accès premium initial",
+"upgrade.starterTitle": "Starter",
+"upgrade.starterLead": "Pour les candidats souhaitant un premier niveau premium au-delà de l'inscription gratuite.",
+"upgrade.starterFeature1": "Parcours d'accès premium initial",
+"upgrade.starterFeature2": "Engagement supérieur à l'accès gratuit",
+"upgrade.starterFeature3": "Conçu pour une préparation initiale ciblée",
+"upgrade.starterFeature4": "Chemin clair vers une préparation plus intensive",
+"upgrade.starterButton": "Commencer avec Starter",
+
+"upgrade.proBadge": "Option la plus équilibrée",
+"upgrade.proTitle": "Professionnel",
+"upgrade.proLead": "Pour les candidats sérieux recherchant l'équilibre optimal entre valeur et profondeur.",
+"upgrade.proFeature1": "Positionné comme l'offre centrale de préparation",
+"upgrade.proFeature2": "Conçu pour les candidats engagés",
+"upgrade.proFeature3": "Idéal pour un usage plus approfondi des outils premium",
+"upgrade.proFeature4": "Équilibre idéal entre prix et intensité",
+"upgrade.proButton": "Choisir Professionnel",
+
+"upgrade.premiumBadge": "Niveau d'intensité maximale",
+"upgrade.premiumTitle": "Premium Intensif",
+"upgrade.premiumLead": "Pour les candidats recherchant le niveau de préparation le plus élevé.",
+"upgrade.premiumFeature1": "Positionnement premium aligné avec la valeur de l'examen",
+"upgrade.premiumFeature2": "Idéal pour les candidats très engagés",
+"upgrade.premiumFeature3": "Signal premium face aux cours génériques à bas prix",
+"upgrade.premiumFeature4": "Conçu pour une préparation intensive",
+"upgrade.premiumButton": "Choisir Premium Intensif",
+
+"upgrade.note": "L'inscription gratuite seule ne donne pas accès à l'intégralité d'Agent Academy. L'accès payant permet de préserver la valeur premium et de structurer le parcours d'apprentissage."
+
 
 }
 
