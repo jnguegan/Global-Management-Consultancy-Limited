@@ -278,6 +278,10 @@ if (access.plan !== "free") {
   idsQuery = idsQuery.eq("topic_id", state.topic.id);
 }
 
+if (access.plan !== "free") {
+  idsQuery = idsQuery.eq("topic_id", state.topic.id);
+}
+
 const { data: idsData, error: idsError } = await idsQuery;
 
 console.log("QUESTION IDS DATA:", idsData);
