@@ -53,16 +53,24 @@
   <iframe id="pdfFrame" src=""></iframe>
 
   <script>
-    const params = new URLSearchParams(window.location.search);
-    const doc = params.get("doc") || "ffar-2025.pdf";
-    const page = params.get("page") || "1";
+  const params = new URLSearchParams(window.location.search);
+  const pdf = decodeURIComponent(params.get("pdf") || params.get("doc") || "");
+  const page = parseInt(params.get("page") || "1", 10);
 
-    const pdfPath = `/agent-academy/regulations/${doc}`;
-    const iframeSrc = `${pdfPath}#page=${page}`;
+  const fallbackPdf = "/agent-academy/regulations/ffar-2025.pdf";
 
-    document.getElementById("pdfFrame").src = iframeSrc;
-    document.getElementById("openRawPdf").href = iframeSrc;
-    document.getElementById("viewerTitle").textContent = `${doc} — page ${page}`;
-  </script>
+  const pdfPath =
+    pdf && pdf.startsWith("/")
+      ? pdf
+      : pdf
+      ? `/agent-academy/regulations/${pdf}`
+      : fallbackPdf;
+
+  const iframeSrc = `${pdfPath}#page=${page}`;
+
+  document.getElementById("pdfFrame").src = iframeSrc;
+  document.getElementById("openRawPdf").href = pdfPath;
+  document.getElementById("viewerTitle").textContent = `${pdfPath} — page ${page}`;
+</script>
 </body>
 </html>
