@@ -115,17 +115,16 @@
 
 "upgrade.note": "L'inscription gratuite seule ne donne pas accès à l'intégralité d'Agent Academy. L'accès payant permet de préserver la valeur premium et de structurer le parcours d'apprentissage.",
   
-  "countdown.title": "Cuenta atrás para el próximo examen de agente de fútbol de la FIFA",
-"countdown.lead": "El examen de agente de fútbol de la FIFA se celebra solo una vez al año. Los candidatos serios se preparan antes de que cierre la ventana del examen.",
-"countdown.date": "Próxima convocatoria: 28–30 abril 2026",
-"countdown.days": "Días",
-"countdown.hours": "Horas",
-"countdown.minutes": "Minutos",
-"countdown.seconds": "Segundos",
+  "countdown.title": "Compte à rebours avant le prochain examen d’agent de football de la FIFA",
+"countdown.lead": "L’examen d’agent de football de la FIFA n’a lieu qu’une fois par an. Les candidats sérieux se préparent avant la fermeture de la session.",
+"countdown.date": "Prochaine session : 28–30 avril 2026",
+"countdown.days": "Jours",
+"countdown.hours": "Heures",
+"countdown.minutes": "Minutes",
+"countdown.seconds": "Secondes",
 
-"upgrade.plansHeading": "Planes",
-"upgrade.plansLead": "Selecciona el nivel de acceso que mejor se adapte a la intensidad de tu preparación y a tus necesidades de estudio."
-
+"upgrade.plansHeading": "Offres",
+"upgrade.plansLead": "Sélectionnez le niveau d’accès qui correspond le mieux à l’intensité de votre préparation et à vos besoins."
 
 
 }
