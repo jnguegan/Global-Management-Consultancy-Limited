@@ -647,10 +647,11 @@
     const guard = window.AgentAcademyGuard;
     if (!guard || !guard.requirePaidAccess) return;
 
-    await guard.requirePaidAccess({
-      loginUrl: "/agent-academy/login.html",
-      upgradeUrl: "/agent-academy/upgrade.html"
-    });
+    await guard.requirePlan("professional", {
+  loginUrl: "/agent-academy/login.html",
+  upgradeUrl: "/agent-academy/upgrade.html"
+});
+
   });
 </script>
 
