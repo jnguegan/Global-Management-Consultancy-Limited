@@ -1,8 +1,8 @@
 {
-"signup.title":"Crear cuenta",
-"signup.heading":"Crear cuenta",
-"signup.button":"Registrarse",
-"signup.success":"Registro exitoso. Revisa tu correo electrónico.",
+  "signup.title":"Crear cuenta",
+  "signup.heading":"Crear cuenta",
+  "signup.button":"Registrarse",
+  "signup.success":"Registro exitoso. Revisa tu correo electrónico.",
 
   "login.pageTitle": "Acceso — Football Agent Exam Prep Platform",
   "login.badge": "Football Agent Exam Prep Platform",
@@ -31,7 +31,6 @@
   "dashboard.stat3Label": "Temas completados",
   "dashboard.note": "Esta plataforma es un recurso independiente de preparación para exámenes y no está afiliada ni respaldada por FIFA.",
   "dashboard.loggedInAs": "Conectado como:",
-  
   "topics.pageTitle": "Temas de estudio — Football Agent Exam Prep Platform",
   "topics.brand": "Football Agent Exam Prep Platform",
   "topics.backToDashboard": "Volver al panel",
@@ -45,8 +44,8 @@
   "topics.startButton": "Empezar tema",
   "topics.metaLabel": "Slug del tema:",
   "topics.noDescription": "Descripción del tema próximamente.",
-  "topics.error": "No es posible cargar los temas en este momento."
-  startTitle: "Instrucciones del examen simulacro",
-startInstructions: "Seleccione el idioma que desea utilizar para este examen. Cuando esté listo, haga clic en Comenzar examen para cargar las preguntas e iniciar el simulacro cronometrado. Dispondrá de 60 minutos para responder 20 preguntas. El idioma seleccionado permanecerá fijo durante todo el examen.",
-startExam: "Comenzar examen"
+  "topics.error": "No es posible cargar los temas en este momento.",
+  "startTitle": "Instrucciones del examen simulacro",
+  "startInstructions": "Seleccione el idioma que desea utilizar para este examen. Cuando esté listo, haga clic en Comenzar examen para cargar las preguntas e iniciar el simulacro cronometrado. Dispondrá de 60 minutos para responder 20 preguntas. El idioma seleccionado permanecerá fijo durante todo el examen.",
+  "startExam": "Comenzar examen"
 }
