@@ -615,6 +615,22 @@ const AgentAcademyDashboard = (() => {
     el.sum4Fill.style.width = `${vm.readiness}%`;
 
     setRing(vm.readiness);
+    const totalBank = 2000;
+let unlocked = 50;
+
+if (plan === "starter") unlocked = 300;
+if (plan === "professional" || plan === "premium" || plan === "premium_intensive") {
+  unlocked = totalBank;
+}
+
+const percent = Math.round((unlocked / totalBank) * 100);
+
+document.getElementById("questionAccessValue").textContent =
+  `${unlocked} / ${totalBank}`;
+
+document.getElementById("questionAccessFill").style.width =
+  `${percent}%`;
+    
     renderPlanAwareCards(plan);
     renderMilestone(plan);
   }
