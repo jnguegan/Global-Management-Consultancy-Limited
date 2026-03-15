@@ -176,7 +176,8 @@
 "launch.label": "Note de lancement :",
 "launch.text": "pour la version 1, les composants essentiels en ligne sont la page d’entrée de l’Academy, la connexion, l’inscription, le quiz d’entraînement, l’examen blanc FIFA et le playbook en ligne. Le tableau de bord, le suivi des résultats et les pages avancées de profil utilisateur pourront être ajoutés après le lancement initial.",
 
-"footer.brand": "Agent Academy"
+"footer.brand": "Agent Academy",
+  "upgrade.freePreviewButton": "Commencer l’aperçu gratuit"
   
 }
 
