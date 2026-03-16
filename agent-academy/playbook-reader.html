@@ -1,270 +1,288 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Agent Academy Playbook</title>
 
-<title>Agent Academy Playbook</title>
+  <style>
+    :root{
+      --bg:#0b1220;
+      --panel:#162033;
+      --text:#f5f7fb;
+      --muted:#b7c0cf;
+      --gold:#d4af37;
+      --border:rgba(255,255,255,0.08);
+    }
 
-<style>
+    body{
+      margin:0;
+      font-family:Arial,Helvetica,sans-serif;
+      background:var(--bg);
+      color:var(--text);
+    }
 
-:root{
-  --bg:#0b1220;
-  --panel:#162033;
-  --text:#f5f7fb;
-  --muted:#b7c0cf;
-  --gold:#d4af37;
-  --border:rgba(255,255,255,0.08);
-}
+    .topbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:16px 24px;
+      border-bottom:1px solid var(--border);
+      background:#121a2b;
+    }
 
-body{
-  margin:0;
-  font-family:Arial,Helvetica,sans-serif;
-  background:var(--bg);
-  color:var(--text);
-}
+    .brand{
+      font-weight:700;
+    }
 
-.topbar{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:16px 24px;
-  border-bottom:1px solid var(--border);
-  background:#121a2b;
-}
+    .lang-switch button{
+      margin-left:6px;
+      padding:6px 10px;
+      border-radius:6px;
+      border:1px solid var(--border);
+      background:transparent;
+      color:white;
+      cursor:pointer;
+    }
 
-.brand{
-  font-weight:700;
-}
+    .layout{
+      display:grid;
+      grid-template-columns:280px 1fr;
+      min-height:calc(100vh - 60px);
+    }
 
-.lang-switch button{
-  margin-left:6px;
-  padding:6px 10px;
-  border-radius:6px;
-  border:1px solid var(--border);
-  background:transparent;
-  color:white;
-  cursor:pointer;
-}
+    .sidebar{
+      border-right:1px solid var(--border);
+      padding:20px;
+    }
 
-.layout{
-  display:grid;
-  grid-template-columns:280px 1fr;
-  min-height:calc(100vh - 60px);
-}
+    .sidebar h3{
+      margin-top:0;
+    }
 
-.sidebar{
-  border-right:1px solid var(--border);
-  padding:20px;
-}
+    .article-link{
+      display:block;
+      padding:8px 0;
+      cursor:pointer;
+      color:var(--muted);
+    }
 
-.sidebar h3{
-  margin-top:0;
-}
+    .article-link:hover{
+      color:var(--gold);
+    }
 
-.article-link{
-  display:block;
-  padding:8px 0;
-  cursor:pointer;
-  color:var(--muted);
-}
+    .content{
+      padding:40px;
+      max-width:900px;
+    }
 
-.article-link:hover{
-  color:var(--gold);
-}
+    .article-title{
+      font-size:28px;
+      margin-bottom:20px;
+    }
 
-.content{
-  padding:40px;
-  max-width:900px;
-}
+    .article-text{
+      line-height:1.7;
+      margin-bottom:30px;
+    }
 
-.article-title{
-  font-size:28px;
-  margin-bottom:20px;
-}
+    .explanation{
+      padding:20px;
+      background:var(--panel);
+      border-radius:10px;
+      margin-bottom:30px;
+    }
 
-.article-text{
-  line-height:1.7;
-  margin-bottom:30px;
-}
+    .actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      margin-top:10px;
+    }
 
-.explanation{
-  padding:20px;
-  background:var(--panel);
-  border-radius:10px;
-  margin-bottom:30px;
-}
+    .actions a{
+      padding:10px 16px;
+      border-radius:8px;
+      background:var(--gold);
+      color:#07111f;
+      text-decoration:none;
+      font-weight:700;
+    }
 
-.actions a{
-  margin-right:12px;
-  padding:10px 16px;
-  border-radius:8px;
-  background:var(--gold);
-  color:#07111f;
-  text-decoration:none;
-  font-weight:700;
-}
+    .related-questions{
+      margin-top:28px;
+      padding:20px;
+      background:var(--panel);
+      border-radius:10px;
+    }
 
-</style>
+    .related-questions h3{
+      margin-top:0;
+    }
+
+    .question-links{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+    }
+
+    .question-link{
+      display:inline-block;
+      padding:8px 12px;
+      border-radius:8px;
+      background:rgba(212,175,55,0.14);
+      color:var(--gold);
+      text-decoration:none;
+      border:1px solid rgba(212,175,55,0.24);
+    }
+  </style>
 </head>
-
 <body>
 
-<div class="topbar">
+  <div class="topbar">
+    <div class="brand">Agent Academy Playbook</div>
 
-<div class="brand">Agent Academy Playbook</div>
+    <div class="lang-switch">
+      <button data-lang="en">EN</button>
+      <button data-lang="fr">FR</button>
+      <button data-lang="es">ES</button>
+    </div>
+  </div>
 
-<div class="lang-switch">
-<button data-lang="en">EN</button>
-<button data-lang="fr">FR</button>
-<button data-lang="es">ES</button>
-</div>
+  <div class="layout">
+    <div class="sidebar">
+      <h3>Playbook</h3>
+      <div id="articleList"></div>
+    </div>
 
-</div>
+    <div class="content">
+      <div id="articleContent">
+        <h2 class="article-title">Select a section</h2>
+        <p class="article-text">Choose a playbook article from the left.</p>
+      </div>
+    </div>
+  </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const supabase = window.supabase.createClient(
+      "https://ysaxtuvuzqkyfmganven.supabase.co",
+      "sb_publishable_esfhuUEIcUJEL6z9zryRAA_FGMmUHlw"
+    );
 
-<div class="layout">
+    let lang = localStorage.getItem("lang") || "en";
+    let currentArticle = null;
 
-<div class="sidebar">
+    document.querySelectorAll("[data-lang]").forEach((btn) => {
+      btn.onclick = () => {
+        lang = btn.dataset.lang;
+        localStorage.setItem("lang", lang);
+        loadSidebar().then(() => {
+          if (currentArticle) loadArticle(currentArticle);
+        });
+      };
+    });
 
-<h3>Playbook</h3>
+    async function loadSidebar() {
+      const { data, error } = await supabase
+        .from("playbook_sections")
+        .select("id,title_en,title_fr,title_es,is_free")
+        .order("sort_order");
 
-<div id="articleList"></div>
+      if (error) {
+        console.error("Sidebar load error:", error);
+        return;
+      }
 
-</div>
+      const list = document.getElementById("articleList");
+      list.innerHTML = "";
 
+      (data || []).forEach((section) => {
+        const a = document.createElement("div");
+        a.className = "article-link";
+        a.textContent =
+          lang === "fr" ? section.title_fr :
+          lang === "es" ? section.title_es :
+          section.title_en;
 
-<div class="content">
+        a.onclick = () => loadArticle(section.id);
+        list.appendChild(a);
+      });
+    }
 
-<div id="articleContent">
+    async function loadArticle(id) {
+      currentArticle = id;
 
-<h2 class="article-title">Select a section</h2>
+      const { data, error } = await supabase
+        .from("playbook_sections")
+        .select("*")
+        .eq("id", id)
+        .single();
 
-<p class="article-text">
-Choose a playbook article from the left.
-</p>
+      if (error || !data) {
+        console.error("Article load error:", error);
+        return;
+      }
 
-</div>
+      const title =
+        lang === "fr" ? data.title_fr :
+        lang === "es" ? data.title_es :
+        data.title_en;
 
-</div>
+      const text =
+        lang === "fr" ? data.text_fr :
+        lang === "es" ? data.text_es :
+        data.text_en;
 
-</div>
+      const explanation =
+        lang === "fr" ? data.explanation_fr :
+        lang === "es" ? data.explanation_es :
+        data.explanation_en;
 
+      const regulationHref =
+        `/agent-academy/regulation-viewer.html?pdf=${encodeURIComponent("/agent-academy/regulations/" + data.regulation_pdf)}&page=${encodeURIComponent(data.regulation_page || 1)}`;
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+      const practiceHref = data.topic_slug
+        ? `/agent-academy/quiz.html?topic=${encodeURIComponent(data.topic_slug)}`
+        : "#";
 
-<script>
+      const relatedIds = Array.isArray(data.related_question_ids)
+        ? data.related_question_ids
+        : [];
 
-const supabase = window.supabase.createClient(
-"https://ysaxtuvuzqkyfmganven.supabase.co",
-"sb_publishable_esfhuUEIcUJEL6z9zryRAA_FGMmUHlw"
-);
+      const keyQuestionsHtml = relatedIds.length
+        ? `
+          <div class="related-questions">
+            <h3>Key Questions for this Article</h3>
+            <div class="question-links">
+              ${relatedIds.map(
+                (qid) => `<a class="question-link" href="/agent-academy/quiz.html?question=${qid}">Question ${qid}</a>`
+              ).join("")}
+            </div>
+          </div>
+        `
+        : "";
 
-let lang = localStorage.getItem("lang") || "en";
+      document.getElementById("articleContent").innerHTML = `
+        <h2 class="article-title">${title}</h2>
 
-document.querySelectorAll("[data-lang]").forEach(btn=>{
-btn.onclick=()=>{
-lang = btn.dataset.lang;
-localStorage.setItem("lang",lang);
-loadArticle(currentArticle);
-};
-});
+        <div class="article-text">${text}</div>
 
+        <div class="explanation">
+          <h3>Explanation</h3>
+          <p>${explanation}</p>
+        </div>
 
-let currentArticle = null;
+        <div class="actions">
+          <a href="${regulationHref}">Open Regulation</a>
+          <a href="${practiceHref}">Practice Questions</a>
+        </div>
 
+        ${keyQuestionsHtml}
+      `;
+    }
 
-async function loadSidebar(){
-
-const {data} = await supabase
-.from("playbook_sections")
-.select("id,title_en,title_fr,title_es")
-.order("sort_order");
-
-const list = document.getElementById("articleList");
-
-list.innerHTML="";
-
-data.forEach(section=>{
-
-const a = document.createElement("div");
-
-a.className="article-link";
-
-a.textContent =
-lang==="fr"?section.title_fr:
-lang==="es"?section.title_es:
-section.title_en;
-
-a.onclick=()=>loadArticle(section.id);
-
-list.appendChild(a);
-
-});
-
-}
-
-
-
-async function loadArticle(id){
-
-currentArticle=id;
-
-const {data} = await supabase
-.from("playbook_sections")
-.select("*")
-.eq("id",id)
-.single();
-
-if(!data) return;
-
-const title =
-lang==="fr"?data.title_fr:
-lang==="es"?data.title_es:
-data.title_en;
-
-const text =
-lang==="fr"?data.text_fr:
-lang==="es"?data.text_es:
-data.text_en;
-
-const explanation =
-lang==="fr"?data.explanation_fr:
-lang==="es"?data.explanation_es:
-data.explanation_en;
-
-document.getElementById("articleContent").innerHTML=`
-
-<h2 class="article-title">${title}</h2>
-
-<div class="article-text">${text}</div>
-
-<div class="explanation">
-<h3>Explanation</h3>
-<p>${explanation}</p>
-</div>
-
-<div class="actions">
-
-<a href="/agent-academy/regulation-viewer.html?doc=${data.regulation_pdf}&page=${data.regulation_page}">
-Open Regulation
-</a>
-
-<a href="/agent-academy/quiz.html?topic=${data.topic_slug}">
-Practice Questions
-</a>
-
-</div>
-
-`;
-
-}
-
-
-
-loadSidebar();
-
-</script>
-
+    loadSidebar();
+  </script>
 </body>
 </html>
