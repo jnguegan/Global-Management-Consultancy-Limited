@@ -205,7 +205,9 @@
           lang === "es" ? section.title_es :
           section.title_en;
 
-        a.onclick = () => loadArticle(section.id);
+       a.onclick = async () => {
+  await loadArticle(section.id);
+};
         list.appendChild(a);
       });
     }
@@ -218,6 +220,8 @@
         .select("*")
         .eq("id", id)
         .single();
+      console.log("PLAYBOOK ARTICLE DATA:", data);
+      console.log("PLAYBOOK ARTICLE ERROR:", error);
 
       if (error || !data) {
         console.error("Article load error:", error);
