@@ -135,6 +135,16 @@
       text-decoration:none;
       border:1px solid rgba(212,175,55,0.24);
     }
+
+    .question-link.disabled{
+      opacity:0.6;
+      pointer-events:none;
+    }
+
+    .question-empty{
+      color:var(--muted);
+      font-size:14px;
+    }
   </style>
 </head>
 <body>
@@ -182,7 +192,8 @@
         selectSectionTitle: "Select a section",
         selectSectionText: "Choose a playbook article from the left.",
         explanation: "Explanation",
-        playbook: "Playbook"
+        playbook: "Playbook",
+        noPracticeQuestions: "No practice questions yet."
       },
       fr: {
         openRegulation: "Ouvrir le règlement",
@@ -192,7 +203,8 @@
         selectSectionTitle: "Sélectionnez une section",
         selectSectionText: "Choisissez un article du playbook à gauche.",
         explanation: "Explication",
-        playbook: "Playbook"
+        playbook: "Playbook",
+        noPracticeQuestions: "Aucune question de pratique pour le moment."
       },
       es: {
         openRegulation: "Abrir reglamento",
@@ -202,12 +214,88 @@
         selectSectionTitle: "Seleccione una sección",
         selectSectionText: "Elija un artículo del playbook a la izquierda.",
         explanation: "Explicación",
-        playbook: "Playbook"
+        playbook: "Playbook",
+        noPracticeQuestions: "Todavía no hay preguntas de práctica."
       }
     };
 
     function rt(key) {
       return readerText[lang]?.[key] || readerText.en[key] || key;
+    }
+
+    function escapeHtml(str) {
+      const div = document.createElement("div");
+      div.textContent = str || "";
+      return div.innerHTML;
+    }
+
+    async function loadTopicBySlug(topicSlug) {
+      if (!topicSlug) return null;
+
+      const { data, error } = await supabaseClient
+        .from("topics")
+        .select("id, slug")
+        .eq("slug", topicSlug)
+        .eq("is_active", true)
+        .single();
+
+      if (error || !data) {
+        console.error("Topic load error:", error);
+        return null;
+      }
+
+      return data;
+    }
+
+    async function loadTopicQuestions(topicSlug, requestedIds = []) {
+      const topic = await loadTopicBySlug(topicSlug);
+
+      if (!topic || !topic.id) {
+        return [];
+      }
+
+      let query = supabaseClient
+        .from("questions")
+        .select("id, topic_id, is_active")
+        .eq("topic_id", topic.id)
+        .eq("is_active", true)
+        .order("id", { ascending: true });
+
+      if (Array.isArray(requestedIds) && requestedIds.length) {
+        const numericIds = requestedIds
+          .map((id) => Number(id))
+          .filter((id) => !Number.isNaN(id));
+
+        if (numericIds.length) {
+          query = query.in("id", numericIds);
+        }
+      }
+
+      const { data, error } = await query;
+
+      if (error) {
+        console.error("Question load error:", error);
+        return [];
+      }
+
+      return data || [];
+    }
+
+    function buildPracticeHref(topicSlug) {
+      return topicSlug
+        ? `/agent-academy/quiz.html?topic=${encodeURIComponent(topicSlug)}`
+        : "#";
+    }
+
+    function buildQuestionLinksHtml(topicSlug, questions) {
+      if (!topicSlug || !Array.isArray(questions) || !questions.length) {
+        return `<span class="question-empty">${rt("noPracticeQuestions")}</span>`;
+      }
+
+      return questions.map((q) => {
+        const href = `/agent-academy/quiz.html?topic=${encodeURIComponent(topicSlug)}&question=${encodeURIComponent(q.id)}`;
+        return `<a class="question-link" href="${href}">${rt("question")} ${q.id}</a>`;
+      }).join("");
     }
 
     document.querySelectorAll("[data-lang]").forEach((btn) => {
@@ -291,35 +379,31 @@
       const regulationHref =
         `/agent-academy/regulation-viewer.html?pdf=${encodeURIComponent("/agent-academy/regulations/" + data.regulation_pdf)}&page=${encodeURIComponent(data.regulation_page || 1)}`;
 
-      const practiceHref = data.topic_slug
-  ? `/agent-academy/quiz.html?topic=${encodeURIComponent(data.topic_slug)}&question=${encodeURIComponent(questionId)}`
-  : "#";
-      
+      const practiceHref = buildPracticeHref(data.topic_slug);
+
       const relatedIds = Array.isArray(data.related_question_ids)
         ? data.related_question_ids
         : [];
 
-      const keyQuestionsHtml = relatedIds.length
-        ? `
-          <div class="related-questions">
-            <h3>${rt("keyQuestions")}</h3>
-            <div class="question-links">
-              ${relatedIds.map(
-                (qid) => `<a class="question-link" href="${practiceHref}">${rt("question")} ${qid}</a>`
-              ).join("")}
-            </div>
+      const relatedQuestions = await loadTopicQuestions(data.topic_slug, relatedIds);
+
+      const keyQuestionsHtml = `
+        <div class="related-questions">
+          <h3>${rt("keyQuestions")}</h3>
+          <div class="question-links">
+            ${buildQuestionLinksHtml(data.topic_slug, relatedQuestions)}
           </div>
-        `
-        : "";
+        </div>
+      `;
 
       document.getElementById("articleContent").innerHTML = `
-        <h2 class="article-title">${title}</h2>
+        <h2 class="article-title">${escapeHtml(title)}</h2>
 
-        <div class="article-text">${text}</div>
+        <div class="article-text">${escapeHtml(text)}</div>
 
         <div class="explanation">
           <h3>${rt("explanation")}</h3>
-          <p>${explanation}</p>
+          <p>${escapeHtml(explanation)}</p>
         </div>
 
         <div class="actions">
