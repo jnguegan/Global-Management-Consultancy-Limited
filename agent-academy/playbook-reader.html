@@ -247,40 +247,52 @@
       return data;
     }
 
-    async function loadTopicQuestions(topicSlug, requestedIds = []) {
-      const topic = await loadTopicBySlug(topicSlug);
+   async function loadTopicQuestions(topicSlug, requestedIds = []) {
+  const topic = await loadTopicBySlug(topicSlug);
 
-      if (!topic || !topic.id) {
-        return [];
-      }
+  if (!topic || !topic.id) {
+    return [];
+  }
 
-      let query = supabaseClient
-        .from("questions")
-        .select("id, topic_id, is_active")
-        .eq("topic_id", topic.id)
-        .eq("is_active", true)
-        .order("id", { ascending: true });
+  const numericIds = Array.isArray(requestedIds)
+    ? requestedIds
+        .map((id) => Number(id))
+        .filter((id) => !Number.isNaN(id))
+    : [];
 
-      if (Array.isArray(requestedIds) && requestedIds.length) {
-        const numericIds = requestedIds
-          .map((id) => Number(id))
-          .filter((id) => !Number.isNaN(id));
+  // Try loading the requested question IDs first
+  if (numericIds.length) {
+    const { data: matchedData, error: matchedError } = await supabaseClient
+      .from("questions")
+      .select("id, topic_id, is_active")
+      .eq("topic_id", topic.id)
+      .eq("is_active", true)
+      .in("id", numericIds)
+      .order("id", { ascending: true });
 
-        if (numericIds.length) {
-          query = query.in("id", numericIds);
-        }
-      }
-
-      const { data, error } = await query;
-
-      if (error) {
-        console.error("Question load error:", error);
-        return [];
-      }
-
-      return data || [];
+    if (matchedError) {
+      console.error("Matched question load error:", matchedError);
+    } else if ((matchedData || []).length) {
+      return matchedData;
     }
+  }
 
+  // Fallback: load the first 4 questions for the topic
+  const { data: fallbackData, error: fallbackError } = await supabaseClient
+    .from("questions")
+    .select("id, topic_id, is_active")
+    .eq("topic_id", topic.id)
+    .eq("is_active", true)
+    .order("id", { ascending: true })
+    .limit(4);
+
+  if (fallbackError) {
+    console.error("Fallback question load error:", fallbackError);
+    return [];
+  }
+
+  return fallbackData || [];
+}
     function buildPracticeHref(topicSlug) {
       return topicSlug
         ? `/agent-academy/quiz.html?topic=${encodeURIComponent(topicSlug)}`
