@@ -4,23 +4,765 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>Football Agent Exam & Regulations Playbook | Global Management Consultancy Limited</title>
+  <title>Agent Academy | FIFA Football Agent Exam Preparation</title>
   <meta
     name="description"
-    content="A multilingual professional guide for football agent exam revision and regulatory understanding, by Global Management Consultancy Limited."
+    content="Premium multilingual FIFA Football Agent Exam preparation platform with course overview, playbook, quizzes, mock exams, and structured study paths."
   />
 
-  <link rel="stylesheet" href="./css/agent-playbook.css" />
+  <style>
+    :root{
+      --bg:#08111f;
+      --bg-soft:#0d1728;
+      --panel:#101d31;
+      --panel-2:#16253c;
+      --text:#f4f7fb;
+      --muted:#aeb8c8;
+      --line:rgba(255,255,255,0.08);
+      --gold:#d4af37;
+      --gold-soft:rgba(212,175,55,0.14);
+      --green:#39c27d;
+      --shadow:0 22px 60px rgba(0,0,0,0.35);
+      --radius:22px;
+      --radius-sm:14px;
+      --container:1200px;
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family:Inter,Arial,Helvetica,sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(212,175,55,0.08), transparent 26%),
+        radial-gradient(circle at top right, rgba(255,255,255,0.04), transparent 18%),
+        linear-gradient(180deg, #07111f 0%, #0a1526 100%);
+    }
+
+    a{color:inherit;text-decoration:none}
+    img{max-width:100%;display:block}
+
+    .container{
+      width:min(var(--container), calc(100% - 40px));
+      margin:0 auto;
+    }
+
+    .topbar{
+      position:sticky;
+      top:0;
+      z-index:20;
+      backdrop-filter:blur(16px);
+      background:rgba(8,17,31,0.78);
+      border-bottom:1px solid var(--line);
+    }
+
+    .topbar-inner{
+      min-height:78px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:20px;
+    }
+
+    .brand-wrap{
+      display:flex;
+      align-items:center;
+      gap:14px;
+      min-width:0;
+    }
+
+    .brand-mark{
+      width:46px;
+      height:46px;
+      border-radius:14px;
+      display:grid;
+      place-items:center;
+      font-weight:800;
+      color:#07111f;
+      background:linear-gradient(135deg,#f2d16b 0%,#d4af37 100%);
+      box-shadow:0 10px 25px rgba(212,175,55,0.25);
+      flex:0 0 auto;
+    }
+
+    .brand-copy{
+      min-width:0;
+    }
+
+    .brand-eyebrow{
+      margin:0 0 3px;
+      font-size:11px;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      color:var(--muted);
+    }
+
+    .brand-title{
+      margin:0;
+      font-size:16px;
+      font-weight:700;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .topbar-actions{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+
+    .lang-switcher{
+      display:flex;
+      gap:6px;
+      padding:4px;
+      border:1px solid var(--line);
+      border-radius:999px;
+      background:rgba(255,255,255,0.03);
+    }
+
+    .lang-btn{
+      border:0;
+      background:transparent;
+      color:var(--muted);
+      padding:8px 11px;
+      border-radius:999px;
+      cursor:pointer;
+      font-weight:700;
+      font-size:12px;
+      transition:.2s ease;
+    }
+
+    .lang-btn.active{
+      background:var(--gold);
+      color:#07111f;
+    }
+
+    .nav-cta{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      min-height:46px;
+      padding:0 18px;
+      border-radius:14px;
+      border:1px solid transparent;
+      font-weight:700;
+      transition:.2s ease;
+      cursor:pointer;
+    }
+
+    .btn:hover{transform:translateY(-1px)}
+    .btn-primary{
+      background:linear-gradient(135deg,#f2d16b 0%,#d4af37 100%);
+      color:#07111f;
+      box-shadow:0 14px 30px rgba(212,175,55,0.22);
+    }
+    .btn-secondary{
+      background:rgba(255,255,255,0.04);
+      border-color:var(--line);
+      color:var(--text);
+    }
+    .btn-outline{
+      background:transparent;
+      border-color:rgba(212,175,55,0.34);
+      color:var(--gold);
+    }
+    .btn.full{width:100%}
+
+    .hero{
+      padding:54px 0 28px;
+    }
+
+    .hero-grid{
+      display:grid;
+      grid-template-columns:1.15fr .85fr;
+      gap:28px;
+      align-items:stretch;
+    }
+
+    .hero-copy,
+    .hero-panel{
+      background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.015));
+      border:1px solid var(--line);
+      border-radius:30px;
+      box-shadow:var(--shadow);
+    }
+
+    .hero-copy{
+      padding:38px;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .hero-copy::after{
+      content:"";
+      position:absolute;
+      inset:auto -60px -60px auto;
+      width:220px;
+      height:220px;
+      background:radial-gradient(circle, rgba(212,175,55,0.15), transparent 70%);
+      pointer-events:none;
+    }
+
+    .eyebrow{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      margin:0 0 16px;
+      padding:8px 14px;
+      border-radius:999px;
+      background:var(--gold-soft);
+      border:1px solid rgba(212,175,55,0.18);
+      color:var(--gold);
+      font-size:12px;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      font-weight:800;
+    }
+
+    h1{
+      margin:0 0 14px;
+      font-size:clamp(34px,5vw,58px);
+      line-height:1.04;
+      letter-spacing:-0.03em;
+      max-width:720px;
+    }
+
+    .credibility{
+      margin:0 0 16px;
+      font-size:15px;
+      font-weight:700;
+      color:#dce5f3;
+    }
+
+    .lead{
+      margin:0 0 24px;
+      max-width:720px;
+      color:var(--muted);
+      font-size:18px;
+      line-height:1.72;
+    }
+
+    .hero-actions{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-bottom:26px;
+    }
+
+    .stats{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:14px;
+    }
+
+    .stat-card{
+      padding:16px 18px;
+      border-radius:18px;
+      background:rgba(255,255,255,0.03);
+      border:1px solid var(--line);
+    }
+
+    .stat-label{
+      display:block;
+      margin-bottom:8px;
+      color:var(--muted);
+      font-size:12px;
+      text-transform:uppercase;
+      letter-spacing:.1em;
+    }
+
+    .stat-value{
+      font-size:20px;
+      font-weight:800;
+    }
+
+    .hero-panel{
+      padding:28px;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      gap:18px;
+      background:
+        linear-gradient(180deg, rgba(212,175,55,0.08), rgba(255,255,255,0.02)),
+        linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.015));
+    }
+
+    .panel-kicker{
+      margin:0;
+      color:var(--gold);
+      font-size:12px;
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      font-weight:800;
+    }
+
+    .hero-panel h2{
+      margin:0;
+      font-size:28px;
+      line-height:1.15;
+      letter-spacing:-0.02em;
+    }
+
+    .hero-panel p{
+      margin:0;
+      color:var(--muted);
+      line-height:1.72;
+    }
+
+    .feature-list{
+      margin:0;
+      padding:0;
+      list-style:none;
+      display:grid;
+      gap:12px;
+    }
+
+    .feature-list li{
+      position:relative;
+      padding-left:26px;
+      color:#d7dfec;
+      line-height:1.55;
+    }
+
+    .feature-list li::before{
+      content:"";
+      position:absolute;
+      left:0;
+      top:.55em;
+      width:10px;
+      height:10px;
+      border-radius:50%;
+      background:var(--gold);
+      box-shadow:0 0 0 5px rgba(212,175,55,0.12);
+      transform:translateY(-50%);
+    }
+
+    .panel-card-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+    }
+
+    .mini-panel{
+      padding:14px;
+      border-radius:16px;
+      background:rgba(255,255,255,0.04);
+      border:1px solid var(--line);
+    }
+
+    .mini-panel span{
+      display:block;
+      color:var(--muted);
+      font-size:12px;
+      margin-bottom:7px;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+    }
+
+    .mini-panel strong{
+      display:block;
+      font-size:15px;
+      line-height:1.4;
+    }
+
+    .section{
+      padding:30px 0;
+    }
+
+    .section-header{
+      margin-bottom:20px;
+      max-width:860px;
+    }
+
+    .section-kicker{
+      margin:0 0 12px;
+      color:var(--gold);
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    h2.section-title{
+      margin:0 0 14px;
+      font-size:clamp(26px,4vw,40px);
+      line-height:1.15;
+      letter-spacing:-0.03em;
+    }
+
+    .section-text{
+      margin:0;
+      color:var(--muted);
+      line-height:1.78;
+      font-size:17px;
+    }
+
+    .overview-grid{
+      display:grid;
+      grid-template-columns:1.05fr .95fr;
+      gap:22px;
+    }
+
+    .panel-box{
+      background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.015));
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:26px;
+    }
+
+    .bullet-list{
+      margin:0;
+      padding:0;
+      list-style:none;
+      display:grid;
+      gap:14px;
+    }
+
+    .bullet-list li{
+      display:flex;
+      align-items:flex-start;
+      gap:12px;
+      color:#d7dfec;
+      line-height:1.6;
+    }
+
+    .bullet-no{
+      width:28px;
+      height:28px;
+      border-radius:50%;
+      background:var(--gold-soft);
+      border:1px solid rgba(212,175,55,0.2);
+      color:var(--gold);
+      display:grid;
+      place-items:center;
+      font-size:12px;
+      font-weight:800;
+      flex:0 0 auto;
+      margin-top:1px;
+    }
+
+    .cards-grid{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:18px;
+    }
+
+    .info-card{
+      padding:22px;
+      border-radius:22px;
+      border:1px solid var(--line);
+      background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.015));
+      box-shadow:var(--shadow);
+      min-height:220px;
+    }
+
+    .info-card-top{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      margin-bottom:16px;
+    }
+
+    .card-tag{
+      display:inline-flex;
+      padding:7px 10px;
+      border-radius:999px;
+      background:var(--gold-soft);
+      color:var(--gold);
+      font-size:11px;
+      text-transform:uppercase;
+      letter-spacing:.1em;
+      font-weight:800;
+      border:1px solid rgba(212,175,55,0.18);
+    }
+
+    .card-index{
+      color:rgba(255,255,255,0.18);
+      font-size:28px;
+      font-weight:800;
+    }
+
+    .info-card h3{
+      margin:0 0 12px;
+      font-size:22px;
+      line-height:1.25;
+      letter-spacing:-0.02em;
+    }
+
+    .info-card p{
+      margin:0;
+      color:var(--muted);
+      line-height:1.72;
+    }
+
+    .journey-grid{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:16px;
+    }
+
+    .journey-step{
+      padding:22px 18px;
+      border-radius:20px;
+      border:1px solid var(--line);
+      background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.015));
+      box-shadow:var(--shadow);
+    }
+
+    .journey-step strong{
+      display:block;
+      margin-bottom:10px;
+      font-size:16px;
+    }
+
+    .journey-step p{
+      margin:0;
+      color:var(--muted);
+      line-height:1.65;
+      font-size:15px;
+    }
+
+    .pricing-grid{
+      display:grid;
+      grid-template-columns:1fr 1.1fr;
+      gap:24px;
+      align-items:start;
+    }
+
+    .pricing-cards{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:16px;
+    }
+
+    .price-card{
+      padding:22px;
+      border-radius:22px;
+      border:1px solid var(--line);
+      background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.015));
+      box-shadow:var(--shadow);
+      position:relative;
+      overflow:hidden;
+    }
+
+    .price-card.featured{
+      border-color:rgba(212,175,55,0.28);
+      background:
+        linear-gradient(180deg, rgba(212,175,55,0.08), rgba(255,255,255,0.02)),
+        linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.015));
+    }
+
+    .price-plan{
+      font-size:12px;
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      color:var(--gold);
+      font-weight:800;
+      margin-bottom:12px;
+    }
+
+    .price-card h3{
+      margin:0 0 10px;
+      font-size:22px;
+      line-height:1.2;
+    }
+
+    .price{
+      font-size:34px;
+      font-weight:800;
+      margin-bottom:10px;
+      letter-spacing:-0.03em;
+    }
+
+    .price-note{
+      color:var(--muted);
+      font-size:14px;
+      margin-bottom:16px;
+    }
+
+    .plan-list{
+      margin:0;
+      padding:0;
+      list-style:none;
+      display:grid;
+      gap:10px;
+    }
+
+    .plan-list li{
+      color:#d7dfec;
+      line-height:1.55;
+      position:relative;
+      padding-left:22px;
+    }
+
+    .plan-list li::before{
+      content:"✓";
+      position:absolute;
+      left:0;
+      top:0;
+      color:var(--green);
+      font-weight:800;
+    }
+
+    .cta-section{
+      padding-top:18px;
+      padding-bottom:54px;
+    }
+
+    .cta-box{
+      display:grid;
+      grid-template-columns:1.1fr .9fr;
+      gap:20px;
+      align-items:center;
+      padding:30px;
+      border-radius:28px;
+      border:1px solid rgba(212,175,55,0.18);
+      background:
+        linear-gradient(180deg, rgba(212,175,55,0.08), rgba(255,255,255,0.02)),
+        linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.015));
+      box-shadow:var(--shadow);
+    }
+
+    .cta-box h2{
+      margin:0 0 12px;
+      font-size:36px;
+      line-height:1.1;
+      letter-spacing:-0.03em;
+    }
+
+    .cta-box p{
+      margin:0;
+      color:var(--muted);
+      line-height:1.72;
+      font-size:17px;
+    }
+
+    .cta-actions{
+      display:grid;
+      gap:12px;
+    }
+
+    .disclaimer{
+      padding:0 0 48px;
+    }
+
+    .disclaimer-box{
+      padding:24px;
+      border-radius:22px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,0.03);
+      color:var(--muted);
+      line-height:1.72;
+    }
+
+    .footer{
+      border-top:1px solid var(--line);
+      background:rgba(0,0,0,0.18);
+    }
+
+    .footer-inner{
+      min-height:72px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:18px;
+      flex-wrap:wrap;
+      color:var(--muted);
+      font-size:14px;
+    }
+
+    @media (max-width: 1100px){
+      .hero-grid,
+      .overview-grid,
+      .pricing-grid,
+      .cta-box{
+        grid-template-columns:1fr;
+      }
+      .cards-grid{
+        grid-template-columns:repeat(2,1fr);
+      }
+      .journey-grid{
+        grid-template-columns:repeat(2,1fr);
+      }
+    }
+
+    @media (max-width: 760px){
+      .container{width:min(var(--container), calc(100% - 24px))}
+      .topbar-inner{
+        padding:10px 0;
+        align-items:flex-start;
+      }
+      .topbar-actions{
+        width:100%;
+        justify-content:space-between;
+      }
+      .nav-cta{
+        width:100%;
+      }
+      .nav-cta .btn{
+        flex:1 1 0;
+      }
+      .hero{
+        padding-top:28px;
+      }
+      .hero-copy,
+      .hero-panel,
+      .panel-box,
+      .info-card,
+      .price-card,
+      .cta-box{
+        padding:22px;
+        border-radius:22px;
+      }
+      .stats,
+      .cards-grid,
+      .journey-grid,
+      .pricing-cards,
+      .panel-card-grid{
+        grid-template-columns:1fr;
+      }
+      h1{font-size:34px}
+      .cta-box h2{font-size:28px}
+      .hero-actions .btn{
+        width:100%;
+      }
+    }
+  </style>
 </head>
 <body>
   <header class="topbar">
     <div class="container topbar-inner">
-      <a href="/" class="brand">Global Management Consultancy Limited</a>
+      <div class="brand-wrap">
+        <div class="brand-mark">AA</div>
+        <div class="brand-copy">
+          <p class="brand-eyebrow" data-i18n="brand.eyebrow">Global Management Consultancy Limited</p>
+          <p class="brand-title" data-i18n="brand.title">Agent Academy</p>
+        </div>
+      </div>
 
-      <div class="lang-switcher" aria-label="Language switcher">
-        <button type="button" class="lang-btn active" data-lang="en">EN</button>
-        <button type="button" class="lang-btn" data-lang="fr">FR</button>
-        <button type="button" class="lang-btn" data-lang="es">ES</button>
+      <div class="topbar-actions">
+        <div class="lang-switcher" aria-label="Language switcher">
+          <button type="button" class="lang-btn active" data-lang="en">EN</button>
+          <button type="button" class="lang-btn" data-lang="fr">FR</button>
+          <button type="button" class="lang-btn" data-lang="es">ES</button>
+        </div>
+
+        <div class="nav-cta">
+          <a href="/agent-academy/login.html" class="btn btn-secondary" data-i18n="nav.signIn">Sign In</a>
+          <a href="/agent-academy/signup.html" class="btn btn-primary" data-i18n="nav.createAccount">Create Free Account</a>
+        </div>
       </div>
     </div>
   </header>
@@ -28,194 +770,315 @@
   <main>
     <section class="hero">
       <div class="container hero-grid">
+        <div class="hero-copy">
+          <p class="eyebrow" data-i18n="hero.badge">FIFA Football Agent Exam Preparation</p>
 
-  <div class="hero-copy">
-    <p class="eyebrow" data-i18n="hero.badge">Global Management Consultancy Limited</p>
+          <h1 data-i18n="hero.title">A premium multilingual academy for football agent exam preparation.</h1>
 
-    <h1 data-i18n="hero.title">The Football Agent Exam & Regulations Playbook</h1>
+          <p class="credibility" data-i18n="hero.credibility">Built for aspiring candidates, practising football agents, lawyers, advisors and club professionals.</p>
 
-    <p class="credibility" data-i18n="hero.credibility">
-  Written by a licensed football agent and industry advisor.
-</p>
+          <p class="lead" data-i18n="hero.subtitle">
+            Agent Academy combines structured course guidance, a multilingual regulatory playbook, topic quizzes, mock exams, and a professional dashboard to help users prepare with confidence.
+          </p>
 
-    <p class="lead" data-i18n="hero.subtitle">
-      A professional guide designed to help candidates revise for football agent exams and help practising agents refresh their knowledge of the regulatory framework.
-    </p>
+          <div class="hero-actions">
+            <a href="/agent-academy/signup.html" class="btn btn-primary" data-i18n="hero.ctaPrimary">Create Free Account</a>
+            <a href="#course-overview" class="btn btn-secondary" data-i18n="hero.ctaSecondary">Explore the Course</a>
+            <a href="#plans" class="btn btn-outline" data-i18n="hero.ctaTertiary">Compare Plans</a>
+          </div>
 
-    <div class="hero-actions">
-      <a href="#waitlist" class="btn btn-primary" data-i18n="hero.ctaPrimary">Join the Priority List</a>
-      <a href="#modules" class="btn btn-secondary" data-i18n="hero.ctaSecondary">Explore the Guide</a>
-    </div>
-
-    <div class="hero-cards">
-      <div class="mini-card">
-        <span class="mini-card-label" data-i18n="hero.card1Label">Format</span>
-        <strong data-i18n="hero.card1Value">Digital Ebook</strong>
-      </div>
-
-      <div class="mini-card">
-        <span class="mini-card-label" data-i18n="hero.card2Label">Languages</span>
-        <strong data-i18n="hero.card2Value">English • Français • Español</strong>
-      </div>
-    </div>
-  </div>
-
-  <div class="hero-book">
-    <img src="./assets/football-agent-playbook-cover.png" alt="Football Agent Playbook Cover">
-  </div>
-
-</div>
+          <div class="stats">
+            <div class="stat-card">
+              <span class="stat-label" data-i18n="hero.stat1Label">Languages</span>
+              <span class="stat-value" data-i18n="hero.stat1Value">English · Français · Español</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-label" data-i18n="hero.stat2Label">Study Tools</span>
+              <span class="stat-value" data-i18n="hero.stat2Value">Playbook · Quiz · Mock Exam</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-label" data-i18n="hero.stat3Label">Access</span>
+              <span class="stat-value" data-i18n="hero.stat3Value">Free to Premium Plans</span>
+            </div>
+          </div>
+        </div>
 
         <div class="hero-panel">
-          <div class="panel">
-            <p class="panel-kicker" data-i18n="panel.kicker">Coming Soon</p>
-            <h2 data-i18n="panel.title">Study smarter. Work sharper.</h2>
+          <div>
+            <p class="panel-kicker" data-i18n="panel.kicker">Course Overview</p>
+            <h2 data-i18n="panel.title">Study smarter. Prepare with structure. Progress like a professional.</h2>
             <p data-i18n="panel.text">
-              Built for aspiring candidates, practising agents, lawyers, club executives, and anyone seeking a clear understanding of modern football agent rules.
+              This platform is designed to move users from understanding the FIFA regulatory framework to applying it confidently through revision, practice questions, and exam simulation.
             </p>
+          </div>
 
-            <ul class="feature-list">
-              <li data-i18n="panel.feature1">Clear explanations of key football agent rules</li>
-              <li data-i18n="panel.feature2">Structured exam revision support</li>
-              <li data-i18n="panel.feature3">Practical scenarios for real-world use</li>
-              <li data-i18n="panel.feature4">Quick-reference summaries and memory aids</li>
+          <ul class="feature-list">
+            <li data-i18n="panel.feature1">Structured explanations of key FIFA football agent rules</li>
+            <li data-i18n="panel.feature2">Multilingual study flow across English, French and Spanish</li>
+            <li data-i18n="panel.feature3">Direct links from playbook topics into real quiz questions</li>
+            <li data-i18n="panel.feature4">Progressive access from free plan to full premium preparation</li>
+          </ul>
+
+          <div class="panel-card-grid">
+            <div class="mini-panel">
+              <span data-i18n="panel.card1Label">Ideal For</span>
+              <strong data-i18n="panel.card1Value">Candidates, agents, lawyers and clubs</strong>
+            </div>
+            <div class="mini-panel">
+              <span data-i18n="panel.card2Label">Format</span>
+              <strong data-i18n="panel.card2Value">Playbook + Quizzes + Dashboard</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="course-overview" class="section">
+      <div class="container">
+        <div class="section-header">
+          <p class="section-kicker" data-i18n="overview.kicker">Course Overview</p>
+          <h2 class="section-title" data-i18n="overview.title">A complete public overview of the Agent Academy study path.</h2>
+          <p class="section-text" data-i18n="overview.text">
+            Agent Academy is built to help users understand the regulatory framework, study efficiently, practise actively, and move step by step toward exam readiness.
+          </p>
+        </div>
+
+        <div class="overview-grid">
+          <div class="panel-box">
+            <h3 data-i18n="overview.leftTitle">What the academy includes</h3>
+            <ul class="bullet-list">
+              <li>
+                <span class="bullet-no">1</span>
+                <span data-i18n="overview.left1">A structured multilingual playbook covering the core FIFA football agent exam themes.</span>
+              </li>
+              <li>
+                <span class="bullet-no">2</span>
+                <span data-i18n="overview.left2">Topic-based quizzes linked directly to regulations and study modules.</span>
+              </li>
+              <li>
+                <span class="bullet-no">3</span>
+                <span data-i18n="overview.left3">A dashboard-based learning environment with plan-based access and progress pathways.</span>
+              </li>
+              <li>
+                <span class="bullet-no">4</span>
+                <span data-i18n="overview.left4">Mock exam preparation designed to simulate a serious revision experience.</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="panel-box">
+            <h3 data-i18n="overview.rightTitle">Who this platform is for</h3>
+            <ul class="bullet-list">
+              <li>
+                <span class="bullet-no">A</span>
+                <span data-i18n="overview.right1">Candidates preparing for the FIFA Football Agent Exam.</span>
+              </li>
+              <li>
+                <span class="bullet-no">B</span>
+                <span data-i18n="overview.right2">Licensed agents refreshing their knowledge of the regulations.</span>
+              </li>
+              <li>
+                <span class="bullet-no">C</span>
+                <span data-i18n="overview.right3">Lawyers, advisors and compliance professionals working in football.</span>
+              </li>
+              <li>
+                <span class="bullet-no">D</span>
+                <span data-i18n="overview.right4">Club and federation professionals who need a practical regulatory reference.</span>
+              </li>
             </ul>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="section section-light">
-      <div class="container narrow">
-        <p class="section-kicker" data-i18n="why.kicker">Why this guide</p>
-        <h2 data-i18n="why.title">A serious professional resource, not just another summary</h2>
-        <p class="section-text" data-i18n="why.text">
-          Most readers do not need more raw regulation text. They need structure, clarity, memory aids, and practical context they can revisit before exams, meetings, negotiations, and compliance reviews.
-        </p>
-      </div>
-    </section>
-
-    <section id="modules" class="section">
+    <section class="section">
       <div class="container">
+        <div class="section-header">
+          <p class="section-kicker" data-i18n="modules.kicker">What You Will Study</p>
+          <h2 class="section-title" data-i18n="modules.title">Core modules aligned with the academy structure.</h2>
+          <p class="section-text" data-i18n="modules.text">
+            The public overview introduces the scope of the academy. Once users create an account, they can move into the dashboard and begin studying according to their plan.
+          </p>
+        </div>
+
         <div class="cards-grid">
           <article class="info-card">
-            <h3 data-i18n="modules.1.title">Module 1 — The Football Agent Landscape</h3>
-            <p data-i18n="modules.1.text">
-              Overview of the football agency ecosystem, the role of agents and intermediaries, and the governance structure of global football.
-            </p>
+            <div class="info-card-top">
+              <span class="card-tag" data-i18n="modules.card1Tag">FFAR</span>
+              <span class="card-index">01</span>
+            </div>
+            <h3 data-i18n="modules.card1Title">FFAR Core Principles</h3>
+            <p data-i18n="modules.card1Text">Understand the purpose, licensing framework, structure and practical foundations of the FIFA Football Agent Regulations.</p>
           </article>
 
           <article class="info-card">
-            <h3 data-i18n="modules.2.title">Module 2 — Regulations Simplified</h3>
-            <p data-i18n="modules.2.text">
-              Clear explanations of the key rules and structures governing football agents.
-            </p>
+            <div class="info-card-top">
+              <span class="card-tag" data-i18n="modules.card2Tag">Contracts</span>
+              <span class="card-index">02</span>
+            </div>
+            <h3 data-i18n="modules.card2Title">Representation Agreements</h3>
+            <p data-i18n="modules.card2Text">Study written form, signatures, duration, validity requirements, scope of services, exclusivity and related legal risks.</p>
           </article>
 
           <article class="info-card">
-            <h3 data-i18n="modules.3.title">Module 3 — Exam Revision</h3>
-            <p data-i18n="modules.3.text">
-              Study-focused summaries designed to help candidates retain and revise essential rules efficiently.
-            </p>
+            <div class="info-card-top">
+              <span class="card-tag" data-i18n="modules.card3Tag">Fees</span>
+              <span class="card-index">03</span>
+            </div>
+            <h3 data-i18n="modules.card3Title">Service Fees and Commissions</h3>
+            <p data-i18n="modules.card3Text">Review service fee rules, fee caps, who may pay, instalments, and when agents are not entitled to fees not yet due.</p>
           </article>
 
           <article class="info-card">
-            <h3 data-i18n="modules.4.title">Module 4 — Practical Scenarios</h3>
-            <p data-i18n="modules.4.text">
-              Real-world examples illustrating how regulations apply in day-to-day football agency practice.
-            </p>
+            <div class="info-card-top">
+              <span class="card-tag" data-i18n="modules.card4Tag">Protection</span>
+              <span class="card-index">04</span>
+            </div>
+            <h3 data-i18n="modules.card4Title">Minors</h3>
+            <p data-i18n="modules.card4Text">Understand timing restrictions, guardian involvement, enforceability and the enhanced safeguards required for dealings involving minors.</p>
+          </article>
+
+          <article class="info-card">
+            <div class="info-card-top">
+              <span class="card-tag" data-i18n="modules.card5Tag">Integrity</span>
+              <span class="card-index">05</span>
+            </div>
+            <h3 data-i18n="modules.card5Title">Conflicts of Interest</h3>
+            <p data-i18n="modules.card5Text">Learn disclosure rules, dual representation limits, prohibited combinations and practical conflict-management principles.</p>
+          </article>
+
+          <article class="info-card">
+            <div class="info-card-top">
+              <span class="card-tag" data-i18n="modules.card6Tag">Football Rules</span>
+              <span class="card-index">06</span>
+            </div>
+            <h3 data-i18n="modules.card6Title">RSTP, Governance, Ethics and Disciplinary</h3>
+            <p data-i18n="modules.card6Text">Go beyond agent regulations and revise the broader football framework tested across the exam syllabus.</p>
           </article>
         </div>
       </div>
     </section>
 
-    <section class="section section-pricing">
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <p class="section-kicker" data-i18n="journey.kicker">How Agent Academy Works</p>
+          <h2 class="section-title" data-i18n="journey.title">A simple path from first access to exam preparation.</h2>
+        </div>
+
+        <div class="journey-grid">
+          <div class="journey-step">
+            <strong data-i18n="journey.step1Title">1. Create your account</strong>
+            <p data-i18n="journey.step1Text">Start with a free account and access the academy environment through your own dashboard.</p>
+          </div>
+
+          <div class="journey-step">
+            <strong data-i18n="journey.step2Title">2. Study the playbook</strong>
+            <p data-i18n="journey.step2Text">Read structured explanations topic by topic, with regulation-linked learning flow.</p>
+          </div>
+
+          <div class="journey-step">
+            <strong data-i18n="journey.step3Title">3. Practise by topic</strong>
+            <p data-i18n="journey.step3Text">Move from theory into quizzes and test yourself against multilingual exam-style questions.</p>
+          </div>
+
+          <div class="journey-step">
+            <strong data-i18n="journey.step4Title">4. Progress to exam mode</strong>
+            <p data-i18n="journey.step4Text">Advance into higher plans for mock exams, broader coverage and deeper preparation tools.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="plans" class="section">
       <div class="container pricing-grid">
-        <div>
-          <p class="section-kicker" data-i18n="pricing.kicker">Suggested launch pricing</p>
-          <h2 data-i18n="pricing.title">Commercial positioning</h2>
-          <p class="section-text" data-i18n="pricing.text">
-            Start with a strong entry offer for the ebook, then add a higher-value tier with revision extras, mock questions, and practical tools.
+        <div class="section-header" style="margin-bottom:0">
+          <p class="section-kicker" data-i18n="plans.kicker">Plans and Access</p>
+          <h2 class="section-title" data-i18n="plans.title">Choose the level of access that fits your preparation stage.</h2>
+          <p class="section-text" data-i18n="plans.text">
+            All users create an account first. Free users can begin inside the academy, while higher plans unlock broader study coverage, more practice content and advanced preparation tools.
           </p>
         </div>
 
         <div class="pricing-cards">
           <div class="price-card">
-            <h3 data-i18n="pricing.standard.title">Standard Ebook</h3>
-            <div class="price" data-i18n="pricing.standard.price">£29</div>
-            <p data-i18n="pricing.standard.text">Core digital guide for revision and professional refresh.</p>
-          </div>
-
-          <div class="price-card featured">
-            <h3 data-i18n="pricing.pro.title">Pro Revision Pack</h3>
-            <div class="price" data-i18n="pricing.pro.price">£49</div>
-            <p data-i18n="pricing.pro.text">Ebook plus revision questions, memory prompts, and practical checklists.</p>
+            <div class="price-plan" data-i18n="plans.freeTag">Free</div>
+            <h3 data-i18n="plans.freeTitle">Free Account</h3>
+            <div class="price" data-i18n="plans.freePrice">£0</div>
+            <div class="price-note" data-i18n="plans.freeNote">Ideal first step into the platform.</div>
+            <ul class="plan-list">
+              <li data-i18n="plans.free1">Access after signup and login</li>
+              <li data-i18n="plans.free2">Selected playbook sections</li>
+              <li data-i18n="plans.free3">Introductory academy access</li>
+            </ul>
           </div>
 
           <div class="price-card">
-            <h3 data-i18n="pricing.premium.title">Premium Bundle</h3>
-            <div class="price" data-i18n="pricing.premium.price">£89</div>
-            <p data-i18n="pricing.premium.text">Future bundle with ebook, mock exams, templates, and short video explainers.</p>
+            <div class="price-plan" data-i18n="plans.starterTag">Starter</div>
+            <h3 data-i18n="plans.starterTitle">Starter Plan</h3>
+            <div class="price" data-i18n="plans.starterPrice">Starter</div>
+            <div class="price-note" data-i18n="plans.starterNote">For structured topic-based learning.</div>
+            <ul class="plan-list">
+              <li data-i18n="plans.starter1">Expanded playbook access</li>
+              <li data-i18n="plans.starter2">Topic quiz availability</li>
+              <li data-i18n="plans.starter3">Core revision progression</li>
+            </ul>
+          </div>
+
+          <div class="price-card featured">
+            <div class="price-plan" data-i18n="plans.proTag">Professional</div>
+            <h3 data-i18n="plans.proTitle">Professional Plan</h3>
+            <div class="price" data-i18n="plans.proPrice">Professional</div>
+            <div class="price-note" data-i18n="plans.proNote">Main full exam-preparation tier.</div>
+            <ul class="plan-list">
+              <li data-i18n="plans.pro1">Full playbook and wider question access</li>
+              <li data-i18n="plans.pro2">Mock exam preparation tools</li>
+              <li data-i18n="plans.pro3">More serious study coverage</li>
+            </ul>
+          </div>
+
+          <div class="price-card">
+            <div class="price-plan" data-i18n="plans.premiumTag">Premium</div>
+            <h3 data-i18n="plans.premiumTitle">Premium Plan</h3>
+            <div class="price" data-i18n="plans.premiumPrice">Premium</div>
+            <div class="price-note" data-i18n="plans.premiumNote">For the most advanced preparation path.</div>
+            <ul class="plan-list">
+              <li data-i18n="plans.premium1">Highest access tier</li>
+              <li data-i18n="plans.premium2">Advanced tools and depth</li>
+              <li data-i18n="plans.premium3">Maximum preparation pathway</li>
+            </ul>
           </div>
         </div>
       </div>
     </section>
 
-    <section id="waitlist" class="section">
-      <div class="container waitlist-grid">
-        <div>
-          <p class="section-kicker" data-i18n="waitlist.kicker">Pre-launch</p>
-          <h2 data-i18n="waitlist.title">Join the priority list</h2>
-          <p class="section-text" data-i18n="waitlist.text">
-            Receive launch updates, early access pricing, and a free revision summary.
-          </p>
-
-          <div class="note-box">
-            <strong data-i18n="waitlist.noteTitle">Good launch strategy:</strong>
-            <p data-i18n="waitlist.noteText">
-              Start collecting interest before the ebook is finished. This gives you a list of warm buyers ahead of launch.
+    <section class="section cta-section">
+      <div class="container">
+        <div class="cta-box">
+          <div>
+            <h2 data-i18n="cta.title">Create your account and enter Agent Academy.</h2>
+            <p data-i18n="cta.text">
+              Start with a free account, explore the academy structure, and upgrade when you are ready for broader playbook access, quizzes, and more advanced exam preparation.
             </p>
           </div>
-        </div>
 
-        
-        <div class="form-card">
-          <form id="waitlistForm" novalidate>
-            <div class="form-group">
-              <label for="name" data-i18n="form.name">Full name</label>
-              <input id="name" name="name" type="text" required />
-            </div>
-
-            <div class="form-group">
-              <label for="email" data-i18n="form.email">Email</label>
-              <input id="email" name="email" type="email" required />
-            </div>
-
-            <div class="form-group">
-              <label for="profile" data-i18n="form.profile">Profile</label>
-              <select id="profile" name="profile" required>
-                <option value="" data-i18n="form.select">Select</option>
-                <option value="candidate" data-i18n="form.option1">Exam candidate</option>
-                <option value="agent" data-i18n="form.option2">Practising agent</option>
-                <option value="lawyer" data-i18n="form.option3">Lawyer / advisor</option>
-                <option value="club" data-i18n="form.option4">Club executive / staff</option>
-                <option value="other" data-i18n="form.option5">Other</option>
-              </select>
-            </div>
-
-            <button type="submit" class="btn btn-primary full" data-i18n="form.submit">Notify me at launch</button>
-            <p id="formMessage" class="form-message" aria-live="polite"></p>
-          </form>
+          <div class="cta-actions">
+            <a href="/agent-academy/signup.html" class="btn btn-primary full" data-i18n="cta.create">Create Free Account</a>
+            <a href="/agent-academy/login.html" class="btn btn-secondary full" data-i18n="cta.signIn">Sign In</a>
+            <a href="/agent-academy/pricing.html" class="btn btn-outline full" data-i18n="cta.compare">Compare Plans</a>
+          </div>
         </div>
       </div>
     </section>
 
-    <section class="section section-light">
-      <div class="container narrow">
-        <h2 data-i18n="disclaimer.title">Important notice</h2>
-        <p class="section-text" data-i18n="disclaimer.text">
-          This publication is an independent educational resource produced under Global Management Consultancy Limited. It is not affiliated with, endorsed by, or officially connected to FIFA.
-        </p>
+    <section class="disclaimer">
+      <div class="container">
+        <div class="disclaimer-box">
+          <strong data-i18n="disclaimer.title">Important notice</strong>
+          <p data-i18n="disclaimer.text">
+            Agent Academy is an independent educational resource produced under Global Management Consultancy Limited. It is not affiliated with, endorsed by, or officially connected to FIFA.
+          </p>
+        </div>
       </div>
     </section>
   </main>
@@ -223,17 +1086,410 @@
   <footer class="footer">
     <div class="container footer-inner">
       <p>© <span id="year"></span> Global Management Consultancy Limited</p>
-      <p data-i18n="footer.text">Independent educational resource for football industry professionals.</p>
+      <p data-i18n="footer.text">Independent multilingual educational platform for football industry professionals.</p>
     </div>
   </footer>
 
- <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    window.SUPABASE_URL = "https://ysaxtuvuzqkyfmganven.supabase.co";
+    window.SUPABASE_ANON_KEY = "sb_publishable_esfhuUEIcUJEL6z9zryRAA_FGMmUHlw";
 
-<script>
-window.SUPABASE_URL = "https://ysaxtuvuzqkyfmganven.supabase.co";
-window.SUPABASE_ANON_KEY = "sb_publishable_esfhuUEIcUJEL6z9zryRAA_FGMmUHlw";
-</script>
+    const i18n = {
+      en: {
+        "brand.eyebrow": "Global Management Consultancy Limited",
+        "brand.title": "Agent Academy",
+        "nav.signIn": "Sign In",
+        "nav.createAccount": "Create Free Account",
 
-<script src="./js/agent-playbook.js"></script>
+        "hero.badge": "FIFA Football Agent Exam Preparation",
+        "hero.title": "A premium multilingual academy for football agent exam preparation.",
+        "hero.credibility": "Built for aspiring candidates, practising football agents, lawyers, advisors and club professionals.",
+        "hero.subtitle": "Agent Academy combines structured course guidance, a multilingual regulatory playbook, topic quizzes, mock exams, and a professional dashboard to help users prepare with confidence.",
+        "hero.ctaPrimary": "Create Free Account",
+        "hero.ctaSecondary": "Explore the Course",
+        "hero.ctaTertiary": "Compare Plans",
+        "hero.stat1Label": "Languages",
+        "hero.stat1Value": "English · Français · Español",
+        "hero.stat2Label": "Study Tools",
+        "hero.stat2Value": "Playbook · Quiz · Mock Exam",
+        "hero.stat3Label": "Access",
+        "hero.stat3Value": "Free to Premium Plans",
+
+        "panel.kicker": "Course Overview",
+        "panel.title": "Study smarter. Prepare with structure. Progress like a professional.",
+        "panel.text": "This platform is designed to move users from understanding the FIFA regulatory framework to applying it confidently through revision, practice questions, and exam simulation.",
+        "panel.feature1": "Structured explanations of key FIFA football agent rules",
+        "panel.feature2": "Multilingual study flow across English, French and Spanish",
+        "panel.feature3": "Direct links from playbook topics into real quiz questions",
+        "panel.feature4": "Progressive access from free plan to full premium preparation",
+        "panel.card1Label": "Ideal For",
+        "panel.card1Value": "Candidates, agents, lawyers and clubs",
+        "panel.card2Label": "Format",
+        "panel.card2Value": "Playbook + Quizzes + Dashboard",
+
+        "overview.kicker": "Course Overview",
+        "overview.title": "A complete public overview of the Agent Academy study path.",
+        "overview.text": "Agent Academy is built to help users understand the regulatory framework, study efficiently, practise actively, and move step by step toward exam readiness.",
+        "overview.leftTitle": "What the academy includes",
+        "overview.left1": "A structured multilingual playbook covering the core FIFA football agent exam themes.",
+        "overview.left2": "Topic-based quizzes linked directly to regulations and study modules.",
+        "overview.left3": "A dashboard-based learning environment with plan-based access and progress pathways.",
+        "overview.left4": "Mock exam preparation designed to simulate a serious revision experience.",
+        "overview.rightTitle": "Who this platform is for",
+        "overview.right1": "Candidates preparing for the FIFA Football Agent Exam.",
+        "overview.right2": "Licensed agents refreshing their knowledge of the regulations.",
+        "overview.right3": "Lawyers, advisors and compliance professionals working in football.",
+        "overview.right4": "Club and federation professionals who need a practical regulatory reference.",
+
+        "modules.kicker": "What You Will Study",
+        "modules.title": "Core modules aligned with the academy structure.",
+        "modules.text": "The public overview introduces the scope of the academy. Once users create an account, they can move into the dashboard and begin studying according to their plan.",
+        "modules.card1Tag": "FFAR",
+        "modules.card1Title": "FFAR Core Principles",
+        "modules.card1Text": "Understand the purpose, licensing framework, structure and practical foundations of the FIFA Football Agent Regulations.",
+        "modules.card2Tag": "Contracts",
+        "modules.card2Title": "Representation Agreements",
+        "modules.card2Text": "Study written form, signatures, duration, validity requirements, scope of services, exclusivity and related legal risks.",
+        "modules.card3Tag": "Fees",
+        "modules.card3Title": "Service Fees and Commissions",
+        "modules.card3Text": "Review service fee rules, fee caps, who may pay, instalments, and when agents are not entitled to fees not yet due.",
+        "modules.card4Tag": "Protection",
+        "modules.card4Title": "Minors",
+        "modules.card4Text": "Understand timing restrictions, guardian involvement, enforceability and the enhanced safeguards required for dealings involving minors.",
+        "modules.card5Tag": "Integrity",
+        "modules.card5Title": "Conflicts of Interest",
+        "modules.card5Text": "Learn disclosure rules, dual representation limits, prohibited combinations and practical conflict-management principles.",
+        "modules.card6Tag": "Football Rules",
+        "modules.card6Title": "RSTP, Governance, Ethics and Disciplinary",
+        "modules.card6Text": "Go beyond agent regulations and revise the broader football framework tested across the exam syllabus.",
+
+        "journey.kicker": "How Agent Academy Works",
+        "journey.title": "A simple path from first access to exam preparation.",
+        "journey.step1Title": "1. Create your account",
+        "journey.step1Text": "Start with a free account and access the academy environment through your own dashboard.",
+        "journey.step2Title": "2. Study the playbook",
+        "journey.step2Text": "Read structured explanations topic by topic, with regulation-linked learning flow.",
+        "journey.step3Title": "3. Practise by topic",
+        "journey.step3Text": "Move from theory into quizzes and test yourself against multilingual exam-style questions.",
+        "journey.step4Title": "4. Progress to exam mode",
+        "journey.step4Text": "Advance into higher plans for mock exams, broader coverage and deeper preparation tools.",
+
+        "plans.kicker": "Plans and Access",
+        "plans.title": "Choose the level of access that fits your preparation stage.",
+        "plans.text": "All users create an account first. Free users can begin inside the academy, while higher plans unlock broader study coverage, more practice content and advanced preparation tools.",
+        "plans.freeTag": "Free",
+        "plans.freeTitle": "Free Account",
+        "plans.freePrice": "£0",
+        "plans.freeNote": "Ideal first step into the platform.",
+        "plans.free1": "Access after signup and login",
+        "plans.free2": "Selected playbook sections",
+        "plans.free3": "Introductory academy access",
+        "plans.starterTag": "Starter",
+        "plans.starterTitle": "Starter Plan",
+        "plans.starterPrice": "Starter",
+        "plans.starterNote": "For structured topic-based learning.",
+        "plans.starter1": "Expanded playbook access",
+        "plans.starter2": "Topic quiz availability",
+        "plans.starter3": "Core revision progression",
+        "plans.proTag": "Professional",
+        "plans.proTitle": "Professional Plan",
+        "plans.proPrice": "Professional",
+        "plans.proNote": "Main full exam-preparation tier.",
+        "plans.pro1": "Full playbook and wider question access",
+        "plans.pro2": "Mock exam preparation tools",
+        "plans.pro3": "More serious study coverage",
+        "plans.premiumTag": "Premium",
+        "plans.premiumTitle": "Premium Plan",
+        "plans.premiumPrice": "Premium",
+        "plans.premiumNote": "For the most advanced preparation path.",
+        "plans.premium1": "Highest access tier",
+        "plans.premium2": "Advanced tools and depth",
+        "plans.premium3": "Maximum preparation pathway",
+
+        "cta.title": "Create your account and enter Agent Academy.",
+        "cta.text": "Start with a free account, explore the academy structure, and upgrade when you are ready for broader playbook access, quizzes, and more advanced exam preparation.",
+        "cta.create": "Create Free Account",
+        "cta.signIn": "Sign In",
+        "cta.compare": "Compare Plans",
+
+        "disclaimer.title": "Important notice",
+        "disclaimer.text": "Agent Academy is an independent educational resource produced under Global Management Consultancy Limited. It is not affiliated with, endorsed by, or officially connected to FIFA.",
+        "footer.text": "Independent multilingual educational platform for football industry professionals."
+      },
+
+      fr: {
+        "brand.eyebrow": "Global Management Consultancy Limited",
+        "brand.title": "Agent Academy",
+        "nav.signIn": "Se connecter",
+        "nav.createAccount": "Créer un compte gratuit",
+
+        "hero.badge": "Préparation à l’examen d’agent de football de la FIFA",
+        "hero.title": "Une académie multilingue premium pour la préparation à l’examen d’agent de football.",
+        "hero.credibility": "Conçue pour les candidats, les agents en activité, les avocats, les conseillers et les professionnels de club.",
+        "hero.subtitle": "Agent Academy réunit un parcours structuré, un playbook réglementaire multilingue, des quiz par thème, des examens blancs et un tableau de bord professionnel pour préparer l’examen avec confiance.",
+        "hero.ctaPrimary": "Créer un compte gratuit",
+        "hero.ctaSecondary": "Découvrir le cours",
+        "hero.ctaTertiary": "Comparer les offres",
+        "hero.stat1Label": "Langues",
+        "hero.stat1Value": "English · Français · Español",
+        "hero.stat2Label": "Outils d’étude",
+        "hero.stat2Value": "Playbook · Quiz · Examen blanc",
+        "hero.stat3Label": "Accès",
+        "hero.stat3Value": "Du gratuit au premium",
+
+        "panel.kicker": "Présentation du cours",
+        "panel.title": "Étudiez plus intelligemment. Préparez-vous avec méthode. Progressez comme un professionnel.",
+        "panel.text": "Cette plateforme aide les utilisateurs à passer de la compréhension du cadre réglementaire de la FIFA à son application concrète grâce à la révision, aux questions pratiques et à la simulation d’examen.",
+        "panel.feature1": "Explications structurées des principales règles des agents de football",
+        "panel.feature2": "Parcours d’étude multilingue en anglais, français et espagnol",
+        "panel.feature3": "Liens directs entre le playbook et de vraies questions de quiz",
+        "panel.feature4": "Accès progressif du plan gratuit jusqu’à la préparation premium",
+        "panel.card1Label": "Idéal pour",
+        "panel.card1Value": "Candidats, agents, avocats et clubs",
+        "panel.card2Label": "Format",
+        "panel.card2Value": "Playbook + Quiz + Tableau de bord",
+
+        "overview.kicker": "Présentation du cours",
+        "overview.title": "Une vue publique complète du parcours d’étude Agent Academy.",
+        "overview.text": "Agent Academy aide les utilisateurs à comprendre le cadre réglementaire, à étudier efficacement, à s’exercer activement et à progresser étape par étape vers la réussite à l’examen.",
+        "overview.leftTitle": "Ce que comprend l’académie",
+        "overview.left1": "Un playbook multilingue structuré couvrant les thèmes essentiels de l’examen FIFA.",
+        "overview.left2": "Des quiz par thème directement liés aux règlements et aux modules d’étude.",
+        "overview.left3": "Un environnement d’apprentissage avec tableau de bord, accès par plan et progression structurée.",
+        "overview.left4": "Une préparation à l’examen blanc conçue comme une vraie simulation de révision.",
+        "overview.rightTitle": "À qui s’adresse la plateforme",
+        "overview.right1": "Aux candidats préparant l’examen d’agent de football de la FIFA.",
+        "overview.right2": "Aux agents licenciés souhaitant actualiser leurs connaissances réglementaires.",
+        "overview.right3": "Aux avocats, conseillers et professionnels conformité du football.",
+        "overview.right4": "Aux professionnels de club ou fédération ayant besoin d’une référence réglementaire pratique.",
+
+        "modules.kicker": "Ce que vous allez étudier",
+        "modules.title": "Modules clés alignés sur la structure de l’académie.",
+        "modules.text": "La partie publique présente l’étendue de l’académie. Une fois le compte créé, l’utilisateur accède au tableau de bord et commence à étudier selon son plan.",
+        "modules.card1Tag": "FFAR",
+        "modules.card1Title": "Principes fondamentaux du FFAR",
+        "modules.card1Text": "Comprendre l’objet, la structure, le système de licence et les fondements pratiques du règlement FIFA sur les agents de football.",
+        "modules.card2Tag": "Contrats",
+        "modules.card2Title": "Contrats de représentation",
+        "modules.card2Text": "Étudier la forme écrite, les signatures, la durée, les conditions de validité, l’étendue des services, l’exclusivité et les risques juridiques associés.",
+        "modules.card3Tag": "Honoraires",
+        "modules.card3Title": "Honoraires et commissions",
+        "modules.card3Text": "Réviser les règles sur les honoraires, les plafonds, les payeurs autorisés, les versements échelonnés et les cas où des honoraires non échus ne sont pas dus.",
+        "modules.card4Tag": "Protection",
+        "modules.card4Title": "Mineurs",
+        "modules.card4Text": "Comprendre les restrictions de timing, le rôle du représentant légal, l’opposabilité et les garanties renforcées concernant les mineurs.",
+        "modules.card5Tag": "Intégrité",
+        "modules.card5Title": "Conflits d’intérêts",
+        "modules.card5Text": "Apprendre les règles de divulgation, les limites de la double représentation, les combinaisons interdites et la gestion pratique des conflits.",
+        "modules.card6Tag": "Règles du football",
+        "modules.card6Title": "RSTP, gouvernance, éthique et disciplinaire",
+        "modules.card6Text": "Aller au-delà des règles sur les agents et réviser le cadre footballistique plus large couvert par l’examen.",
+
+        "journey.kicker": "Comment fonctionne Agent Academy",
+        "journey.title": "Un parcours simple de l’inscription à la préparation à l’examen.",
+        "journey.step1Title": "1. Créez votre compte",
+        "journey.step1Text": "Commencez avec un compte gratuit et accédez à l’académie depuis votre propre tableau de bord.",
+        "journey.step2Title": "2. Étudiez le playbook",
+        "journey.step2Text": "Lisez des explications structurées par thème avec une logique d’apprentissage reliée aux règlements.",
+        "journey.step3Title": "3. Pratiquez par thème",
+        "journey.step3Text": "Passez de la théorie aux quiz et testez-vous avec des questions multilingues de style examen.",
+        "journey.step4Title": "4. Passez au mode examen",
+        "journey.step4Text": "Progressez vers des plans supérieurs pour accéder aux examens blancs, à une couverture plus large et à des outils de préparation avancés.",
+
+        "plans.kicker": "Offres et accès",
+        "plans.title": "Choisissez le niveau d’accès correspondant à votre stade de préparation.",
+        "plans.text": "Tous les utilisateurs commencent par créer un compte. Le plan gratuit permet d’entrer dans l’académie, tandis que les plans supérieurs débloquent une couverture plus large, plus de pratique et des outils avancés.",
+        "plans.freeTag": "Gratuit",
+        "plans.freeTitle": "Compte gratuit",
+        "plans.freePrice": "£0",
+        "plans.freeNote": "Point d’entrée idéal dans la plateforme.",
+        "plans.free1": "Accès après inscription et connexion",
+        "plans.free2": "Sélection de sections du playbook",
+        "plans.free3": "Accès d’introduction à l’académie",
+        "plans.starterTag": "Starter",
+        "plans.starterTitle": "Plan Starter",
+        "plans.starterPrice": "Starter",
+        "plans.starterNote": "Pour un apprentissage structuré par thème.",
+        "plans.starter1": "Accès élargi au playbook",
+        "plans.starter2": "Accès aux quiz thématiques",
+        "plans.starter3": "Progression centrale de révision",
+        "plans.proTag": "Professionnel",
+        "plans.proTitle": "Plan Professionnel",
+        "plans.proPrice": "Professionnel",
+        "plans.proNote": "Le principal niveau de préparation complète à l’examen.",
+        "plans.pro1": "Playbook complet et accès plus large aux questions",
+        "plans.pro2": "Outils d’examen blanc",
+        "plans.pro3": "Couverture d’étude plus sérieuse",
+        "plans.premiumTag": "Premium",
+        "plans.premiumTitle": "Plan Premium",
+        "plans.premiumPrice": "Premium",
+        "plans.premiumNote": "Pour la voie de préparation la plus avancée.",
+        "plans.premium1": "Niveau d’accès le plus élevé",
+        "plans.premium2": "Outils avancés et plus grande profondeur",
+        "plans.premium3": "Parcours de préparation maximal",
+
+        "cta.title": "Créez votre compte et entrez dans Agent Academy.",
+        "cta.text": "Commencez avec un compte gratuit, découvrez la structure de l’académie, puis passez à un plan supérieur lorsque vous serez prêt pour plus de playbook, de quiz et d’outils avancés.",
+        "cta.create": "Créer un compte gratuit",
+        "cta.signIn": "Se connecter",
+        "cta.compare": "Comparer les offres",
+
+        "disclaimer.title": "Avis important",
+        "disclaimer.text": "Agent Academy est une ressource éducative indépendante produite par Global Management Consultancy Limited. Elle n’est ni affiliée à la FIFA, ni approuvée par elle, ni officiellement liée à elle.",
+        "footer.text": "Plateforme éducative multilingue indépendante pour les professionnels de l’industrie du football."
+      },
+
+      es: {
+        "brand.eyebrow": "Global Management Consultancy Limited",
+        "brand.title": "Agent Academy",
+        "nav.signIn": "Iniciar sesión",
+        "nav.createAccount": "Crear cuenta gratuita",
+
+        "hero.badge": "Preparación para el examen de agente de fútbol de la FIFA",
+        "hero.title": "Una academia multilingüe premium para la preparación del examen de agente de fútbol.",
+        "hero.credibility": "Diseñada para candidatos, agentes en activo, abogados, asesores y profesionales de clubes.",
+        "hero.subtitle": "Agent Academy combina una guía estructurada del curso, un playbook regulatorio multilingüe, cuestionarios por tema, simuladores de examen y un panel profesional para ayudar a prepararse con confianza.",
+        "hero.ctaPrimary": "Crear cuenta gratuita",
+        "hero.ctaSecondary": "Explorar el curso",
+        "hero.ctaTertiary": "Comparar planes",
+        "hero.stat1Label": "Idiomas",
+        "hero.stat1Value": "English · Français · Español",
+        "hero.stat2Label": "Herramientas de estudio",
+        "hero.stat2Value": "Playbook · Quiz · Simulador",
+        "hero.stat3Label": "Acceso",
+        "hero.stat3Value": "De plan gratuito a premium",
+
+        "panel.kicker": "Descripción del curso",
+        "panel.title": "Estudia con más inteligencia. Prepárate con estructura. Progresa como un profesional.",
+        "panel.text": "Esta plataforma está diseñada para ayudar a los usuarios a pasar de la comprensión del marco regulatorio de la FIFA a su aplicación práctica mediante revisión, preguntas de práctica y simulación de examen.",
+        "panel.feature1": "Explicaciones estructuradas de las principales normas de agentes de fútbol",
+        "panel.feature2": "Ruta de estudio multilingüe en inglés, francés y español",
+        "panel.feature3": "Enlaces directos del playbook a preguntas reales del quiz",
+        "panel.feature4": "Acceso progresivo desde plan gratuito hasta preparación premium",
+        "panel.card1Label": "Ideal para",
+        "panel.card1Value": "Candidatos, agentes, abogados y clubes",
+        "panel.card2Label": "Formato",
+        "panel.card2Value": "Playbook + Quiz + Panel",
+
+        "overview.kicker": "Descripción del curso",
+        "overview.title": "Una visión pública completa de la ruta de estudio de Agent Academy.",
+        "overview.text": "Agent Academy está diseñada para ayudar a los usuarios a comprender el marco regulatorio, estudiar con eficacia, practicar activamente y avanzar paso a paso hacia la preparación para el examen.",
+        "overview.leftTitle": "Qué incluye la academia",
+        "overview.left1": "Un playbook multilingüe estructurado que cubre los temas clave del examen de agente de fútbol de la FIFA.",
+        "overview.left2": "Cuestionarios por tema vinculados directamente a reglamentos y módulos de estudio.",
+        "overview.left3": "Un entorno de aprendizaje con panel, acceso por plan y rutas de progreso.",
+        "overview.left4": "Preparación para simulador de examen diseñada como una experiencia seria de revisión.",
+        "overview.rightTitle": "Para quién es esta plataforma",
+        "overview.right1": "Para candidatos que se preparan para el examen de agente de fútbol de la FIFA.",
+        "overview.right2": "Para agentes licenciados que desean actualizar sus conocimientos regulatorios.",
+        "overview.right3": "Para abogados, asesores y profesionales de cumplimiento en el fútbol.",
+        "overview.right4": "Para profesionales de clubes y federaciones que necesitan una referencia regulatoria práctica.",
+
+        "modules.kicker": "Qué vas a estudiar",
+        "modules.title": "Módulos principales alineados con la estructura de la academia.",
+        "modules.text": "La parte pública presenta el alcance de la academia. Una vez creada la cuenta, el usuario accede al panel y comienza a estudiar según su plan.",
+        "modules.card1Tag": "FFAR",
+        "modules.card1Title": "Principios básicos del FFAR",
+        "modules.card1Text": "Comprende el propósito, el marco de licencias, la estructura y los fundamentos prácticos del Reglamento FIFA sobre Agentes de Fútbol.",
+        "modules.card2Tag": "Contratos",
+        "modules.card2Title": "Acuerdos de representación",
+        "modules.card2Text": "Estudia la forma escrita, firmas, duración, requisitos de validez, alcance de servicios, exclusividad y riesgos legales asociados.",
+        "modules.card3Tag": "Honorarios",
+        "modules.card3Title": "Honorarios y comisiones",
+        "modules.card3Text": "Revisa reglas de honorarios, topes, quién puede pagar, pagos por plazos y cuándo el agente no tiene derecho a honorarios aún no vencidos.",
+        "modules.card4Tag": "Protección",
+        "modules.card4Title": "Menores",
+        "modules.card4Text": "Comprende restricciones temporales, participación de tutores, exigibilidad y salvaguardas reforzadas para asuntos que involucren menores.",
+        "modules.card5Tag": "Integridad",
+        "modules.card5Title": "Conflictos de interés",
+        "modules.card5Text": "Aprende reglas de divulgación, límites de representación dual, combinaciones prohibidas y gestión práctica de conflictos.",
+        "modules.card6Tag": "Normativa del fútbol",
+        "modules.card6Title": "RSTP, gobernanza, ética y disciplina",
+        "modules.card6Text": "Ve más allá de las reglas de agentes y revisa el marco futbolístico más amplio cubierto por el examen.",
+
+        "journey.kicker": "Cómo funciona Agent Academy",
+        "journey.title": "Una ruta simple desde el primer acceso hasta la preparación del examen.",
+        "journey.step1Title": "1. Crea tu cuenta",
+        "journey.step1Text": "Empieza con una cuenta gratuita y entra en la academia desde tu propio panel.",
+        "journey.step2Title": "2. Estudia el playbook",
+        "journey.step2Text": "Lee explicaciones estructuradas tema por tema, con un flujo de aprendizaje vinculado a la normativa.",
+        "journey.step3Title": "3. Practica por tema",
+        "journey.step3Text": "Pasa de la teoría al quiz y evalúate con preguntas multilingües de estilo examen.",
+        "journey.step4Title": "4. Avanza al modo examen",
+        "journey.step4Text": "Sube a planes superiores para acceder a simuladores, mayor cobertura y herramientas avanzadas de preparación.",
+
+        "plans.kicker": "Planes y acceso",
+        "plans.title": "Elige el nivel de acceso que se adapte a tu etapa de preparación.",
+        "plans.text": "Todos los usuarios crean una cuenta primero. Los usuarios gratuitos pueden entrar en la academia, mientras que los planes superiores desbloquean más contenido, práctica y herramientas avanzadas.",
+        "plans.freeTag": "Gratis",
+        "plans.freeTitle": "Cuenta gratuita",
+        "plans.freePrice": "£0",
+        "plans.freeNote": "Primer paso ideal dentro de la plataforma.",
+        "plans.free1": "Acceso tras registro e inicio de sesión",
+        "plans.free2": "Secciones seleccionadas del playbook",
+        "plans.free3": "Acceso introductorio a la academia",
+        "plans.starterTag": "Starter",
+        "plans.starterTitle": "Plan Starter",
+        "plans.starterPrice": "Starter",
+        "plans.starterNote": "Para aprendizaje estructurado por temas.",
+        "plans.starter1": "Acceso ampliado al playbook",
+        "plans.starter2": "Disponibilidad de quiz por tema",
+        "plans.starter3": "Progresión central de revisión",
+        "plans.proTag": "Professional",
+        "plans.proTitle": "Plan Professional",
+        "plans.proPrice": "Professional",
+        "plans.proNote": "Nivel principal de preparación completa para el examen.",
+        "plans.pro1": "Playbook completo y mayor acceso a preguntas",
+        "plans.pro2": "Herramientas de simulador de examen",
+        "plans.pro3": "Cobertura de estudio más seria",
+        "plans.premiumTag": "Premium",
+        "plans.premiumTitle": "Plan Premium",
+        "plans.premiumPrice": "Premium",
+        "plans.premiumNote": "Para la ruta de preparación más avanzada.",
+        "plans.premium1": "Nivel de acceso más alto",
+        "plans.premium2": "Herramientas avanzadas y mayor profundidad",
+        "plans.premium3": "Ruta máxima de preparación",
+
+        "cta.title": "Crea tu cuenta y entra en Agent Academy.",
+        "cta.text": "Empieza con una cuenta gratuita, explora la estructura de la academia y mejora tu plan cuando estés listo para más playbook, cuestionarios y herramientas avanzadas.",
+        "cta.create": "Crear cuenta gratuita",
+        "cta.signIn": "Iniciar sesión",
+        "cta.compare": "Comparar planes",
+
+        "disclaimer.title": "Aviso importante",
+        "disclaimer.text": "Agent Academy es un recurso educativo independiente producido por Global Management Consultancy Limited. No está afiliado, respaldado ni oficialmente vinculado a la FIFA.",
+        "footer.text": "Plataforma educativa multilingüe independiente para profesionales de la industria del fútbol."
+      }
+    };
+
+    let currentLang = localStorage.getItem("lang") || "en";
+
+    function applyLanguage(lang) {
+      const dict = i18n[lang] || i18n.en;
+      document.documentElement.lang = lang;
+
+      document.querySelectorAll("[data-i18n]").forEach((el) => {
+        const key = el.getAttribute("data-i18n");
+        if (dict[key]) {
+          el.textContent = dict[key];
+        }
+      });
+
+      document.querySelectorAll(".lang-btn").forEach((btn) => {
+        btn.classList.toggle("active", btn.dataset.lang === lang);
+      });
+
+      localStorage.setItem("lang", lang);
+      currentLang = lang;
+    }
+
+    document.querySelectorAll(".lang-btn").forEach((btn) => {
+      btn.addEventListener("click", () => applyLanguage(btn.dataset.lang));
+    });
+
+    document.getElementById("year").textContent = new Date().getFullYear();
+    applyLanguage(currentLang);
+  </script>
 </body>
 </html>
