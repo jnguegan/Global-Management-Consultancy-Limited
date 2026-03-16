@@ -151,14 +151,14 @@
 
   <div class="layout">
     <div class="sidebar">
-      <h3>Playbook</h3>
+      <h3 id="playbookSidebarTitle">Playbook</h3>
       <div id="articleList"></div>
     </div>
 
     <div class="content">
       <div id="articleContent">
-        <h2 class="article-title">Select a section</h2>
-        <p class="article-text">Choose a playbook article from the left.</p>
+        <h2 class="article-title" id="defaultArticleTitle">Select a section</h2>
+        <p class="article-text" id="defaultArticleText">Choose a playbook article from the left.</p>
       </div>
     </div>
   </div>
@@ -166,17 +166,63 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
     const supabaseClient = window.supabase.createClient(
-  "https://ysaxtuvuzqkyfmganven.supabase.co",
-  "sb_publishable_esfhuUEIcUJEL6z9zryRAA_FGMmUHlw"
-);
+      "https://ysaxtuvuzqkyfmganven.supabase.co",
+      "sb_publishable_esfhuUEIcUJEL6z9zryRAA_FGMmUHlw"
+    );
 
     let lang = localStorage.getItem("lang") || "en";
     let currentArticle = null;
+
+    const readerText = {
+      en: {
+        openRegulation: "Open Regulation",
+        practiceQuestions: "Practice Questions",
+        keyQuestions: "Key Questions for this Article",
+        question: "Question",
+        selectSectionTitle: "Select a section",
+        selectSectionText: "Choose a playbook article from the left.",
+        explanation: "Explanation",
+        playbook: "Playbook"
+      },
+      fr: {
+        openRegulation: "Ouvrir le règlement",
+        practiceQuestions: "Questions de pratique",
+        keyQuestions: "Questions clés pour cet article",
+        question: "Question",
+        selectSectionTitle: "Sélectionnez une section",
+        selectSectionText: "Choisissez un article du playbook à gauche.",
+        explanation: "Explication",
+        playbook: "Playbook"
+      },
+      es: {
+        openRegulation: "Abrir reglamento",
+        practiceQuestions: "Preguntas de práctica",
+        keyQuestions: "Preguntas clave para este artículo",
+        question: "Pregunta",
+        selectSectionTitle: "Seleccione una sección",
+        selectSectionText: "Elija un artículo del playbook a la izquierda.",
+        explanation: "Explicación",
+        playbook: "Playbook"
+      }
+    };
+
+    function rt(key) {
+      return readerText[lang]?.[key] || readerText.en[key] || key;
+    }
 
     document.querySelectorAll("[data-lang]").forEach((btn) => {
       btn.onclick = () => {
         lang = btn.dataset.lang;
         localStorage.setItem("lang", lang);
+
+        const sidebarTitle = document.getElementById("playbookSidebarTitle");
+        const defaultTitle = document.getElementById("defaultArticleTitle");
+        const defaultText = document.getElementById("defaultArticleText");
+
+        if (sidebarTitle) sidebarTitle.textContent = rt("playbook");
+        if (defaultTitle) defaultTitle.textContent = rt("selectSectionTitle");
+        if (defaultText) defaultText.textContent = rt("selectSectionText");
+
         loadSidebar().then(() => {
           if (currentArticle) loadArticle(currentArticle);
         });
@@ -184,7 +230,7 @@
     });
 
     async function loadSidebar() {
-        const { data, error } = await supabaseClient
+      const { data, error } = await supabaseClient
         .from("playbook_sections")
         .select("id,title_en,title_fr,title_es,is_free")
         .order("sort_order");
@@ -205,9 +251,10 @@
           lang === "es" ? section.title_es :
           section.title_en;
 
-       a.onclick = async () => {
-  await loadArticle(section.id);
-};
+        a.onclick = async () => {
+          await loadArticle(section.id);
+        };
+
         list.appendChild(a);
       });
     }
@@ -216,10 +263,11 @@
       currentArticle = id;
 
       const { data, error } = await supabaseClient
-      .from("playbook_sections")
-      .select("*")
-      .eq("id", id)
-      .single();
+        .from("playbook_sections")
+        .select("*")
+        .eq("id", id)
+        .single();
+
       console.log("PLAYBOOK ARTICLE DATA:", data);
       console.log("PLAYBOOK ARTICLE ERROR:", error);
 
@@ -257,10 +305,10 @@
       const keyQuestionsHtml = relatedIds.length
         ? `
           <div class="related-questions">
-            <h3>Key Questions for this Article</h3>
+            <h3>${rt("keyQuestions")}</h3>
             <div class="question-links">
               ${relatedIds.map(
-                (qid) => `<a class="question-link" href="/agent-academy/quiz.html?question=${qid}">Question ${qid}</a>`
+                (qid) => `<a class="question-link" href="/agent-academy/quiz.html?question=${qid}">${rt("question")} ${qid}</a>`
               ).join("")}
             </div>
           </div>
@@ -273,18 +321,22 @@
         <div class="article-text">${text}</div>
 
         <div class="explanation">
-          <h3>Explanation</h3>
+          <h3>${rt("explanation")}</h3>
           <p>${explanation}</p>
         </div>
 
         <div class="actions">
-          <a href="${regulationHref}">Open Regulation</a>
-          <a href="${practiceHref}">Practice Questions</a>
+          <a href="${regulationHref}">${rt("openRegulation")}</a>
+          <a href="${practiceHref}">${rt("practiceQuestions")}</a>
         </div>
 
         ${keyQuestionsHtml}
       `;
     }
+
+    document.getElementById("playbookSidebarTitle").textContent = rt("playbook");
+    document.getElementById("defaultArticleTitle").textContent = rt("selectSectionTitle");
+    document.getElementById("defaultArticleText").textContent = rt("selectSectionText");
 
     loadSidebar();
   </script>
