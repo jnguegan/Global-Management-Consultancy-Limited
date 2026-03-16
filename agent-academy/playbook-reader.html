@@ -304,14 +304,16 @@
 
       const keyQuestionsHtml = relatedIds.length
         ? `
-          <div class="related-questions">
-            <h3>${rt("keyQuestions")}</h3>
-            <div class="question-links">
-              ${relatedIds.map(
-                (qid) => `<a class="question-link" href="/agent-academy/quiz.html?question=${qid}">${rt("question")} ${qid}</a>`
-              ).join("")}
-            </div>
-          </div>
+          const keyQuestionsHtml = relatedIds.length
+  ? `
+    <div class="related-questions">
+      <h3>${rt("keyQuestions")}</h3>
+      <div class="question-links">
+        ${relatedIds.map(
+          (qid) => `<a class="question-link" href="/agent-academy/quiz.html?topic=${encodeURIComponent(data.topic_slug)}">${rt("question")} ${qid}</a>`
+        ).join("")}
+      </div>
+    </div>
         `
         : "";
 
