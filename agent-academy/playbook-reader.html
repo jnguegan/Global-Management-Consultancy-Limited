@@ -215,11 +215,11 @@
     async function loadArticle(id) {
       currentArticle = id;
 
-      const { data, error } = await supabase
-        .from("playbook_sections")
-        .select("*")
-        .eq("id", id)
-        .single();
+      const { data, error } = await supabaseClient
+      .from("playbook_sections")
+      .select("*")
+      .eq("id", id)
+      .single();
       console.log("PLAYBOOK ARTICLE DATA:", data);
       console.log("PLAYBOOK ARTICLE ERROR:", error);
 
