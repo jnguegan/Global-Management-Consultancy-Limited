@@ -222,6 +222,19 @@ function selectRandomQuestions(allQuestions, limit) {
 }
 
 async function loadTopic() {
+if (state.questionIdFromUrl && !state.topicSlug) {
+    state.topic = {
+      id: null,
+      slug: "linked-question",
+      name_en: "Linked Question",
+      name_fr: "Question liée",
+      name_es: "Pregunta vinculada",
+      description_en: "Opened from the Playbook or a direct question link.",
+      description_fr: "Ouverte depuis le Playbook ou un lien direct vers une question.",
+      description_es: "Abierta desde el Playbook o un enlace directo a una pregunta."
+    };
+    return;
+  }  
   const { data, error } = await db
     .from("topics")
     .select(`
