@@ -20,7 +20,8 @@ const state = {
   submitted: false,
   canSaveAttempt: false,
   questionLimit: 10,
-  seenQuestionIds: new Set()
+  seenQuestionIds: new Set(),
+  singleQuestionId: null
 };
 
 const el = {
@@ -46,7 +47,6 @@ const el = {
   submitBtn: document.getElementById("submitBtn"),
   nextBtn: document.getElementById("nextBtn"),
   retryBtn: document.getElementById("retryBtn"),
-    
   questionReferencePanel: document.getElementById("questionReferencePanel"),
   questionReferenceMeta: document.getElementById("questionReferenceMeta"),
   questionReferenceLink: document.getElementById("questionReferenceLink"),
@@ -63,17 +63,26 @@ async function init() {
 
     const params = new URLSearchParams(window.location.search);
     state.topicSlug = params.get("topic");
+    state.singleQuestionId = params.get("question");
 
-    if (!state.topicSlug) {
-      showEmpty("Missing topic in URL. Example: quiz.html?topic=ffar-basics");
+    if (!state.topicSlug && !state.singleQuestionId) {
+      showEmpty("Missing topic or question in URL. Example: quiz.html?topic=ffar-basics or quiz.html?topic=ffar-basics&question=101");
       return;
     }
 
     injectReferenceTooltipStyles();
     bindEvents();
-    loadSeenQuestionIds();
-    await loadTopic();
-    await loadQuestions();
+
+    if (state.topicSlug) {
+      loadSeenQuestionIds();
+      await loadTopic();
+    }
+
+    if (state.singleQuestionId) {
+      await loadSingleQuestion();
+    } else {
+      await loadQuestions();
+    }
 
     if (!state.questions.length) {
       showEmpty("No questions found for this topic yet.");
@@ -258,43 +267,150 @@ async function loadTopic() {
   }
 }
 
+async function loadSingleQuestion() {
+  const questionId = Number(state.singleQuestionId);
+
+  if (!questionId || Number.isNaN(questionId)) {
+    throw new Error("Invalid question id");
+  }
+
+  const { data: questionData, error: questionError } = await db
+    .from("questions")
+    .select(`
+      id,
+      topic_id,
+      is_active,
+      created_at,
+      question_text_en,
+      question_text_fr,
+      question_text_es,
+      explanation_en,
+      explanation_fr,
+      explanation_es,
+      reference_label,
+      reference_article,
+      reference_url,
+      reference_title,
+      reference_page,
+      reference_preview_en,
+      reference_preview_fr,
+      reference_preview_es,
+      difficulty
+    `)
+    .eq("id", questionId)
+    .eq("is_active", true)
+    .single();
+
+  console.log("SINGLE QUESTION DATA:", questionData);
+  console.log("SINGLE QUESTION ERROR:", questionError);
+
+  if (questionError || !questionData) {
+    throw questionError || new Error("Question not found");
+  }
+
+  const { data: optionsData, error: optionsError } = await db
+    .from("question_options")
+    .select(`
+      id,
+      question_id,
+      is_correct,
+      sort_order,
+      option_text_en,
+      option_text_fr,
+      option_text_es
+    `)
+    .eq("question_id", questionId)
+    .order("sort_order", { ascending: true });
+
+  console.log("SINGLE QUESTION OPTIONS:", optionsData);
+  console.log("SINGLE QUESTION OPTIONS ERROR:", optionsError);
+
+  if (optionsError) {
+    throw optionsError;
+  }
+
+  const questionWithOptions = {
+    ...questionData,
+    options: (optionsData || []).sort(
+      (a, b) => (a.sort_order || 0) - (b.sort_order || 0)
+    )
+  };
+
+  state.questions = [questionWithOptions];
+  state.currentIndex = 0;
+  state.selectedOptionId = null;
+  state.score = 0;
+  state.submitted = false;
+
+  if (el.totalLive) el.totalLive.textContent = "1";
+
+  if (!state.topic && questionData.topic_id) {
+    const { data: topicData, error: topicError } = await db
+      .from("topics")
+      .select(`
+        id,
+        slug,
+        is_active,
+        name_en,
+        name_fr,
+        name_es,
+        description_en,
+        description_fr,
+        description_es
+      `)
+      .eq("id", questionData.topic_id)
+      .maybeSingle();
+
+    console.log("SINGLE QUESTION TOPIC DATA:", topicData);
+    console.log("SINGLE QUESTION TOPIC ERROR:", topicError);
+
+    if (!topicError && topicData) {
+      state.topic = topicData;
+      state.topicSlug = topicData.slug || state.topicSlug;
+
+      const topicName = getLocalizedValue(topicData, "name");
+      const topicDescription = getLocalizedValue(topicData, "description");
+
+      if (el.topicTitle) el.topicTitle.textContent = topicName || "Topic";
+      if (el.topicBadge) el.topicBadge.textContent = topicData.slug || "";
+      if (el.quizHeading) el.quizHeading.textContent = topicName || "Quiz";
+      if (el.quizSubheading) {
+        el.quizSubheading.textContent =
+          topicDescription || "Answer the question below.";
+      }
+    }
+  }
+}
+
 async function loadQuestions() {
   const access = await AgentAcademyGuard.getAccessState();
 
-let table = "questions";
+  let table = "questions";
 
-if (access.plan === "free") {
-  table = "preview_quiz_questions";
-} else if (access.plan === "starter") {
-  table = "starter_quiz_questions";
-}
+  if (access.plan === "free") {
+    table = "preview_quiz_questions";
+  } else if (access.plan === "starter") {
+    table = "starter_quiz_questions";
+  }
 
-let idsQuery = db
-  .from(table)
-  .select("id");
+  let idsQuery = db
+    .from(table)
+    .select("id");
 
-if (access.plan !== "free") {
-  idsQuery = idsQuery
-    .eq("topic_id", state.topic.id)
-    .eq("is_active", true);
-}
+  if (access.plan !== "free") {
+    idsQuery = idsQuery
+      .eq("topic_id", state.topic.id)
+      .eq("is_active", true);
+  }
 
-if (access.plan !== "free") {
-  idsQuery = idsQuery.eq("topic_id", state.topic.id);
-}
+  const { data: idsData, error: idsError } = await idsQuery;
 
-if (access.plan !== "free") {
-  idsQuery = idsQuery.eq("topic_id", state.topic.id);
-}
+  console.log("QUESTION IDS DATA:", idsData);
+  console.log("QUESTION IDS ERROR:", idsError);
 
-const { data: idsData, error: idsError } = await idsQuery;
-
-console.log("QUESTION IDS DATA:", idsData);
-console.log("QUESTION IDS ERROR:", idsError);
-
-if (idsError) {
-  throw idsError;
-}
+  if (idsError) {
+    throw idsError;
+  }
 
   const allQuestionIds = (idsData || []).map((q) => q.id);
 
@@ -413,6 +529,11 @@ if (idsError) {
 
 async function tryCreateQuizAttempt() {
   try {
+    if (!state.topic || !state.topic.id) {
+      state.canSaveAttempt = false;
+      return;
+    }
+
     const {
       data: { user },
       error: userError
@@ -469,7 +590,9 @@ function renderQuestion() {
   const questionExplanation = getLocalizedValue(q, "explanation");
 
   if (el.questionNumber) {
-    el.questionNumber.textContent = `Question ${state.currentIndex + 1}`;
+    el.questionNumber.textContent = state.singleQuestionId
+      ? `Question ${q.id}`
+      : `Question ${state.currentIndex + 1}`;
   }
 
   if (el.questionText) {
@@ -477,10 +600,14 @@ function renderQuestion() {
   }
 
   if (el.progressLabel) {
-    el.progressLabel.textContent = `Question ${state.currentIndex + 1} of ${state.questions.length}`;
+    el.progressLabel.textContent = state.singleQuestionId
+      ? "Question 1 of 1"
+      : `Question ${state.currentIndex + 1} of ${state.questions.length}`;
   }
 
-  const percent = Math.round((state.currentIndex / state.questions.length) * 100);
+  const percent = state.questions.length > 0
+    ? Math.round((state.currentIndex / state.questions.length) * 100)
+    : 0;
 
   if (el.progressPercent) el.progressPercent.textContent = `${percent}%`;
   if (el.progressBar) el.progressBar.style.width = `${percent}%`;
@@ -522,9 +649,9 @@ function renderQuestion() {
 
   q._cachedExplanation = questionExplanation || "";
 
-if (el.questionReferencePanel) {
-  el.questionReferencePanel.classList.add("hidden");
-}
+  if (el.questionReferencePanel) {
+    el.questionReferencePanel.classList.add("hidden");
+  }
 }
 
 function selectOption(optionId) {
@@ -654,6 +781,7 @@ async function submitAnswer() {
         (isCorrect ? "Well done." : "Review this point carefully.")
       ) + ref;
   }
+
   if (typeof renderReferencePanel === "function") {
     renderReferencePanel(q);
   }
@@ -727,7 +855,17 @@ async function finishQuiz() {
 function retryQuiz() {
   resetSeenQuestionIds();
   const url = new URL(window.location.href);
-  url.searchParams.set("topic", state.topicSlug);
+
+  if (state.topicSlug) {
+    url.searchParams.set("topic", state.topicSlug);
+  }
+
+  if (state.singleQuestionId) {
+    url.searchParams.set("question", state.singleQuestionId);
+  } else {
+    url.searchParams.delete("question");
+  }
+
   window.location.href = url.toString();
 }
 
