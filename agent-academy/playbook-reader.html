@@ -165,10 +165,10 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-    const supabase = window.supabase.createClient(
-      "https://ysaxtuvuzqkyfmganven.supabase.co",
-      "sb_publishable_esfhuUEIcUJEL6z9zryRAA_FGMmUHlw"
-    );
+    const supabaseClient = window.supabase.createClient(
+  "https://ysaxtuvuzqkyfmganven.supabase.co",
+  "sb_publishable_esfhuUEIcUJEL6z9zryRAA_FGMmUHlw"
+);
 
     let lang = localStorage.getItem("lang") || "en";
     let currentArticle = null;
@@ -184,7 +184,7 @@
     });
 
     async function loadSidebar() {
-      const { data, error } = await supabase
+        const { data, error } = await supabaseClient
         .from("playbook_sections")
         .select("id,title_en,title_fr,title_es,is_free")
         .order("sort_order");
