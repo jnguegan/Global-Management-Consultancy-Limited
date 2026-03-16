@@ -63,6 +63,8 @@ async function init() {
 
     const params = new URLSearchParams(window.location.search);
     state.topicSlug = params.get("topic");
+     const params = new URLSearchParams(window.location.search);
+    state.topicSlug = params.get("topic");
 
     if (!state.topicSlug) {
       showEmpty("Missing topic in URL. Example: quiz.html?topic=ffar-basics");
@@ -268,15 +270,22 @@ if (access.plan === "free") {
 } else if (access.plan === "starter") {
   table = "starter_quiz_questions";
 }
+  const exactQuestionId = state.questionIdFromUrl || null;
 
 let idsQuery = db
   .from(table)
   .select("id");
 
-if (access.plan !== "free") {
+if (state.questionIdFromUrl) {
+
+  idsQuery = idsQuery.eq("id", state.questionIdFromUrl);
+
+} else if (access.plan !== "free") {
+
   idsQuery = idsQuery
     .eq("topic_id", state.topic.id)
     .eq("is_active", true);
+
 }
 
 if (access.plan !== "free") {
