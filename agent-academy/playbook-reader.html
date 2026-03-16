@@ -291,10 +291,10 @@
       const regulationHref =
         `/agent-academy/regulation-viewer.html?pdf=${encodeURIComponent("/agent-academy/regulations/" + data.regulation_pdf)}&page=${encodeURIComponent(data.regulation_page || 1)}`;
 
-      const practiceHref = data.topic_slug
-        ? `/agent-academy/quiz.html?topic=${encodeURIComponent(data.topic_slug)}`
-        : "#";
-
+      const practiceHref = (data.topic_slug && data.question_id)
+  ? `/agent-academy/quiz.html?topic=${encodeURIComponent(data.topic_slug)}&question=${encodeURIComponent(data.question_id)}`
+  : "#";
+      
       const relatedIds = Array.isArray(data.related_question_ids)
         ? data.related_question_ids
         : [];
