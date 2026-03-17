@@ -334,8 +334,6 @@
       };
     });
 
-    <script src="/agent-academy/js/academy.js"></script>
-    <script>
     async function loadSidebar() {
       const { data, error } = await supabaseClient
         .from("playbook_sections")
@@ -461,30 +459,12 @@ if (!allowed) {
       `;
     }
 
-  document.getElementById("playbookSidebarTitle").textContent = rt("playbook");
-document.getElementById("defaultArticleTitle").textContent = rt("selectSectionTitle");
-document.getElementById("defaultArticleText").textContent = rt("selectSectionText");
+    document.getElementById("playbookSidebarTitle").textContent = rt("playbook");
+    document.getElementById("defaultArticleTitle").textContent = rt("selectSectionTitle");
+    document.getElementById("defaultArticleText").textContent = rt("selectSectionText");
 
-async function initPlaybookPage() {
-  try {
-    const { data: { user } } = await supabaseClient.auth.getUser();
-
-    if (user) {
-      await loadUserAccess(user.id);
-    } else {
-      window.userPlan = "free";
-    }
-  } catch (err) {
-    console.error("Playbook init auth error:", err);
-    window.userPlan = "free";
-  }
-
-  await loadSidebar();
-}
-
-initPlaybookPage();
-    
+    loadSidebar();
   </script>
- 
+  <script src="/agent-academy/js/academy.js"></script>
 </body>
 </html>
