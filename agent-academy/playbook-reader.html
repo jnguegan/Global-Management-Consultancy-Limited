@@ -332,7 +332,7 @@
     async function loadSidebar() {
       const { data, error } = await supabaseClient
         .from("playbook_sections")
-        .select("id,title_en,title_fr,title_es,is_free")
+        .select("id,title_en,title_fr,title_es,is_free,access_level")
         .order("sort_order");
 
       if (error) {
@@ -344,19 +344,36 @@
       list.innerHTML = "";
 
       (data || []).forEach((section) => {
-        const a = document.createElement("div");
-        a.className = "article-link";
-        a.textContent =
-          lang === "fr" ? section.title_fr :
-          lang === "es" ? section.title_es :
-          section.title_en;
+  const a = document.createElement("div");
+  a.className = "article-link";
 
-        a.onclick = async () => {
-          await loadArticle(section.id);
-        };
+  const sectionTitle =
+    lang === "fr" ? section.title_fr :
+    lang === "es" ? section.title_es :
+    section.title_en;
 
-        list.appendChild(a);
-      });
+  const requiredLevel =
+    section.access_level || (section.is_free ? "free" : "professional");
+
+  const allowed = hasAccess(window.userPlan || "free", requiredLevel);
+
+  a.textContent = allowed ? sectionTitle : `🔒 ${sectionTitle}`;
+
+  if (!allowed) {
+    a.classList.add("locked");
+  }
+
+  a.onclick = async () => {
+    if (!allowed) {
+      showUpgradePrompt(requiredLevel);
+      return;
+    }
+
+    await loadArticle(section.id);
+  };
+
+  list.appendChild(a);
+});
     }
 
     async function loadArticle(id) {
