@@ -179,7 +179,13 @@
 "playbookCta.title": "Start with the Playbook",
 "playbookCta.text": "Read the structured learning guide before starting topic quizzes. Understand key FIFA regulations, then test yourself with exam-style questions.",
 "playbookCta.open": "Open Playbook",
-"playbookCta.upgrade": "Unlock Full Access"
+"playbookCta.upgrade": "Unlock Full Access",
+  "studyCta.kicker": "Recommended study path",
+"studyCta.title": "Study the Playbook or try the Mock Exam",
+"studyCta.text": "Read the structured learning guide before starting topic quizzes, or open the mock exam to experience timed exam-style practice.",
+"studyCta.playbook": "Open Playbook",
+"studyCta.mock": "Start Mock Exam",
+"studyCta.upgrade": "Unlock Full Access"
 
 }
 
