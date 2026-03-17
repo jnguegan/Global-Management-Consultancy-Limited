@@ -323,7 +323,45 @@
 "services.cta.button1": "Explore Finance",
 "services.cta.button2": "Contact Us",
 "services.cta.button3": "Partner Enquiry",  
+"finance.cta1": "Partner Enquiry",
+"finance.cta2": "Discuss Your Needs",
 
+"finance.panel.kicker": "Platform Positioning",
+"finance.panel.title": "Built for football where money, people and operations move internationally.",
+"finance.panel.text": "Global Sport Finance is not generic banking language repackaged for sport. It is positioned around the operational realities of clubs, agencies, professional players and global football workflows.",
+"finance.panel.feature1": "Multi-currency capability for cross-border football activity",
+"finance.panel.feature2": "Operational support for salaries, bonuses, supplier payments and treasury flows",
+"finance.panel.feature3": "Card and spending infrastructure for clubs, teams, executives and players",
+"finance.panel.feature4": "Structured through regulated financial institution partnerships",
+"finance.panel.card1Label": "Ideal For",
+"finance.panel.card1Value": "Clubs, agencies, players and international football operators",
+"finance.panel.card2Label": "Core Value",
+"finance.panel.card2Value": "Payments, FX, cards and treasury aligned with football",
+
+"finance.section.kicker": "Client Coverage",
+"finance.section.title": "Designed for the decision-makers and operators behind the global game.",
+"finance.section.text": "The service has been structured for clients whose financial operations do not fit neatly inside domestic, single-currency or off-the-shelf banking models.",
+
+"finance.who.tag": "Who We Serve",
+"finance.who.intro": "Global Sport Finance is built for serious users across football and related international structures.",
+
+"finance.services.tag": "Services",
+"finance.services.intro": "The offering is structured around modern financial infrastructure for international movement of funds, people and obligations.",
+
+"finance.why.kicker": "Why Global Sport Finance",
+"finance.why.card1.title": "International by Design",
+"finance.why.card1.text": "Football revenue, salaries, transfers, bonuses and operational costs move across countries and currencies every day. The infrastructure should reflect that reality.",
+"finance.why.card2.title": "Operationally Relevant",
+"finance.why.card2.text": "This is about practical workflows: treasury, payouts, cards, FX, controls and operational efficiency for real football organisations.",
+"finance.why.card3.title": "Commercially Structured",
+"finance.why.card3.text": "Global Sport Finance sits inside a broader premium platform with football sector understanding, advisory context and strategic international orientation.",
+
+"finance.approach.kicker": "Approach",
+
+"finance.cta.title": "Need structured financial solutions for football or cross-border operations?",
+"finance.cta.text": "Contact us for a more tailored discussion around international payments, multi-currency workflows, cards, FX and partner-led infrastructure relevant to your organisation.",
+"finance.cta.button1": "Partner Enquiry",
+"finance.cta.button2": "Contact Us",
 
     },
 
@@ -642,7 +680,45 @@
 "services.cta.button1": "Découvrir la finance",
 "services.cta.button2": "Nous contacter",
 "services.cta.button3": "Demande de partenariat",
+"finance.cta1": "Demande de partenariat",
+"finance.cta2": "Discuter de vos besoins",
 
+"finance.panel.kicker": "Positionnement",
+"finance.panel.title": "Conçu pour un football où l’argent, les personnes et les opérations circulent à l’international.",
+"finance.panel.text": "Global Sport Finance n’est pas un simple discours bancaire générique adapté au sport. Le service est positionné autour des réalités opérationnelles des clubs, agences, joueurs professionnels et flux football internationaux.",
+"finance.panel.feature1": "Capacité multi-devises pour les activités football transfrontalières",
+"finance.panel.feature2": "Support opérationnel pour salaires, primes, paiements fournisseurs et flux de trésorerie",
+"finance.panel.feature3": "Infrastructure cartes et gestion des dépenses pour clubs, équipes, dirigeants et joueurs",
+"finance.panel.feature4": "Structuré via des partenariats avec des institutions financières régulées",
+"finance.panel.card1Label": "Idéal pour",
+"finance.panel.card1Value": "Clubs, agences, joueurs et opérateurs internationaux du football",
+"finance.panel.card2Label": "Valeur centrale",
+"finance.panel.card2Value": "Paiements, change, cartes et trésorerie alignés sur le football",
+
+"finance.section.kicker": "Couverture clients",
+"finance.section.title": "Conçu pour les décideurs et opérateurs derrière le football mondial.",
+"finance.section.text": "Le service a été structuré pour des clients dont les opérations financières ne s’intègrent pas dans des modèles domestiques, mono-devise ou bancaires standards.",
+
+"finance.who.tag": "À qui nous servons",
+"finance.who.intro": "Global Sport Finance est conçu pour des utilisateurs sérieux dans le football et les structures internationales liées au secteur.",
+
+"finance.services.tag": "Services",
+"finance.services.intro": "L’offre est structurée autour d’une infrastructure financière moderne pour les mouvements internationaux de fonds, de personnes et d’obligations.",
+
+"finance.why.kicker": "Pourquoi Global Sport Finance",
+"finance.why.card1.title": "International par conception",
+"finance.why.card1.text": "Revenus, salaires, transferts, primes et coûts opérationnels circulent chaque jour entre pays et devises. L’infrastructure doit refléter cette réalité.",
+"finance.why.card2.title": "Pertinence opérationnelle",
+"finance.why.card2.text": "Il s’agit de flux pratiques : trésorerie, paiements, cartes, change, contrôles et efficacité opérationnelle pour de vraies organisations du football.",
+"finance.why.card3.title": "Structuration commerciale",
+"finance.why.card3.text": "Global Sport Finance s’inscrit dans une plateforme premium plus large avec compréhension du football, contexte conseil et orientation internationale stratégique.",
+
+"finance.approach.kicker": "Approche",
+
+"finance.cta.title": "Besoin de solutions financières structurées pour le football ou des opérations transfrontalières ?",
+"finance.cta.text": "Contactez-nous pour un échange plus ciblé autour des paiements internationaux, flux multi-devises, cartes, change et infrastructures partenaires pertinentes pour votre organisation.",
+"finance.cta.button1": "Demande de partenariat",
+"finance.cta.button2": "Nous contacter",
 
     },
 
@@ -963,7 +1039,45 @@
 "services.cta.button1": "Explorar finanzas",
 "services.cta.button2": "Contactar",
 "services.cta.button3": "Solicitud de partnership",
+"finance.cta1": "Solicitud de partnership",
+"finance.cta2": "Hablar de sus necesidades",
 
+"finance.panel.kicker": "Posicionamiento",
+"finance.panel.title": "Diseñado para un fútbol en el que el dinero, las personas y las operaciones se mueven internacionalmente.",
+"finance.panel.text": "Global Sport Finance no es lenguaje bancario genérico adaptado al deporte. Está posicionado en torno a las realidades operativas de clubes, agencias, jugadores profesionales y flujos internacionales del fútbol.",
+"finance.panel.feature1": "Capacidad multidivisa para actividad futbolística transfronteriza",
+"finance.panel.feature2": "Soporte operativo para salarios, primas, pagos a proveedores y flujos de tesorería",
+"finance.panel.feature3": "Infraestructura de tarjetas y gasto para clubes, equipos, directivos y jugadores",
+"finance.panel.feature4": "Estructurado mediante alianzas con instituciones financieras reguladas",
+"finance.panel.card1Label": "Ideal para",
+"finance.panel.card1Value": "Clubes, agencias, jugadores y operadores internacionales del fútbol",
+"finance.panel.card2Label": "Valor principal",
+"finance.panel.card2Value": "Pagos, divisas, tarjetas y tesorería alineados con el fútbol",
+
+"finance.section.kicker": "Cobertura de clientes",
+"finance.section.title": "Diseñado para los responsables y operadores detrás del fútbol global.",
+"finance.section.text": "El servicio ha sido estructurado para clientes cuyas operaciones financieras no encajan en modelos domésticos, de una sola moneda o bancarios estándar.",
+
+"finance.who.tag": "A quién servimos",
+"finance.who.intro": "Global Sport Finance está diseñado para usuarios serios dentro del fútbol y estructuras internacionales relacionadas.",
+
+"finance.services.tag": "Servicios",
+"finance.services.intro": "La oferta está estructurada en torno a infraestructura financiera moderna para el movimiento internacional de fondos, personas y obligaciones.",
+
+"finance.why.kicker": "Por qué Global Sport Finance",
+"finance.why.card1.title": "Internacional por diseño",
+"finance.why.card1.text": "Ingresos, salarios, traspasos, primas y costes operativos se mueven cada día entre países y monedas. La infraestructura debe reflejar esa realidad.",
+"finance.why.card2.title": "Relevancia operativa",
+"finance.why.card2.text": "Se trata de flujos prácticos: tesorería, pagos, tarjetas, divisas, controles y eficiencia operativa para organizaciones reales del fútbol.",
+"finance.why.card3.title": "Estructura comercial",
+"finance.why.card3.text": "Global Sport Finance forma parte de una plataforma premium más amplia con comprensión del sector fútbol, contexto de asesoría y orientación internacional estratégica.",
+
+"finance.approach.kicker": "Enfoque",
+
+"finance.cta.title": "¿Necesita soluciones financieras estructuradas para fútbol u operaciones transfronterizas?",
+"finance.cta.text": "Contáctenos para una conversación más adaptada sobre pagos internacionales, flujos multidivisa, tarjetas, divisas e infraestructura asociada relevante para su organización.",
+"finance.cta.button1": "Solicitud de partnership",
+"finance.cta.button2": "Contacto",
     }
   };
 
