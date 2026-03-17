@@ -275,7 +275,54 @@
 "upgrade.choosePremium": "Choose Premium",
 
 "upgrade.noteTitle": "Important",
-"upgrade.noteText": "Free accounts only provide limited preview access. Full mock exams, the full question bank and the complete playbook are available through premium access."
+"upgrade.noteText": "Free accounts only provide limited preview access. Full mock exams, the full question bank and the complete playbook are available through premium access.",
+     "brand.eyebrow": "Global Management Consultancy Limited",
+"brand.title": "Premium advisory, finance and academy platform",
+
+"services.cta1": "Explore Finance Solutions",
+"services.cta2": "Discuss Your Needs",
+
+"services.panel.kicker": "Service Positioning",
+"services.panel.title": "Built for professional clients who need clarity, execution and international perspective.",
+"services.panel.text": "Our service model is intentionally focused. Rather than trying to be everything to everyone, we concentrate on high-value support where strategic advisory and practical implementation matter most.",
+"services.panel.feature1": "Cross-border advisory for football and international operators",
+"services.panel.feature2": "Finance infrastructure tailored to real operational workflows",
+"services.panel.feature3": "Football agency and representation support aligned with the modern game",
+"services.panel.feature4": "Premium, multilingual and commercially focused client experience",
+"services.panel.card1Label": "Main Areas",
+"services.panel.card1Value": "Finance and Football Agency",
+"services.panel.card2Label": "Client Focus",
+"services.panel.card2Value": "Clubs, agencies, athletes and global partners",
+
+"services.section.kicker": "Core Service Lines",
+"services.section.title": "Two focused pillars, each built for serious professional use.",
+"services.section.text": "This page is intentionally concentrated on the two service areas that currently define the strongest commercial offering of the group.",
+
+"services.card1.tag": "Finance",
+"services.card1.intro": "Financial infrastructure and payment solutions built for football organisations, internationally mobile professionals and businesses operating across borders.",
+"services.card1.li5": "Club and player cards, physical and virtual",
+"services.card1.cta1": "Enter Finance",
+"services.card1.cta2": "Partner Enquiry",
+
+"services.card2.tag": "Agency",
+"services.card2.intro": "Representation support, negotiation guidance and strategic football advisory for professionals and stakeholders operating within the modern game.",
+"services.card2.cta1": "Discuss Representation",
+"services.card2.cta2": "Partner Enquiry",
+
+"services.insights.kicker": "Why This Matters",
+"services.insights.title": "Services structured around practical execution, not just description.",
+"services.insights.card1.title": "Operational Relevance",
+"services.insights.card1.text": "These services are designed for real-world use across clubs, players, agency structures and cross-border business settings.",
+"services.insights.card2.title": "Cross-Border Perspective",
+"services.insights.card2.text": "The value comes not only from the service itself, but from understanding international movement, compliance, payments and football realities together.",
+"services.insights.card3.title": "Premium Focus",
+"services.insights.card3.text": "A focused service page creates stronger brand positioning than a long generic list of offerings. It signals clarity, seriousness and high-value intent.",
+
+"services.cta.title": "Need the right solution for your football or finance workflow?",
+"services.cta.text": "Start with the service area most relevant to you, or contact us directly for a more tailored discussion based on your objectives and international context.",
+"services.cta.button1": "Explore Finance",
+"services.cta.button2": "Contact Us",
+"services.cta.button3": "Partner Enquiry",  
 
 
     },
@@ -547,8 +594,54 @@
 "upgrade.choosePremium": "Choisir Premium",
 
 "upgrade.noteTitle": "Important",
-"upgrade.noteText": "Les comptes gratuits donnent uniquement accès à un aperçu limité. Les examens blancs complets, la banque complète de questions et le playbook complet sont disponibles via l'accès premium."
+"upgrade.noteText": "Les comptes gratuits donnent uniquement accès à un aperçu limité. Les examens blancs complets, la banque complète de questions et le playbook complet sont disponibles via l'accès premium.",
+"brand.eyebrow": "Global Management Consultancy Limited",
+"brand.title": "Plateforme premium de conseil, finance et académie",
 
+"services.cta1": "Découvrir les solutions finance",
+"services.cta2": "Discuter de vos besoins",
+
+"services.panel.kicker": "Positionnement des services",
+"services.panel.title": "Conçu pour des clients professionnels qui attendent clarté, exécution et vision internationale.",
+"services.panel.text": "Notre modèle de services est volontairement concentré. Plutôt que d’essayer de tout faire pour tout le monde, nous nous concentrons sur des accompagnements à forte valeur, là où le conseil stratégique et la mise en œuvre pratique comptent réellement.",
+"services.panel.feature1": "Conseil transfrontalier pour le football et les opérateurs internationaux",
+"services.panel.feature2": "Infrastructure financière adaptée aux flux opérationnels réels",
+"services.panel.feature3": "Accompagnement en agence de football et représentation alignés avec le jeu moderne",
+"services.panel.feature4": "Expérience client premium, multilingue et orientée business",
+"services.panel.card1Label": "Domaines principaux",
+"services.panel.card1Value": "Finance et agence de football",
+"services.panel.card2Label": "Clients visés",
+"services.panel.card2Value": "Clubs, agences, athlètes et partenaires internationaux",
+
+"services.section.kicker": "Lignes de services principales",
+"services.section.title": "Deux piliers ciblés, chacun conçu pour un usage professionnel sérieux.",
+"services.section.text": "Cette page est volontairement concentrée sur les deux domaines de services qui définissent aujourd’hui l’offre commerciale la plus forte du groupe.",
+
+"services.card1.tag": "Finance",
+"services.card1.intro": "Infrastructure financière et solutions de paiement conçues pour les organisations du football, les professionnels mobiles à l’international et les entreprises opérant au-delà des frontières.",
+"services.card1.li5": "Cartes pour clubs et joueurs, physiques et virtuelles",
+"services.card1.cta1": "Accéder à la finance",
+"services.card1.cta2": "Demande de partenariat",
+
+"services.card2.tag": "Agence",
+"services.card2.intro": "Accompagnement en représentation, soutien à la négociation et conseil stratégique football pour les professionnels et acteurs du jeu moderne.",
+"services.card2.cta1": "Parler représentation",
+"services.card2.cta2": "Demande de partenariat",
+
+"services.insights.kicker": "Pourquoi c’est important",
+"services.insights.title": "Des services structurés autour de l’exécution pratique, pas seulement de la description.",
+"services.insights.card1.title": "Pertinence opérationnelle",
+"services.insights.card1.text": "Ces services sont conçus pour un usage réel dans les clubs, chez les joueurs, dans les structures d’agence et dans les environnements commerciaux transfrontaliers.",
+"services.insights.card2.title": "Perspective internationale",
+"services.insights.card2.text": "La valeur ne vient pas seulement du service lui-même, mais aussi de la compréhension conjointe de la mobilité internationale, de la conformité, des paiements et des réalités du football.",
+"services.insights.card3.title": "Positionnement premium",
+"services.insights.card3.text": "Une page de services ciblée crée un positionnement de marque plus fort qu’une longue liste générique d’offres. Elle signale clarté, sérieux et intention à forte valeur.",
+
+"services.cta.title": "Besoin de la bonne solution pour vos flux football ou finance ?",
+"services.cta.text": "Commencez par le domaine de service le plus pertinent pour vous, ou contactez-nous directement pour un échange plus ciblé selon vos objectifs et votre contexte international.",
+"services.cta.button1": "Découvrir la finance",
+"services.cta.button2": "Nous contacter",
+"services.cta.button3": "Demande de partenariat",
 
 
     },
@@ -821,7 +914,55 @@
 "upgrade.choosePremium": "Elegir Premium",
 
 "upgrade.noteTitle": "Importante",
-"upgrade.noteText": "Las cuentas gratuitas solo proporcionan acceso de vista previa limitado. Los exámenes simulados completos, el banco completo de preguntas y el playbook completo están disponibles mediante acceso premium."
+"upgrade.noteText": "Las cuentas gratuitas solo proporcionan acceso de vista previa limitado. Los exámenes simulados completos, el banco completo de preguntas y el playbook completo están disponibles mediante acceso premium.",
+
+       "brand.eyebrow": "Global Management Consultancy Limited",
+"brand.title": "Plataforma premium de consultoría, finanzas y academia",
+
+"services.cta1": "Explorar soluciones financieras",
+"services.cta2": "Hablar de sus necesidades",
+
+"services.panel.kicker": "Posicionamiento de servicios",
+"services.panel.title": "Diseñado para clientes profesionales que necesitan claridad, ejecución y visión internacional.",
+"services.panel.text": "Nuestro modelo de servicios está intencionadamente enfocado. En lugar de intentar ser todo para todos, nos concentramos en apoyo de alto valor, donde la asesoría estratégica y la implementación práctica realmente importan.",
+"services.panel.feature1": "Asesoría transfronteriza para fútbol y operadores internacionales",
+"services.panel.feature2": "Infraestructura financiera adaptada a flujos operativos reales",
+"services.panel.feature3": "Apoyo de agencia de fútbol y representación alineados con el juego moderno",
+"services.panel.feature4": "Experiencia de cliente premium, multilingüe y orientada al negocio",
+"services.panel.card1Label": "Áreas principales",
+"services.panel.card1Value": "Finanzas y agencia de fútbol",
+"services.panel.card2Label": "Enfoque de clientes",
+"services.panel.card2Value": "Clubes, agencias, atletas y socios globales",
+
+"services.section.kicker": "Líneas principales de servicio",
+"services.section.title": "Dos pilares enfocados, cada uno diseñado para un uso profesional serio.",
+"services.section.text": "Esta página está concentrada intencionadamente en las dos áreas de servicio que actualmente definen la oferta comercial más fuerte del grupo.",
+
+"services.card1.tag": "Finanzas",
+"services.card1.intro": "Infraestructura financiera y soluciones de pago creadas para organizaciones del fútbol, profesionales con movilidad internacional y empresas que operan a través de fronteras.",
+"services.card1.li5": "Tarjetas para clubes y jugadores, físicas y virtuales",
+"services.card1.cta1": "Entrar en finanzas",
+"services.card1.cta2": "Solicitud de partnership",
+
+"services.card2.tag": "Agencia",
+"services.card2.intro": "Apoyo en representación, orientación en negociación y asesoría estratégica de fútbol para profesionales y actores que operan dentro del juego moderno.",
+"services.card2.cta1": "Hablar de representación",
+"services.card2.cta2": "Solicitud de partnership",
+
+"services.insights.kicker": "Por qué importa",
+"services.insights.title": "Servicios estructurados en torno a la ejecución práctica, no solo a la descripción.",
+"services.insights.card1.title": "Relevancia operativa",
+"services.insights.card1.text": "Estos servicios están diseñados para uso real en clubes, jugadores, estructuras de agencia y entornos comerciales transfronterizos.",
+"services.insights.card2.title": "Perspectiva internacional",
+"services.insights.card2.text": "El valor no solo proviene del servicio en sí, sino de entender conjuntamente movilidad internacional, cumplimiento, pagos y realidades del fútbol.",
+"services.insights.card3.title": "Enfoque premium",
+"services.insights.card3.text": "Una página de servicios enfocada crea un posicionamiento de marca más fuerte que una lista larga y genérica de ofertas. Transmite claridad, seriedad e intención de alto valor.",
+
+"services.cta.title": "¿Necesita la solución adecuada para su flujo de trabajo en fútbol o finanzas?",
+"services.cta.text": "Comience por el área de servicio más relevante para usted, o contáctenos directamente para una conversación más adaptada a sus objetivos y contexto internacional.",
+"services.cta.button1": "Explorar finanzas",
+"services.cta.button2": "Contactar",
+"services.cta.button3": "Solicitud de partnership",
 
     }
   };
