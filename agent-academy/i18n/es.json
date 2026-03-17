@@ -174,7 +174,12 @@
 "launch.text": "para la versión 1, los componentes esenciales en vivo son la página de entrada de Academy, inicio de sesión, registro, cuestionario de práctica, examen simulado FIFA y el playbook online. El panel, el seguimiento de resultados y las páginas avanzadas de perfil de usuario pueden añadirse después del lanzamiento inicial.",
 
 "footer.brand": "Agent Academy",
-  "upgrade.freePreviewButton": "Comenzar vista previa gratuita"
+  "upgrade.freePreviewButton": "Comenzar vista previa gratuita",
+  "playbookCta.kicker": "Ruta de estudio recomendada",
+"playbookCta.title": "Empieza con el Playbook",
+"playbookCta.text": "Consulta la guía de aprendizaje estructurada antes de comenzar los cuestionarios por tema. Comprende las regulaciones FIFA y luego pon a prueba tus conocimientos con preguntas tipo examen.",
+"playbookCta.open": "Abrir Playbook",
+"playbookCta.upgrade": "Desbloquear acceso completo"
 
 
 
