@@ -185,7 +185,9 @@
 "studyCta.text": "Read the structured learning guide before starting topic quizzes, or open the mock exam to experience timed exam-style practice.",
 "studyCta.playbook": "Open Playbook",
 "studyCta.mock": "Start Mock Exam",
-"studyCta.upgrade": "Unlock Full Access"
+"studyCta.upgrade": "Unlock Full Access",
+  "nav.backAcademy": "Back to Academy",
+"nav.backTopics": "Back to Topics"
 
 }
 
