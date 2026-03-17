@@ -460,11 +460,30 @@ if (!allowed) {
     }
 
     document.getElementById("playbookSidebarTitle").textContent = rt("playbook");
-    document.getElementById("defaultArticleTitle").textContent = rt("selectSectionTitle");
-    document.getElementById("defaultArticleText").textContent = rt("selectSectionText");
+document.getElementById("defaultArticleTitle").textContent = rt("selectSectionTitle");
+document.getElementById("defaultArticleText").textContent = rt("selectSectionText");
 
-    loadSidebar();
-  </script>
+async function initPlaybookPage() {
+  try {
+    const { data: { user } } = await supabaseClient.auth.getUser();
+
+    if (user) {
+      await loadUserAccess(user.id);
+    } else {
+      window.userPlan = "free";
+    }
+  } catch (err) {
+    console.error("Playbook init auth error:", err);
+    window.userPlan = "free";
+  }
+
+  await loadSidebar();
+}
+
+initPlaybookPage();
+    
   <script src="/agent-academy/js/academy.js"></script>
+  </script>
+ 
 </body>
 </html>
