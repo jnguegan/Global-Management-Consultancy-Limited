@@ -177,7 +177,12 @@
 "launch.text": "pour la version 1, les composants essentiels en ligne sont la page d’entrée de l’Academy, la connexion, l’inscription, le quiz d’entraînement, l’examen blanc FIFA et le playbook en ligne. Le tableau de bord, le suivi des résultats et les pages avancées de profil utilisateur pourront être ajoutés après le lancement initial.",
 
 "footer.brand": "Agent Academy",
-  "upgrade.freePreviewButton": "Commencer l’aperçu gratuit"
+  "upgrade.freePreviewButton": "Commencer l’aperçu gratuit",
+  "playbookCta.kicker": "Parcours recommandé",
+"playbookCta.title": "Commencez par le Playbook",
+"playbookCta.text": "Consultez le guide d’apprentissage structuré avant de commencer les quiz par thème. Comprenez les règlements FIFA, puis testez-vous avec des questions de type examen.",
+"playbookCta.open": "Ouvrir le Playbook",
+"playbookCta.upgrade": "Débloquer l’accès complet"
   
 }
 
