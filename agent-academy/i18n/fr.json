@@ -189,7 +189,9 @@
 "studyCta.text": "Consultez le guide d’apprentissage structuré avant de commencer les quiz par thème, ou ouvrez l’examen blanc pour découvrir une pratique chronométrée de type examen.",
 "studyCta.playbook": "Ouvrir le Playbook",
 "studyCta.mock": "Commencer l’examen blanc",
-"studyCta.upgrade": "Débloquer l’accès complet"
+"studyCta.upgrade": "Débloquer l’accès complet",
+  "nav.backAcademy": "Retour à l’académie",
+"nav.backTopics": "Retour aux sujets"
   
 }
 
