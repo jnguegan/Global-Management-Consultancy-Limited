@@ -145,6 +145,11 @@
       color:var(--muted);
       font-size:14px;
     }
+
+    .article-link.locked{
+  opacity: 0.72;
+  cursor: not-allowed;
+}
   </style>
 </head>
 <body>
@@ -389,6 +394,16 @@
         console.error("Article load error:", error);
         return;
       }
+
+      const requiredLevel =
+  data.access_level || (data.is_free ? "free" : "professional");
+
+const allowed = hasAccess(window.userPlan || "free", requiredLevel);
+
+if (!allowed) {
+  showUpgradePrompt(requiredLevel);
+  return;
+}
 
       const title =
         lang === "fr" ? data.title_fr :
