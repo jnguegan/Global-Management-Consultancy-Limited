@@ -4,87 +4,840 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Services | Global Management Consultancy Limited</title>
-  <meta name="description" content="Services: Global Sport Finance and football agency services for international football operations." />
+  <meta
+    name="description"
+    content="Premium consultancy, football agency support and Global Sport Finance solutions for international football operations."
+  />
 
   <link rel="icon" href="favicon.png" type="image/png" />
-  <link rel="stylesheet" href="assets/css/style.css" />
+
+  <style>
+    :root{
+      --bg:#08111f;
+      --bg-soft:#0d1728;
+      --panel:#101d31;
+      --panel-2:#16253c;
+      --text:#f4f7fb;
+      --muted:#aeb8c8;
+      --line:rgba(255,255,255,0.08);
+      --gold:#d4af37;
+      --gold-soft:rgba(212,175,55,0.14);
+      --green:#39c27d;
+      --shadow:0 22px 60px rgba(0,0,0,0.35);
+      --radius:24px;
+      --container:1200px;
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family:Inter,Arial,Helvetica,sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(212,175,55,0.08), transparent 26%),
+        radial-gradient(circle at top right, rgba(255,255,255,0.04), transparent 18%),
+        linear-gradient(180deg, #07111f 0%, #0a1526 100%);
+    }
+
+    a{color:inherit;text-decoration:none}
+    img{max-width:100%;display:block}
+
+    .container{
+      width:min(var(--container), calc(100% - 40px));
+      margin:0 auto;
+    }
+
+    .topbar{
+      position:sticky;
+      top:0;
+      z-index:40;
+      backdrop-filter:blur(18px);
+      background:rgba(8,17,31,0.82);
+      border-bottom:1px solid var(--line);
+    }
+
+    .topbar-inner{
+      min-height:84px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:18px;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:14px;
+      min-width:0;
+    }
+
+    .brand img{
+      width:68px;
+      height:68px;
+      object-fit:contain;
+      border-radius:14px;
+      background:rgba(255,255,255,0.02);
+      padding:4px;
+      flex:0 0 auto;
+    }
+
+    .brand-copy{
+      min-width:0;
+    }
+
+    .brand-eyebrow{
+      margin:0 0 4px;
+      font-size:11px;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      color:var(--muted);
+    }
+
+    .brand-title{
+      margin:0;
+      font-size:17px;
+      font-weight:700;
+      line-height:1.2;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .navRight{
+      display:flex;
+      align-items:center;
+      gap:18px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+
+    .menu{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+
+    .menu a{
+      padding:10px 14px;
+      border-radius:999px;
+      color:var(--muted);
+      font-weight:600;
+      transition:.2s ease;
+    }
+
+    .menu a:hover,
+    .menu a.active{
+      color:var(--text);
+      background:rgba(255,255,255,0.05);
+    }
+
+    .lang{
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+
+    .langLabel{
+      font-size:12px;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      color:var(--muted);
+      font-weight:700;
+    }
+
+    .langSelect{
+      min-height:42px;
+      padding:0 14px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,0.04);
+      color:var(--text);
+      font:inherit;
+      font-weight:700;
+      outline:none;
+    }
+
+    .hero{
+      padding:54px 0 26px;
+    }
+
+    .hero-grid{
+      display:grid;
+      grid-template-columns:1.06fr .94fr;
+      gap:28px;
+      align-items:stretch;
+    }
+
+    .hero-copy,
+    .hero-panel{
+      border:1px solid var(--line);
+      border-radius:30px;
+      box-shadow:var(--shadow);
+    }
+
+    .hero-copy{
+      padding:42px;
+      background:
+        radial-gradient(circle at bottom right, rgba(212,175,55,0.12), transparent 28%),
+        linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.015));
+    }
+
+    .kicker{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      margin:0 0 16px;
+      padding:8px 14px;
+      border-radius:999px;
+      background:var(--gold-soft);
+      border:1px solid rgba(212,175,55,0.18);
+      color:var(--gold);
+      font-size:12px;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      font-weight:800;
+    }
+
+    .hero-title{
+      margin:0 0 14px;
+      font-size:clamp(34px,5vw,60px);
+      line-height:1.03;
+      letter-spacing:-0.04em;
+      max-width:820px;
+    }
+
+    .hero-lead{
+      margin:0 0 16px;
+      color:var(--muted);
+      font-size:18px;
+      line-height:1.75;
+      max-width:760px;
+    }
+
+    .hero-lead strong{
+      color:var(--text);
+      font-weight:800;
+    }
+
+    .hero-actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      margin:26px 0 0;
+    }
+
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      min-height:48px;
+      padding:0 20px;
+      border-radius:14px;
+      border:1px solid transparent;
+      font-weight:700;
+      transition:.2s ease;
+      cursor:pointer;
+    }
+
+    .btn:hover{transform:translateY(-1px)}
+    .btn.primary{
+      background:linear-gradient(135deg,#f2d16b 0%,#d4af37 100%);
+      color:#07111f;
+      box-shadow:0 14px 30px rgba(212,175,55,0.22);
+    }
+    .btn.secondary{
+      background:rgba(255,255,255,0.04);
+      border-color:var(--line);
+      color:var(--text);
+    }
+    .btn.outline{
+      background:transparent;
+      border-color:rgba(212,175,55,0.34);
+      color:var(--gold);
+    }
+
+    .hero-panel{
+      padding:28px;
+      background:
+        linear-gradient(180deg, rgba(212,175,55,0.08), rgba(255,255,255,0.02)),
+        linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.015));
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      gap:20px;
+    }
+
+    .panel-kicker{
+      margin:0;
+      color:var(--gold);
+      font-size:12px;
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      font-weight:800;
+    }
+
+    .hero-panel h2{
+      margin:0;
+      font-size:30px;
+      line-height:1.12;
+      letter-spacing:-0.02em;
+    }
+
+    .hero-panel p{
+      margin:0;
+      color:var(--muted);
+      line-height:1.72;
+    }
+
+    .feature-list{
+      margin:0;
+      padding:0;
+      list-style:none;
+      display:grid;
+      gap:12px;
+    }
+
+    .feature-list li{
+      position:relative;
+      padding-left:26px;
+      color:#d7dfec;
+      line-height:1.55;
+    }
+
+    .feature-list li::before{
+      content:"";
+      position:absolute;
+      left:0;
+      top:.55em;
+      width:10px;
+      height:10px;
+      border-radius:50%;
+      background:var(--gold);
+      box-shadow:0 0 0 5px rgba(212,175,55,0.12);
+      transform:translateY(-50%);
+    }
+
+    .mini-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+    }
+
+    .mini-panel{
+      padding:14px;
+      border-radius:16px;
+      background:rgba(255,255,255,0.04);
+      border:1px solid var(--line);
+    }
+
+    .mini-panel span{
+      display:block;
+      color:var(--muted);
+      font-size:12px;
+      margin-bottom:7px;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+    }
+
+    .mini-panel strong{
+      display:block;
+      font-size:15px;
+      line-height:1.4;
+    }
+
+    .cred-strip{
+      width:min(var(--container), calc(100% - 40px));
+      margin:8px auto 0;
+      padding:14px 18px;
+      border:1px solid var(--line);
+      border-radius:18px;
+      background:rgba(255,255,255,0.03);
+      color:var(--muted);
+      text-align:center;
+      line-height:1.6;
+      box-shadow:var(--shadow);
+    }
+
+    .section{
+      padding:28px 0;
+    }
+
+    .section-header{
+      margin-bottom:20px;
+      max-width:860px;
+    }
+
+    .section-kicker{
+      margin:0 0 12px;
+      color:var(--gold);
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    .section-title{
+      margin:0 0 14px;
+      font-size:clamp(28px,4vw,42px);
+      line-height:1.15;
+      letter-spacing:-0.03em;
+    }
+
+    .section-text{
+      margin:0;
+      color:var(--muted);
+      line-height:1.78;
+      font-size:17px;
+    }
+
+    .service-grid{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:18px;
+    }
+
+    .service-card{
+      padding:26px;
+      border-radius:24px;
+      border:1px solid var(--line);
+      background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.015));
+      box-shadow:var(--shadow);
+      display:flex;
+      flex-direction:column;
+      gap:20px;
+      min-height:100%;
+    }
+
+    .service-card h2{
+      margin:0 0 12px;
+      font-size:30px;
+      line-height:1.16;
+      letter-spacing:-0.02em;
+    }
+
+    .service-intro{
+      margin:0;
+      color:var(--muted);
+      line-height:1.72;
+      font-size:16px;
+    }
+
+    .service-tag{
+      display:inline-flex;
+      padding:7px 10px;
+      border-radius:999px;
+      background:var(--gold-soft);
+      color:var(--gold);
+      font-size:11px;
+      text-transform:uppercase;
+      letter-spacing:.1em;
+      font-weight:800;
+      border:1px solid rgba(212,175,55,0.18);
+      margin-bottom:14px;
+    }
+
+    .list{
+      margin:0;
+      padding:0;
+      list-style:none;
+      display:grid;
+      gap:12px;
+    }
+
+    .list li{
+      position:relative;
+      padding-left:24px;
+      color:#d7dfec;
+      line-height:1.6;
+      font-size:15px;
+    }
+
+    .list li::before{
+      content:"";
+      position:absolute;
+      left:0;
+      top:.6em;
+      width:9px;
+      height:9px;
+      border-radius:50%;
+      background:var(--green);
+      box-shadow:0 0 0 5px rgba(57,194,125,0.12);
+      transform:translateY(-50%);
+    }
+
+    .service-actions{
+      margin-top:auto;
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+    }
+
+    .insight-grid{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:18px;
+    }
+
+    .insight-card{
+      padding:22px;
+      border-radius:22px;
+      border:1px solid var(--line);
+      background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.015));
+      box-shadow:var(--shadow);
+    }
+
+    .insight-card h3{
+      margin:0 0 10px;
+      font-size:22px;
+      line-height:1.22;
+      letter-spacing:-0.02em;
+    }
+
+    .insight-card p{
+      margin:0;
+      color:var(--muted);
+      line-height:1.7;
+    }
+
+    .cta-box{
+      display:grid;
+      grid-template-columns:1.1fr .9fr;
+      gap:20px;
+      align-items:center;
+      padding:30px;
+      border-radius:28px;
+      border:1px solid rgba(212,175,55,0.18);
+      background:
+        linear-gradient(180deg, rgba(212,175,55,0.08), rgba(255,255,255,0.02)),
+        linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.015));
+      box-shadow:var(--shadow);
+    }
+
+    .cta-box h2{
+      margin:0 0 12px;
+      font-size:36px;
+      line-height:1.1;
+      letter-spacing:-0.03em;
+    }
+
+    .cta-box p{
+      margin:0;
+      color:var(--muted);
+      line-height:1.72;
+      font-size:17px;
+    }
+
+    .cta-actions{
+      display:grid;
+      gap:12px;
+    }
+
+    .site-footer{
+      margin-top:36px;
+      border-top:1px solid var(--line);
+      background:rgba(0,0,0,0.18);
+    }
+
+    .footer-grid{
+      padding:28px 0 8px;
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:20px;
+      color:var(--muted);
+    }
+
+    .footer-grid strong{
+      color:var(--text);
+      display:block;
+      margin-bottom:8px;
+    }
+
+    .footer-grid a{
+      color:var(--muted);
+    }
+
+    .footer-grid a:hover{
+      color:var(--text);
+    }
+
+    .site-footer hr{
+      border:0;
+      border-top:1px solid var(--line);
+      margin:12px 0 18px;
+    }
+
+    .small{
+      margin:0 0 12px;
+      color:var(--muted);
+      line-height:1.7;
+      font-size:14px;
+    }
+
+    .muted{
+      color:#94a0b3;
+      padding-bottom:26px;
+    }
+
+    @media (max-width: 1100px){
+      .hero-grid,
+      .service-grid,
+      .insight-grid,
+      .cta-box{
+        grid-template-columns:1fr;
+      }
+    }
+
+    @media (max-width: 820px){
+      .container,
+      .cred-strip{
+        width:min(var(--container), calc(100% - 24px));
+      }
+      .topbar-inner{
+        align-items:flex-start;
+        padding:10px 0;
+      }
+      .navRight{
+        width:100%;
+        justify-content:flex-start;
+      }
+      .menu{
+        width:100%;
+      }
+      .lang{
+        width:100%;
+        justify-content:flex-start;
+      }
+      .langLabel{display:none}
+      .hero{
+        padding-top:28px;
+      }
+      .hero-copy,
+      .hero-panel,
+      .service-card,
+      .insight-card,
+      .cta-box{
+        padding:22px;
+        border-radius:22px;
+      }
+      .hero-actions .btn,
+      .service-actions .btn{
+        width:100%;
+      }
+      .mini-grid{
+        grid-template-columns:1fr;
+      }
+      .footer-grid{
+        grid-template-columns:1fr;
+      }
+    }
+  </style>
 </head>
 <body>
-<div class="wrap">
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="index.html" aria-label="Global Management Consultancy Limited">
+        <img src="assets/images/gmc-logo.png" alt="Global Management Consultancy Limited" />
+        <div class="brand-copy">
+          <p class="brand-eyebrow" data-i18n="brand.eyebrow">Global Management Consultancy Limited</p>
+          <p class="brand-title" data-i18n="brand.title">Premium advisory, finance and academy platform</p>
+        </div>
+      </a>
 
-  <nav class="nav">
-    <a class="brand" href="index.html" aria-label="Global Management Consultancy Limited">
-      <img src="assets/images/gmc-logo.png" alt="Global Management Consultancy Limited" />
-    </a>
+      <div class="navRight">
+        <div class="menu" aria-label="Primary navigation">
+          <a href="index.html" data-i18n="nav.home">Home</a>
+          <a class="active" href="services.html" data-i18n="nav.services">Services</a>
+          <a href="finance.html" data-i18n="nav.finance">Finance</a>
+          <a href="contact.html" data-i18n="nav.contact">Contact</a>
+          <a href="partner-enquiry.html" data-i18n="nav.partner">Partner Enquiry</a>
+        </div>
 
-    <div class="navRight">
-      <div class="menu" aria-label="Primary navigation">
-        <a href="index.html" data-i18n="nav.home">Home</a>
-        <a class="active" href="services.html" data-i18n="nav.services">Services</a>
-        <a href="finance.html" data-i18n="nav.finance">Finance</a>
-        <a href="contact.html" data-i18n="nav.contact">Contact</a>
-        <a href="partner-enquiry.html" data-i18n="nav.partner">Partner Enquiry</a>
-      </div>
-
-      <!-- Language Dropdown (ONLY EN/FR/ES) -->
-      <div class="lang" aria-label="Language selector">
-        <label class="langLabel" for="langSelect" data-i18n="lang.label">Language</label>
-        <select id="langSelect" class="langSelect" aria-label="Choose language">
-          <option value="en">EN</option>
-          <option value="fr">FR</option>
-          <option value="es">ES</option>
-        </select>
+        <div class="lang" aria-label="Language selector">
+          <label class="langLabel" for="langSelect" data-i18n="lang.label">Language</label>
+          <select id="langSelect" class="langSelect" aria-label="Choose language">
+            <option value="en">EN</option>
+            <option value="fr">FR</option>
+            <option value="es">ES</option>
+          </select>
+        </div>
       </div>
     </div>
-  </nav>
-
-  <header class="hero">
-    <span class="kicker" data-i18n="services.kicker">Services</span>
-    <h1 class="h1" data-i18n="services.title">Focused services for football and finance</h1>
-
-    <p class="lead" data-i18n="services.p1">
-      Global Management Consultancy Limited provides two core service lines designed for the realities of international football operations.
-    </p>
-
-    <p class="lead" data-i18n="services.p2">
-      Our primary focus is <strong>Global Sport Finance</strong> and <strong>Football Agency Services</strong>, supporting clubs, agencies and professional players with modern financial infrastructure and professional representation.
-    </p>
   </header>
 
-  <!-- GMC Credibility Strip -->
-  <div class="cred-strip" data-i18n="cred.strip">
-    Commercial & contractual consulting · Partner onboarding · Global Management Consultancy Limited
-  </div>
-  <!-- END GMC Credibility Strip -->
+  <main>
+    <section class="hero">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <p class="kicker" data-i18n="services.kicker">Services</p>
 
-  <section class="grid">
-    <div class="card">
-      <h2 data-i18n="services.card1.title">Global Sport Finance</h2>
-      <ul class="list">
-        <li data-i18n="services.card1.li1">Multi-currency accounts and wallets</li>
-        <li data-i18n="services.card1.li2">Foreign exchange and treasury workflows</li>
-        <li data-i18n="services.card1.li3">Local and international payments</li>
-        <li data-i18n="services.card1.li4">Mass payouts for salaries, bonuses and suppliers</li>
-        <li data-i18n="services.card1.li5">Club and player cards (physical and virtual)</li>
-        <li data-i18n="services.card1.li6">Expense management and spending controls</li>
-      </ul>
-      <p class="meta"><span class="badge" data-i18n="cards.primary">Primary focus</span></p>
+          <h1 class="hero-title" data-i18n="services.title">
+            Premium services designed for football, finance and cross-border operations.
+          </h1>
+
+          <p class="hero-lead" data-i18n="services.p1">
+            Global Management Consultancy Limited provides two principal service lines designed for the realities of international football and modern global financial infrastructure.
+          </p>
+
+          <p class="hero-lead" data-i18n="services.p2">
+            Our core focus is <strong>Global Sport Finance</strong> and <strong>Football Agency Services</strong>, supporting clubs, agencies, athletes and international partners with serious, commercially aligned solutions.
+          </p>
+
+          <div class="hero-actions">
+            <a class="btn primary" href="finance.html" data-i18n="services.cta1">Explore Finance Solutions</a>
+            <a class="btn secondary" href="contact.html" data-i18n="services.cta2">Discuss Your Needs</a>
+          </div>
+        </div>
+
+        <div class="hero-panel">
+          <div>
+            <p class="panel-kicker" data-i18n="services.panel.kicker">Service Positioning</p>
+            <h2 data-i18n="services.panel.title">Built for professional clients who need clarity, execution and international perspective.</h2>
+            <p data-i18n="services.panel.text">
+              Our service model is intentionally focused. Rather than trying to be everything to everyone, we concentrate on high-value support where strategic advisory and practical implementation matter most.
+            </p>
+          </div>
+
+          <ul class="feature-list">
+            <li data-i18n="services.panel.feature1">Cross-border advisory for football and international operators</li>
+            <li data-i18n="services.panel.feature2">Finance infrastructure tailored to real operational workflows</li>
+            <li data-i18n="services.panel.feature3">Football agency and representation support aligned with the modern game</li>
+            <li data-i18n="services.panel.feature4">Premium, multilingual and commercially focused client experience</li>
+          </ul>
+
+          <div class="mini-grid">
+            <div class="mini-panel">
+              <span data-i18n="services.panel.card1Label">Main Areas</span>
+              <strong data-i18n="services.panel.card1Value">Finance and Football Agency</strong>
+            </div>
+            <div class="mini-panel">
+              <span data-i18n="services.panel.card2Label">Client Focus</span>
+              <strong data-i18n="services.panel.card2Value">Clubs, agencies, athletes and global partners</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="cred-strip" data-i18n="cred.strip">
+      Commercial &amp; contractual consulting · Partner onboarding · Global Management Consultancy Limited
     </div>
 
-    <div class="card">
-      <h2 data-i18n="services.card2.title">Football Agency Services</h2>
-      <ul class="list">
-        <li data-i18n="services.card2.li1">Player representation and career planning</li>
-        <li data-i18n="services.card2.li2">Contract negotiation support</li>
-        <li data-i18n="services.card2.li3">Club relations and opportunity sourcing</li>
-        <li data-i18n="services.card2.li4">International mobility guidance</li>
-        <li data-i18n="services.card2.li5">Strategic career advisory</li>
-      </ul>
-      <p class="meta"><span class="badge" data-i18n="cards.primary">Primary focus</span></p>
-    </div>
-  </section>
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <p class="section-kicker" data-i18n="services.section.kicker">Core Service Lines</p>
+          <h2 class="section-title" data-i18n="services.section.title">Two focused pillars, each built for serious professional use.</h2>
+          <p class="section-text" data-i18n="services.section.text">
+            This page is intentionally concentrated on the two service areas that currently define the strongest commercial offering of the group.
+          </p>
+        </div>
 
-  <!-- GMC Footer -->
+        <div class="service-grid">
+          <article class="service-card">
+            <div>
+              <span class="service-tag" data-i18n="services.card1.tag">Finance</span>
+              <h2 data-i18n="services.card1.title">Global Sport Finance</h2>
+              <p class="service-intro" data-i18n="services.card1.intro">
+                Financial infrastructure and payment solutions built for football organisations, internationally mobile professionals and businesses operating across borders.
+              </p>
+            </div>
+
+            <ul class="list">
+              <li data-i18n="services.card1.li1">Multi-currency accounts and wallets</li>
+              <li data-i18n="services.card1.li2">Foreign exchange and treasury workflows</li>
+              <li data-i18n="services.card1.li3">Local and international payments</li>
+              <li data-i18n="services.card1.li4">Mass payouts for salaries, bonuses and suppliers</li>
+              <li data-i18n="services.card1.li5">Club and player cards, physical and virtual</li>
+              <li data-i18n="services.card1.li6">Expense management and spending controls</li>
+            </ul>
+
+            <div class="service-actions">
+              <a class="btn primary" href="finance.html" data-i18n="services.card1.cta1">Enter Finance</a>
+              <a class="btn outline" href="partner-enquiry.html" data-i18n="services.card1.cta2">Partner Enquiry</a>
+            </div>
+          </article>
+
+          <article class="service-card">
+            <div>
+              <span class="service-tag" data-i18n="services.card2.tag">Agency</span>
+              <h2 data-i18n="services.card2.title">Football Agency Services</h2>
+              <p class="service-intro" data-i18n="services.card2.intro">
+                Representation support, negotiation guidance and strategic football advisory for professionals and stakeholders operating within the modern game.
+              </p>
+            </div>
+
+            <ul class="list">
+              <li data-i18n="services.card2.li1">Player representation and career planning</li>
+              <li data-i18n="services.card2.li2">Contract negotiation support</li>
+              <li data-i18n="services.card2.li3">Club relations and opportunity sourcing</li>
+              <li data-i18n="services.card2.li4">International mobility guidance</li>
+              <li data-i18n="services.card2.li5">Strategic career advisory</li>
+            </ul>
+
+            <div class="service-actions">
+              <a class="btn primary" href="contact.html" data-i18n="services.card2.cta1">Discuss Representation</a>
+              <a class="btn outline" href="partner-enquiry.html" data-i18n="services.card2.cta2">Partner Enquiry</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <p class="section-kicker" data-i18n="services.insights.kicker">Why This Matters</p>
+          <h2 class="section-title" data-i18n="services.insights.title">Services structured around practical execution, not just description.</h2>
+        </div>
+
+        <div class="insight-grid">
+          <div class="insight-card">
+            <h3 data-i18n="services.insights.card1.title">Operational Relevance</h3>
+            <p data-i18n="services.insights.card1.text">
+              These services are designed for real-world use across clubs, players, agency structures and cross-border business settings.
+            </p>
+          </div>
+
+          <div class="insight-card">
+            <h3 data-i18n="services.insights.card2.title">Cross-Border Perspective</h3>
+            <p data-i18n="services.insights.card2.text">
+              The value comes not only from the service itself, but from understanding international movement, compliance, payments and football realities together.
+            </p>
+          </div>
+
+          <div class="insight-card">
+            <h3 data-i18n="services.insights.card3.title">Premium Focus</h3>
+            <p data-i18n="services.insights.card3.text">
+              A focused service page creates stronger brand positioning than a long generic list of offerings. It signals clarity, seriousness and high-value intent.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="cta-box">
+          <div>
+            <h2 data-i18n="services.cta.title">Need the right solution for your football or finance workflow?</h2>
+            <p data-i18n="services.cta.text">
+              Start with the service area most relevant to you, or contact us directly for a more tailored discussion based on your objectives and international context.
+            </p>
+          </div>
+
+          <div class="cta-actions">
+            <a class="btn primary" href="finance.html" data-i18n="services.cta.button1">Explore Finance</a>
+            <a class="btn secondary" href="contact.html" data-i18n="services.cta.button2">Contact Us</a>
+            <a class="btn outline" href="partner-enquiry.html" data-i18n="services.cta.button3">Partner Enquiry</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
   <footer class="site-footer">
     <div class="container">
       <div class="footer-grid">
@@ -103,14 +856,11 @@
       <hr />
 
       <p class="small" data-i18n="footer.notice">
-        <strong>Important notice:</strong> Content on this website is provided for general information only and does not
-        constitute legal, tax, investment or financial advice.
+        <strong>Important notice:</strong> Content on this website is provided for general information only and does not constitute legal, tax, investment or financial advice.
       </p>
 
       <p class="small" data-i18n="footer.regulatory">
-        <strong>Regulatory:</strong> Services described may include commercial and contractual consulting. If any activity
-        falls within UK financial services regulation (including FCA-regulated activities), such services are provided only
-        where authorised or through appropriately authorised partners. Clients should obtain independent professional advice.
+        <strong>Regulatory:</strong> Services described may include commercial and contractual consulting. If any activity falls within UK financial services regulation, such services are provided only where authorised or through appropriately authorised partners. Clients should obtain independent professional advice.
       </p>
 
       <p class="small muted">
@@ -118,18 +868,31 @@
       </p>
     </div>
   </footer>
-  <!-- END GMC Footer -->
 
-</div><!-- /.wrap -->
+  <script src="assets/js/i18n.js"></script>
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
 
-<!-- Shared i18n -->
-<script src="assets/js/i18n.js"></script>
+    const langSelect = document.getElementById("langSelect");
+    if (langSelect) {
+      const savedLang = localStorage.getItem("lang") || "en";
+      langSelect.value = savedLang;
 
-<!-- Year -->
-<script>
-  const y = document.getElementById("year");
-  if (y) y.textContent = new Date().getFullYear();
-</script>
+      langSelect.addEventListener("change", (e) => {
+        const lang = e.target.value;
+        localStorage.setItem("lang", lang);
 
+        if (typeof window.setLanguage === "function") {
+          window.setLanguage(lang);
+        } else {
+          window.location.reload();
+        }
+      });
+    }
+
+    if (typeof window.setLanguage === "function") {
+      window.setLanguage(localStorage.getItem("lang") || "en");
+    }
+  </script>
 </body>
 </html>
