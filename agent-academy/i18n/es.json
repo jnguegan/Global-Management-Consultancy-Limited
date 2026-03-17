@@ -179,7 +179,13 @@
 "playbookCta.title": "Empieza con el Playbook",
 "playbookCta.text": "Consulta la guía de aprendizaje estructurada antes de comenzar los cuestionarios por tema. Comprende las regulaciones FIFA y luego pon a prueba tus conocimientos con preguntas tipo examen.",
 "playbookCta.open": "Abrir Playbook",
-"playbookCta.upgrade": "Desbloquear acceso completo"
+"playbookCta.upgrade": "Desbloquear acceso completo",
+  "studyCta.kicker": "Ruta de estudio recomendada",
+"studyCta.title": "Estudia el Playbook o prueba el examen simulado",
+"studyCta.text": "Consulta la guía de aprendizaje estructurada antes de comenzar los cuestionarios por tema, o abre el examen simulado para experimentar una práctica cronometrada tipo examen.",
+"studyCta.playbook": "Abrir Playbook",
+"studyCta.mock": "Comenzar examen simulado",
+"studyCta.upgrade": "Desbloquear acceso completo"
 
 
 
