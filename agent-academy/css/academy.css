@@ -1,1 +1,5 @@
+.article-link.locked{
+  opacity: .72;
+  cursor: not-allowed;
+}
 
