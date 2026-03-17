@@ -334,6 +334,8 @@
       };
     });
 
+    <script src="/agent-academy/js/academy.js"></script>
+    <script>
     async function loadSidebar() {
       const { data, error } = await supabaseClient
         .from("playbook_sections")
@@ -459,7 +461,7 @@ if (!allowed) {
       `;
     }
 
-    document.getElementById("playbookSidebarTitle").textContent = rt("playbook");
+  document.getElementById("playbookSidebarTitle").textContent = rt("playbook");
 document.getElementById("defaultArticleTitle").textContent = rt("selectSectionTitle");
 document.getElementById("defaultArticleText").textContent = rt("selectSectionText");
 
@@ -482,7 +484,6 @@ async function initPlaybookPage() {
 
 initPlaybookPage();
     
-  <script src="/agent-academy/js/academy.js"></script>
   </script>
  
 </body>
