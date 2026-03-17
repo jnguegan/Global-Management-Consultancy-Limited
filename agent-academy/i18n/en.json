@@ -174,7 +174,12 @@
 "launch.text": "for version 1, the essential live components are the Academy entry page, sign in, sign up, practice quiz, FIFA mock exam and the online playbook. Dashboard, results tracking and advanced user profile pages can be layered in after initial launch.",
 
 "footer.brand": "Agent Academy",
-  "upgrade.freePreviewButton": "Start Free Preview"
+  "upgrade.freePreviewButton": "Start Free Preview",
+  "playbookCta.kicker": "Recommended study path",
+"playbookCta.title": "Start with the Playbook",
+"playbookCta.text": "Read the structured learning guide before starting topic quizzes. Understand key FIFA regulations, then test yourself with exam-style questions.",
+"playbookCta.open": "Open Playbook",
+"playbookCta.upgrade": "Unlock Full Access"
 
 }
 
