@@ -71,6 +71,11 @@
       color:var(--gold);
     }
 
+    .article-link.locked{
+      opacity:0.72;
+      cursor:not-allowed;
+    }
+
     .content{
       padding:40px;
       max-width:900px;
@@ -84,6 +89,7 @@
     .article-text{
       line-height:1.7;
       margin-bottom:30px;
+      white-space:pre-wrap;
     }
 
     .explanation{
@@ -136,20 +142,10 @@
       border:1px solid rgba(212,175,55,0.24);
     }
 
-    .question-link.disabled{
-      opacity:0.6;
-      pointer-events:none;
-    }
-
     .question-empty{
       color:var(--muted);
       font-size:14px;
     }
-
-    .article-link.locked{
-  opacity: 0.72;
-  cursor: not-allowed;
-}
   </style>
 </head>
 <body>
@@ -179,6 +175,7 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/agent-academy/js/academy.js"></script>
   <script>
     const supabaseClient = window.supabase.createClient(
       "https://ysaxtuvuzqkyfmganven.supabase.co",
@@ -198,7 +195,10 @@
         selectSectionText: "Choose a playbook article from the left.",
         explanation: "Explanation",
         playbook: "Playbook",
-        noPracticeQuestions: "No practice questions yet."
+        noPracticeQuestions: "No practice questions yet.",
+        upgradeFree: "This section is not included in the Free plan. Please upgrade to unlock this content.",
+        upgradeStarter: "This section is not included in the Starter plan. Please upgrade to unlock this content.",
+        upgradeProfessional: "This section is not included in your current plan. Please upgrade to unlock this content."
       },
       fr: {
         openRegulation: "Ouvrir le règlement",
@@ -209,7 +209,10 @@
         selectSectionText: "Choisissez un article du playbook à gauche.",
         explanation: "Explication",
         playbook: "Playbook",
-        noPracticeQuestions: "Aucune question de pratique pour le moment."
+        noPracticeQuestions: "Aucune question de pratique pour le moment.",
+        upgradeFree: "Cette section n’est pas incluse dans le plan Gratuit. Veuillez passer à un plan supérieur pour débloquer ce contenu.",
+        upgradeStarter: "Cette section n’est pas incluse dans le plan Starter. Veuillez passer à un plan supérieur pour débloquer ce contenu.",
+        upgradeProfessional: "Cette section n’est pas incluse dans votre plan actuel. Veuillez passer à un plan supérieur pour débloquer ce contenu."
       },
       es: {
         openRegulation: "Abrir reglamento",
@@ -220,7 +223,10 @@
         selectSectionText: "Elija un artículo del playbook a la izquierda.",
         explanation: "Explicación",
         playbook: "Playbook",
-        noPracticeQuestions: "Todavía no hay preguntas de práctica."
+        noPracticeQuestions: "Todavía no hay preguntas de práctica.",
+        upgradeFree: "Esta sección no está incluida en el plan Gratuito. Mejore su plan para desbloquear este contenido.",
+        upgradeStarter: "Esta sección no está incluida en el plan Starter. Mejore su plan para desbloquear este contenido.",
+        upgradeProfessional: "Esta sección no está incluida en su plan actual. Mejore su plan para desbloquear este contenido."
       }
     };
 
@@ -232,6 +238,18 @@
       const div = document.createElement("div");
       div.textContent = str || "";
       return div.innerHTML;
+    }
+
+    function showUpgradePrompt(requiredLevel = "professional") {
+      if (requiredLevel === "free") {
+        alert(rt("upgradeFree"));
+        return;
+      }
+      if (requiredLevel === "starter") {
+        alert(rt("upgradeStarter"));
+        return;
+      }
+      alert(rt("upgradeProfessional"));
     }
 
     async function loadTopicBySlug(topicSlug) {
@@ -252,52 +270,51 @@
       return data;
     }
 
-   async function loadTopicQuestions(topicSlug, requestedIds = []) {
-  const topic = await loadTopicBySlug(topicSlug);
+    async function loadTopicQuestions(topicSlug, requestedIds = []) {
+      const topic = await loadTopicBySlug(topicSlug);
 
-  if (!topic || !topic.id) {
-    return [];
-  }
+      if (!topic || !topic.id) {
+        return [];
+      }
 
-  const numericIds = Array.isArray(requestedIds)
-    ? requestedIds
-        .map((id) => Number(id))
-        .filter((id) => !Number.isNaN(id))
-    : [];
+      const numericIds = Array.isArray(requestedIds)
+        ? requestedIds
+            .map((id) => Number(id))
+            .filter((id) => !Number.isNaN(id))
+        : [];
 
-  // Try loading the requested question IDs first
-  if (numericIds.length) {
-    const { data: matchedData, error: matchedError } = await supabaseClient
-      .from("questions")
-      .select("id, topic_id, is_active")
-      .eq("topic_id", topic.id)
-      .eq("is_active", true)
-      .in("id", numericIds)
-      .order("id", { ascending: true });
+      if (numericIds.length) {
+        const { data: matchedData, error: matchedError } = await supabaseClient
+          .from("questions")
+          .select("id, topic_id, is_active")
+          .eq("topic_id", topic.id)
+          .eq("is_active", true)
+          .in("id", numericIds)
+          .order("id", { ascending: true });
 
-    if (matchedError) {
-      console.error("Matched question load error:", matchedError);
-    } else if ((matchedData || []).length) {
-      return matchedData;
+        if (matchedError) {
+          console.error("Matched question load error:", matchedError);
+        } else if ((matchedData || []).length) {
+          return matchedData;
+        }
+      }
+
+      const { data: fallbackData, error: fallbackError } = await supabaseClient
+        .from("questions")
+        .select("id, topic_id, is_active")
+        .eq("topic_id", topic.id)
+        .eq("is_active", true)
+        .order("id", { ascending: true })
+        .limit(4);
+
+      if (fallbackError) {
+        console.error("Fallback question load error:", fallbackError);
+        return [];
+      }
+
+      return fallbackData || [];
     }
-  }
 
-  // Fallback: load the first 4 questions for the topic
-  const { data: fallbackData, error: fallbackError } = await supabaseClient
-    .from("questions")
-    .select("id, topic_id, is_active")
-    .eq("topic_id", topic.id)
-    .eq("is_active", true)
-    .order("id", { ascending: true })
-    .limit(4);
-
-  if (fallbackError) {
-    console.error("Fallback question load error:", fallbackError);
-    return [];
-  }
-
-  return fallbackData || [];
-}
     function buildPracticeHref(topicSlug) {
       return topicSlug
         ? `/agent-academy/quiz.html?topic=${encodeURIComponent(topicSlug)}`
@@ -349,36 +366,36 @@
       list.innerHTML = "";
 
       (data || []).forEach((section) => {
-  const a = document.createElement("div");
-  a.className = "article-link";
+        const a = document.createElement("div");
+        a.className = "article-link";
 
-  const sectionTitle =
-    lang === "fr" ? section.title_fr :
-    lang === "es" ? section.title_es :
-    section.title_en;
+        const sectionTitle =
+          lang === "fr" ? section.title_fr :
+          lang === "es" ? section.title_es :
+          section.title_en;
 
-  const requiredLevel =
-    section.access_level || (section.is_free ? "free" : "professional");
+        const requiredLevel =
+          section.access_level || (section.is_free ? "free" : "professional");
 
-  const allowed = hasAccess(window.userPlan || "free", requiredLevel);
+        const allowed = hasAccess(window.userPlan || "free", requiredLevel);
 
-  a.textContent = allowed ? sectionTitle : `🔒 ${sectionTitle}`;
+        a.textContent = allowed ? sectionTitle : `🔒 ${sectionTitle}`;
 
-  if (!allowed) {
-    a.classList.add("locked");
-  }
+        if (!allowed) {
+          a.classList.add("locked");
+        }
 
-  a.onclick = async () => {
-    if (!allowed) {
-      showUpgradePrompt(requiredLevel);
-      return;
-    }
+        a.onclick = async () => {
+          if (!allowed) {
+            showUpgradePrompt(requiredLevel);
+            return;
+          }
 
-    await loadArticle(section.id);
-  };
+          await loadArticle(section.id);
+        };
 
-  list.appendChild(a);
-});
+        list.appendChild(a);
+      });
     }
 
     async function loadArticle(id) {
@@ -396,14 +413,14 @@
       }
 
       const requiredLevel =
-  data.access_level || (data.is_free ? "free" : "professional");
+        data.access_level || (data.is_free ? "free" : "professional");
 
-const allowed = hasAccess(window.userPlan || "free", requiredLevel);
+      const allowed = hasAccess(window.userPlan || "free", requiredLevel);
 
-if (!allowed) {
-  showUpgradePrompt(requiredLevel);
-  return;
-}
+      if (!allowed) {
+        showUpgradePrompt(requiredLevel);
+        return;
+      }
 
       const title =
         lang === "fr" ? data.title_fr :
@@ -463,8 +480,24 @@ if (!allowed) {
     document.getElementById("defaultArticleTitle").textContent = rt("selectSectionTitle");
     document.getElementById("defaultArticleText").textContent = rt("selectSectionText");
 
-    loadSidebar();
+    async function initPlaybookPage() {
+      try {
+        const { data: { user } } = await supabaseClient.auth.getUser();
+
+        if (user) {
+          await loadUserAccess(user.id);
+        } else {
+          window.userPlan = "free";
+        }
+      } catch (err) {
+        console.error("Playbook init auth error:", err);
+        window.userPlan = "free";
+      }
+
+      await loadSidebar();
+    }
+
+    initPlaybookPage();
   </script>
-  <script src="/agent-academy/js/academy.js"></script>
 </body>
 </html>
