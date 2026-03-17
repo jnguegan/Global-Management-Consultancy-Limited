@@ -362,6 +362,8 @@
 "finance.cta.text": "Contact us for a more tailored discussion around international payments, multi-currency workflows, cards, FX and partner-led infrastructure relevant to your organisation.",
 "finance.cta.button1": "Partner Enquiry",
 "finance.cta.button2": "Contact Us",
+ "services.section.title": "Three focused pillars, each built for serious professional use.",
+"services.section.text": "This page presents the three core service pillars that define the group’s commercial offering across advisory, financial infrastructure and professional education.",
 
     },
 
@@ -719,7 +721,8 @@
 "finance.cta.text": "Contactez-nous pour un échange plus ciblé autour des paiements internationaux, flux multi-devises, cartes, change et infrastructures partenaires pertinentes pour votre organisation.",
 "finance.cta.button1": "Demande de partenariat",
 "finance.cta.button2": "Nous contacter",
-
+"services.section.title": "Trois piliers ciblés, chacun conçu pour un usage professionnel sérieux.",
+"services.section.text": "Cette page présente les trois piliers de service qui définissent l’offre commerciale du groupe à travers le conseil, l’infrastructure financière et la formation professionnelle.",
     },
 
     es: {
@@ -1078,6 +1081,8 @@
 "finance.cta.text": "Contáctenos para una conversación más adaptada sobre pagos internacionales, flujos multidivisa, tarjetas, divisas e infraestructura asociada relevante para su organización.",
 "finance.cta.button1": "Solicitud de partnership",
 "finance.cta.button2": "Contacto",
+ "services.section.title": "Tres pilares enfocados, cada uno diseñado para un uso profesional serio.",
+"services.section.text": "Esta página presenta los tres pilares de servicio que definen la oferta comercial del grupo en asesoría, infraestructura financiera y educación profesional.",
     }
   };
 
