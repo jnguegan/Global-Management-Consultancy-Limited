@@ -185,7 +185,9 @@
 "studyCta.text": "Consulta la guía de aprendizaje estructurada antes de comenzar los cuestionarios por tema, o abre el examen simulado para experimentar una práctica cronometrada tipo examen.",
 "studyCta.playbook": "Abrir Playbook",
 "studyCta.mock": "Comenzar examen simulado",
-"studyCta.upgrade": "Desbloquear acceso completo"
+"studyCta.upgrade": "Desbloquear acceso completo",
+  "nav.backAcademy": "Volver a la academia",
+"nav.backTopics": "Volver a los temas"
 
 
 
