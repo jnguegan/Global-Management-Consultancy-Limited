@@ -182,7 +182,14 @@
 "playbookCta.title": "Commencez par le Playbook",
 "playbookCta.text": "Consultez le guide d’apprentissage structuré avant de commencer les quiz par thème. Comprenez les règlements FIFA, puis testez-vous avec des questions de type examen.",
 "playbookCta.open": "Ouvrir le Playbook",
-"playbookCta.upgrade": "Débloquer l’accès complet"
+"playbookCta.upgrade": "Débloquer l’accès complet",
+
+  "studyCta.kicker": "Parcours recommandé",
+"studyCta.title": "Étudiez le Playbook ou essayez l’examen blanc",
+"studyCta.text": "Consultez le guide d’apprentissage structuré avant de commencer les quiz par thème, ou ouvrez l’examen blanc pour découvrir une pratique chronométrée de type examen.",
+"studyCta.playbook": "Ouvrir le Playbook",
+"studyCta.mock": "Commencer l’examen blanc",
+"studyCta.upgrade": "Débloquer l’accès complet"
   
 }
 
