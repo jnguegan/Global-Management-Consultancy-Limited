@@ -960,6 +960,15 @@ function hideLoader() {
 
 function showQuiz() {
   if (el.quizContent) el.quizContent.classList.remove("hidden");
+  const banner = document.getElementById("upgradeBanner");
+
+if (banner) {
+  if (state.hasLockedContent) {
+    banner.classList.remove("hidden");
+  } else {
+    banner.classList.add("hidden");
+  }
+}
   if (el.resultsView) el.resultsView.classList.remove("show");
   if (el.emptyState) el.emptyState.classList.add("hidden");
 }
