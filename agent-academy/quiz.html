@@ -487,23 +487,13 @@ function setLang(lang){
 
 <script>
   document.addEventListener("DOMContentLoaded", async () => {
-    const guard = window.AgentAcademyGuard;
-    if (!guard || !guard.requirePaidAccess) return;
+  const guard = window.AgentAcademyGuard;
+  if (!guard || !guard.requireLogin) return;
 
-    const access = await guard.requireLogin({
-  loginUrl: "/agent-academy/login.html"
-});
-    const topicSlug = new URLSearchParams(window.location.search).get("topic");
-
-let table = "questions";
-
-if (access.plan === "free") {
-  table = "preview_quiz_questions";
-} else if (access.plan === "starter") {
-  table = "starter_quiz_questions";
-}
-
+  await guard.requireLogin({
+    loginUrl: "/agent-academy/login.html"
   });
+});
 </script>
   
 <script src="/agent-academy/js/academy.js"></script>
