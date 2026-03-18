@@ -70,7 +70,10 @@ async function init() {
       showEmpty("Missing topic or question in URL. Example: quiz.html?topic=ffar-basics or quiz.html?topic=ffar-basics&question=101");
       return;
     }
-state.access = await AgentAcademyGuard.getAccessState();
+state.access = await AgentAcademyGuard.getAccessState() || {
+  plan: "free",
+  role: "user"
+};
     injectReferenceTooltipStyles();
     bindEvents();
 
@@ -424,7 +427,7 @@ if (!questionData) {
 }
 
 async function loadQuestions() {
-  const access = await AgentAcademyGuard.getAccessState();
+ const access = state.access || { plan: "free", role: "user" };
 
  const table = "questions";
   
