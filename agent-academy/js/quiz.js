@@ -21,7 +21,8 @@ const state = {
   canSaveAttempt: false,
   questionLimit: 10,
   seenQuestionIds: new Set(),
-  singleQuestionId: null
+  singleQuestionId: null,
+access: null
 };
 
 const el = {
@@ -69,7 +70,7 @@ async function init() {
       showEmpty("Missing topic or question in URL. Example: quiz.html?topic=ffar-basics or quiz.html?topic=ffar-basics&question=101");
       return;
     }
-
+state.access = await AgentAcademyGuard.getAccessState();
     injectReferenceTooltipStyles();
     bindEvents();
 
@@ -300,7 +301,7 @@ async function loadSingleQuestion() {
     throw new Error("Invalid question id");
   }
 
- const access = await AgentAcademyGuard.getAccessState();
+ const access = state.access || { plan: "free", role: "user" };
 
 const singleQuestionTable = "questions";
   
@@ -333,6 +334,7 @@ const { data: questionData, error: questionError } = await db
   .eq("id", questionId)
   .eq("is_active", true)
   .in("access_level", allowedAccessLevels)
+  .limit(1)
   .maybeSingle();
   
   console.log("SINGLE QUESTION DATA:", questionData);
@@ -433,7 +435,8 @@ async function loadQuestions() {
   .select("id")
   .eq("topic_id", state.topic.id)
   .eq("is_active", true)
-  .in("access_level", allowedAccessLevels);
+  .in("access_level", allowedAccessLevels)
+  .order("id", { ascending: true });
   
   const { data: idsData, error: idsError } = await idsQuery;
 
@@ -456,19 +459,23 @@ async function loadQuestions() {
     return;
   }
 
-  const unseenQuestionIds = allQuestionIds.filter(
-    (id) => !state.seenQuestionIds.has(id)
-  );
-
-  const pool =
-    unseenQuestionIds.length >= state.questionLimit
-      ? unseenQuestionIds
-      : allQuestionIds;
-
-  const selectedQuestionIds = shuffleArray(pool).slice(
-  0,
-  Math.min(maxQuestions, pool.length)
+ const unseenQuestionIds = allQuestionIds.filter(
+  (id) => !state.seenQuestionIds.has(id)
 );
+
+const pool =
+  unseenQuestionIds.length > 0
+    ? unseenQuestionIds
+    : allQuestionIds;
+
+ const selectionLimit = Math.min(maxQuestions, pool.length);
+
+const selectedQuestionIds = shuffleArray(pool).slice(0, selectionLimit);
+  if (!selectedQuestionIds.length) {
+  state.questions = [];
+  if (el.totalLive) el.totalLive.textContent = "0";
+  return;
+}
 
   selectedQuestionIds.forEach((id) => state.seenQuestionIds.add(id));
   saveSeenQuestionIds();
@@ -498,7 +505,8 @@ const { data: questionsData, error: questionsError } = await db
     difficulty
   `)
   .in("id", selectedQuestionIds)
-  .eq("is_active", true);
+  .eq("is_active", true)
+  .order("id", { ascending: true });
 
   console.log("QUESTIONS DATA:", questionsData);
   console.log("QUESTIONS ERROR:", questionsError);
@@ -546,16 +554,14 @@ const { data: questionsData, error: questionsError } = await db
     optionsByQuestionId[option.question_id].push(option);
   });
 
-  state.questions = orderedQuestions.map((q) => {
-    const options = (optionsByQuestionId[q.id] || []).sort(
-      (a, b) => (a.sort_order || 0) - (b.sort_order || 0)
-    );
+ state.questions = orderedQuestions.map((q) => {
+  const options = optionsByQuestionId[q.id] || [];
 
-    return {
-      ...q,
-      options
-    };
-  });
+  return {
+    ...q,
+    options
+  };
+});
 
   state.currentIndex = 0;
   state.selectedOptionId = null;
