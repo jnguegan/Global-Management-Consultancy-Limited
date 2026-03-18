@@ -272,6 +272,12 @@ function getQuizSourceTable(plan) {
   if (plan === "starter") return "starter_quiz_questions";
   return "questions"; // professional / premium / admin
 }
+function getPlanQuestionCap(plan) {
+  if (plan === "free") return 50;
+  if (plan === "starter") return 300;
+  return state.questionLimit; // professional / premium / admin
+}
+
 async function loadSingleQuestion() {
   const questionId = Number(state.singleQuestionId);
 
@@ -281,13 +287,7 @@ async function loadSingleQuestion() {
 
  const access = await AgentAcademyGuard.getAccessState();
 
-let singleQuestionTable = "questions";
-
-if (access.plan === "free") {
-  singleQuestionTable = "preview_quiz_questions";
-} else if (access.plan === "starter") {
-  singleQuestionTable = "starter_quiz_questions";
-}
+const singleQuestionTable = getQuizSourceTable(access.plan);
 
 const { data: questionData, error: questionError } = await db
   .from(singleQuestionTable)
@@ -314,8 +314,8 @@ const { data: questionData, error: questionError } = await db
   `)
   .eq("id", questionId)
   .eq("is_active", true)
-  .single();
-
+  .maybeSingle();
+  
   console.log("SINGLE QUESTION DATA:", questionData);
   console.log("SINGLE QUESTION ERROR:", questionError);
 
@@ -400,15 +400,7 @@ const { data: questionData, error: questionError } = await db
 async function loadQuestions() {
   const access = await AgentAcademyGuard.getAccessState();
 
-  let table = "questions";
-
-if (access.plan === "free") {
-  table = "preview_quiz_questions";
-} else if (access.plan === "starter") {
-  table = "starter_quiz_questions";
-} else {
-  table = "questions"; // professional / premium / admin
-}
+ const table = getQuizSourceTable(access.plan);
 
   let idsQuery = db
     .from(table)
@@ -427,13 +419,10 @@ if (access.plan === "free") {
 
   const allQuestionIds = (idsData || []).map((q) => q.id);
 
-  let maxQuestions = state.questionLimit;
-
-if (access.plan === "free") {
-  maxQuestions = Math.min(50, state.questionLimit);
-} else if (access.plan === "starter") {
-  maxQuestions = Math.min(300, state.questionLimit);
-}
+  const maxQuestions = Math.min(
+  getPlanQuestionCap(access.plan),
+  state.questionLimit
+);
   if (!allQuestionIds.length) {
     state.questions = [];
     if (el.totalLive) el.totalLive.textContent = "0";
