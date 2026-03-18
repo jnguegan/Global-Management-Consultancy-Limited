@@ -51,7 +51,7 @@ window.loadUserAccess = async function (userId) {
       .select("plan, role, is_active, access_end")
       .eq("user_id", userId)
       .eq("is_active", true)
-      .single();
+     .maybeSingle();
 
     if (error || !data) {
       console.error("loadUserAccess error:", error);
