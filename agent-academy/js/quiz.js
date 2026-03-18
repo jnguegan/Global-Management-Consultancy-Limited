@@ -78,16 +78,20 @@ async function init() {
       await loadTopic();
     }
 
-    if (state.singleQuestionId) {
-      await loadSingleQuestion();
-    } else {
-      await loadQuestions();
-    }
+   if (state.singleQuestionId) {
+  await loadSingleQuestion();
 
-    if (!state.questions.length) {
-      showEmpty("No questions found for this topic yet.");
-      return;
-    }
+  if (!state.questions.length) {
+    return;
+  }
+} else {
+  await loadQuestions();
+}
+
+if (!state.questions.length) {
+  showEmpty("No questions found for this topic yet.");
+  return;
+}
 
     hideLoader();
     showQuiz();
@@ -319,9 +323,14 @@ const { data: questionData, error: questionError } = await db
   console.log("SINGLE QUESTION DATA:", questionData);
   console.log("SINGLE QUESTION ERROR:", questionError);
 
-  if (questionError || !questionData) {
-    throw questionError || new Error("Question not found");
-  }
+ if (questionError) {
+  throw questionError;
+}
+
+if (!questionData) {
+  showEmpty("This question is not available for your plan.");
+  return;
+}
 
   const { data: optionsData, error: optionsError } = await db
     .from("question_options")
