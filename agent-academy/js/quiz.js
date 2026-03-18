@@ -21,8 +21,9 @@ const state = {
   canSaveAttempt: false,
   questionLimit: 10,
   seenQuestionIds: new Set(),
-  singleQuestionId: null,
-access: null
+ singleQuestionId: null,
+access: null,
+hasLockedContent: false
 };
 
 const el = {
@@ -451,7 +452,8 @@ async function loadQuestions() {
   }
 
   const allQuestionIds = (idsData || []).map((q) => q.id);
-
+state.hasLockedContent =
+  access.plan === "free" || access.plan === "starter";
   const maxQuestions = Math.min(
   getPlanQuestionCap(access.plan),
   state.questionLimit
