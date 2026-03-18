@@ -654,21 +654,76 @@ document.getElementById("questionAccessFill").style.width =
     });
   }
 
+  async function ensureUserAccess(userId) {
+  try {
+    const client = window.supabaseClient || window.sb || window.supabase;
+
+    if (!client) {
+      console.error("Supabase client not found for ensureUserAccess");
+      window.userPlan = "free";
+      return "free";
+    }
+
+    const { data, error } = await client
+      .from("user_access")
+      .select("user_id")
+      .eq("user_id", userId)
+      .maybeSingle();
+
+    if (error) {
+      console.error("ensureUserAccess check error:", error);
+      window.userPlan = "free";
+      return "free";
+    }
+
+    if (!data) {
+      const { error: insertError } = await client
+        .from("user_access")
+        .insert([{
+          user_id: userId,
+          plan: "free",
+          is_active: true
+        }]);
+
+      if (insertError) {
+        console.error("ensureUserAccess insert error:", insertError);
+      }
+
+      window.userPlan = "free";
+      return "free";
+    }
+
+    if (typeof window.loadUserAccess === "function") {
+      await window.loadUserAccess(userId);
+      return window.userPlan || "free";
+    }
+
+    window.userPlan = "free";
+    return "free";
+  } catch (err) {
+    console.error("ensureUserAccess unexpected error:", err);
+    window.userPlan = "free";
+    return "free";
+  }
+}
+  
   async function init() {
     cacheDom();
     bindEvents();
     renderStatic();
 
     try {
-      const guard = window.AgentAcademyGuard;
       const access = await guard.requireLogin({
-        loginUrl: "/agent-academy/login.html"
-      });
+  loginUrl: "/agent-academy/login.html"
+});
 
-      if (!access) return;
+if (!access) return;
 
-      state.access = access;
-      renderAccess();
+await ensureUserAccess(access.user.id);
+
+state.access = access;
+renderAccess();
+      
     } catch (error) {
       console.error("Dashboard init error:", error);
     }
