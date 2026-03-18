@@ -267,6 +267,11 @@ async function loadTopic() {
   }
 }
 
+function getQuizSourceTable(plan) {
+  if (plan === "free") return "preview_quiz_questions";
+  if (plan === "starter") return "starter_quiz_questions";
+  return "questions"; // professional / premium / admin
+}
 async function loadSingleQuestion() {
   const questionId = Number(state.singleQuestionId);
 
@@ -274,32 +279,42 @@ async function loadSingleQuestion() {
     throw new Error("Invalid question id");
   }
 
-  const { data: questionData, error: questionError } = await db
-    .from("questions")
-    .select(`
-      id,
-      topic_id,
-      is_active,
-      created_at,
-      question_text_en,
-      question_text_fr,
-      question_text_es,
-      explanation_en,
-      explanation_fr,
-      explanation_es,
-      reference_label,
-      reference_article,
-      reference_url,
-      reference_title,
-      reference_page,
-      reference_preview_en,
-      reference_preview_fr,
-      reference_preview_es,
-      difficulty
-    `)
-    .eq("id", questionId)
-    .eq("is_active", true)
-    .single();
+ const access = await AgentAcademyGuard.getAccessState();
+
+let singleQuestionTable = "questions";
+
+if (access.plan === "free") {
+  singleQuestionTable = "preview_quiz_questions";
+} else if (access.plan === "starter") {
+  singleQuestionTable = "starter_quiz_questions";
+}
+
+const { data: questionData, error: questionError } = await db
+  .from(singleQuestionTable)
+  .select(`
+    id,
+    topic_id,
+    is_active,
+    created_at,
+    question_text_en,
+    question_text_fr,
+    question_text_es,
+    explanation_en,
+    explanation_fr,
+    explanation_es,
+    reference_label,
+    reference_article,
+    reference_url,
+    reference_title,
+    reference_page,
+    reference_preview_en,
+    reference_preview_fr,
+    reference_preview_es,
+    difficulty
+  `)
+  .eq("id", questionId)
+  .eq("is_active", true)
+  .single();
 
   console.log("SINGLE QUESTION DATA:", questionData);
   console.log("SINGLE QUESTION ERROR:", questionError);
@@ -387,22 +402,20 @@ async function loadQuestions() {
 
   let table = "questions";
 
-  if (access.plan === "free") {
-    table = "preview_quiz_questions";
-  } else if (access.plan === "starter") {
-    table = "starter_quiz_questions";
-  }
+if (access.plan === "free") {
+  table = "preview_quiz_questions";
+} else if (access.plan === "starter") {
+  table = "starter_quiz_questions";
+} else {
+  table = "questions"; // professional / premium / admin
+}
 
   let idsQuery = db
     .from(table)
-    .select("id");
-
-  if (access.plan !== "free") {
-    idsQuery = idsQuery
-      .eq("topic_id", state.topic.id)
-      .eq("is_active", true);
-  }
-
+    .select("id")
+    .eq("topic_id", state.topic.id)
+    .eq("is_active", true);
+  
   const { data: idsData, error: idsError } = await idsQuery;
 
   console.log("QUESTION IDS DATA:", idsData);
@@ -414,6 +427,13 @@ async function loadQuestions() {
 
   const allQuestionIds = (idsData || []).map((q) => q.id);
 
+  let maxQuestions = state.questionLimit;
+
+if (access.plan === "free") {
+  maxQuestions = Math.min(50, state.questionLimit);
+} else if (access.plan === "starter") {
+  maxQuestions = Math.min(300, state.questionLimit);
+}
   if (!allQuestionIds.length) {
     state.questions = [];
     if (el.totalLive) el.totalLive.textContent = "0";
@@ -430,14 +450,14 @@ async function loadQuestions() {
       : allQuestionIds;
 
   const selectedQuestionIds = shuffleArray(pool).slice(
-    0,
-    Math.min(state.questionLimit, pool.length)
-  );
+  0,
+  Math.min(maxQuestions, pool.length)
+);
 
   selectedQuestionIds.forEach((id) => state.seenQuestionIds.add(id));
   saveSeenQuestionIds();
 
-  const { data: questionsData, error: questionsError } = await db
+const { data: questionsData, error: questionsError } = await db
     .from("questions")
     .select(`
       id,
@@ -460,7 +480,8 @@ async function loadQuestions() {
       reference_preview_es,
       difficulty
     `)
-    .in("id", selectedQuestionIds);
+    .in("id", selectedQuestionIds)
+    .eq("is_active", true);
 
   console.log("QUESTIONS DATA:", questionsData);
   console.log("QUESTIONS ERROR:", questionsError);
