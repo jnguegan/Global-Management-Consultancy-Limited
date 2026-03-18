@@ -271,15 +271,26 @@ async function loadTopic() {
   }
 }
 
-function getQuizSourceTable(plan) {
-  if (plan === "free") return "preview_quiz_questions";
-  if (plan === "starter") return "starter_quiz_questions";
-  return "questions"; // professional / premium / admin
-}
+
 function getPlanQuestionCap(plan) {
   if (plan === "free") return 50;
   if (plan === "starter") return 300;
   return state.questionLimit; // professional / premium / admin
+}
+function getAllowedAccessLevels(plan, role) {
+  if (role === "admin") {
+    return ["free", "starter", "professional"];
+  }
+
+  if (plan === "premium" || plan === "professional") {
+    return ["free", "starter", "professional"];
+  }
+
+  if (plan === "starter") {
+    return ["free", "starter"];
+  }
+
+  return ["free"];
 }
 
 async function loadSingleQuestion() {
@@ -291,7 +302,9 @@ async function loadSingleQuestion() {
 
  const access = await AgentAcademyGuard.getAccessState();
 
-const singleQuestionTable = getQuizSourceTable(access.plan);
+const singleQuestionTable = "questions";
+  
+  const allowedAccessLevels = getAllowedAccessLevels(access.plan, access.role);
 
 const { data: questionData, error: questionError } = await db
   .from(singleQuestionTable)
@@ -299,6 +312,7 @@ const { data: questionData, error: questionError } = await db
     id,
     topic_id,
     is_active,
+    access_level,
     created_at,
     question_text_en,
     question_text_fr,
@@ -318,6 +332,7 @@ const { data: questionData, error: questionError } = await db
   `)
   .eq("id", questionId)
   .eq("is_active", true)
+  .in("access_level", allowedAccessLevels)
   .maybeSingle();
   
   console.log("SINGLE QUESTION DATA:", questionData);
@@ -409,13 +424,16 @@ if (!questionData) {
 async function loadQuestions() {
   const access = await AgentAcademyGuard.getAccessState();
 
- const table = getQuizSourceTable(access.plan);
+ const table = "questions";
+  
+  const allowedAccessLevels = getAllowedAccessLevels(access.plan, access.role);
 
-  let idsQuery = db
-    .from(table)
-    .select("id")
-    .eq("topic_id", state.topic.id)
-    .eq("is_active", true);
+ let idsQuery = db
+  .from(table)
+  .select("id")
+  .eq("topic_id", state.topic.id)
+  .eq("is_active", true)
+  .in("access_level", allowedAccessLevels);
   
   const { data: idsData, error: idsError } = await idsQuery;
 
@@ -456,30 +474,31 @@ async function loadQuestions() {
   saveSeenQuestionIds();
 
 const { data: questionsData, error: questionsError } = await db
-    .from("questions")
-    .select(`
-      id,
-      topic_id,
-      is_active,
-      created_at,
-      question_text_en,
-      question_text_fr,
-      question_text_es,
-      explanation_en,
-      explanation_fr,
-      explanation_es,
-      reference_label,
-      reference_article,
-      reference_url,
-      reference_title,
-      reference_page,
-      reference_preview_en,
-      reference_preview_fr,
-      reference_preview_es,
-      difficulty
-    `)
-    .in("id", selectedQuestionIds)
-    .eq("is_active", true);
+  .from("questions")
+  .select(`
+    id,
+    topic_id,
+    is_active,
+    access_level,
+    created_at,
+    question_text_en,
+    question_text_fr,
+    question_text_es,
+    explanation_en,
+    explanation_fr,
+    explanation_es,
+    reference_label,
+    reference_article,
+    reference_url,
+    reference_title,
+    reference_page,
+    reference_preview_en,
+    reference_preview_fr,
+    reference_preview_es,
+    difficulty
+  `)
+  .in("id", selectedQuestionIds)
+  .eq("is_active", true);
 
   console.log("QUESTIONS DATA:", questionsData);
   console.log("QUESTIONS ERROR:", questionsError);
