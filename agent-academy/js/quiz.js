@@ -52,6 +52,8 @@ const el = {
   questionReferencePanel: document.getElementById("questionReferencePanel"),
   questionReferenceMeta: document.getElementById("questionReferenceMeta"),
   questionReferenceLink: document.getElementById("questionReferenceLink"),
+  upgradeBanner: document.getElementById("upgradeBanner"),
+upgradeBannerText: document.getElementById("upgradeBannerText"),
 };
 
 document.addEventListener("DOMContentLoaded", init);
@@ -960,15 +962,24 @@ function hideLoader() {
 
 function showQuiz() {
   if (el.quizContent) el.quizContent.classList.remove("hidden");
-  const banner = document.getElementById("upgradeBanner");
 
-if (banner) {
+  if (el.upgradeBanner) {
   if (state.hasLockedContent) {
-    banner.classList.remove("hidden");
+    const plan = state.access?.plan || "free";
+    const planLabel = plan === "starter" ? "Starter" : "Free";
+    const questionLimit = getPlanQuestionCap(plan);
+
+    if (el.upgradeBannerText) {
+      el.upgradeBannerText.textContent =
+        `You are currently on the ${planLabel} plan with access to ${questionLimit} quiz questions. Upgrade to unlock more questions and the full exam preparation experience.`;
+    }
+
+    el.upgradeBanner.classList.remove("hidden");
   } else {
-    banner.classList.add("hidden");
+    el.upgradeBanner.classList.add("hidden");
   }
 }
+  
   if (el.resultsView) el.resultsView.classList.remove("show");
   if (el.emptyState) el.emptyState.classList.add("hidden");
 }
