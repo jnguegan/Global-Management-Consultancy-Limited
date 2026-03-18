@@ -521,7 +521,7 @@ if (googleBtn) {
       const { error } = await supabaseClient.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo: window.location.origin + "/agent-academy/dashboard.html"
+          redirectTo: "https://www.globalmgm.co.uk/agent-academy/dashboard.html"
         }
       });
 
