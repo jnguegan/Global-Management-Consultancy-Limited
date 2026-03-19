@@ -709,6 +709,11 @@ document.getElementById("questionAccessFill").style.width =
 }
   
   async function init() {
+  const guard = window.AgentAcademyGuard;
+    if (!guard || !guard.requireLogin) {
+  console.error("AgentAcademyGuard not available");
+  return;
+}
     cacheDom();
     bindEvents();
     renderStatic();
