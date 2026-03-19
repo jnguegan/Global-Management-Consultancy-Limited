@@ -31,48 +31,12 @@
     );
   }
 
+  // ✅ FIXED FUNCTION (NO DUPLICATES, NO SYNTAX ERRORS)
   async function getProfileAccess(userId) {
-  const auth = window.AgentAcademyAuth;
-  const sb = auth?.getClient ? auth.getClient() : null;
+    const auth = window.AgentAcademyAuth;
+    const sb = auth?.getClient ? auth.getClient() : null;
 
-  if (!sb || !userId) {
-    return {
-      plan: "free",
-      subscriptionStatus: "inactive",
-      source: "fallback"
-    };
-  }
-
-  try {
-    const { data, error } = await sb
-      .from("user_access")
-      .select("plan, is_active, access_end")
-      .eq("user_id", userId)
-      .eq("is_active", true)
-      .order("created_at", { ascending: false })
-      .limit(1)
-      .maybeSingle();
-
-    if (!error && data) {
-      const nowIso = new Date().toISOString();
-      const accessEnd = data.access_end ? String(data.access_end) : null;
-      const stillValid = !accessEnd || accessEnd >= nowIso;
-
-      return {
-        plan: stillValid ? normalizePlan(data.plan) : "free",
-        subscriptionStatus: stillValid ? "active" : "inactive",
-        source: "user_access"
-      };
-    }
-
-    // fallback to profiles
-    const { data: profileData, error: profileError } = await sb
-      .from("profiles")
-      .select("plan_tier, access_level, subscription_status")
-      .eq("id", userId)
-      .maybeSingle();
-
-    if (profileError || !profileData) {
+    if (!sb || !userId) {
       return {
         plan: "free",
         subscriptionStatus: "inactive",
@@ -80,33 +44,37 @@
       };
     }
 
-    const planTier = normalizePlan(profileData.plan_tier);
-    const accessLevel = normalizePlan(profileData.access_level);
-    const subscriptionStatus = String(profileData.subscription_status || "inactive").trim().toLowerCase();
-
-    const resolvedPlan = planTier !== "free" ? planTier : accessLevel;
-
-    return {
-      plan: resolvedPlan,
-      subscriptionStatus,
-      source: "profiles"
-    };
-  } catch (error) {
-    return {
-      plan: "free",
-      subscriptionStatus: "inactive",
-      source: "fallback"
-    };
-  }
-}
     try {
+      // 🔹 PRIMARY: user_access table
       const { data, error } = await sb
+        .from("user_access")
+        .select("plan, is_active, access_end")
+        .eq("user_id", userId)
+        .eq("is_active", true)
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      if (!error && data) {
+        const nowIso = new Date().toISOString();
+        const accessEnd = data.access_end ? String(data.access_end) : null;
+        const stillValid = !accessEnd || accessEnd >= nowIso;
+
+        return {
+          plan: stillValid ? normalizePlan(data.plan) : "free",
+          subscriptionStatus: stillValid ? "active" : "inactive",
+          source: "user_access"
+        };
+      }
+
+      // 🔹 FALLBACK: profiles table
+      const { data: profileData, error: profileError } = await sb
         .from("profiles")
         .select("plan_tier, access_level, subscription_status")
         .eq("id", userId)
         .maybeSingle();
 
-      if (error || !data) {
+      if (profileError || !profileData) {
         return {
           plan: "free",
           subscriptionStatus: "inactive",
@@ -114,9 +82,9 @@
         };
       }
 
-      const planTier = normalizePlan(data.plan_tier);
-      const accessLevel = normalizePlan(data.access_level);
-      const subscriptionStatus = String(data.subscription_status || "inactive").trim().toLowerCase();
+      const planTier = normalizePlan(profileData.plan_tier);
+      const accessLevel = normalizePlan(profileData.access_level);
+      const subscriptionStatus = String(profileData.subscription_status || "inactive").trim().toLowerCase();
 
       const resolvedPlan = planTier !== "free" ? planTier : accessLevel;
 
