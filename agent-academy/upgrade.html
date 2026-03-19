@@ -777,7 +777,7 @@
       updateCountdown();
       setInterval(updateCountdown, 1000);
 
-      const db = window.supabaseClient || window.sb || null;
+          const db = window.supabaseClient || window.sb || null;
       let currentPlan = "free";
 
       if (db) {
@@ -787,16 +787,12 @@
         } = await db.auth.getUser();
 
         if (!userError && user) {
-          const { data: accessRow, error: accessError } = await db
-            .from("user_access")
-            .select("plan, role, is_active")
-            .eq("user_id", user.id)
-            .eq("is_active", true)
-            .single();
+          const loadedPlan = await window.loadUserAccess?.(user.id);
 
-          if (!accessError && accessRow?.plan) {
-            currentPlan = accessRow.plan;
-          }
+          console.log("UPGRADE LOADED PLAN:", loadedPlan);
+          console.log("UPGRADE WINDOW PLAN:", window.userPlan, "ROLE:", window.userRole);
+
+          currentPlan = loadedPlan || window.userPlan || "free";
         }
       }
 
