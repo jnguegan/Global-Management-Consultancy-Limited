@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Payment | Agent Academy</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Inter, Arial, sans-serif;
+      background: #07101d;
+      color: #edf3ff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    .card {
+      max-width: 520px;
+      padding: 32px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      text-align: center;
+    }
+
+    h1 {
+      margin-bottom: 12px;
+    }
+
+    p {
+      color: rgba(237,243,255,0.75);
+      line-height: 1.6;
+    }
+
+    .plan {
+      margin: 16px 0;
+      font-size: 18px;
+      font-weight: 700;
+      color: #d4af37;
+    }
+
+    .btn {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 12px 18px;
+      border-radius: 999px;
+      background: rgba(212,175,55,0.2);
+      border: 1px solid rgba(212,175,55,0.4);
+      color: #fff4cf;
+      text-decoration: none;
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <h1>Payment page (coming next)</h1>
+
+    <p>
+      You are about to upgrade your Agent Academy access.
+      Payment integration (Stripe) will be added next.
+    </p>
+
+    <div class="plan" id="planName"></div>
+
+    <a href="/agent-academy/upgrade.html" class="btn">Back to plans</a>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const plan = params.get("plan");
+
+    const planMap = {
+      starter: "Starter Plan (£149)",
+      professional: "Professional Plan (£395)",
+      premium_intensive: "Premium Intensive (£895)"
+    };
+
+    const label = planMap[plan] || "Selected plan";
+
+    document.getElementById("planName").textContent = label;
+  </script>
+
+</body>
+</html>
