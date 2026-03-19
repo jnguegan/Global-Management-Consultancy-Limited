@@ -643,15 +643,15 @@
 <script src="/agent-academy/js/guard.js"></script>
 
 <script>
+ <script>
   document.addEventListener("DOMContentLoaded", async () => {
     const guard = window.AgentAcademyGuard;
-    if (!guard || !guard.requirePaidAccess) return;
+    if (!guard || !guard.requirePlan) return;
 
-    await guard.requirePlan("professional", {
-  loginUrl: "/agent-academy/login.html",
-  upgradeUrl: "/agent-academy/upgrade.html"
-});
-
+    await guard.requirePlan("starter", {
+      loginUrl: "/agent-academy/login.html",
+      upgradeUrl: "/agent-academy/upgrade.html"
+    });
   });
 </script>
 
