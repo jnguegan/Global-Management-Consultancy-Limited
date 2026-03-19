@@ -345,6 +345,8 @@ async function loadMockAccessState() {
 
       applyStaticTranslations();
       
+    state.access = await loadMockAccessState();
+state.examQuestionCount = state.access.examQuestionCount;  
 console.log("ACCESS STATE:", state.access);
       const pool = await loadQuestionPool();
 
