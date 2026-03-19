@@ -69,10 +69,6 @@ async function init() {
     state.topicSlug = params.get("topic");
     
     state.originalTopicSlug = state.topicSlug;
-
-if (state.topicSlug === "service-fees-commissions") {
-  state.topicSlug = "commissions";
-}
     
     state.singleQuestionId = params.get("question");
 
