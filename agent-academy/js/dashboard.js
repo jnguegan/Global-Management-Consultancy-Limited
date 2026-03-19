@@ -672,57 +672,13 @@ document.getElementById("questionAccessFill").style.width =
 });
 }
 
-  async function ensureUserAccess(userId) {
-  try {
-    const client = window.supabaseClient || window.sb || window.supabase;
-
-    if (!client) {
-      console.error("Supabase client not found for ensureUserAccess");
-      window.userPlan = "free";
-      return "free";
-    }
-
-    const { data, error } = await client
-      .from("user_access")
-      .select("user_id")
-      .eq("user_id", userId)
-      .maybeSingle();
-
-    if (error) {
-      console.error("ensureUserAccess check error:", error);
-      window.userPlan = "free";
-      return "free";
-    }
-
-    if (!data) {
-      const { error: insertError } = await client
-        .from("user_access")
-        .insert([{
-          user_id: userId,
-          plan: "free",
-          is_active: true
-        }]);
-
-      if (insertError) {
-        console.error("ensureUserAccess insert error:", insertError);
-      }
-
-      window.userPlan = "free";
-      return "free";
-    }
-
-    if (typeof window.loadUserAccess === "function") {
-      await window.loadUserAccess(userId);
-      return window.userPlan || "free";
-    }
-
-    window.userPlan = "free";
-    return "free";
-  } catch (err) {
-    console.error("ensureUserAccess unexpected error:", err);
-    window.userPlan = "free";
-    return "free";
+async function ensureUserAccess(userId) {
+  if (typeof window.loadUserAccess === "function") {
+    const loadedPlan = await window.loadUserAccess(userId);
+    return loadedPlan || window.userPlan || "free";
   }
+
+  return window.userPlan || "free";
 }
   
   async function init() {
