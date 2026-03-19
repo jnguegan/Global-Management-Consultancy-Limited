@@ -114,27 +114,31 @@ payBtn.addEventListener("click", async () => {
       return;
     }
 
-    const res = await fetch("/.netlify/functions/create-checkout-session", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        plan,
-        userId: user.id,
-        email: user.email
-      })
-    });
+   const res = await fetch("/.netlify/functions/create-checkout-session", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    plan,
+    userId: user.id,
+    email: user.email
+  })
+});
 
-    const data = await res.json();
+const data = await res.json();
 
-    if (data.url) {
-      window.location.href = data.url;
-    } else {
-      alert("Unable to start payment");
-      payBtn.disabled = false;
-      payBtn.textContent = "Proceed to payment";
-    }
+console.log("CHECKOUT RESPONSE STATUS:", res.status);
+console.log("CHECKOUT RESPONSE DATA:", data);
+
+if (data.url) {
+  window.location.href = data.url;
+} else {
+  alert(data.error || "Unable to start payment");
+  payBtn.disabled = false;
+  payBtn.textContent = "Proceed to payment";
+}
+    
   } catch (err) {
     console.error(err);
     alert("Payment error");
