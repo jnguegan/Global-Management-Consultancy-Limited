@@ -67,22 +67,81 @@
 
     <div class="plan" id="planName"></div>
 
-    <a href="/agent-academy/upgrade.html" class="btn">Back to plans</a>
+    <button id="payBtn" class="btn">Proceed to payment</button>
   </div>
 
   <script>
-    const params = new URLSearchParams(window.location.search);
-    const plan = params.get("plan");
+  const params = new URLSearchParams(window.location.search);
+const plan = params.get("plan");
 
-    const planMap = {
-      starter: "Starter Plan (£149)",
-      professional: "Professional Plan (£395)",
-      premium_intensive: "Premium Intensive (£895)"
-    };
+const planMap = {
+  starter: "Starter Plan (£149)",
+  professional: "Professional Plan (£395)",
+  premium_intensive: "Premium Intensive (£895)"
+};
 
-    const label = planMap[plan] || "Selected plan";
+document.getElementById("planName").textContent =
+  planMap[plan] || "Selected plan";
 
-    document.getElementById("planName").textContent = label;
+const payBtn = document.getElementById("payBtn");
+
+payBtn.addEventListener("click", async () => {
+  try {
+    payBtn.textContent = "Redirecting...";
+    payBtn.disabled = true;
+
+    const db = window.supabaseClient || window.sb || null;
+
+    if (!db) {
+      alert("Auth not loaded");
+      return;
+    }
+
+    const {
+      data: { user }
+    } = await db.auth.getUser();
+
+    if (!user) {
+      alert("You must be logged in");
+      window.location.href = "/agent-academy/login.html";
+      return;
+    }
+
+    const res = await fetch("/.netlify/functions/create-checkout-session", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        plan,
+        userId: user.id,
+        email: user.email
+      })
+    });
+
+    const data = await res.json();
+
+    if (data.url) {
+      window.location.href = data.url;
+    } else {
+      alert("Unable to start payment");
+      payBtn.disabled = false;
+      payBtn.textContent = "Proceed to payment";
+    }
+  } catch (err) {
+    console.error(err);
+    alert("Payment error");
+    payBtn.disabled = false;
+    payBtn.textContent = "Proceed to payment";
+  }
+});
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/agent-academy/js/supabase-client.js"></script>
+<script src="/agent-academy/js/auth.js"></script>
+<script src="/agent-academy/js/guard.js"></script>
+<script src="/agent-academy/js/academy.js"></script>
+    
   </script>
 
 </body>
