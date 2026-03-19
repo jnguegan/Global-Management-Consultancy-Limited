@@ -773,7 +773,7 @@
     }
 
     document.addEventListener("DOMContentLoaded", async () => {
-      loadLang(currentLang);
+      await loadLang(currentLang);
       updateCountdown();
       setInterval(updateCountdown, 1000);
 
@@ -794,18 +794,14 @@
             .eq("is_active", true)
             .single();
 
-          console.log("UPGRADE ACCESS ROW:", accessRow);
-          console.log("UPGRADE ACCESS ERROR:", accessError);
-
           if (!accessError && accessRow?.plan) {
             currentPlan = accessRow.plan;
-            console.log("CURRENT PLAN ON UPGRADE PAGE:", currentPlan);
           }
         }
       }
 
       const buttons = document.querySelectorAll(".plan-btn");
-console.log("UPGRADE BUTTON HREFS:", [...buttons].map(btn => btn.getAttribute("href")));
+
       buttons.forEach((btn) => {
         const href = btn.getAttribute("href");
 
