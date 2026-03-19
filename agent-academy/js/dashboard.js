@@ -560,7 +560,8 @@ const AgentAcademyDashboard = (() => {
   function renderAccess() {
     if (!state.access) return;
 
-    const plan = state.access.plan || "free";
+   const plan = window.userPlan || state.access?.plan || "free";
+console.log("DASHBOARD PLAN:", plan, "window.userPlan=", window.userPlan, "state.access=", state.access);
     const user = state.access.user || {};
     const vm = computeViewModel(plan);
 
