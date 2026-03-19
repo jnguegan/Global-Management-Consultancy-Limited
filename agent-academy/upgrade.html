@@ -772,10 +772,28 @@
       updateExamDateText();
     }
 
-    document.addEventListener("DOMContentLoaded", () => {
+    document.addEventListener("DOMContentLoaded", async () => {
       loadLang(currentLang);
       updateCountdown();
       setInterval(updateCountdown, 1000);
+
+      await window.loadUserAccess?.();
+
+      const currentPlan = window.userPlan || "free";
+
+      const buttons = document.querySelectorAll(".plan-btn");
+
+      buttons.forEach((btn) => {
+        const href = btn.getAttribute("href");
+
+        if (!href) return;
+
+        if (href.includes(`plan=${currentPlan}`)) {
+          btn.textContent = "Current plan";
+          btn.style.pointerEvents = "none";
+          btn.style.opacity = "0.6";
+        }
+      });
     });
 
 document.getElementById("freePreviewBtn")?.addEventListener("click", async (e) => {
