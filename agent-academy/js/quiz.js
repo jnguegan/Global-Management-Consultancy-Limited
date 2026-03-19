@@ -122,7 +122,6 @@ state.access = accessRow || {
 }
 
 if (!state.questions.length) {
-  showEmpty("No questions found for this topic yet.");
   return;
 }
 
