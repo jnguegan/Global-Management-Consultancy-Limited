@@ -56,7 +56,7 @@
 "upgrade.starterTitle": "Starter",
 "upgrade.proTitle": "Professional",
 "upgrade.premiumTitle": "Premium Intensive",
-"upgrade.starterButton": "Start with Starter",
+"upgrade.starterButton": "Choose Starter",
 "upgrade.proButton": "Choose Professional",
 "upgrade.premiumButton": "Join Premium",
 
@@ -93,7 +93,7 @@
 "upgrade.starterFeature2": "Stronger commitment than free-only access",
 "upgrade.starterFeature3": "Built for focused early-stage preparation",
 "upgrade.starterFeature4": "Clear upgrade path to more intensive support",
-"upgrade.starterButton": "Start with Starter",
+
 
 "upgrade.proBadge": "Most balanced option",
 "upgrade.proTitle": "Professional",
@@ -102,7 +102,7 @@
 "upgrade.proFeature2": "Built for committed candidates preparing properly",
 "upgrade.proFeature3": "Suitable for deeper use of premium academy tools",
 "upgrade.proFeature4": "Ideal midpoint between affordability and intensity",
-"upgrade.proButton": "Choose Professional",
+
 
 "upgrade.premiumBadge": "Highest intensity tier",
 "upgrade.premiumTitle": "Premium Intensive",
