@@ -298,7 +298,20 @@
 }
 
 async function loadMockAccessState() {
-  const access = await window.AgentAcademyGuard.getAccessState();
+  const guard = window.AgentAcademyGuard;
+
+  if (!guard || typeof guard.getAccessState !== "function") {
+    return {
+      isLoggedIn: false,
+      isPaid: false,
+      plan: "free",
+      table: "preview_mock_questions",
+      allowedAccessLevels: ["free"],
+      examQuestionCount: 10
+    };
+  }
+
+  const access = await guard.getAccessState();
   const plan = normalizePlan(access?.plan);
 
   if (plan === "starter") {
@@ -329,7 +342,6 @@ async function loadMockAccessState() {
     examQuestionCount: 10
   };
 }
-
   async function startMockExam() {
     if (!db) {
       showError(t("supabaseMissing"));
