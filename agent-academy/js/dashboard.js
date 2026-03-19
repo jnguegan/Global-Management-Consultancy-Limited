@@ -727,7 +727,7 @@ if (!access) return;
 
 await ensureUserAccess(access.user.id);
 
-const loadedPlan = await loadUserAccess(access.user.id);
+const loadedPlan = await window.loadUserAccess(access.user.id);
 
 console.log("LOADED PLAN:", loadedPlan);
 console.log("WINDOW PLAN AFTER LOAD:", window.userPlan, "ROLE:", window.userRole);
