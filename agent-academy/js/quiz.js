@@ -505,11 +505,20 @@ state.hasLockedContent =
   getSessionQuestionLimit(access.plan)
 );
   
-  if (!allQuestionIds.length) {
-    state.questions = [];
-    if (el.totalLive) el.totalLive.textContent = "0";
+ if (!allQuestionIds.length) {
+  state.questions = [];
+  if (el.totalLive) el.totalLive.textContent = "0";
+
+  if (
+    state.access?.plan === "free" ||
+    state.access?.plan === "starter"
+  ) {
+    showEmpty("This topic is not available on your current plan.");
     return;
   }
+
+  return;
+}
 
  const unseenQuestionIds = allQuestionIds.filter(
   (id) => !state.seenQuestionIds.has(id)
