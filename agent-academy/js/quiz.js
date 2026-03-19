@@ -1056,6 +1056,12 @@ function showEmpty(message) {
   if (el.resultsView) el.resultsView.classList.remove("show");
   if (el.emptyState) {
     el.emptyState.classList.remove("hidden");
-    el.emptyState.textContent = message;
+    el.emptyState.innerHTML = `
+  ${message}
+  <br><br>
+  <a href="/agent-academy/upgrade.html" class="btn-primary">
+    Upgrade plan
+  </a>
+`;
   }
 }
