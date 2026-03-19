@@ -70,8 +70,15 @@
     <button id="payBtn" class="btn">Proceed to payment</button>
   </div>
 
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/agent-academy/js/supabase-client.js"></script>
+<script src="/agent-academy/js/auth.js"></script>
+<script src="/agent-academy/js/guard.js"></script>
+<script src="/agent-academy/js/academy.js"></script>
   <script>
-  const params = new URLSearchParams(window.location.search);
+
+const params = new URLSearchParams(window.location.search);
 const plan = params.get("plan");
 
 const planMap = {
@@ -136,11 +143,7 @@ payBtn.addEventListener("click", async () => {
   }
 });
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="/agent-academy/js/supabase-client.js"></script>
-<script src="/agent-academy/js/auth.js"></script>
-<script src="/agent-academy/js/guard.js"></script>
-<script src="/agent-academy/js/academy.js"></script>
+   
     
   </script>
 
