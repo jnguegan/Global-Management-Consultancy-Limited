@@ -378,7 +378,7 @@
         const requiredLevel =
           section.access_level || (section.is_free ? "free" : "professional");
 
-       const allowed = hasAccess(requiredLevel);
+       const allowed = hasAccess(window.userPlan || "free", requiredLevel);
 
         a.textContent = allowed ? sectionTitle : `🔒 ${sectionTitle}`;
 
@@ -416,7 +416,7 @@
       const requiredLevel =
         data.access_level || (data.is_free ? "free" : "professional");
 
-     const allowed = hasAccess(requiredLevel);
+    const allowed = hasAccess(window.userPlan || "free", requiredLevel);
 
       if (!allowed) {
         showUpgradePrompt(requiredLevel);
