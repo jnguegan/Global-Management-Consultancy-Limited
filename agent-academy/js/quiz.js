@@ -301,7 +301,7 @@ async function loadTopic() {
 
   if (el.topicTitle) el.topicTitle.textContent = topicName || "Topic";
   
- if (el.topicBadge) el.topicBadge.textContent = state.topicSlug || data.slug;
+ if (el.topicBadge) el.topicBadge.textContent = state.originalTopicSlug || data.slug;
   
   if (el.quizHeading) el.quizHeading.textContent = topicName || "Quiz";
   if (el.quizSubheading) {
