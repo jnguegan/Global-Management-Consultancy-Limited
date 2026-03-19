@@ -428,7 +428,8 @@ const { data, error } = await db
     return Array.isArray(data) ? data : [];
   }
 
-function buildExamQuestions(pool) {
+const finalQuestions = shuffleArray(selected).slice(0, state.examQuestionCount);
+  
   const REGULATION_WEIGHTS = {
     FFAR: 10,
     RSTP: 8,
