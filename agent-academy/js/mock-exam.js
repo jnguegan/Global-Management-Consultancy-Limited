@@ -537,7 +537,7 @@ const finalQuestions = shuffleArray(selected).slice(0, state.examQuestionCount);
 
   const takeQuestions = (source, maxCount) => {
     for (const question of source) {
-      if (selected.length >= EXAM_QUESTION_COUNT) break;
+     if (selected.length >= state.examQuestionCount) break;
       if (maxCount <= 0) break;
       if (usedIds.has(question.id)) continue;
 
@@ -550,7 +550,7 @@ const finalQuestions = shuffleArray(selected).slice(0, state.examQuestionCount);
   takeQuestions(scenarioQuestions, TARGET_SCENARIO_COUNT);
 
   for (const question of nonScenarioQuestions) {
-    if (selected.length >= EXAM_QUESTION_COUNT) break;
+   if (selected.length >= state.examQuestionCount) break;
     if (usedIds.has(question.id)) continue;
 
     selected.push(question);
@@ -559,7 +559,7 @@ const finalQuestions = shuffleArray(selected).slice(0, state.examQuestionCount);
 
   if (selected.length < EXAM_QUESTION_COUNT) {
     for (const question of scenarioQuestions) {
-      if (selected.length >= EXAM_QUESTION_COUNT) break;
+      if (selected.length >= state.examQuestionCount) break;
       if (usedIds.has(question.id)) continue;
 
       selected.push(question);
