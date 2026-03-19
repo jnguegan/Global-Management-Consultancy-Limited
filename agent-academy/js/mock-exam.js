@@ -466,8 +466,7 @@ async function fetchQuestions() {
     return Array.isArray(data) ? data : [];
   }
 
-const finalQuestions = shuffleArray(selected).slice(0, state.examQuestionCount);
-  
+  function buildExamQuestions(pool) {
   const REGULATION_WEIGHTS = {
     FFAR: 10,
     RSTP: 8,
@@ -595,7 +594,7 @@ const finalQuestions = shuffleArray(selected).slice(0, state.examQuestionCount);
     usedIds.add(question.id);
   }
 
-  if (selected.length < EXAM_QUESTION_COUNT) {
+  if (selected.length < state.examQuestionCount) {
     for (const question of scenarioQuestions) {
       if (selected.length >= state.examQuestionCount) break;
       if (usedIds.has(question.id)) continue;
@@ -605,7 +604,7 @@ const finalQuestions = shuffleArray(selected).slice(0, state.examQuestionCount);
     }
   }
 
-  const finalQuestions = shuffleArray(selected).slice(0, EXAM_QUESTION_COUNT);
+  const finalQuestions = shuffleArray(selected).slice(0, state.examQuestionCount);
 
   const updatedRecentIds = [
     ...finalQuestions.map((q) => q.id),
