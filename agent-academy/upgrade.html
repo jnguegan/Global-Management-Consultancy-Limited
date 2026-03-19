@@ -676,8 +676,7 @@
       document.documentElement.lang = currentLang;
 
       document.querySelectorAll("[data-i18n]").forEach((el) => {
-        console.log("UPGRADE BUTTON HREFS:", [...buttons].map(btn => btn.getAttribute("href")));
-        const key = el.getAttribute("data-i18n");
+      const key = el.getAttribute("data-i18n");
         if (translations[key]) {
           el.textContent = translations[key];
         }
@@ -806,7 +805,7 @@
       }
 
       const buttons = document.querySelectorAll(".plan-btn");
-
+console.log("UPGRADE BUTTON HREFS:", [...buttons].map(btn => btn.getAttribute("href")));
       buttons.forEach((btn) => {
         const href = btn.getAttribute("href");
 
