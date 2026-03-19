@@ -347,11 +347,10 @@ async function loadMockAccessState() {
 
       const pool = await loadQuestionPool();
 
-      if (!Array.isArray(pool) || pool.length < EXAM_QUESTION_COUNT) {
-        showError(t("notEnoughQuestions", { count: EXAM_QUESTION_COUNT }));
-        return;
-      }
-
+      if (!Array.isArray(pool) || pool.length < state.examQuestionCount) {
+  showError(t("notEnoughQuestions", { count: state.examQuestionCount }));
+  return;
+}
       state.questions = buildExamQuestions(pool);
       state.currentIndex = 0;
       state.answers = {};
@@ -415,26 +414,25 @@ async function loadMockAccessState() {
       .filter((q) => getLocalizedQuestionText(q.raw || "").trim() && q.options.length >= 4);
   }
 
-  async function fetchQuestions() {
-    const { data, error } = await db
-      
-      const access = await AgentAcademyGuard.getAccessState();
+async function fetchQuestions() {
+  const access = state.access || (await loadMockAccessState());
+  const table = access.table;
+  const allowedAccessLevels = access.allowedAccessLevels || ["free"];
 
-const table =
-  access.plan === "free"
-    ? "preview_mock_questions"
-    : "questions";
+  let query = db.from(table).select("*");
 
-const { data, error } = await db
-  .from(table)
-  .select("*");
-
-    if (error) {
-      throw new Error(`Unable to load questions: ${error.message}`);
-    }
-
-    return Array.isArray(data) ? data : [];
+  if (table === "questions") {
+    query = query.in("access_level", allowedAccessLevels);
   }
+
+  const { data, error } = await query;
+
+  if (error) {
+    throw new Error(`Unable to load questions: ${error.message}`);
+  }
+
+  return Array.isArray(data) ? data : [];
+}
 
   async function fetchOptions(questionIds) {
     if (!questionIds.length) return [];
@@ -936,12 +934,12 @@ if (unanswered > 0) {
       {
         mode: "mock_exam",
         started_at: startedAtIso,
-        total_questions: EXAM_QUESTION_COUNT,
+        total_questions: state.examQuestionCount,
         language: state.lang
       },
       {
         started_at: startedAtIso,
-        total_questions: EXAM_QUESTION_COUNT,
+        total_questions: state.examQuestionCount,
         language: state.lang
       },
       {
