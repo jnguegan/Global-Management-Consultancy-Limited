@@ -646,14 +646,30 @@ document.getElementById("questionAccessFill").style.width =
       });
     });
 
-    el.logoutBtn.addEventListener("click", async () => {
-      const auth = window.AgentAcademyAuth;
-      if (auth?.signOut) {
-        await auth.signOut();
-      }
-      window.location.href = "/agent-academy/login.html";
-    });
+   el.logoutBtn.addEventListener("click", async (e) => {
+  e.preventDefault();
+
+  try {
+    const client =
+      window.supabaseClient ||
+      window.sb ||
+      window.supabase ||
+      null;
+
+    if (client?.auth?.signOut) {
+      await client.auth.signOut();
+    } else if (window.AgentAcademyAuth?.signOut) {
+      await window.AgentAcademyAuth.signOut();
+    }
+  } catch (error) {
+    console.error("Logout error:", error);
   }
+
+  localStorage.removeItem("lang");
+  localStorage.removeItem("mock_exam_lang");
+
+  window.location.href = "/agent-academy/login.html";
+});
 
   async function ensureUserAccess(userId) {
   try {
