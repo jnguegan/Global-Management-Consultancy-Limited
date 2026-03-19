@@ -662,14 +662,21 @@
         Free signup alone does not unlock the full Agent Academy. Paid access is intended to control premium value, preserve serious positioning and structure the learning journey properly.
       </div>
 
-      <div class="footer" data-i18n="upgrade.footer">
+           <div class="footer" data-i18n="upgrade.footer">
         Agent Academy by GlobalMGM
       </div>
     </div>
   </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="/agent-academy/js/supabase-client.js"></script>
+    <script src="/agent-academy/js/auth.js"></script>
+    <script src="/agent-academy/js/guard.js"></script>
+    <script src="/agent-academy/js/academy.js"></script>
+
     <script>
     let translations = {};
+      
     let currentLang = localStorage.getItem("lang") || "en";
 
     function applyTranslations() {
