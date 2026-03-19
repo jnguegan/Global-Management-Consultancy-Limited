@@ -804,7 +804,11 @@
       }
 
       const buttons = document.querySelectorAll(".plan-btn");
+      const freeBtn = document.getElementById("freePreviewBtn");
 
+if (currentPlan !== "free" && freeBtn) {
+  freeBtn.style.display = "none";
+}
       buttons.forEach((btn) => {
         const href = btn.getAttribute("href");
 
