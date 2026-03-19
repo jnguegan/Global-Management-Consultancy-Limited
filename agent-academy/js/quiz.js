@@ -67,6 +67,9 @@ async function init() {
 
     const params = new URLSearchParams(window.location.search);
     state.topicSlug = params.get("topic");
+    if (state.topicSlug === "service-fees-commissions") {
+  state.topicSlug = "commissions";
+}
     state.singleQuestionId = params.get("question");
 
     if (!state.topicSlug && !state.singleQuestionId) {
@@ -293,7 +296,9 @@ async function loadTopic() {
   const topicDescription = getLocalizedValue(data, "description");
 
   if (el.topicTitle) el.topicTitle.textContent = topicName || "Topic";
-  if (el.topicBadge) el.topicBadge.textContent = data.slug;
+  
+ if (el.topicBadge) el.topicBadge.textContent = state.topicSlug || data.slug;
+  
   if (el.quizHeading) el.quizHeading.textContent = topicName || "Quiz";
   if (el.quizSubheading) {
     el.quizSubheading.textContent =
