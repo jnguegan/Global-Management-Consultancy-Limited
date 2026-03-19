@@ -344,7 +344,8 @@ async function loadMockAccessState() {
       el.examTopbar.classList.remove("hidden");
 
       applyStaticTranslations();
-
+      
+console.log("ACCESS STATE:", state.access);
       const pool = await loadQuestionPool();
 
       if (!Array.isArray(pool) || pool.length < state.examQuestionCount) {
