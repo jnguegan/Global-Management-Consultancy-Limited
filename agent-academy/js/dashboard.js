@@ -670,6 +670,7 @@ document.getElementById("questionAccessFill").style.width =
 
   window.location.href = "/agent-academy/login.html";
 });
+}
 
   async function ensureUserAccess(userId) {
   try {
@@ -741,17 +742,12 @@ document.getElementById("questionAccessFill").style.width =
 
 if (!access) return;
 
-await ensureUserAccess(access.user.id);
-
-const loadedPlan = await window.loadUserAccess(access.user.id);
-
-console.log("LOADED PLAN:", loadedPlan);
-console.log("WINDOW PLAN AFTER LOAD:", window.userPlan, "ROLE:", window.userRole);
+console.log("ACCESS FROM GUARD:", access);
 
 state.access = {
   ...access,
-  plan: loadedPlan || window.userPlan || "free",
-  role: window.userRole || access.role || "user"
+  plan: access.plan || "free",
+  role: access.role || "user"
 };
 
 console.log("FINAL ACCESS STATE:", state.access);
