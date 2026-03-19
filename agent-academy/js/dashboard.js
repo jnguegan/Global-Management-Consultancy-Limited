@@ -727,7 +727,15 @@ if (!access) return;
 
 await ensureUserAccess(access.user.id);
 
-state.access = access;
+await loadUserAccess(access.user.id);
+
+state.access = {
+  ...access,
+  plan: window.userPlan,
+  role: window.userRole
+};
+
+console.log("FINAL ACCESS STATE:", state.access);
 renderAccess();
       
     } catch (error) {
