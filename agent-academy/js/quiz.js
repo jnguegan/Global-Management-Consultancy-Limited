@@ -67,9 +67,13 @@ async function init() {
 
     const params = new URLSearchParams(window.location.search);
     state.topicSlug = params.get("topic");
-    if (state.topicSlug === "service-fees-commissions") {
+    
+    state.originalTopicSlug = state.topicSlug;
+
+if (state.topicSlug === "service-fees-commissions") {
   state.topicSlug = "commissions";
 }
+    
     state.singleQuestionId = params.get("question");
 
     if (!state.topicSlug && !state.singleQuestionId) {
