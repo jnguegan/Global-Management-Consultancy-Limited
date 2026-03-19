@@ -10,20 +10,22 @@
   const LANGUAGE_STORAGE_KEY = "mock_exam_lang";
 
   const state = {
-    lang: localStorage.getItem(LANGUAGE_STORAGE_KEY) || "en",
-    questions: [],
-    currentIndex: 0,
-    answers: {},
-    flagged: {},
-    visited: {},
-    startedAtMs: null,
-    endsAtMs: null,
-    timerInterval: null,
-    remainingSeconds: EXAM_DURATION_SECONDS,
-    attemptId: null,
-    submitted: false,
-    submitting: false
-  };
+  lang: localStorage.getItem(LANGUAGE_STORAGE_KEY) || "en",
+  questions: [],
+  currentIndex: 0,
+  answers: {},
+  flagged: {},
+  visited: {},
+  startedAtMs: null,
+  endsAtMs: null,
+  timerInterval: null,
+  remainingSeconds: EXAM_DURATION_SECONDS,
+  attemptId: null,
+  submitted: false,
+  submitting: false,
+  access: null,
+  examQuestionCount: EXAM_QUESTION_COUNT
+};
 
   const i18n = {
     en: {
@@ -290,6 +292,43 @@
   function updateActiveLanguageBadge() {
     el.activeLanguageBadge.textContent = t("languageBadge");
   }
+
+  function normalizePlan(plan) {
+  return String(plan || "free").trim().toLowerCase();
+}
+
+async function loadMockAccessState() {
+  const access = await window.AgentAcademyGuard.getAccessState();
+  const plan = normalizePlan(access?.plan);
+
+  if (plan === "starter") {
+    return {
+      ...access,
+      plan: "starter",
+      table: "questions",
+      allowedAccessLevels: ["free", "starter"],
+      examQuestionCount: 20
+    };
+  }
+
+  if (plan === "professional" || plan === "premium" || plan === "pro") {
+    return {
+      ...access,
+      plan,
+      table: "questions",
+      allowedAccessLevels: ["free", "starter", "professional", "premium"],
+      examQuestionCount: 20
+    };
+  }
+
+  return {
+    ...access,
+    plan: "free",
+    table: "preview_mock_questions",
+    allowedAccessLevels: ["free"],
+    examQuestionCount: 10
+  };
+}
 
   async function startMockExam() {
     if (!db) {
