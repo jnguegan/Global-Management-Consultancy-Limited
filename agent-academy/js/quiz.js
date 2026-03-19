@@ -512,7 +512,7 @@ state.hasLockedContent =
     state.access?.plan === "free" ||
     state.access?.plan === "starter"
   ) {
-    showEmpty("This topic is not available on your current plan. Upgrade to unlock questions for this topic.");
+    showEmpty("This topic is not available on your current plan.");
 
 if (el.upgradeBanner) {
   el.upgradeBanner.classList.remove("hidden");
