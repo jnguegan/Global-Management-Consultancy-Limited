@@ -129,7 +129,8 @@ payBtn.addEventListener("click", async () => {
 const data = await res.json();
 
 console.log("CHECKOUT RESPONSE STATUS:", res.status);
-console.log("CHECKOUT RESPONSE DATA:", data);
+console.log("CHECKOUT RESPONSE DATA:", JSON.stringify(data));
+alert(JSON.stringify(data));
 
 if (data.url) {
   window.location.href = data.url;
