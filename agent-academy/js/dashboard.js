@@ -560,10 +560,10 @@ const AgentAcademyDashboard = (() => {
   function renderAccess() {
     if (!state.access) return;
 
-   const plan = window.userPlan || state.access?.plan || "free";
-console.log("DASHBOARD PLAN:", plan, "window.userPlan=", window.userPlan, "state.access=", state.access);
-    const user = state.access.user || {};
-    const vm = computeViewModel(plan);
+  const plan = state.access?.plan || window.userPlan || "free";
+console.log("RENDER PLAN:", plan, "state.access.plan=", state.access?.plan, "window.userPlan=", window.userPlan);
+const user = state.access.user || {};
+const vm = computeViewModel(plan);
 
     const fullName =
       user?.user_metadata?.full_name ||
@@ -727,15 +727,19 @@ if (!access) return;
 
 await ensureUserAccess(access.user.id);
 
-await loadUserAccess(access.user.id);
+const loadedPlan = await loadUserAccess(access.user.id);
+
+console.log("LOADED PLAN:", loadedPlan);
+console.log("WINDOW PLAN AFTER LOAD:", window.userPlan, "ROLE:", window.userRole);
 
 state.access = {
   ...access,
-  plan: window.userPlan,
-  role: window.userRole
+  plan: loadedPlan || window.userPlan || "free",
+  role: window.userRole || access.role || "user"
 };
 
 console.log("FINAL ACCESS STATE:", state.access);
+      
 renderAccess();
       
     } catch (error) {
