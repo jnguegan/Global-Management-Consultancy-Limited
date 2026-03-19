@@ -1,7 +1,5 @@
 const Stripe = require("stripe");
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
-
 const PLAN_CONFIG = {
   starter: {
     name: "Agent Academy Starter",
@@ -18,6 +16,15 @@ const PLAN_CONFIG = {
 };
 
 exports.handler = async (event) => {
+  
+  if (!process.env.STRIPE_SECRET_KEY) {
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ error: "Missing STRIPE_SECRET_KEY" }),
+    };
+  }
+
+  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
   try {
     if (event.httpMethod !== "POST") {
       return {
