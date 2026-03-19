@@ -19,7 +19,7 @@ const state = {
   startedAt: null,
   submitted: false,
   canSaveAttempt: false,
-  questionLimit: 10,
+  sessionQuestionLimit: 20,
   seenQuestionIds: new Set(),
  singleQuestionId: null,
 access: null,
@@ -73,10 +73,33 @@ async function init() {
       showEmpty("Missing topic or question in URL. Example: quiz.html?topic=ffar-basics or quiz.html?topic=ffar-basics&question=101");
       return;
     }
-state.access = await AgentAcademyGuard.getAccessState() || {
+const {
+  data: { user },
+  error: userError
+} = await db.auth.getUser();
+
+if (userError) throw userError;
+
+if (!user) {
+  window.location.href = "/agent-academy/login.html";
+  return;
+}
+
+const { data: accessRow, error: accessError } = await db
+  .from("user_access")
+  .select("plan, role, is_active, access_end")
+  .eq("user_id", user.id)
+  .eq("is_active", true)
+  .single();
+
+console.log("QUIZ ACCESS ROW:", accessRow);
+console.log("QUIZ ACCESS ERROR:", accessError);
+
+state.access = accessRow || {
   plan: "free",
   role: "user"
 };
+    
     injectReferenceTooltipStyles();
     bindEvents();
 
@@ -282,8 +305,14 @@ async function loadTopic() {
 function getPlanQuestionCap(plan) {
   if (plan === "free") return 50;
   if (plan === "starter") return 300;
-  return state.questionLimit; // professional / premium / admin
+  return 9999;
 }
+
+function getSessionQuestionLimit(plan) {
+  if (plan === "free") return 10;
+  return 20;
+}
+
 function getAllowedAccessLevels(plan, role) {
   if (role === "admin") {
     return ["free", "starter", "professional"];
@@ -465,10 +494,12 @@ console.log("ALLOWED TOPICS:", allowedTopicSlugs);
   const allQuestionIds = (idsData || []).map((q) => q.id);
 state.hasLockedContent =
   access.plan === "free" || access.plan === "starter";
+ 
   const maxQuestions = Math.min(
   getPlanQuestionCap(access.plan),
-  state.questionLimit
+  getSessionQuestionLimit(access.plan)
 );
+  
   if (!allQuestionIds.length) {
     state.questions = [];
     if (el.totalLive) el.totalLive.textContent = "0";
