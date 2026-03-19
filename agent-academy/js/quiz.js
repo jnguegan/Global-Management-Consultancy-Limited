@@ -435,6 +435,15 @@ async function loadQuestions() {
  const table = "questions";
   
   const allowedAccessLevels = getAllowedAccessLevels(access.plan, access.role);
+  // fetch allowed topics from playbook
+const { data: allowedSections } = await db
+  .from("playbook_sections")
+  .select("topic_slug")
+  .in("access_level", allowedAccessLevels);
+
+const allowedTopicSlugs = [...new Set((allowedSections || []).map(s => s.topic_slug))];
+
+console.log("ALLOWED TOPICS:", allowedTopicSlugs);
 
  let idsQuery = db
   .from(table)
