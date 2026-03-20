@@ -276,7 +276,32 @@
     }
 
     window.activateRequest = activateRequest;
-    loadRequests();
+
+    document.addEventListener("DOMContentLoaded", async () => {
+      if (!db) {
+        showMessage("error", "Supabase is not loaded.");
+        return;
+      }
+
+      const { data: { user } } = await db.auth.getUser();
+
+      if (!user) {
+        window.location.href = "/agent-academy/login.html";
+        return;
+      }
+
+      if ((user.email || "").toLowerCase() !== "jnguegan@gmail.com") {
+        document.body.innerHTML = `
+          <div style="padding:40px; text-align:center;">
+            <h1>Access denied</h1>
+            <p>This page is restricted.</p>
+          </div>
+        `;
+        return;
+      }
+
+      loadRequests();
+    });
   </script>
 </body>
 </html>
