@@ -592,6 +592,13 @@
           <div class="hero-actions">
             <a href="/agent-academy/topics.html" class="action-btn" id="topicsQuickBtn">Open Topics</a>
             <a href="/agent-academy/upgrade.html" class="action-btn" id="upgradeQuickBtn">Upgrade Access</a>
+            href="/agent-academy/admin-upgrades.html"
+              class="action-btn"
+              id="adminUpgradesBtn"
+              style="display:none;"
+            >
+              Admin Upgrades
+            </a>
           </div>
 
           <div class="hero-mini-stats">
@@ -864,6 +871,27 @@
 <script src="/agent-academy/js/auth.js"></script>
 <script src="/agent-academy/js/guard.js"></script>
 <script src="/agent-academy/js/academy.js"></script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", async () => {
+    const btn = document.getElementById("adminUpgradesBtn");
+    if (!btn) return;
+
+    const db = window.supabaseClient || window.sb || null;
+    if (!db) return;
+
+    try {
+      const { data: { user } } = await db.auth.getUser();
+
+      if (user && (user.email || "").toLowerCase() === "jnguegan@gmail.com") {
+        btn.style.display = "inline-flex";
+      }
+    } catch (err) {
+      console.error("Admin dashboard button error:", err);
+    }
+  });
+</script>
+
 <script src="/agent-academy/js/dashboard.js"></script>
 </body>
 </html>
