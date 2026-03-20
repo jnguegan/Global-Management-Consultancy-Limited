@@ -260,11 +260,24 @@
           message: message || null
         };
 
-        const { error } = await db
+                const { error } = await db
           .from("upgrade_requests")
           .insert([payload]);
 
         if (error) throw error;
+
+        await fetch("/.netlify/functions/send-upgrade-request-email", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            fullName: fullName || "",
+            email: email || user?.email || "",
+            requestedPlan: selectedPlan.dbValue,
+            message: message || ""
+          })
+        });
 
         form.reset();
 
