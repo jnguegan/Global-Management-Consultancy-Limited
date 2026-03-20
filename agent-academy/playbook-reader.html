@@ -440,7 +440,7 @@
         data.explanation_en;
 
       const regulationHref =
-        `/agent-academy/regulation-viewer.html?pdf=${encodeURIComponent("/agent-academy/regulations/" + data.regulation_pdf)}&page=${encodeURIComponent(data.regulation_page || 1)}`;
+  `/agent-academy/regulation-viewer.html?pdf=/agent-academy/regulations/${data.regulation_pdf}&page=${data.regulation_page || 1}`;
 
       const practiceHref = buildPracticeHref(data.topic_slug);
 
