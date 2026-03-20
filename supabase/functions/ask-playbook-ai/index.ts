@@ -2,29 +2,40 @@ import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 
 const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
 
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+  "Content-Type": "application/json"
+};
+
 Deno.serve(async (req) => {
   try {
+    if (req.method === "OPTIONS") {
+      return new Response("ok", { headers: corsHeaders });
+    }
+
     if (req.method !== "POST") {
-      return new Response(JSON.stringify({ error: "Method not allowed" }), {
-        status: 405,
-        headers: { "Content-Type": "application/json" }
-      });
+      return new Response(
+        JSON.stringify({ error: "Method not allowed" }),
+        { status: 405, headers: corsHeaders }
+      );
     }
 
     if (!OPENAI_API_KEY) {
-      return new Response(JSON.stringify({ error: "Missing OPENAI_API_KEY" }), {
-        status: 500,
-        headers: { "Content-Type": "application/json" }
-      });
+      return new Response(
+        JSON.stringify({ error: "Missing OPENAI_API_KEY" }),
+        { status: 500, headers: corsHeaders }
+      );
     }
 
     const { question, articleText, lang } = await req.json();
 
     if (!question || !articleText) {
-      return new Response(JSON.stringify({ error: "Missing question or articleText" }), {
-        status: 400,
-        headers: { "Content-Type": "application/json" }
-      });
+      return new Response(
+        JSON.stringify({ error: "Missing question or articleText" }),
+        { status: 400, headers: corsHeaders }
+      );
     }
 
     const languageInstruction =
@@ -49,6 +60,11 @@ Article content:
 ${articleText}
 `;
 
+    console.log("Incoming AI request");
+    console.log("Question:", question);
+    console.log("Lang:", lang);
+    console.log("Article length:", articleText.length);
+
     const openaiRes = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -72,18 +88,46 @@ ${articleText}
     });
 
     const openaiData = await openaiRes.json();
-    const answer =
-      openaiData?.choices?.[0]?.message?.content ||
-      "No answer returned.";
 
-    return new Response(JSON.stringify({ answer }), {
-      status: 200,
-      headers: { "Content-Type": "application/json" }
-    });
+    console.log("OpenAI FULL RESPONSE:", openaiData);
+
+    if (!openaiRes.ok) {
+      console.error("OpenAI ERROR:", openaiData);
+
+      return new Response(
+        JSON.stringify({
+          error: openaiData?.error?.message || "OpenAI request failed",
+          debug: openaiData
+        }),
+        {
+          status: 500,
+          headers: corsHeaders
+        }
+      );
+    }
+
+    const answer = openaiData?.choices?.[0]?.message?.content?.trim();
+
+    return new Response(
+      JSON.stringify({
+        answer:
+          answer ||
+          "The article does not contain enough information to answer this question."
+      }),
+      {
+        status: 200,
+        headers: corsHeaders
+      }
+    );
   } catch (error) {
-    return new Response(JSON.stringify({ error: String(error) }), {
-      status: 500,
-      headers: { "Content-Type": "application/json" }
-    });
+    console.error("Function error:", error);
+
+    return new Response(
+      JSON.stringify({ error: String(error) }),
+      {
+        status: 500,
+        headers: corsHeaders
+      }
+    );
   }
 });
