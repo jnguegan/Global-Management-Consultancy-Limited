@@ -226,7 +226,11 @@
         noPracticeQuestions: "No practice questions yet.",
         upgradeFree: "This section is not included in the Free plan. Please upgrade to unlock this content.",
         upgradeStarter: "This section is not included in the Starter plan. Please upgrade to unlock this content.",
-        upgradeProfessional: "This section is not included in your current plan. Please upgrade to unlock this content."
+        upgradeProfessional: "This section is not included in your current plan. Please upgrade to unlock this content.",
+        aiAssistantTitle: "Ask AI about this section",
+      aiQuestionPlaceholder: "Type your question about this section...",
+      aiAskButton: "Ask AI",
+      aiAnswerPlaceholder: "AI answer will appear here..."
       },
       fr: {
         openRegulation: "Ouvrir le règlement",
@@ -240,7 +244,11 @@
         noPracticeQuestions: "Aucune question de pratique pour le moment.",
         upgradeFree: "Cette section n’est pas incluse dans le plan Gratuit. Veuillez passer à un plan supérieur pour débloquer ce contenu.",
         upgradeStarter: "Cette section n’est pas incluse dans le plan Starter. Veuillez passer à un plan supérieur pour débloquer ce contenu.",
-        upgradeProfessional: "Cette section n’est pas incluse dans votre plan actuel. Veuillez passer à un plan supérieur pour débloquer ce contenu."
+        upgradeProfessional: "Cette section n’est pas incluse dans votre plan actuel. Veuillez passer à un plan supérieur pour débloquer ce contenu.",
+        aiAssistantTitle: "Demander à l’IA à propos de cette section",
+      aiQuestionPlaceholder: "Tapez votre question sur cette section...",
+      aiAskButton: "Demander à l’IA",
+      aiAnswerPlaceholder: "La réponse de l’IA apparaîtra ici..."
       },
       es: {
         openRegulation: "Abrir reglamento",
@@ -254,7 +262,11 @@
         noPracticeQuestions: "Todavía no hay preguntas de práctica.",
         upgradeFree: "Esta sección no está incluida en el plan Gratuito. Mejore su plan para desbloquear este contenido.",
         upgradeStarter: "Esta sección no está incluida en el plan Starter. Mejore su plan para desbloquear este contenido.",
-        upgradeProfessional: "Esta sección no está incluida en su plan actual. Mejore su plan para desbloquear este contenido."
+        upgradeProfessional: "Esta sección no está incluida en su plan actual. Mejore su plan para desbloquear este contenido.",
+        aiAssistantTitle: "Preguntar a la IA sobre esta sección",
+      aiQuestionPlaceholder: "Escriba su pregunta sobre esta sección...",
+      aiAskButton: "Preguntar a la IA",
+      aiAnswerPlaceholder: "La respuesta de la IA aparecerá aquí..."
       }
     };
 
@@ -508,6 +520,10 @@
     document.getElementById("playbookSidebarTitle").textContent = rt("playbook");
     document.getElementById("defaultArticleTitle").textContent = rt("selectSectionTitle");
     document.getElementById("defaultArticleText").textContent = rt("selectSectionText");
+    document.getElementById("aiAssistantTitle").textContent = rt("aiAssistantTitle");
+    document.getElementById("aiQuestionInput").placeholder = rt("aiQuestionPlaceholder");
+    document.getElementById("askAiBtn").textContent = rt("aiAskButton");
+    document.getElementById("aiAnswerBox").textContent = rt("aiAnswerPlaceholder");
 
     async function initPlaybookPage() {
       try {
