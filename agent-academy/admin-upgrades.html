@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Upgrades | Agent Academy</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Inter, Arial, sans-serif;
+      background: #07101d;
+      color: #edf3ff;
+      padding: 24px;
+    }
+
+    .wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+    }
+
+    p {
+      color: rgba(237,243,255,0.75);
+      line-height: 1.6;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(212,175,55,0.4);
+      background: rgba(212,175,55,0.2);
+      color: #fff4cf;
+      text-decoration: none;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .btn.secondary {
+      background: rgba(255,255,255,0.05);
+      border-color: rgba(255,255,255,0.12);
+      color: #edf3ff;
+    }
+
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .card {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 18px;
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1.3fr 0.9fr 0.9fr 0.9fr auto;
+      gap: 14px;
+      align-items: center;
+    }
+
+    .label {
+      font-size: 12px;
+      color: rgba(237,243,255,0.6);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 4px;
+    }
+
+    .value {
+      font-size: 15px;
+      line-height: 1.5;
+      word-break: break-word;
+    }
+
+    .pill {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .pill.pending {
+      color: #fff4cf;
+      border-color: rgba(212,175,55,0.35);
+      background: rgba(212,175,55,0.10);
+    }
+
+    .pill.activated {
+      color: #dff7d6;
+      border-color: rgba(22,163,74,0.35);
+      background: rgba(22,163,74,0.14);
+    }
+
+    .message {
+      margin: 16px 0 22px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      display: none;
+    }
+
+    .message.show {
+      display: block;
+    }
+
+    .message.success {
+      background: rgba(22,163,74,0.14);
+      border: 1px solid rgba(22,163,74,0.35);
+      color: #dff7d6;
+    }
+
+    .message.error {
+      background: rgba(220,38,38,0.14);
+      border: 1px solid rgba(220,38,38,0.35);
+      color: #ffd9d9;
+    }
+
+    .empty {
+      padding: 20px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: rgba(237,243,255,0.75);
+    }
+
+    @media (max-width: 900px) {
+      .row {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <div>
+        <h1>Admin upgrades</h1>
+        <p>Review pending requests and activate access in one click.</p>
+      </div>
+
+      <a class="btn secondary" href="/agent-academy/upgrade.html">Back</a>
+    </div>
+
+    <div id="messageBox" class="message"></div>
+    <div id="requestsList"></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/agent-academy/js/supabase-client.js"></script>
+  <script src="/agent-academy/js/auth.js"></script>
+  <script src="/agent-academy/js/guard.js"></script>
+  <script src="/agent-academy/js/academy.js"></script>
+
+  <script>
+    const db = window.supabaseClient || window.sb || null;
+    const listEl = document.getElementById("requestsList");
+    const messageBox = document.getElementById("messageBox");
+
+    function showMessage(type, text) {
+      messageBox.className = `message show ${type}`;
+      messageBox.textContent = text;
+    }
+
+    function formatDate(value) {
+      if (!value) return "";
+      const d = new Date(value);
+      return isNaN(d.getTime()) ? value : d.toLocaleString();
+    }
+
+    function renderRequests(rows) {
+      if (!rows || !rows.length) {
+        listEl.innerHTML = `<div class="empty">No upgrade requests found.</div>`;
+        return;
+      }
+
+      listEl.innerHTML = rows.map((row) => `
+        <div class="card">
+          <div class="row">
+            <div>
+              <div class="label">Email</div>
+              <div class="value">${row.email || ""}</div>
+            </div>
+
+            <div>
+              <div class="label">Requested plan</div>
+              <div class="value">${row.requested_plan || ""}</div>
+            </div>
+
+            <div>
+              <div class="label">Status</div>
+              <div class="value">
+                <span class="pill ${row.status || ""}">${row.status || ""}</span>
+              </div>
+            </div>
+
+            <div>
+              <div class="label">Requested at</div>
+              <div class="value">${formatDate(row.created_at)}</div>
+            </div>
+
+            <div>
+              ${row.status === "activated"
+                ? `<button class="btn" disabled>Activated</button>`
+                : `<button class="btn" onclick="activateRequest('${row.id}', this)">Activate</button>`
+              }
+            </div>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    async function loadRequests() {
+      if (!db) {
+        showMessage("error", "Supabase is not loaded.");
+        return;
+      }
+
+      const { data, error } = await db
+        .from("upgrade_requests")
+        .select("id, email, requested_plan, status, created_at")
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        console.error(error);
+        showMessage("error", "Could not load upgrade requests.");
+        return;
+      }
+
+      renderRequests(data || []);
+    }
+
+    async function activateRequest(requestId, btn) {
+      if (!db) {
+        showMessage("error", "Supabase is not loaded.");
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = "Activating...";
+
+      const { error } = await db.rpc("activate_upgrade_request", {
+        p_request_id: requestId
+      });
+
+      if (error) {
+        console.error(error);
+        showMessage("error", error.message || "Could not activate request.");
+        btn.disabled = false;
+        btn.textContent = "Activate";
+        return;
+      }
+
+      showMessage("success", "User access activated successfully.");
+      await loadRequests();
+    }
+
+    window.activateRequest = activateRequest;
+    loadRequests();
+  </script>
+</body>
+</html>
