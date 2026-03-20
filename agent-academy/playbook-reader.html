@@ -439,13 +439,31 @@
         lang === "es" ? data.explanation_es :
         data.explanation_en;
 
-      const rawRegulationPdf = String(data.regulation_pdf || "").trim();
+            const rawRegulationPdf = String(data.regulation_pdf || "").trim();
 
       let normalizedPdfFile = rawRegulationPdf
         .replace(/^https?:\/\/[^/]+/i, "")
         .replace(/^\/agent-academy\/regulations\//i, "")
         .replace(/^\/?regulations\//i, "")
-        .replace(/^\/+/, "");
+        .replace(/^\/+/, "")
+        .toLowerCase();
+
+      const regulationFileMap = {
+        "ffar.pdf": "ffar-2025.pdf",
+        "ffar": "ffar-2025.pdf",
+        "rstp.pdf": "rstp-2025.pdf",
+        "rstp": "rstp-2025.pdf",
+        "fdc.pdf": "fifa-disciplinary-code-2025.pdf",
+        "fdc": "fifa-disciplinary-code-2025.pdf",
+        "fce.pdf": "fifa-code-of-ethics-2025.pdf",
+        "fce": "fifa-code-of-ethics-2025.pdf",
+        "statutes.pdf": "fifa-statutes-2025.pdf",
+        "statutes": "fifa-statutes-2025.pdf",
+        "guardians.pdf": "fifa-guardians-toolkit.pdf",
+        "guardians": "fifa-guardians-toolkit.pdf"
+      };
+
+      normalizedPdfFile = regulationFileMap[normalizedPdfFile] || normalizedPdfFile;
 
       const regulationPdfPath = normalizedPdfFile
         ? `/agent-academy/regulations/${normalizedPdfFile}`
