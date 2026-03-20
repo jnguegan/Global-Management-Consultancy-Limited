@@ -153,6 +153,10 @@
     </div>
 
     <form id="upgradeRequestForm">
+      <input type="hidden" name="_subject" value="New Upgrade Request">
+  <input type="hidden" name="_template" value="table">
+  <input type="hidden" name="_captcha" value="false">
+  <input type="hidden" name="_to" value="jnguegan@gmail.com">
       <div class="field">
         <label for="fullName">Full name</label>
         <input id="fullName" name="fullName" type="text" />
@@ -219,7 +223,15 @@
     const formMessage = document.getElementById("formMessage");
 
     form.addEventListener("submit", async (e) => {
-      e.preventDefault();
+     e.preventDefault();
+
+// 🔹 Send email via FormSubmit
+const formData = new FormData(form);
+
+await fetch("https://formsubmit.co/ajax/jnguegan@gmail.com", {
+  method: "POST",
+  body: formData
+});
 
       formMessage.className = "message";
       formMessage.textContent = "";
