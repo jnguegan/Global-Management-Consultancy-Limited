@@ -219,11 +219,17 @@
               <div class="value">${formatDate(row.created_at)}</div>
             </div>
 
-            <div>
-              ${row.status === "activated"
-                ? `<button class="btn" disabled>Activated</button>`
-                : `<button class="btn" onclick="activateRequest('${row.id}', this)">Activate</button>`
-              }
+               <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+              <select id="plan-${row.id}" class="plan-select" style="padding:10px 12px; border-radius:12px; background:rgba(255,255,255,0.05); color:#edf3ff; border:1px solid rgba(255,255,255,0.12);">
+                <option value="free">Free</option>
+                <option value="starter" ${row.requested_plan === "starter" ? "selected" : ""}>Starter</option>
+                <option value="professional" ${row.requested_plan === "professional" ? "selected" : ""}>Professional</option>
+                <option value="platinum" ${row.requested_plan === "platinum" || row.requested_plan === "premium_intensive" ? "selected" : ""}>Platinum</option>
+              </select>
+
+              <button class="btn" onclick="applyPlanChange('${row.id}', this)">
+                Apply
+              </button>
             </div>
           </div>
         </div>
@@ -276,6 +282,88 @@
     }
 
     window.activateRequest = activateRequest;
+        async function applyPlanChange(requestId, btn) {
+      if (!db) {
+        showMessage("error", "Supabase is not loaded.");
+        return;
+      }
+
+      const select = document.getElementById(`plan-${requestId}`);
+      const selectedPlan = select ? select.value : "";
+
+      if (!selectedPlan) {
+        showMessage("error", "Please select a plan.");
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = "Applying...";
+
+      try {
+        const { data: requestRow, error: requestError } = await db
+          .from("upgrade_requests")
+          .select("id, user_id, email")
+          .eq("id", requestId)
+          .single();
+
+        if (requestError) throw requestError;
+        if (!requestRow || !requestRow.user_id) {
+          throw new Error("Request user not found.");
+        }
+
+        const { data: existingAccess, error: existingError } = await db
+          .from("user_access")
+          .select("user_id")
+          .eq("user_id", requestRow.user_id)
+          .maybeSingle();
+
+        if (existingError) throw existingError;
+
+        if (existingAccess) {
+          const { error: updateError } = await db
+            .from("user_access")
+            .update({
+              plan: selectedPlan,
+              email: requestRow.email || null,
+              is_active: selectedPlan !== "free"
+            })
+            .eq("user_id", requestRow.user_id);
+
+          if (updateError) throw updateError;
+        } else {
+          const { error: insertError } = await db
+            .from("user_access")
+            .insert([{
+              user_id: requestRow.user_id,
+              email: requestRow.email || null,
+              plan: selectedPlan,
+              is_active: selectedPlan !== "free"
+            }]);
+
+          if (insertError) throw insertError;
+        }
+
+        const newStatus = selectedPlan === "free" ? "downgraded" : "activated";
+
+        const { error: statusError } = await db
+          .from("upgrade_requests")
+          .update({ status: newStatus })
+          .eq("id", requestId);
+
+        if (statusError) throw statusError;
+
+        showMessage("success", `Access updated to ${selectedPlan}.`);
+        await loadRequests();
+      } catch (err) {
+        console.error(err);
+        showMessage("error", err.message || "Could not update access.");
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "Apply";
+      }
+    }
+
+    window.applyPlanChange = applyPlanChange;
 
     document.addEventListener("DOMContentLoaded", async () => {
       if (!db) {
