@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Payment | Agent Academy</title>
+  <title>Upgrade Request | Agent Academy</title>
 
   <style>
     body {
@@ -11,145 +11,292 @@
       font-family: Inter, Arial, sans-serif;
       background: #07101d;
       color: #edf3ff;
+      min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      height: 100vh;
+      padding: 24px;
     }
 
     .card {
-      max-width: 520px;
+      width: 100%;
+      max-width: 680px;
       padding: 32px;
       border-radius: 20px;
       background: rgba(255,255,255,0.06);
       border: 1px solid rgba(255,255,255,0.12);
-      text-align: center;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.34);
     }
 
     h1 {
-      margin-bottom: 12px;
+      margin: 0 0 12px;
+      font-size: 32px;
     }
 
     p {
       color: rgba(237,243,255,0.75);
-      line-height: 1.6;
+      line-height: 1.7;
     }
 
     .plan {
-      margin: 16px 0;
+      margin: 16px 0 22px;
       font-size: 18px;
       font-weight: 700;
       color: #d4af37;
     }
 
-    .btn {
-      display: inline-block;
+    .notice {
+      margin: 18px 0 22px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: rgba(212,175,55,0.10);
+      border: 1px solid rgba(212,175,55,0.28);
+      color: #fff4cf;
+      line-height: 1.65;
+    }
+
+    .field {
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+
+    input,
+    textarea {
+      width: 100%;
+      padding: 14px 16px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.04);
+      color: #edf3ff;
+      font: inherit;
+      box-sizing: border-box;
+    }
+
+    textarea {
+      min-height: 130px;
+      resize: vertical;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
       margin-top: 20px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       padding: 12px 18px;
       border-radius: 999px;
-      background: rgba(212,175,55,0.2);
       border: 1px solid rgba(212,175,55,0.4);
+      background: rgba(212,175,55,0.2);
       color: #fff4cf;
       text-decoration: none;
       font-weight: 700;
+      cursor: pointer;
+    }
+
+    .btn.secondary {
+      background: rgba(255,255,255,0.05);
+      border-color: rgba(255,255,255,0.12);
+      color: #edf3ff;
+    }
+
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .message {
+      display: none;
+      margin-top: 18px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      line-height: 1.65;
+    }
+
+    .message.success {
+      display: block;
+      background: rgba(22,163,74,0.14);
+      border: 1px solid rgba(22,163,74,0.35);
+      color: #dff7d6;
+    }
+
+    .message.error {
+      display: block;
+      background: rgba(220,38,38,0.14);
+      border: 1px solid rgba(220,38,38,0.35);
+      color: #ffd9d9;
     }
   </style>
 </head>
 <body>
 
   <div class="card">
-    <h1>Payment page (coming next)</h1>
+    <h1>Upgrade request</h1>
 
     <p>
-      You are about to upgrade your Agent Academy access.
-      Payment integration (Stripe) will be added next.
+      Payments are currently handled manually. Submit your request below and we will contact you with payment instructions.
     </p>
 
-    <div class="plan" id="planName"></div>
+    <div class="plan" id="planName">Selected plan</div>
 
-    <button id="payBtn" class="btn">Proceed to payment</button>
+    <div class="notice">
+      After payment is confirmed, your access will be activated manually.
+    </div>
+
+    <form id="upgradeRequestForm">
+      <div class="field">
+        <label for="fullName">Full name</label>
+        <input id="fullName" name="fullName" type="text" />
+      </div>
+
+      <div class="field">
+        <label for="email">Email address</label>
+        <input id="email" name="email" type="email" required />
+      </div>
+
+      <div class="field">
+        <label for="message">Optional message</label>
+        <textarea id="message" name="message" placeholder="Add any details here..."></textarea>
+      </div>
+
+      <div class="actions">
+        <button id="submitBtn" type="submit" class="btn">Send upgrade request</button>
+        <a id="backBtn" class="btn secondary" href="/agent-academy/upgrade.html">Back</a>
+      </div>
+    </form>
+
+    <div id="formMessage" class="message"></div>
   </div>
 
-
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="/agent-academy/js/supabase-client.js"></script>
-<script src="/agent-academy/js/auth.js"></script>
-<script src="/agent-academy/js/guard.js"></script>
-<script src="/agent-academy/js/academy.js"></script>
+  <script src="/agent-academy/js/supabase-client.js"></script>
+  <script src="/agent-academy/js/auth.js"></script>
+  <script src="/agent-academy/js/guard.js"></script>
+  <script src="/agent-academy/js/academy.js"></script>
+
   <script>
+    const params = new URLSearchParams(window.location.search);
+    const rawPlan = (params.get("plan") || "").trim().toLowerCase();
 
-const params = new URLSearchParams(window.location.search);
-const plan = params.get("plan");
+    const planConfig = {
+      starter: {
+        dbValue: "starter",
+        label: "Starter Plan (£199)"
+      },
+      professional: {
+        dbValue: "professional",
+        label: "Professional Plan (£599)"
+      },
+      premium_intensive: {
+        dbValue: "platinum",
+        label: "Premium Intensive (£895)"
+      },
+      platinum: {
+        dbValue: "platinum",
+        label: "Platinum Plan (£895)"
+      }
+    };
 
-const planMap = {
-  starter: "Starter Plan (£149)",
-  professional: "Professional Plan (£395)",
-  premium_intensive: "Premium Intensive (£895)"
-};
+    const selectedPlan = planConfig[rawPlan] || {
+      dbValue: "starter",
+      label: "Starter Plan (£199)"
+    };
 
-document.getElementById("planName").textContent =
-  planMap[plan] || "Selected plan";
+    document.getElementById("planName").textContent = selectedPlan.label;
+    document.getElementById("backBtn").href = `/agent-academy/upgrade.html`;
 
-const payBtn = document.getElementById("payBtn");
+    const form = document.getElementById("upgradeRequestForm");
+    const submitBtn = document.getElementById("submitBtn");
+    const formMessage = document.getElementById("formMessage");
 
-payBtn.addEventListener("click", async () => {
-  try {
-    payBtn.textContent = "Redirecting...";
-    payBtn.disabled = true;
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
 
-    const db = window.supabaseClient || window.sb || null;
+      formMessage.className = "message";
+      formMessage.textContent = "";
 
-    if (!db) {
-      alert("Auth not loaded");
-      return;
-    }
+      const db = window.supabaseClient || window.sb || null;
 
-    const {
-      data: { user }
-    } = await db.auth.getUser();
+      if (!db) {
+        formMessage.className = "message error";
+        formMessage.textContent = "Supabase is not loaded.";
+        return;
+      }
 
-    if (!user) {
-      alert("You must be logged in");
-      window.location.href = "/agent-academy/login.html";
-      return;
-    }
+      const fullName = document.getElementById("fullName").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const message = document.getElementById("message").value.trim();
 
-   const res = await fetch("/.netlify/functions/create-checkout-session", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify({
-    plan,
-    userId: user.id,
-    email: user.email
-  })
-});
+      if (!email) {
+        formMessage.className = "message error";
+        formMessage.textContent = "Please enter your email address.";
+        return;
+      }
 
-const data = await res.json();
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Sending...";
 
-console.log("CHECKOUT RESPONSE STATUS:", res.status);
-console.log("CHECKOUT RESPONSE DATA:", JSON.stringify(data));
-alert(JSON.stringify(data));
+      try {
+        const { data: { user } } = await db.auth.getUser();
 
-if (data.url) {
-  window.location.href = data.url;
-} else {
-  alert(data.error || "Unable to start payment");
-  payBtn.disabled = false;
-  payBtn.textContent = "Proceed to payment";
-}
-    
-  } catch (err) {
-    console.error(err);
-    alert("Payment error");
-    payBtn.disabled = false;
-    payBtn.textContent = "Proceed to payment";
-  }
-});
+        if (user?.email && !document.getElementById("email").value.trim()) {
+          document.getElementById("email").value = user.email;
+        }
 
-   
-    
+        const payload = {
+          user_id: user?.id || null,
+          full_name: fullName || null,
+          email: email || user?.email || null,
+          requested_plan: selectedPlan.dbValue,
+          message: message || null
+        };
+
+        const { error } = await db
+          .from("upgrade_requests")
+          .insert([payload]);
+
+        if (error) throw error;
+
+        form.reset();
+
+        if (user?.email) {
+          document.getElementById("email").value = user.email;
+        }
+
+        formMessage.className = "message success";
+        formMessage.textContent = "Thank you. Your upgrade request has been received. We will contact you with payment instructions.";
+      } catch (err) {
+        console.error("Upgrade request error:", err);
+        formMessage.className = "message error";
+        formMessage.textContent = "We could not submit your request right now. Please try again.";
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Send upgrade request";
+      }
+    });
+
+    document.addEventListener("DOMContentLoaded", async () => {
+      try {
+        const db = window.supabaseClient || window.sb || null;
+        if (!db) return;
+
+        const { data: { user } } = await db.auth.getUser();
+        if (user?.email) {
+          document.getElementById("email").value = user.email;
+        }
+      } catch (err) {
+        console.error("Prefill error:", err);
+      }
+    });
   </script>
 
 </body>
