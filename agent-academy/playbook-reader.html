@@ -424,7 +424,7 @@
         return;
       }
 
-      const title =
+            const title =
         lang === "fr" ? data.title_fr :
         lang === "es" ? data.title_es :
         data.title_en;
@@ -439,16 +439,31 @@
         lang === "es" ? data.explanation_es :
         data.explanation_en;
 
-     const regulationPdfPath = String(data.regulation_pdf || "").trim();
+      const rawRegulationPdf = String(data.regulation_pdf || "").trim();
 
-const normalizedPdfPath = regulationPdfPath.startsWith("/agent-academy/regulations/")
-  ? regulationPdfPath
-  : `/agent-academy/regulations/${regulationPdfPath.replace(/^\/+/, "")}`;
+      let normalizedPdfFile = rawRegulationPdf
+        .replace(/^https?:\/\/[^/]+/i, "")
+        .replace(/^\/agent-academy\/regulations\//i, "")
+        .replace(/^\/?regulations\//i, "")
+        .replace(/^\/+/, "");
 
-const regulationHref =
-  `/agent-academy/regulation-viewer.html?pdf=${encodeURIComponent(normalizedPdfPath)}&page=${encodeURIComponent(data.regulation_page || 1)}`;
+      const regulationPdfPath = normalizedPdfFile
+        ? `/agent-academy/regulations/${normalizedPdfFile}`
+        : "";
 
-const practiceHref = buildPracticeHref(data.topic_slug);
+      const regulationPage = Number(data.regulation_page) > 0
+        ? Number(data.regulation_page)
+        : 1;
+
+      const regulationHref = regulationPdfPath
+        ? `/agent-academy/regulation-viewer.html?pdf=${encodeURIComponent(regulationPdfPath)}&page=${regulationPage}`
+        : "#";
+
+      const practiceHref = buildPracticeHref(data.topic_slug);
+
+      console.log("PLAYBOOK regulation_pdf raw:", data.regulation_pdf);
+      console.log("PLAYBOOK regulationPdfPath:", regulationPdfPath);
+      console.log("PLAYBOOK regulationHref:", regulationHref);
 
       const relatedIds = Array.isArray(data.related_question_ids)
         ? data.related_question_ids
@@ -476,13 +491,12 @@ const practiceHref = buildPracticeHref(data.topic_slug);
         </div>
 
         <div class="actions">
-          <a href="${regulationHref}">${rt("openRegulation")}</a>
+          <a href="${regulationHref}" target="_blank" rel="noopener noreferrer">${rt("openRegulation")}</a>
           <a href="${practiceHref}">${rt("practiceQuestions")}</a>
         </div>
 
         ${keyQuestionsHtml}
-      `;
-    }
+      `;    }
 
     document.getElementById("playbookSidebarTitle").textContent = rt("playbook");
     document.getElementById("defaultArticleTitle").textContent = rt("selectSectionTitle");
