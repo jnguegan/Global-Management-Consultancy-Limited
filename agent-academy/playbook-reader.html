@@ -542,6 +542,27 @@
       await loadSidebar();
     }
 
+    document.getElementById("askAiBtn").addEventListener("click", async () => {
+  const question = document.getElementById("aiQuestionInput").value.trim();
+  const answerBox = document.getElementById("aiAnswerBox");
+
+  if (!question) {
+    answerBox.textContent = "Please enter a question.";
+    return;
+  }
+
+  const articleText = document.getElementById("articleContent")?.innerText || "";
+
+  answerBox.textContent = "Thinking...";
+
+  setTimeout(() => {
+    answerBox.textContent =
+      "Demo answer:\n\n" +
+      "Question: " + question + "\n\n" +
+      "Context length: " + articleText.length + " characters.";
+  }, 500);
+});
+    
     initPlaybookPage();
   </script>
 </body>
