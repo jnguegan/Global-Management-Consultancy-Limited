@@ -542,7 +542,7 @@
       await loadSidebar();
     }
 
-    document.getElementById("askAiBtn").addEventListener("click", async () => {
+document.getElementById("askAiBtn").addEventListener("click", async () => {
   const question = document.getElementById("aiQuestionInput").value.trim();
   const answerBox = document.getElementById("aiAnswerBox");
 
@@ -555,12 +555,29 @@
 
   answerBox.textContent = "Thinking...";
 
-  setTimeout(() => {
-    answerBox.textContent =
-      "Demo answer:\n\n" +
-      "Question: " + question + "\n\n" +
-      "Context length: " + articleText.length + " characters.";
-  }, 500);
+  try {
+    const res = await fetch(
+      "https://ysaxtuvuzqkyfmganven.supabase.co/functions/v1/ask-playbook-ai",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          question,
+          articleText,
+          lang
+        })
+      }
+    );
+
+    const data = await res.json();
+
+    answerBox.textContent = data.answer || "No answer returned.";
+  } catch (err) {
+    console.error(err);
+    answerBox.textContent = "Error getting AI response.";
+  }
 });
     
     initPlaybookPage();
