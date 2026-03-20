@@ -171,33 +171,6 @@
         <h2 class="article-title" id="defaultArticleTitle">Select a section</h2>
         <p class="article-text" id="defaultArticleText">Choose a playbook article from the left.</p>
       </div>
-
-       <!-- ✅ AI ASSISTANT START -->
-  <div class="ai-assistant-card" style="margin-top:30px;">
-    <h3 id="aiAssistantTitle">Ask AI about this section</h3>
-
-    <textarea
-      id="aiQuestionInput"
-      placeholder="Type your question about this section..."
-      style="width:100%; padding:12px; border-radius:8px; border:1px solid #2a2f45; background:#0f172a; color:#fff; margin:10px 0;"
-    ></textarea>
-
-    <button id="askAiBtn" class="btn btn-primary">
-      Ask AI
-    </button>
-
-    <div
-      id="aiAnswerBox"
-      style="margin-top:10px; padding:12px; border-radius:8px; background:#020617; border:1px solid #1e293b;"
-    >
-      AI answer will appear here...
-    </div>
-  </div>
-  <!-- ✅ AI ASSISTANT END -->
-
-</div>
-      
-      
     </div>
   </div>
 
@@ -208,8 +181,8 @@
       "https://ysaxtuvuzqkyfmganven.supabase.co",
       "sb_publishable_esfhuUEIcUJEL6z9zryRAA_FGMmUHlw"
     );
-  window.supabaseClient = supabaseClient;
-   
+    window.supabaseClient = supabaseClient;
+
     let lang = localStorage.getItem("lang") || "en";
     let currentArticle = null;
 
@@ -226,11 +199,7 @@
         noPracticeQuestions: "No practice questions yet.",
         upgradeFree: "This section is not included in the Free plan. Please upgrade to unlock this content.",
         upgradeStarter: "This section is not included in the Starter plan. Please upgrade to unlock this content.",
-        upgradeProfessional: "This section is not included in your current plan. Please upgrade to unlock this content.",
-        aiAssistantTitle: "Ask AI about this section",
-      aiQuestionPlaceholder: "Type your question about this section...",
-      aiAskButton: "Ask AI",
-      aiAnswerPlaceholder: "AI answer will appear here..."
+        upgradeProfessional: "This section is not included in your current plan. Please upgrade to unlock this content."
       },
       fr: {
         openRegulation: "Ouvrir le règlement",
@@ -244,11 +213,7 @@
         noPracticeQuestions: "Aucune question de pratique pour le moment.",
         upgradeFree: "Cette section n’est pas incluse dans le plan Gratuit. Veuillez passer à un plan supérieur pour débloquer ce contenu.",
         upgradeStarter: "Cette section n’est pas incluse dans le plan Starter. Veuillez passer à un plan supérieur pour débloquer ce contenu.",
-        upgradeProfessional: "Cette section n’est pas incluse dans votre plan actuel. Veuillez passer à un plan supérieur pour débloquer ce contenu.",
-        aiAssistantTitle: "Demander à l’IA à propos de cette section",
-      aiQuestionPlaceholder: "Tapez votre question sur cette section...",
-      aiAskButton: "Demander à l’IA",
-      aiAnswerPlaceholder: "La réponse de l’IA apparaîtra ici..."
+        upgradeProfessional: "Cette section n’est pas incluse dans votre plan actuel. Veuillez passer à un plan supérieur pour débloquer ce contenu."
       },
       es: {
         openRegulation: "Abrir reglamento",
@@ -262,11 +227,7 @@
         noPracticeQuestions: "Todavía no hay preguntas de práctica.",
         upgradeFree: "Esta sección no está incluida en el plan Gratuito. Mejore su plan para desbloquear este contenido.",
         upgradeStarter: "Esta sección no está incluida en el plan Starter. Mejore su plan para desbloquear este contenido.",
-        upgradeProfessional: "Esta sección no está incluida en su plan actual. Mejore su plan para desbloquear este contenido.",
-        aiAssistantTitle: "Preguntar a la IA sobre esta sección",
-      aiQuestionPlaceholder: "Escriba su pregunta sobre esta sección...",
-      aiAskButton: "Preguntar a la IA",
-      aiAnswerPlaceholder: "La respuesta de la IA aparecerá aquí..."
+        upgradeProfessional: "Esta sección no está incluida en su plan actual. Mejore su plan para desbloquear este contenido."
       }
     };
 
@@ -417,7 +378,7 @@
         const requiredLevel =
           section.access_level || (section.is_free ? "free" : "professional");
 
-       const allowed = hasAccess(window.userPlan || "free", requiredLevel);
+        const allowed = hasAccess(window.userPlan || "free", requiredLevel);
         console.log("PLAYBOOK ACCESS:", section.title_en, "plan=", window.userPlan, "required=", requiredLevel, "allowed=", allowed);
 
         a.textContent = allowed ? sectionTitle : `🔒 ${sectionTitle}`;
@@ -456,7 +417,7 @@
       const requiredLevel =
         data.access_level || (data.is_free ? "free" : "professional");
 
-    const allowed = hasAccess(window.userPlan || "free", requiredLevel);
+      const allowed = hasAccess(window.userPlan || "free", requiredLevel);
 
       if (!allowed) {
         showUpgradePrompt(requiredLevel);
@@ -520,10 +481,6 @@
     document.getElementById("playbookSidebarTitle").textContent = rt("playbook");
     document.getElementById("defaultArticleTitle").textContent = rt("selectSectionTitle");
     document.getElementById("defaultArticleText").textContent = rt("selectSectionText");
-    document.getElementById("aiAssistantTitle").textContent = rt("aiAssistantTitle");
-    document.getElementById("aiQuestionInput").placeholder = rt("aiQuestionPlaceholder");
-    document.getElementById("askAiBtn").textContent = rt("aiAskButton");
-    document.getElementById("aiAnswerBox").textContent = rt("aiAnswerPlaceholder");
 
     async function initPlaybookPage() {
       try {
@@ -542,89 +499,6 @@
       await loadSidebar();
     }
 
-document.getElementById("askAiBtn").addEventListener("click", async () => {
-  const question = document.getElementById("aiQuestionInput").value.trim();
-  const answerBox = document.getElementById("aiAnswerBox");
-
-  if (!question) {
-    answerBox.textContent = "Please enter a question.";
-    return;
-  }
-
-  const articleText = document.getElementById("articleContent")?.innerText || "";
-
-  answerBox.textContent = "Thinking...";
-
-  try {
-    const res = await fetch(
-      "https://ysaxtuvuzqkyfmganven.supabase.co/functions/v1/ask-playbook-ai",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          question,
-          articleText,
-          lang
-        })
-      }
-    );
-
-    const data = await res.json();
-
-  document.getElementById("askAiBtn").addEventListener("click", async () => {
-  const question = document.getElementById("aiQuestionInput").value.trim();
-  const answerBox = document.getElementById("aiAnswerBox");
-
-  if (!question) {
-    answerBox.textContent = "Please enter a question.";
-    return;
-  }
-
-  const articleText =
-    document.getElementById("articleContent")?.innerText || "";
-
-  answerBox.textContent = "Thinking...";
-
-  try {
-    const res = await fetch(
-      "https://ysaxtuvuzqkyfmganven.supabase.co/functions/v1/ask-playbook-ai",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          question,
-          articleText,
-          lang
-        })
-      }
-    );
-
-    const data = await res.json();
-
-    console.log("AI FUNCTION RESPONSE:", data);
-
-    if (!res.ok) {
-      answerBox.textContent =
-        data?.error ||
-        data?.debug?.error?.message ||
-        "Function error.";
-      return;
-    }
-
-    answerBox.textContent =
-      data?.answer ||
-      data?.error ||
-      "No answer returned.";
-  } catch (err) {
-    console.error("AI frontend error:", err);
-    answerBox.textContent = "Error getting AI response.";
-  }
-});
-    
     initPlaybookPage();
   </script>
 </body>
