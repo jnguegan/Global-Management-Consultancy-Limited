@@ -439,10 +439,16 @@
         lang === "es" ? data.explanation_es :
         data.explanation_en;
 
-      const regulationHref =
-  `/agent-academy/regulation-viewer.html?pdf=/agent-academy/regulations/${data.regulation_pdf}&page=${data.regulation_page || 1}`;
+     const regulationPdfPath = String(data.regulation_pdf || "").trim();
 
-      const practiceHref = buildPracticeHref(data.topic_slug);
+const normalizedPdfPath = regulationPdfPath.startsWith("/agent-academy/regulations/")
+  ? regulationPdfPath
+  : `/agent-academy/regulations/${regulationPdfPath.replace(/^\/+/, "")}`;
+
+const regulationHref =
+  `/agent-academy/regulation-viewer.html?pdf=${encodeURIComponent(normalizedPdfPath)}&page=${encodeURIComponent(data.regulation_page || 1)}`;
+
+const practiceHref = buildPracticeHref(data.topic_slug);
 
       const relatedIds = Array.isArray(data.related_question_ids)
         ? data.related_question_ids
