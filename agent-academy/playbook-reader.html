@@ -573,9 +573,54 @@ document.getElementById("askAiBtn").addEventListener("click", async () => {
 
     const data = await res.json();
 
-    answerBox.textContent = data.answer || "No answer returned.";
+  document.getElementById("askAiBtn").addEventListener("click", async () => {
+  const question = document.getElementById("aiQuestionInput").value.trim();
+  const answerBox = document.getElementById("aiAnswerBox");
+
+  if (!question) {
+    answerBox.textContent = "Please enter a question.";
+    return;
+  }
+
+  const articleText =
+    document.getElementById("articleContent")?.innerText || "";
+
+  answerBox.textContent = "Thinking...";
+
+  try {
+    const res = await fetch(
+      "https://ysaxtuvuzqkyfmganven.supabase.co/functions/v1/ask-playbook-ai",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          question,
+          articleText,
+          lang
+        })
+      }
+    );
+
+    const data = await res.json();
+
+    console.log("AI FUNCTION RESPONSE:", data);
+
+    if (!res.ok) {
+      answerBox.textContent =
+        data?.error ||
+        data?.debug?.error?.message ||
+        "Function error.";
+      return;
+    }
+
+    answerBox.textContent =
+      data?.answer ||
+      data?.error ||
+      "No answer returned.";
   } catch (err) {
-    console.error(err);
+    console.error("AI frontend error:", err);
     answerBox.textContent = "Error getting AI response.";
   }
 });
