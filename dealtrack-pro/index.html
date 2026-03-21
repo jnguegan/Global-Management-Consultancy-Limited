@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>DealTrack Pro | Coming Soon</title>
+
+  <link rel="icon" href="/agent-academy/assets/academy-logo.png">
+
+  <style>
+    :root {
+      --bg-1:#07101d;
+      --bg-2:#0c1628;
+      --gold:#d4af37;
+      --text:#edf3ff;
+      --muted:rgba(237,243,255,0.7);
+      --border:rgba(255,255,255,0.12);
+    }
+
+    body {
+      margin:0;
+      font-family:Inter,Arial,sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(212,175,55,0.1), transparent 25%),
+        linear-gradient(180deg, var(--bg-1), var(--bg-2));
+      color:var(--text);
+      display:flex;
+      flex-direction:column;
+      min-height:100vh;
+    }
+
+    .topbar {
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:20px;
+    }
+
+    .brand img {
+      height:36px;
+    }
+
+    .back-btn {
+      padding:10px 16px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background:rgba(255,255,255,0.05);
+      color:var(--text);
+      text-decoration:none;
+    }
+
+    .container {
+      flex:1;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      padding:20px;
+    }
+
+    .card {
+      max-width:720px;
+      width:100%;
+      padding:40px;
+      border-radius:24px;
+      background:rgba(255,255,255,0.06);
+      border:1px solid var(--border);
+      text-align:center;
+    }
+
+    h1 {
+      font-size:48px;
+      margin-bottom:10px;
+    }
+
+    .gold {
+      color:var(--gold);
+    }
+
+    .tagline {
+      font-size:20px;
+      margin-bottom:20px;
+    }
+
+    p {
+      color:var(--muted);
+      margin-bottom:30px;
+      line-height:1.7;
+    }
+
+    form {
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
+
+    input, select {
+      padding:14px;
+      border-radius:12px;
+      border:1px solid var(--border);
+      background:rgba(255,255,255,0.05);
+      color:var(--text);
+    }
+
+    button {
+      padding:14px;
+      border-radius:999px;
+      border:1px solid rgba(212,175,55,0.4);
+      background:rgba(212,175,55,0.2);
+      color:#fff4cf;
+      font-weight:700;
+      cursor:pointer;
+    }
+
+    .footer {
+      text-align:center;
+      padding:16px;
+      color:var(--muted);
+      font-size:14px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="topbar">
+    <div class="brand">
+      <img src="/agent-academy/assets/academy-logo.png" alt="GMC">
+    </div>
+
+    <a href="/agent-academy/index.html" class="back-btn">
+      Back to Academy
+    </a>
+  </div>
+
+  <div class="container">
+    <div class="card">
+
+      <h1>DealTrack <span class="gold">Pro</span></h1>
+
+      <div class="tagline">
+        Never miss a payment again.
+      </div>
+
+      <p>
+        A contract intelligence platform for football agents, players, agencies, and clubs.
+        Track clauses, monitor triggers, and secure every payment with precision.
+      </p>
+
+      <form id="waitlistForm">
+        <input type="text" placeholder="Full name" required>
+        <input type="email" placeholder="Email address" required>
+
+        <select required>
+          <option value="">I am...</option>
+          <option>Agent</option>
+          <option>Player</option>
+          <option>Agency</option>
+          <option>Club</option>
+        </select>
+
+        <button type="submit">Join Early Access</button>
+      </form>
+
+    </div>
+  </div>
+
+  <div class="footer">
+    Global Management Consultancy Limited
+  </div>
+
+</body>
+</html>
