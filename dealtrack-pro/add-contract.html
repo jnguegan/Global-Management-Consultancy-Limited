@@ -4,7 +4,10 @@
   <meta charset="UTF-8" />
   <title>Add Contract</title>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/agent-academy/js/supabase-client.js"></script>
+<script src="/agent-academy/js/auth.js"></script>
+<script src="/agent-academy/js/guard.js"></script>
 
   <style>
     body {
@@ -39,54 +42,55 @@
 
   <button id="saveBtn">Save</button>
 
-  <script>
-    console.log("Script loaded");
+ <script>
+  document.addEventListener("DOMContentLoaded", async () => {
+    const db = window.supabaseClient || window.sb || null;
 
-    // Safe Supabase init (no duplicates)
-    if (!window.supabaseClient) {
-      window.supabaseClient = window.supabase.createClient(
-        "https://ysaxtuvuzqkyfmganven.supabase.co",
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlzYXh0dXZ1enFreWZtZ2FudmVuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI4NDYzNzMsImV4cCI6MjA4ODQyMjM3M30.gzKSSNA5jtR5JtZWnjP7zVBUDsgxwnCHVnnDZeZb8lo"
-      );
+    if (!db) {
+      alert("Supabase client not available");
+      return;
     }
 
-    const supabase = window.supabaseClient;
+    const { data: { user }, error: userError } = await db.auth.getUser();
 
-    async function init() {
-      const { data: { session } } = await supabase.auth.getSession();
+    if (userError || !user) {
+      window.location.href = "/agent-academy/login.html";
+      return;
+    }
 
-      if (!session) {
-        alert("You must be logged in");
-        window.location.href = "/login.html";
+    const saveBtn = document.getElementById("saveBtn");
+    if (!saveBtn) {
+      alert("Save button not found");
+      return;
+    }
+
+    saveBtn.addEventListener("click", async () => {
+      const player = document.getElementById("player")?.value?.trim();
+      const club = document.getElementById("club")?.value?.trim();
+
+      if (!player) {
+        alert("Player name is required");
         return;
       }
-    }
 
-    async function addContract() {
-      console.log("addContract triggered");
-
-      const player = document.getElementById("player").value;
-      const club = document.getElementById("club").value;
-
-      const { error } = await supabase
+      const { error } = await db
         .from("contracts")
         .insert({
+          user_id: user.id,
           player_name: player,
           club_name: club
         });
 
       if (error) {
+        console.error("Insert error:", error);
         alert("Error: " + error.message);
         return;
       }
 
       alert("Contract added!");
-      window.location.href = "contracts.html";
-    }
-
-    document.getElementById("saveBtn").addEventListener("click", addContract);
-init();
-  </script>
-
+      window.location.href = "/dealtrack/contracts.html";
+    });
+  });
+</script>
 </body>
 </html>
