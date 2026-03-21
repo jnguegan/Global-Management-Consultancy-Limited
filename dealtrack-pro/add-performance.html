@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DealTrack Pro — Add Performance</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/agent-academy/js/supabase-client.js"></script>
+  <script src="/agent-academy/js/auth.js"></script>
+  <script src="/agent-academy/js/guard.js"></script>
+
+  <style>
+    :root {
+      --bg: #020b1d;
+      --panel: rgba(12, 28, 58, 0.96);
+      --panel-2: rgba(255,255,255,0.03);
+      --border: rgba(255,255,255,0.08);
+      --text: #f6f8fc;
+      --muted: #9fb0cf;
+      --blue: #2f8cff;
+      --gold: #d4af37;
+      --danger: #ef4444;
+      --success: #16a34a;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Inter, Arial, sans-serif;
+      color: var(--text);
+      background: linear-gradient(180deg, #010814 0%, #05122a 45%, #020b1d 100%);
+      min-height: 100vh;
+      padding: 24px;
+    }
+
+    .page {
+      max-width: 980px;
+      margin: 0 auto;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      padding: 12px 0;
+      margin-bottom: 20px;
+      background: rgba(2,11,29,0.92);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .brand-title {
+      font-size: 20px;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-main { color: #fff; }
+    .brand-pro { color: var(--gold); margin-left: 6px; }
+
+    .brand-tagline {
+      font-size: 11px;
+      color: rgba(212,175,55,0.8);
+      margin-top: 2px;
+    }
+
+    .back-link, .btn, .lang-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      padding: 0 16px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      text-decoration: none;
+      color: var(--text);
+      background: rgba(255,255,255,0.04);
+      font-weight: 700;
+      transition: 0.2s ease;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--blue) 0%, #58a6ff 100%);
+      border-color: rgba(88,166,255,0.35);
+      color: white;
+      cursor: pointer;
+    }
+
+    .lang-switcher {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .lang-btn {
+      min-width: 54px;
+      cursor: pointer;
+    }
+
+    .lang-btn.is-active {
+      background: linear-gradient(135deg, var(--blue) 0%, #58a6ff 100%);
+      border-color: rgba(88,166,255,0.35);
+      color: #fff;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 22px;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: 30px;
+    }
+
+    .subtitle {
+      margin: 0 0 20px;
+      color: var(--muted);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .field.full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      font-size: 13px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-weight: 700;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: var(--panel-2);
+      color: var(--text);
+      outline: none;
+    }
+
+    textarea {
+      min-height: 110px;
+      resize: vertical;
+    }
+
+    .checks {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      margin-top: 6px;
+    }
+
+    .check {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text);
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 22px;
+    }
+
+    .status {
+      margin-top: 14px;
+      min-height: 22px;
+      font-size: 14px;
+    }
+
+    .status.error { color: var(--danger); }
+    .status.success { color: var(--success); }
+
+    @media (max-width: 760px) {
+      .grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="topbar">
+      <div>
+        <div class="brand-title">
+          <span class="brand-main">DealTrack</span><span class="brand-pro">Pro</span>
+        </div>
+        <div class="brand-tagline" data-i18n="brand.tagline">Contract Intelligence for Football Agents</div>
+      </div>
+
+      <div class="topbar-right">
+        <a id="backLink" class="back-link" href="/dealtrack-pro/contracts.html" data-i18n="backToContract">← Back to Contract</a>
+
+        <div class="lang-switcher">
+          <button type="button" class="lang-btn" data-lang-btn="en">EN</button>
+          <button type="button" class="lang-btn" data-lang-btn="fr">FR</button>
+          <button type="button" class="lang-btn" data-lang-btn="es">ES</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h1 data-i18n="pageTitle">Add Performance Snapshot</h1>
+      <p class="subtitle" data-i18n="pageSubtitle">Record the latest player performance and create a short agent highlight.</p>
+
+      <form id="performanceForm">
+        <div class="grid">
+          <div class="field">
+            <label for="snapshotDate" data-i18n="snapshotDateLabel">Snapshot Date</label>
+            <input id="snapshotDate" type="date" />
+          </div>
+
+          <div class="field">
+            <label for="competition" data-i18n="competitionLabel">Competition</label>
+            <input id="competition" data-i18n-placeholder="competitionPlaceholder" placeholder="Bundesliga" />
+          </div>
+
+          <div class="field">
+            <label for="opponent" data-i18n="opponentLabel">Opponent</label>
+            <input id="opponent" data-i18n-placeholder="opponentPlaceholder" placeholder="Borussia Dortmund" />
+          </div>
+
+          <div class="field">
+            <label for="minutesPlayed" data-i18n="minutesPlayedLabel">Minutes Played</label>
+            <input id="minutesPlayed" type="number" min="0" max="130" data-i18n-placeholder="minutesPlayedPlaceholder" placeholder="90" />
+          </div>
+
+          <div class="field">
+            <label for="goals" data-i18n="goalsLabel">Goals</label>
+            <input id="goals" type="number" min="0" data-i18n-placeholder="goalsPlaceholder" placeholder="0" />
+          </div>
+
+          <div class="field">
+            <label for="assists" data-i18n="assistsLabel">Assists</label>
+            <input id="assists" type="number" min="0" data-i18n-placeholder="assistsPlaceholder" placeholder="0" />
+          </div>
+
+          <div class="field">
+            <label for="yellowCards" data-i18n="yellowCardsLabel">Yellow Cards</label>
+            <input id="yellowCards" type="number" min="0" data-i18n-placeholder="yellowCardsPlaceholder" placeholder="0" />
+          </div>
+
+          <div class="field">
+            <label for="redCards" data-i18n="redCardsLabel">Red Cards</label>
+            <input id="redCards" type="number" min="0" data-i18n-placeholder="redCardsPlaceholder" placeholder="0" />
+          </div>
+
+          <div class="field full">
+            <label data-i18n="flagsLabel">Flags</label>
+            <div class="checks">
+              <label class="check"><input id="starts" type="checkbox" /> <span data-i18n="startsLabel">Started Match</span></label>
+              <label class="check"><input id="cleanSheet" type="checkbox" /> <span data-i18n="cleanSheetLabel">Clean Sheet</span></label>
+            </div>
+          </div>
+
+          <div class="field full">
+            <label for="summary" data-i18n="summaryLabel">Agent Highlight Summary</label>
+            <textarea id="summary" data-i18n-placeholder="summaryPlaceholder" placeholder="Played 78 minutes last weekend, delivered 1 assist, no cards, and showed strong attacking impact."></textarea>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button type="submit" class="btn btn-primary" data-i18n="saveBtn">Save Performance</button>
+        </div>
+
+        <div id="statusMessage" class="status"></div>
+      </form>
+    </div>
+  </div>
+
+  <script type="application/json" id="dealtrack-performance-i18n">
+  {
+    "en": {
+      "brand.tagline": "Contract Intelligence for Football Agents",
+      "backToContract": "← Back to Contract",
+      "pageTitle": "Add Performance Snapshot",
+      "pageSubtitle": "Record the latest player performance and create a short agent highlight.",
+      "snapshotDateLabel": "Snapshot Date",
+      "competitionLabel": "Competition",
+      "competitionPlaceholder": "Bundesliga",
+      "opponentLabel": "Opponent",
+      "opponentPlaceholder": "Borussia Dortmund",
+      "minutesPlayedLabel": "Minutes Played",
+      "minutesPlayedPlaceholder": "90",
+      "goalsLabel": "Goals",
+      "goalsPlaceholder": "0",
+      "assistsLabel": "Assists",
+      "assistsPlaceholder": "0",
+      "yellowCardsLabel": "Yellow Cards",
+      "yellowCardsPlaceholder": "0",
+      "redCardsLabel": "Red Cards",
+      "redCardsPlaceholder": "0",
+      "flagsLabel": "Flags",
+      "startsLabel": "Started Match",
+      "cleanSheetLabel": "Clean Sheet",
+      "summaryLabel": "Agent Highlight Summary",
+      "summaryPlaceholder": "Played 78 minutes last weekend, delivered 1 assist, no cards, and showed strong attacking impact.",
+      "saveBtn": "Save Performance",
+      "msgSupabaseMissing": "Supabase client not available.",
+      "msgMissingContractId": "Missing contract_id.",
+      "msgSaving": "Saving performance...",
+      "msgSaved": "Performance snapshot added successfully.",
+      "msgErrorPrefix": "Error:"
+    },
+    "fr": {
+      "brand.tagline": "Intelligence contractuelle pour agents de football",
+      "backToContract": "← Retour au contrat",
+      "pageTitle": "Ajouter un instantané de performance",
+      "pageSubtitle": "Enregistrez la dernière performance du joueur et créez un court résumé pour l’agent.",
+      "snapshotDateLabel": "Date de l’instantané",
+      "competitionLabel": "Compétition",
+      "competitionPlaceholder": "Bundesliga",
+      "opponentLabel": "Adversaire",
+      "opponentPlaceholder": "Borussia Dortmund",
+      "minutesPlayedLabel": "Minutes jouées",
+      "minutesPlayedPlaceholder": "90",
+      "goalsLabel": "Buts",
+      "goalsPlaceholder": "0",
+      "assistsLabel": "Passes décisives",
+      "assistsPlaceholder": "0",
+      "yellowCardsLabel": "Cartons jaunes",
+      "yellowCardsPlaceholder": "0",
+      "redCardsLabel": "Cartons rouges",
+      "redCardsPlaceholder": "0",
+      "flagsLabel": "Indicateurs",
+      "startsLabel": "Titulaire",
+      "cleanSheetLabel": "Clean sheet",
+      "summaryLabel": "Résumé pour l’agent",
+      "summaryPlaceholder": "A joué 78 minutes le week-end dernier, a délivré 1 passe décisive, aucun carton, et a montré un fort impact offensif.",
+      "saveBtn": "Enregistrer la performance",
+      "msgSupabaseMissing": "Client Supabase indisponible.",
+      "msgMissingContractId": "contract_id manquant.",
+      "msgSaving": "Enregistrement de la performance...",
+      "msgSaved": "Instantané de performance ajouté avec succès.",
+      "msgErrorPrefix": "Erreur :"
+    },
+    "es": {
+      "brand.tagline": "Inteligencia contractual para agentes de fútbol",
+      "backToContract": "← Volver al contrato",
+      "pageTitle": "Añadir registro de rendimiento",
+      "pageSubtitle": "Registre el último rendimiento del jugador y cree un breve resumen para el agente.",
+      "snapshotDateLabel": "Fecha del registro",
+      "competitionLabel": "Competición",
+      "competitionPlaceholder": "Bundesliga",
+      "opponentLabel": "Rival",
+      "opponentPlaceholder": "Borussia Dortmund",
+      "minutesPlayedLabel": "Minutos jugados",
+      "minutesPlayedPlaceholder": "90",
+      "goalsLabel": "Goles",
+      "goalsPlaceholder": "0",
+      "assistsLabel": "Asistencias",
+      "assistsPlaceholder": "0",
+      "yellowCardsLabel": "Tarjetas amarillas",
+      "yellowCardsPlaceholder": "0",
+      "redCardsLabel": "Tarjetas rojas",
+      "redCardsPlaceholder": "0",
+      "flagsLabel": "Indicadores",
+      "startsLabel": "Titular",
+      "cleanSheetLabel": "Portería a cero",
+      "summaryLabel": "Resumen para el agente",
+      "summaryPlaceholder": "Jugó 78 minutos el último fin de semana, dio 1 asistencia, sin tarjetas, y mostró un fuerte impacto ofensivo.",
+      "saveBtn": "Guardar rendimiento",
+      "msgSupabaseMissing": "Cliente Supabase no disponible.",
+      "msgMissingContractId": "Falta contract_id.",
+      "msgSaving": "Guardando rendimiento...",
+      "msgSaved": "Registro de rendimiento añadido correctamente.",
+      "msgErrorPrefix": "Error:"
+    }
+  }
+  </script>
+
+  <script>
+    const I18N = JSON.parse(document.getElementById("dealtrack-performance-i18n").textContent);
+    let currentLang = localStorage.getItem("lang") || "en";
+
+    function t(key) {
+      return I18N[currentLang]?.[key] || I18N.en?.[key] || key;
+    }
+
+    function applyTranslations() {
+      document.documentElement.lang = currentLang;
+
+      document.querySelectorAll("[data-i18n]").forEach((el) => {
+        const key = el.getAttribute("data-i18n");
+        el.textContent = t(key);
+      });
+
+      document.querySelectorAll("[data-i18n-placeholder]").forEach((el) => {
+        const key = el.getAttribute("data-i18n-placeholder");
+        el.setAttribute("placeholder", t(key));
+      });
+
+      document.querySelectorAll("[data-lang-btn]").forEach((btn) => {
+        btn.classList.toggle("is-active", btn.getAttribute("data-lang-btn") === currentLang);
+      });
+
+      document.title = "DealTrack Pro — " + t("pageTitle");
+    }
+
+    function setStatus(message, type = "") {
+      const box = document.getElementById("statusMessage");
+      box.className = `status ${type}`.trim();
+      box.textContent = message || "";
+    }
+
+    document.addEventListener("DOMContentLoaded", async () => {
+      applyTranslations();
+
+      document.querySelectorAll("[data-lang-btn]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          currentLang = btn.getAttribute("data-lang-btn");
+          localStorage.setItem("lang", currentLang);
+          applyTranslations();
+        });
+      });
+
+      const db = window.supabaseClient || window.sb || null;
+
+      if (!db) {
+        setStatus(t("msgSupabaseMissing"), "error");
+        return;
+      }
+
+      const { data: { user }, error: userError } = await db.auth.getUser();
+
+      if (userError || !user) {
+        window.location.href = "/agent-academy/login.html";
+        return;
+      }
+
+      const params = new URLSearchParams(window.location.search);
+      const contractId = params.get("contract_id");
+
+      if (!contractId) {
+        setStatus(t("msgMissingContractId"), "error");
+        return;
+      }
+
+      document.getElementById("backLink").href = `/dealtrack-pro/contract.html?id=${contractId}`;
+      document.getElementById("snapshotDate").value = new Date().toISOString().split("T")[0];
+
+      document.getElementById("performanceForm").addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const snapshotDate = document.getElementById("snapshotDate").value || null;
+        const competition = document.getElementById("competition").value.trim() || null;
+        const opponent = document.getElementById("opponent").value.trim() || null;
+        const minutesPlayed = document.getElementById("minutesPlayed").value || null;
+        const goals = document.getElementById("goals").value || 0;
+        const assists = document.getElementById("assists").value || 0;
+        const yellowCards = document.getElementById("yellowCards").value || 0;
+        const redCards = document.getElementById("redCards").value || 0;
+        const starts = document.getElementById("starts").checked;
+        const cleanSheet = document.getElementById("cleanSheet").checked;
+        const summary = document.getElementById("summary").value.trim() || null;
+
+        setStatus(t("msgSaving"));
+
+        const { error } = await db
+          .from("player_performance_snapshots")
+          .insert({
+            contract_id: contractId,
+            user_id: user.id,
+            snapshot_date: snapshotDate,
+            competition: competition,
+            opponent: opponent,
+            minutes_played: minutesPlayed ? Number(minutesPlayed) : null,
+            goals: Number(goals),
+            assists: Number(assists),
+            yellow_cards: Number(yellowCards),
+            red_cards: Number(redCards),
+            starts: starts,
+            clean_sheet: cleanSheet,
+            summary: summary
+          });
+
+        if (error) {
+          console.error("Insert performance error:", error);
+          setStatus(`${t("msgErrorPrefix")} ${error.message}`, "error");
+          return;
+        }
+
+        setStatus(t("msgSaved"), "success");
+
+        setTimeout(() => {
+          window.location.href = `/dealtrack-pro/contract.html?id=${contractId}`;
+        }, 500);
+      });
+    });
+  </script>
+</body>
+</html>
