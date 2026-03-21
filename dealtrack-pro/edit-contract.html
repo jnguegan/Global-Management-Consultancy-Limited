@@ -237,6 +237,15 @@
             <label for="club" data-i18n="clubLabel">Club Name</label>
             <input id="club" data-i18n-placeholder="clubPlaceholder" placeholder="Club Name" />
           </div>
+          <div class="field">
+            <label for="clubLeague" data-i18n="clubLeagueLabel">League / Division</label>
+            <input id="clubLeague" data-i18n-placeholder="clubLeaguePlaceholder" placeholder="Premier League" />
+          </div>
+          
+          <div class="field">
+            <label for="clubCountry" data-i18n="clubCountryLabel">Country</label>
+            <input id="clubCountry" data-i18n-placeholder="clubCountryPlaceholder" placeholder="England" />
+          </div>
 
           <div class="field">
             <label for="startDate" data-i18n="startDateLabel">Start Date</label>
@@ -457,7 +466,11 @@
       "msgLoading": "Loading contract...",
       "msgSaving": "Saving changes...",
       "msgSaved": "Contract updated successfully.",
-      "msgErrorPrefix": "Error:"
+      "msgErrorPrefix": "Error:",
+    "clubLeagueLabel": "League / Division",
+      "clubLeaguePlaceholder": "Premier League",
+      "clubCountryLabel": "Country",
+      "clubCountryPlaceholder": "England"
     },
     "fr": {
       "backToContract": "← Retour au contrat",
@@ -522,7 +535,11 @@
       "msgLoading": "Chargement du contrat...",
       "msgSaving": "Enregistrement des modifications...",
       "msgSaved": "Contrat mis à jour avec succès.",
-      "msgErrorPrefix": "Erreur :"
+      "msgErrorPrefix": "Erreur :",
+    "clubLeagueLabel": "Ligue / Division",
+      "clubLeaguePlaceholder": "Premier League",
+      "clubCountryLabel": "Pays",
+      "clubCountryPlaceholder": "Angleterre"
     },
     "es": {
       "backToContract": "← Volver al contrato",
@@ -587,7 +604,11 @@
       "msgLoading": "Cargando contrato...",
       "msgSaving": "Guardando cambios...",
       "msgSaved": "Contrato actualizado correctamente.",
-      "msgErrorPrefix": "Error:"
+      "msgErrorPrefix": "Error:",
+    "clubLeagueLabel": "Liga / División",
+      "clubLeaguePlaceholder": "Premier League",
+      "clubCountryLabel": "País",
+      "clubCountryPlaceholder": "Inglaterra"
     }
   }
   </script>
@@ -629,6 +650,8 @@
     function fillForm(data) {
       document.getElementById("player").value = data.player_name || "";
       document.getElementById("club").value = data.club_name || "";
+      document.getElementById("clubLeague").value = data.club_league || "";
+      document.getElementById("clubCountry").value = data.club_country || "";
       document.getElementById("startDate").value = data.start_date || "";
       document.getElementById("endDate").value = data.end_date || "";
 
@@ -712,7 +735,8 @@
 
         const player = document.getElementById("player")?.value?.trim();
         const club = document.getElementById("club")?.value?.trim();
-
+        const clubLeague = document.getElementById("clubLeague")?.value?.trim();
+        const clubCountry = document.getElementById("clubCountry")?.value?.trim();
         const agentName = document.getElementById("agentName")?.value?.trim();
         const agentEmail = document.getElementById("agentEmail")?.value?.trim();
         const agentLicenceNumber = document.getElementById("agentLicenceNumber")?.value?.trim();
@@ -753,6 +777,8 @@
           .update({
             player_name: player,
             club_name: club || null,
+            club_league: clubLeague || null,
+            club_country: clubCountry || null,
             agent_name: agentName,
             agent_email: agentEmail || null,
             agent_licence_number: agentLicenceNumber || null,
