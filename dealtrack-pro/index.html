@@ -3,170 +3,464 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>DealTrack Pro | Coming Soon</title>
+  <title>DealTrack Pro | Contract Intelligence</title>
 
   <link rel="icon" href="/agent-academy/assets/academy-logo.png">
+  <link rel="shortcut icon" href="/agent-academy/assets/academy-logo.png">
 
   <style>
     :root {
-      --bg-1:#07101d;
-      --bg-2:#0c1628;
-      --gold:#d4af37;
-      --text:#edf3ff;
-      --muted:rgba(237,243,255,0.7);
-      --border:rgba(255,255,255,0.12);
+      --bg-1: #07101d;
+      --bg-2: #0c1628;
+      --gold: #d4af37;
+      --text: #edf3ff;
+      --muted: rgba(237,243,255,0.7);
+      --border: rgba(255,255,255,0.12);
+      --panel: rgba(255,255,255,0.06);
+      --panel-strong: rgba(255,255,255,0.08);
+      --success: #dff7d6;
+      --error: #ffd9d9;
+    }
+
+    * {
+      box-sizing: border-box;
     }
 
     body {
-      margin:0;
-      font-family:Inter,Arial,sans-serif;
+      margin: 0;
+      font-family: Inter, Arial, sans-serif;
       background:
-        radial-gradient(circle at top left, rgba(212,175,55,0.1), transparent 25%),
+        radial-gradient(circle at top left, rgba(212,175,55,0.10), transparent 25%),
         linear-gradient(180deg, var(--bg-1), var(--bg-2));
-      color:var(--text);
-      display:flex;
-      flex-direction:column;
-      min-height:100vh;
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
     }
 
     .topbar {
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      padding:20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 24px;
+      gap: 16px;
+      flex-wrap: wrap;
     }
 
     .brand img {
-      height:36px;
+      height: 36px;
+      width: auto;
+      display: block;
     }
 
-    .back-btn {
-      padding:10px 16px;
-      border-radius:999px;
-      border:1px solid var(--border);
-      background:rgba(255,255,255,0.05);
-      color:var(--text);
-      text-decoration:none;
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .back-btn,
+    .lang-switch button,
+    .cta-btn {
+      padding: 10px 16px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.05);
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.18s ease;
+    }
+
+    .lang-switch button:hover,
+    .back-btn:hover,
+    .cta-btn:hover {
+      transform: translateY(-1px);
+      border-color: rgba(212,175,55,0.45);
+      background: rgba(255,255,255,0.08);
+    }
+
+    .lang-switch {
+      display: inline-flex;
+      gap: 8px;
+      flex-wrap: wrap;
     }
 
     .container {
-      flex:1;
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      padding:20px;
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
     }
 
     .card {
-      max-width:720px;
-      width:100%;
-      padding:40px;
-      border-radius:24px;
-      background:rgba(255,255,255,0.06);
-      border:1px solid var(--border);
-      text-align:center;
+      max-width: 760px;
+      width: 100%;
+      padding: 42px;
+      border-radius: 24px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      text-align: center;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.34);
     }
 
     h1 {
-      font-size:48px;
-      margin-bottom:10px;
+      font-size: 48px;
+      margin: 0 0 10px;
+      line-height: 1.05;
     }
 
     .gold {
-      color:var(--gold);
+      color: var(--gold);
+    }
+
+    .subtitle {
+      font-size: 21px;
+      margin-bottom: 14px;
+      font-weight: 700;
     }
 
     .tagline {
-      font-size:20px;
-      margin-bottom:20px;
+      color: #fff4cf;
+      margin-bottom: 18px;
+      font-size: 16px;
+      letter-spacing: 0.03em;
     }
 
-    p {
-      color:var(--muted);
-      margin-bottom:30px;
-      line-height:1.7;
+    p.description {
+      color: var(--muted);
+      margin: 0 auto 30px;
+      line-height: 1.8;
+      max-width: 650px;
+      font-size: 17px;
     }
 
     form {
-      display:flex;
-      flex-direction:column;
-      gap:12px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 10px;
     }
 
-    input, select {
-      padding:14px;
-      border-radius:12px;
-      border:1px solid var(--border);
-      background:rgba(255,255,255,0.05);
-      color:var(--text);
+    input,
+    select {
+      padding: 14px 16px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.05);
+      color: var(--text);
+      font: inherit;
+      width: 100%;
     }
 
-    button {
-      padding:14px;
-      border-radius:999px;
-      border:1px solid rgba(212,175,55,0.4);
-      background:rgba(212,175,55,0.2);
-      color:#fff4cf;
-      font-weight:700;
-      cursor:pointer;
+    select option {
+      color: #111;
+    }
+
+    button[type="submit"] {
+      padding: 14px 18px;
+      border-radius: 999px;
+      border: 1px solid rgba(212,175,55,0.4);
+      background: rgba(212,175,55,0.2);
+      color: #fff4cf;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.18s ease;
+    }
+
+    button[type="submit"]:hover {
+      transform: translateY(-1px);
+      background: rgba(212,175,55,0.25);
+    }
+
+    button[type="submit"]:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .form-message {
+      margin-top: 16px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      line-height: 1.65;
+      display: none;
+      text-align: left;
+    }
+
+    .form-message.success {
+      display: block;
+      background: rgba(22,163,74,0.14);
+      border: 1px solid rgba(22,163,74,0.35);
+      color: var(--success);
+    }
+
+    .form-message.error {
+      display: block;
+      background: rgba(220,38,38,0.14);
+      border: 1px solid rgba(220,38,38,0.35);
+      color: var(--error);
     }
 
     .footer {
-      text-align:center;
-      padding:16px;
-      color:var(--muted);
-      font-size:14px;
+      text-align: center;
+      padding: 16px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    @media (max-width: 720px) {
+      .topbar {
+        padding: 16px;
+      }
+
+      .card {
+        padding: 28px 20px;
+      }
+
+      h1 {
+        font-size: 36px;
+      }
+
+      .subtitle {
+        font-size: 18px;
+      }
+
+      p.description {
+        font-size: 16px;
+      }
     }
   </style>
 </head>
 
 <body>
-
   <div class="topbar">
     <div class="brand">
       <img src="/agent-academy/assets/academy-logo.png" alt="GMC">
     </div>
 
-    <a href="/agent-academy/index.html" class="back-btn">
-      Back to Academy
-    </a>
+    <div class="topbar-right">
+      <a href="/agent-academy/index.html" class="back-btn" data-i18n="backBtn">Back to Academy</a>
+
+      <div class="lang-switch">
+        <button type="button" onclick="setLang('en')">EN</button>
+        <button type="button" onclick="setLang('fr')">FR</button>
+        <button type="button" onclick="setLang('es')">ES</button>
+      </div>
+    </div>
   </div>
 
   <div class="container">
     <div class="card">
-
       <h1>DealTrack <span class="gold">Pro</span></h1>
 
-      <div class="tagline">
+      <div class="subtitle" data-i18n="subtitle">
+        Contract Intelligence for Football Agents
+      </div>
+
+      <div class="tagline" data-i18n="tagline">
         Never miss a payment again.
       </div>
 
-      <p>
-        A contract intelligence platform for football agents, players, agencies, and clubs.
-        Track clauses, monitor triggers, and secure every payment with precision.
+      <p class="description" data-i18n="description">
+        A contract intelligence platform built for professional football agents.
+        Transform complex contract clauses into trackable financial outcomes and ensure every payment is captured.
       </p>
 
       <form id="waitlistForm">
-        <input type="text" placeholder="Full name" required>
-        <input type="email" placeholder="Email address" required>
+        <input type="hidden" name="_subject" value="New DealTrack Pro Early Access Request">
+        <input type="hidden" name="_template" value="table">
+        <input type="hidden" name="_captcha" value="false">
+        <input type="hidden" name="_to" value="jnguegan@gmail.com">
 
-        <select required>
-          <option value="">I am...</option>
-          <option>Agent</option>
-          <option>Player</option>
-          <option>Agency</option>
-          <option>Club</option>
+        <input
+          id="fullName"
+          name="fullName"
+          type="text"
+          placeholder="Full name"
+          data-i18n-placeholder="name"
+          required
+        >
+
+        <input
+          id="email"
+          name="email"
+          type="email"
+          placeholder="Email address"
+          data-i18n-placeholder="email"
+          required
+        >
+
+        <select id="role" name="role" required>
+          <option value="" data-i18n="role">I am...</option>
+          <option value="Agent" data-i18n="roleAgent">Agent</option>
+          <option value="Player" data-i18n="rolePlayer">Player</option>
+          <option value="Agency" data-i18n="roleAgency">Agency</option>
+          <option value="Club" data-i18n="roleClub">Club</option>
         </select>
 
-        <button type="submit">Join Early Access</button>
+        <button id="submitBtn" type="submit" data-i18n="cta">
+          Join Early Access
+        </button>
       </form>
 
+      <div id="formMessage" class="form-message"></div>
     </div>
   </div>
 
-  <div class="footer">
+  <div class="footer" data-i18n="footer">
     Global Management Consultancy Limited
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script>
+    const supabaseClient = window.supabase.createClient(
+      "https://ysaxtuvuzqkyfmganven.supabase.co",
+      "sb_publishable_esfhuUEIcUJEL6z9zryRAA_FGMmUHlw"
+    );
+
+    const translations = {
+      en: {
+        backBtn: "Back to Academy",
+        subtitle: "Contract Intelligence for Football Agents",
+        tagline: "Never miss a payment again.",
+        description: "A contract intelligence platform built for professional football agents. Transform complex contract clauses into trackable financial outcomes and ensure every payment is captured.",
+        name: "Full name",
+        email: "Email address",
+        role: "I am...",
+        roleAgent: "Agent",
+        rolePlayer: "Player",
+        roleAgency: "Agency",
+        roleClub: "Club",
+        cta: "Join Early Access",
+        success: "Thank you. Your early access request has been received.",
+        error: "We could not submit your request right now. Please try again.",
+        sending: "Submitting...",
+        footer: "Global Management Consultancy Limited"
+      },
+      fr: {
+        backBtn: "Retour à l’Academy",
+        subtitle: "Intelligence Contractuelle pour Agents de Football",
+        tagline: "Ne manquez plus jamais un paiement.",
+        description: "Une plateforme d’intelligence contractuelle conçue pour les agents de football professionnels. Transformez des clauses contractuelles complexes en résultats financiers mesurables et assurez-vous que chaque paiement soit capturé.",
+        name: "Nom complet",
+        email: "Adresse e-mail",
+        role: "Je suis...",
+        roleAgent: "Agent",
+        rolePlayer: "Joueur",
+        roleAgency: "Agence",
+        roleClub: "Club",
+        cta: "Rejoindre l’accès anticipé",
+        success: "Merci. Votre demande d’accès anticipé a bien été reçue.",
+        error: "Nous n’avons pas pu soumettre votre demande pour le moment. Veuillez réessayer.",
+        sending: "Envoi...",
+        footer: "Global Management Consultancy Limited"
+      },
+      es: {
+        backBtn: "Volver a la Academy",
+        subtitle: "Inteligencia Contractual para Agentes de Fútbol",
+        tagline: "No pierda nunca más un pago.",
+        description: "Una plataforma de inteligencia contractual diseñada para agentes de fútbol profesionales. Convierte cláusulas contractuales complejas en resultados financieros medibles y garantiza que cada pago quede registrado.",
+        name: "Nombre completo",
+        email: "Correo electrónico",
+        role: "Soy...",
+        roleAgent: "Agente",
+        rolePlayer: "Jugador",
+        roleAgency: "Agencia",
+        roleClub: "Club",
+        cta: "Solicitar acceso anticipado",
+        success: "Gracias. Su solicitud de acceso anticipado ha sido recibida.",
+        error: "No hemos podido enviar su solicitud en este momento. Inténtelo de nuevo.",
+        sending: "Enviando...",
+        footer: "Global Management Consultancy Limited"
+      }
+    };
+
+    let currentLang = localStorage.getItem("lang") || "en";
+
+    function setLang(lang) {
+      currentLang = lang;
+      localStorage.setItem("lang", lang);
+
+      document.documentElement.lang = lang;
+
+      document.querySelectorAll("[data-i18n]").forEach((el) => {
+        const key = el.getAttribute("data-i18n");
+        if (translations[lang] && translations[lang][key]) {
+          el.textContent = translations[lang][key];
+        }
+      });
+
+      document.querySelectorAll("[data-i18n-placeholder]").forEach((el) => {
+        const key = el.getAttribute("data-i18n-placeholder");
+        if (translations[lang] && translations[lang][key]) {
+          el.placeholder = translations[lang][key];
+        }
+      });
+
+      document.title = "DealTrack Pro | Contract Intelligence";
+    }
+
+    const waitlistForm = document.getElementById("waitlistForm");
+    const formMessage = document.getElementById("formMessage");
+    const submitBtn = document.getElementById("submitBtn");
+
+    waitlistForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      formMessage.className = "form-message";
+      formMessage.textContent = "";
+
+      const fullName = document.getElementById("fullName").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const role = document.getElementById("role").value;
+
+      if (!email || !role) {
+        formMessage.className = "form-message error";
+        formMessage.textContent = translations[currentLang].error;
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = translations[currentLang].sending;
+
+      try {
+        const { error } = await supabaseClient
+          .from("dealtrack_waitlist")
+          .insert([{
+            full_name: fullName || null,
+            email,
+            role: role || null
+          }]);
+
+        if (error) throw error;
+
+        const formData = new FormData(waitlistForm);
+
+        await fetch("https://formsubmit.co/ajax/jnguegan@gmail.com", {
+          method: "POST",
+          body: formData
+        });
+
+        waitlistForm.reset();
+
+        formMessage.className = "form-message success";
+        formMessage.textContent = translations[currentLang].success;
+      } catch (err) {
+        console.error("DealTrack waitlist error:", err);
+        formMessage.className = "form-message error";
+        formMessage.textContent = translations[currentLang].error;
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = translations[currentLang].cta;
+      }
+    });
+
+    setLang(currentLang);
+  </script>
 </body>
 </html>
