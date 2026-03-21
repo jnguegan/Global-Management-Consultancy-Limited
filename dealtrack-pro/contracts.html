@@ -98,12 +98,14 @@
       }
 
       container.innerHTML = data.map(contract => `
-        <div class="card">
-          <strong>${contract.player_name}</strong><br>
-          <span>${contract.club_name || "No club"}</span><br>
-          <span class="muted">Status: ${contract.status || "active"}</span>
-        </div>
-      `).join("");
+  <a href="/dealtrack-pro/contract.html?id=${contract.id}" style="text-decoration:none; color:inherit;">
+    <div class="card">
+      <strong>${contract.player_name}</strong><br>
+      <span>${contract.club_name || "No club"}</span><br>
+      <span class="muted">Status: ${contract.status || "active"}</span>
+    </div>
+  </a>
+`).join("");
     });
   </script>
 
