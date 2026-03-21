@@ -69,6 +69,8 @@
     saveBtn.addEventListener("click", async () => {
       const player = document.getElementById("player")?.value?.trim();
       const club = document.getElementById("club")?.value?.trim();
+      const startDate = document.getElementById("startDate")?.value || null;
+    const endDate = document.getElementById("endDate")?.value || null;
 
       if (!player) {
         alert("Player name is required");
