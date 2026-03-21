@@ -40,6 +40,7 @@
   <button onclick="addContract()">Save</button>
 
   <script>
+    console.log("Script loaded");
   const supabase = window.supabase.createClient(
     "YOUR_SUPABASE_URL",
     "YOUR_SUPABASE_ANON_KEY"
@@ -56,6 +57,7 @@
   }
 
   async function addContract() {
+    console.log("addContract triggered");
     const player = document.getElementById("player").value;
     const club = document.getElementById("club").value;
 
