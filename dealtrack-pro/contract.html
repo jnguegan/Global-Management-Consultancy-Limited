@@ -12,60 +12,117 @@
 
   <style>
     :root {
-      --bg: #0b0f1a;
-      --panel: #141a2a;
-      --panel-2: #101625;
-      --text: #ffffff;
-      --muted: #9aa6c2;
-      --accent: #1e90ff;
+      --bg: #020b1d;
+      --bg-2: #07152f;
+      --panel: rgba(10, 24, 52, 0.88);
+      --panel-strong: rgba(12, 28, 58, 0.96);
+      --panel-soft: rgba(255,255,255,0.03);
       --border: rgba(255,255,255,0.08);
+      --border-strong: rgba(212, 175, 55, 0.22);
+      --text: #f6f8fc;
+      --muted: #9fb0cf;
+      --blue: #2f8cff;
+      --blue-2: #58a6ff;
+      --gold: #d4af37;
+      --gold-2: #f0c85a;
       --danger: #ef4444;
+      --shadow: 0 18px 60px rgba(0,0,0,0.36);
+      --radius: 20px;
     }
 
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
 
     body {
       margin: 0;
       font-family: Inter, Arial, sans-serif;
-      background: var(--bg);
       color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(47,140,255,0.18), transparent 28%),
+        radial-gradient(circle at top right, rgba(212,175,55,0.12), transparent 24%),
+        linear-gradient(180deg, #010814 0%, #05122a 45%, #020b1d 100%);
+      min-height: 100vh;
       padding: 24px;
     }
 
     .page {
-      max-width: 980px;
+      max-width: 1240px;
       margin: 0 auto;
     }
 
     .topbar {
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 16px;
-  flex-wrap: wrap;
-  margin: 0 0 20px;
-  padding: 12px 0;
-  background: var(--bg);
-  border-bottom: 1px solid var(--border);
-}
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      flex-wrap: wrap;
+      padding: 14px 0 18px;
+      margin-bottom: 22px;
+      background: linear-gradient(180deg, rgba(2,11,29,0.95) 0%, rgba(2,11,29,0.82) 100%);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .topbar-left,
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .back-link,
+    .btn,
+    .lang-btn {
+      appearance: none;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      text-decoration: none;
+      color: var(--text);
+      background: linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.02));
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
+      transition: 0.2s ease;
+    }
 
     .back-link,
     .btn {
-      color: var(--text);
-      text-decoration: none;
-      border: 1px solid var(--border);
-      padding: 10px 14px;
-      border-radius: 10px;
-      background: var(--panel);
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 48px;
+      padding: 0 16px;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+    }
+
+    .back-link:hover,
+    .btn:hover,
+    .lang-btn:hover {
+      transform: translateY(-1px);
+      border-color: rgba(255,255,255,0.16);
     }
 
     .btn-primary {
-      background: var(--accent);
-      border-color: var(--accent);
+      background: linear-gradient(135deg, var(--blue) 0%, var(--blue-2) 100%);
+      border-color: rgba(88,166,255,0.35);
+      color: white;
+      box-shadow: 0 14px 30px rgba(47,140,255,0.22);
+    }
+
+    .btn-gold {
+      background: linear-gradient(135deg, var(--gold) 0%, var(--gold-2) 100%);
+      color: #09111f;
+      border-color: rgba(212,175,55,0.55);
+      box-shadow: 0 14px 30px rgba(212,175,55,0.18);
     }
 
     .lang-switcher {
@@ -75,41 +132,137 @@
     }
 
     .lang-btn {
-      border: 1px solid var(--border);
-      background: var(--panel);
-      color: var(--text);
-      padding: 8px 12px;
-      border-radius: 10px;
+      min-width: 54px;
+      min-height: 46px;
+      padding: 0 14px;
       cursor: pointer;
+      font-weight: 700;
+      opacity: 0.86;
     }
 
     .lang-btn.is-active {
-      background: var(--accent);
-      border-color: var(--accent);
+      background: linear-gradient(135deg, var(--blue) 0%, var(--blue-2) 100%);
+      border-color: rgba(88,166,255,0.35);
+      color: #fff;
+      opacity: 1;
+      box-shadow: 0 10px 24px rgba(47,140,255,0.24);
     }
 
-    .card {
-      background: var(--panel);
+    .hero {
+      position: relative;
+      overflow: hidden;
+      background:
+        linear-gradient(135deg, rgba(47,140,255,0.12), transparent 42%),
+        linear-gradient(160deg, rgba(212,175,55,0.08), transparent 55%),
+        var(--panel-strong);
       border: 1px solid var(--border);
-      padding: 20px;
-      border-radius: 16px;
-      margin-bottom: 16px;
+      border-radius: 28px;
+      padding: 30px 30px 26px;
+      box-shadow: var(--shadow);
+      margin-bottom: 22px;
     }
 
-    h1 {
-      margin: 0 0 8px;
-      font-size: 30px;
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 85% 20%, rgba(212,175,55,0.12), transparent 25%);
+      pointer-events: none;
     }
 
-    h2 {
-      margin: 0 0 14px;
-      font-size: 18px;
-      color: #dbe7ff;
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--gold-2);
+      margin-bottom: 14px;
+      font-weight: 700;
     }
 
-    .subtitle {
+    .hero h1 {
+      margin: 0 0 10px;
+      font-size: clamp(2rem, 4vw, 3.25rem);
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+    }
+
+    .hero p {
+      margin: 0;
+      max-width: 820px;
       color: var(--muted);
-      margin: 0 0 22px;
+      font-size: 1.02rem;
+      line-height: 1.65;
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 22px;
+    }
+
+    .meta-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 42px;
+      padding: 0 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-size: 0.95rem;
+    }
+
+    .meta-pill strong {
+      color: var(--gold-2);
+      font-weight: 700;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1.2fr 0.95fr;
+      gap: 22px;
+      align-items: start;
+    }
+
+    .stack {
+      display: grid;
+      gap: 22px;
+    }
+
+    .premium-card {
+      background: linear-gradient(180deg, rgba(11,24,52,0.96), rgba(7,20,43,0.96));
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 22px;
+      box-shadow: var(--shadow);
+    }
+
+    .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .section-title {
+      margin: 0;
+      font-size: 1.12rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .section-kicker {
+      font-size: 0.84rem;
+      color: var(--gold-2);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-weight: 700;
     }
 
     .grid {
@@ -118,44 +271,136 @@
       gap: 14px;
     }
 
-    .item {
-      background: var(--panel-2);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 12px 14px;
+    .data-tile {
+      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.015));
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 18px;
+      padding: 16px 16px 15px;
+      min-height: 92px;
     }
 
-    .label {
+    .tile-label {
       display: block;
-      font-size: 13px;
+      font-size: 0.8rem;
+      line-height: 1.2;
       color: var(--muted);
-      margin-bottom: 4px;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 700;
     }
 
-    .value {
-      font-size: 15px;
+    .tile-value {
+      font-size: 1rem;
+      line-height: 1.45;
       color: var(--text);
       word-break: break-word;
+      font-weight: 600;
     }
 
-    .actions {
-      display: flex;
+    .summary-card {
+      padding: 0;
+      overflow: hidden;
+    }
+
+    .summary-top {
+      padding: 22px 22px 18px;
+      border-bottom: 1px solid var(--border);
+      background:
+        linear-gradient(135deg, rgba(47,140,255,0.08), transparent 50%),
+        linear-gradient(180deg, rgba(255,255,255,0.03), transparent);
+    }
+
+    .summary-top h2 {
+      margin: 0 0 8px;
+      font-size: 1.2rem;
+      letter-spacing: -0.02em;
+    }
+
+    .summary-top p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .summary-list {
+      padding: 18px 22px 22px;
+      display: grid;
       gap: 12px;
-      flex-wrap: wrap;
-      margin-bottom: 16px;
     }
 
-    .status {
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: center;
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.025);
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .summary-row .left {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .summary-row .right {
+      color: var(--text);
+      font-weight: 700;
+      text-align: right;
+    }
+
+    .status-box {
+      padding: 18px 20px;
+      border-radius: 18px;
+      background: rgba(239,68,68,0.08);
+      border: 1px solid rgba(239,68,68,0.18);
+      color: #ffd5d5;
+    }
+
+    .muted {
       color: var(--muted);
     }
 
-    .error {
-      color: var(--danger);
+    .empty {
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    @media (max-width: 1050px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
     }
 
     @media (max-width: 760px) {
+      body {
+        padding: 16px;
+      }
+
+      .hero,
+      .premium-card {
+        padding: 18px;
+      }
+
       .grid {
         grid-template-columns: 1fr;
+      }
+
+      .topbar {
+        padding-top: 10px;
+      }
+
+      .back-link,
+      .btn {
+        width: 100%;
+      }
+
+      .topbar-left,
+      .topbar-right,
+      .actions {
+        width: 100%;
       }
     }
   </style>
@@ -163,23 +408,28 @@
 <body>
   <div class="page">
     <div class="topbar">
-      <a class="back-link" href="/dealtrack-pro/contracts.html" data-i18n="backToContracts">← Back to Contracts</a>
+      <div class="topbar-left">
+        <a class="back-link" href="/dealtrack-pro/contracts.html" data-i18n="backToContracts">← Back to Contracts</a>
+      </div>
 
-      <div class="lang-switcher">
-        <button type="button" class="lang-btn" data-lang-btn="en">EN</button>
-        <button type="button" class="lang-btn" data-lang-btn="fr">FR</button>
-        <button type="button" class="lang-btn" data-lang-btn="es">ES</button>
+      <div class="topbar-right">
+        <a id="editContractBtn" class="btn btn-gold" href="#" data-i18n="editContractBtn">✏️ Edit Contract</a>
+        <a id="addClauseBtn" class="btn btn-primary" href="#" data-i18n="addClauseBtn">➕ Add Clause</a>
+
+        <div class="lang-switcher">
+          <button type="button" class="lang-btn" data-lang-btn="en">EN</button>
+          <button type="button" class="lang-btn" data-lang-btn="fr">FR</button>
+          <button type="button" class="lang-btn" data-lang-btn="es">ES</button>
+        </div>
       </div>
     </div>
 
-    <div class="actions">
-  <a id="editContractBtn" class="btn" href="#" data-i18n="editContractBtn">✏️ Edit Contract</a>
-  <a id="addClauseBtn" class="btn btn-primary" href="#" data-i18n="addClauseBtn">➕ Add Clause</a>
-</div>
-
-    <div id="contractView" class="card">
-      <h1 data-i18n="loadingTitle">Loading contract...</h1>
-      <p class="subtitle" data-i18n="loadingSubtitle">Please wait while the contract details load.</p>
+    <div id="contractView">
+      <div class="hero">
+        <div class="eyebrow" data-i18n="loadingEyebrow">DealTrack Pro</div>
+        <h1 data-i18n="loadingTitle">Loading contract...</h1>
+        <p data-i18n="loadingSubtitle">Please wait while the premium contract view is prepared.</p>
+      </div>
     </div>
   </div>
 
@@ -187,21 +437,29 @@
   {
     "en": {
       "backToContracts": "← Back to Contracts",
+      "editContractBtn": "✏️ Edit Contract",
       "addClauseBtn": "➕ Add Clause",
+      "loadingEyebrow": "DealTrack Pro",
       "loadingTitle": "Loading contract...",
-      "loadingSubtitle": "Please wait while the contract details load.",
+      "loadingSubtitle": "Please wait while the premium contract view is prepared.",
       "errorSupabase": "Supabase client not available.",
       "errorMissingId": "Missing contract ID.",
       "errorNotFound": "Contract not found.",
-      "contractSubtitle": "Master contract details, agent identity, salary baseline, and commission structure.",
-      "sectionClub": "Club",
-      "sectionAgent": "Agent",
-      "sectionContract": "Contract",
-      "sectionSalary": "Salary",
-      "sectionCommission": "Commission",
+      "heroEyebrow": "Premium Contract Record",
+      "heroSubtitle": "Master contract details, licensed agent identity, salary baseline, and commission structure.",
+      "metaStatus": "Status",
+      "metaSalary": "Salary",
+      "metaCommission": "Commission",
+      "sectionClub": "Club Profile",
+      "sectionAgent": "Licensed Agent Identity",
+      "sectionContract": "Contract Timeline",
+      "sectionSalary": "Salary Baseline",
+      "sectionCommission": "Commission Structure",
+      "sectionSnapshot": "Commercial Snapshot",
+      "sectionSnapshotText": "A premium summary of the commercial foundations currently recorded for this mandate.",
       "labelClubName": "Club Name",
-      "labelAgentName": "Name",
-      "labelAgentEmail": "Email",
+      "labelAgentName": "Agent Name",
+      "labelAgentEmail": "Agent Email",
       "labelAgentLicence": "Licence Number",
       "labelAgencyName": "Agency",
       "labelAgentCountry": "Country",
@@ -209,37 +467,50 @@
       "labelLicensedAgent": "Licensed FIFA Agent",
       "labelStartDate": "Start Date",
       "labelEndDate": "End Date",
-      "labelSalaryAmount": "Amount",
-      "labelSalaryFrequency": "Frequency",
-      "labelSalaryCurrency": "Currency",
-      "labelCommissionType": "Type",
-      "labelCommissionValue": "Value",
-      "labelCommissionCurrency": "Currency",
-      "labelCommissionPayer": "Payer",
-      "labelCommissionFrequency": "Frequency",
+      "labelSalaryAmount": "Gross Salary",
+      "labelSalaryFrequency": "Salary Frequency",
+      "labelSalaryCurrency": "Salary Currency",
+      "labelCommissionType": "Commission Type",
+      "labelCommissionValue": "Commission Value",
+      "labelCommissionCurrency": "Commission Currency",
+      "labelCommissionPayer": "Commission Payer",
+      "labelCommissionFrequency": "Payment Frequency",
       "labelCommissionInstalments": "Instalments",
       "labelDualRepresentation": "Dual Representation",
+      "snapshotPlayer": "Player",
+      "snapshotClub": "Club",
+      "snapshotAgent": "Agent",
+      "snapshotPayer": "Payer",
+      "snapshotDual": "Dual Representation",
       "yes": "Yes",
       "no": "No",
-      "na": "-"
+      "na": "Not recorded"
     },
     "fr": {
       "backToContracts": "← Retour aux contrats",
+      "editContractBtn": "✏️ Modifier le contrat",
       "addClauseBtn": "➕ Ajouter une clause",
+      "loadingEyebrow": "DealTrack Pro",
       "loadingTitle": "Chargement du contrat...",
-      "loadingSubtitle": "Veuillez patienter pendant le chargement des détails du contrat.",
+      "loadingSubtitle": "Veuillez patienter pendant la préparation de la vue premium du contrat.",
       "errorSupabase": "Client Supabase indisponible.",
       "errorMissingId": "ID du contrat manquant.",
       "errorNotFound": "Contrat introuvable.",
-      "contractSubtitle": "Détails principaux du contrat, identité de l’agent, base salariale et structure de commission.",
-      "sectionClub": "Club",
-      "sectionAgent": "Agent",
-      "sectionContract": "Contrat",
-      "sectionSalary": "Salaire",
-      "sectionCommission": "Commission",
+      "heroEyebrow": "Fiche contrat premium",
+      "heroSubtitle": "Détails principaux du contrat, identité de l’agent licencié, base salariale et structure de commission.",
+      "metaStatus": "Statut",
+      "metaSalary": "Salaire",
+      "metaCommission": "Commission",
+      "sectionClub": "Profil du club",
+      "sectionAgent": "Identité de l’agent licencié",
+      "sectionContract": "Calendrier du contrat",
+      "sectionSalary": "Base salariale",
+      "sectionCommission": "Structure de commission",
+      "sectionSnapshot": "Synthèse commerciale",
+      "sectionSnapshotText": "Une synthèse premium des fondements commerciaux actuellement enregistrés pour ce mandat.",
       "labelClubName": "Nom du club",
-      "labelAgentName": "Nom",
-      "labelAgentEmail": "Email",
+      "labelAgentName": "Nom de l’agent",
+      "labelAgentEmail": "Email de l’agent",
       "labelAgentLicence": "Numéro de licence",
       "labelAgencyName": "Agence",
       "labelAgentCountry": "Pays",
@@ -247,37 +518,50 @@
       "labelLicensedAgent": "Agent FIFA licencié",
       "labelStartDate": "Date de début",
       "labelEndDate": "Date de fin",
-      "labelSalaryAmount": "Montant",
-      "labelSalaryFrequency": "Fréquence",
-      "labelSalaryCurrency": "Devise",
-      "labelCommissionType": "Type",
-      "labelCommissionValue": "Valeur",
-      "labelCommissionCurrency": "Devise",
-      "labelCommissionPayer": "Payeur",
-      "labelCommissionFrequency": "Fréquence",
+      "labelSalaryAmount": "Salaire brut",
+      "labelSalaryFrequency": "Fréquence du salaire",
+      "labelSalaryCurrency": "Devise du salaire",
+      "labelCommissionType": "Type de commission",
+      "labelCommissionValue": "Valeur de la commission",
+      "labelCommissionCurrency": "Devise de la commission",
+      "labelCommissionPayer": "Payeur de la commission",
+      "labelCommissionFrequency": "Fréquence de paiement",
       "labelCommissionInstalments": "Échéances",
       "labelDualRepresentation": "Double représentation",
+      "snapshotPlayer": "Joueur",
+      "snapshotClub": "Club",
+      "snapshotAgent": "Agent",
+      "snapshotPayer": "Payeur",
+      "snapshotDual": "Double représentation",
       "yes": "Oui",
       "no": "Non",
-      "na": "-"
+      "na": "Non renseigné"
     },
     "es": {
       "backToContracts": "← Volver a contratos",
+      "editContractBtn": "✏️ Editar contrato",
       "addClauseBtn": "➕ Añadir cláusula",
+      "loadingEyebrow": "DealTrack Pro",
       "loadingTitle": "Cargando contrato...",
-      "loadingSubtitle": "Espere mientras se cargan los detalles del contrato.",
+      "loadingSubtitle": "Espere mientras se prepara la vista premium del contrato.",
       "errorSupabase": "Cliente Supabase no disponible.",
       "errorMissingId": "Falta el ID del contrato.",
       "errorNotFound": "Contrato no encontrado.",
-      "contractSubtitle": "Detalles maestros del contrato, identidad del agente, base salarial y estructura de comisión.",
-      "sectionClub": "Club",
-      "sectionAgent": "Agente",
-      "sectionContract": "Contrato",
-      "sectionSalary": "Salario",
-      "sectionCommission": "Comisión",
+      "heroEyebrow": "Ficha contractual premium",
+      "heroSubtitle": "Detalles maestros del contrato, identidad del agente licenciado, base salarial y estructura de comisión.",
+      "metaStatus": "Estado",
+      "metaSalary": "Salario",
+      "metaCommission": "Comisión",
+      "sectionClub": "Perfil del club",
+      "sectionAgent": "Identidad del agente licenciado",
+      "sectionContract": "Calendario contractual",
+      "sectionSalary": "Base salarial",
+      "sectionCommission": "Estructura de comisión",
+      "sectionSnapshot": "Resumen comercial",
+      "sectionSnapshotText": "Un resumen premium de las bases comerciales actualmente registradas para este mandato.",
       "labelClubName": "Nombre del club",
-      "labelAgentName": "Nombre",
-      "labelAgentEmail": "Correo",
+      "labelAgentName": "Nombre del agente",
+      "labelAgentEmail": "Correo del agente",
       "labelAgentLicence": "Número de licencia",
       "labelAgencyName": "Agencia",
       "labelAgentCountry": "País",
@@ -285,19 +569,24 @@
       "labelLicensedAgent": "Agente FIFA licenciado",
       "labelStartDate": "Fecha de inicio",
       "labelEndDate": "Fecha de finalización",
-      "labelSalaryAmount": "Importe",
-      "labelSalaryFrequency": "Frecuencia",
-      "labelSalaryCurrency": "Moneda",
-      "labelCommissionType": "Tipo",
-      "labelCommissionValue": "Valor",
-      "labelCommissionCurrency": "Moneda",
-      "labelCommissionPayer": "Pagador",
-      "labelCommissionFrequency": "Frecuencia",
+      "labelSalaryAmount": "Salario bruto",
+      "labelSalaryFrequency": "Frecuencia salarial",
+      "labelSalaryCurrency": "Moneda salarial",
+      "labelCommissionType": "Tipo de comisión",
+      "labelCommissionValue": "Valor de la comisión",
+      "labelCommissionCurrency": "Moneda de la comisión",
+      "labelCommissionPayer": "Pagador de la comisión",
+      "labelCommissionFrequency": "Frecuencia de pago",
       "labelCommissionInstalments": "Cuotas",
       "labelDualRepresentation": "Representación dual",
+      "snapshotPlayer": "Jugador",
+      "snapshotClub": "Club",
+      "snapshotAgent": "Agente",
+      "snapshotPayer": "Pagador",
+      "snapshotDual": "Representación dual",
       "yes": "Sí",
       "no": "No",
-      "na": "-"
+      "na": "No registrado"
     }
   }
   </script>
@@ -323,131 +612,157 @@
         btn.classList.toggle("is-active", btn.getAttribute("data-lang-btn") === currentLang);
       });
 
-      document.title = "DealTrack Pro — " + t("sectionContract");
+      document.title = "DealTrack Pro — " + (currentContract?.player_name || t("sectionContract"));
     }
 
     function safeValue(value) {
-      return value || t("na");
+      return value || `<span class="empty">${t("na")}</span>`;
     }
 
     function yesNo(value) {
       return value ? t("yes") : t("no");
     }
 
+    function moneyLine(amount, currency, frequency) {
+      const a = amount ?? null;
+      const c = currency || "";
+      const f = frequency || "";
+      if (a === null || a === "" || typeof a === "undefined") return t("na");
+      return `${a} ${c}${f ? ` · ${f}` : ""}`.trim();
+    }
+
+    function renderTile(labelKey, valueHtml) {
+      return `
+        <div class="data-tile">
+          <span class="tile-label">${t(labelKey)}</span>
+          <div class="tile-value">${valueHtml}</div>
+        </div>
+      `;
+    }
+
     function renderContract(data) {
       const container = document.getElementById("contractView");
 
       container.innerHTML = `
-        <h1>${safeValue(data.player_name)}</h1>
-        <p class="subtitle">${t("contractSubtitle")}</p>
+        <section class="hero">
+          <div class="eyebrow">${t("heroEyebrow")}</div>
+          <h1>${safeValue(data.player_name)}</h1>
+          <p>${t("heroSubtitle")}</p>
 
-        <div class="card">
-          <h2>${t("sectionClub")}</h2>
-          <div class="grid">
-            <div class="item">
-              <span class="label">${t("labelClubName")}</span>
-              <span class="value">${safeValue(data.club_name)}</span>
-            </div>
+          <div class="hero-meta">
+            <div class="meta-pill"><strong>${t("metaStatus")}:</strong> ${safeValue(data.status || "active")}</div>
+            <div class="meta-pill"><strong>${t("metaSalary")}:</strong> ${moneyLine(data.salary, data.salary_currency, data.salary_frequency)}</div>
+            <div class="meta-pill"><strong>${t("metaCommission")}:</strong> ${safeValue(data.commission_type)}</div>
           </div>
-        </div>
+        </section>
 
-        <div class="card">
-          <h2>${t("sectionAgent")}</h2>
-          <div class="grid">
-            <div class="item">
-              <span class="label">${t("labelAgentName")}</span>
-              <span class="value">${safeValue(data.agent_name)}</span>
-            </div>
-            <div class="item">
-              <span class="label">${t("labelAgentEmail")}</span>
-              <span class="value">${safeValue(data.agent_email)}</span>
-            </div>
-            <div class="item">
-              <span class="label">${t("labelAgentLicence")}</span>
-              <span class="value">${safeValue(data.agent_licence_number)}</span>
-            </div>
-            <div class="item">
-              <span class="label">${t("labelAgencyName")}</span>
-              <span class="value">${safeValue(data.agency_name)}</span>
-            </div>
-            <div class="item">
-              <span class="label">${t("labelAgentCountry")}</span>
-              <span class="value">${safeValue(data.agent_country)}</span>
-            </div>
-            <div class="item">
-              <span class="label">${t("labelAgentFederation")}</span>
-              <span class="value">${safeValue(data.agent_federation)}</span>
-            </div>
-            <div class="item">
-              <span class="label">${t("labelLicensedAgent")}</span>
-              <span class="value">${yesNo(data.is_licensed_agent)}</span>
-            </div>
+        <div class="layout">
+          <div class="stack">
+            <section class="premium-card">
+              <div class="section-head">
+                <div>
+                  <div class="section-kicker">01</div>
+                  <h2 class="section-title">${t("sectionClub")}</h2>
+                </div>
+              </div>
+              <div class="grid">
+                ${renderTile("labelClubName", safeValue(data.club_name))}
+              </div>
+            </section>
+
+            <section class="premium-card">
+              <div class="section-head">
+                <div>
+                  <div class="section-kicker">02</div>
+                  <h2 class="section-title">${t("sectionAgent")}</h2>
+                </div>
+              </div>
+              <div class="grid">
+                ${renderTile("labelAgentName", safeValue(data.agent_name))}
+                ${renderTile("labelAgentEmail", safeValue(data.agent_email))}
+                ${renderTile("labelAgentLicence", safeValue(data.agent_licence_number))}
+                ${renderTile("labelAgencyName", safeValue(data.agency_name))}
+                ${renderTile("labelAgentCountry", safeValue(data.agent_country))}
+                ${renderTile("labelAgentFederation", safeValue(data.agent_federation))}
+                ${renderTile("labelLicensedAgent", yesNo(data.is_licensed_agent))}
+              </div>
+            </section>
+
+            <section class="premium-card">
+              <div class="section-head">
+                <div>
+                  <div class="section-kicker">03</div>
+                  <h2 class="section-title">${t("sectionContract")}</h2>
+                </div>
+              </div>
+              <div class="grid">
+                ${renderTile("labelStartDate", safeValue(data.start_date))}
+                ${renderTile("labelEndDate", safeValue(data.end_date))}
+              </div>
+            </section>
           </div>
-        </div>
 
-        <div class="card">
-          <h2>${t("sectionContract")}</h2>
-          <div class="grid">
-            <div class="item">
-              <span class="label">${t("labelStartDate")}</span>
-              <span class="value">${safeValue(data.start_date)}</span>
-            </div>
-            <div class="item">
-              <span class="label">${t("labelEndDate")}</span>
-              <span class="value">${safeValue(data.end_date)}</span>
-            </div>
-          </div>
-        </div>
+          <div class="stack">
+            <section class="premium-card">
+              <div class="section-head">
+                <div>
+                  <div class="section-kicker">04</div>
+                  <h2 class="section-title">${t("sectionSalary")}</h2>
+                </div>
+              </div>
+              <div class="grid">
+                ${renderTile("labelSalaryAmount", safeValue(data.salary))}
+                ${renderTile("labelSalaryCurrency", safeValue(data.salary_currency))}
+                ${renderTile("labelSalaryFrequency", safeValue(data.salary_frequency))}
+              </div>
+            </section>
 
-        <div class="card">
-          <h2>${t("sectionSalary")}</h2>
-          <div class="grid">
-            <div class="item">
-              <span class="label">${t("labelSalaryAmount")}</span>
-              <span class="value">${safeValue(data.salary)}</span>
-            </div>
-            <div class="item">
-              <span class="label">${t("labelSalaryFrequency")}</span>
-              <span class="value">${safeValue(data.salary_frequency)}</span>
-            </div>
-            <div class="item">
-              <span class="label">${t("labelSalaryCurrency")}</span>
-              <span class="value">${safeValue(data.salary_currency)}</span>
-            </div>
-          </div>
-        </div>
+            <section class="premium-card">
+              <div class="section-head">
+                <div>
+                  <div class="section-kicker">05</div>
+                  <h2 class="section-title">${t("sectionCommission")}</h2>
+                </div>
+              </div>
+              <div class="grid">
+                ${renderTile("labelCommissionType", safeValue(data.commission_type))}
+                ${renderTile("labelCommissionValue", safeValue(data.commission_value))}
+                ${renderTile("labelCommissionCurrency", safeValue(data.commission_currency))}
+                ${renderTile("labelCommissionPayer", safeValue(data.commission_payer))}
+                ${renderTile("labelCommissionFrequency", safeValue(data.commission_frequency))}
+                ${renderTile("labelCommissionInstalments", safeValue(data.commission_instalments))}
+                ${renderTile("labelDualRepresentation", yesNo(data.is_dual_representation))}
+              </div>
+            </section>
 
-        <div class="card">
-          <h2>${t("sectionCommission")}</h2>
-          <div class="grid">
-            <div class="item">
-              <span class="label">${t("labelCommissionType")}</span>
-              <span class="value">${safeValue(data.commission_type)}</span>
-            </div>
-            <div class="item">
-              <span class="label">${t("labelCommissionValue")}</span>
-              <span class="value">${safeValue(data.commission_value)}</span>
-            </div>
-            <div class="item">
-              <span class="label">${t("labelCommissionCurrency")}</span>
-              <span class="value">${safeValue(data.commission_currency)}</span>
-            </div>
-            <div class="item">
-              <span class="label">${t("labelCommissionPayer")}</span>
-              <span class="value">${safeValue(data.commission_payer)}</span>
-            </div>
-            <div class="item">
-              <span class="label">${t("labelCommissionFrequency")}</span>
-              <span class="value">${safeValue(data.commission_frequency)}</span>
-            </div>
-            <div class="item">
-              <span class="label">${t("labelCommissionInstalments")}</span>
-              <span class="value">${safeValue(data.commission_instalments)}</span>
-            </div>
-            <div class="item">
-              <span class="label">${t("labelDualRepresentation")}</span>
-              <span class="value">${yesNo(data.is_dual_representation)}</span>
-            </div>
+            <section class="premium-card summary-card">
+              <div class="summary-top">
+                <h2>${t("sectionSnapshot")}</h2>
+                <p>${t("sectionSnapshotText")}</p>
+              </div>
+              <div class="summary-list">
+                <div class="summary-row">
+                  <div class="left">${t("snapshotPlayer")}</div>
+                  <div class="right">${data.player_name || t("na")}</div>
+                </div>
+                <div class="summary-row">
+                  <div class="left">${t("snapshotClub")}</div>
+                  <div class="right">${data.club_name || t("na")}</div>
+                </div>
+                <div class="summary-row">
+                  <div class="left">${t("snapshotAgent")}</div>
+                  <div class="right">${data.agent_name || t("na")}</div>
+                </div>
+                <div class="summary-row">
+                  <div class="left">${t("snapshotPayer")}</div>
+                  <div class="right">${data.commission_payer || t("na")}</div>
+                </div>
+                <div class="summary-row">
+                  <div class="left">${t("snapshotDual")}</div>
+                  <div class="right">${yesNo(data.is_dual_representation)}</div>
+                </div>
+              </div>
+            </section>
           </div>
         </div>
       `;
@@ -469,7 +784,7 @@
       const container = document.getElementById("contractView");
 
       if (!db) {
-        container.innerHTML = `<p class="error">${t("errorSupabase")}</p>`;
+        container.innerHTML = `<div class="status-box">${t("errorSupabase")}</div>`;
         return;
       }
 
@@ -484,17 +799,17 @@
       const id = params.get("id");
 
       const addClauseBtn = document.getElementById("addClauseBtn");
-            if (addClauseBtn && id) {
+      if (addClauseBtn && id) {
         addClauseBtn.href = `/dealtrack-pro/add-clause.html?contract_id=${id}`;
       }
-      const editContractBtn = document.getElementById("editContractBtn");
 
-if (editContractBtn && id) {
-  editContractBtn.href = `/dealtrack-pro/edit-contract.html?id=${id}`;
-}
+      const editContractBtn = document.getElementById("editContractBtn");
+      if (editContractBtn && id) {
+        editContractBtn.href = `/dealtrack-pro/edit-contract.html?id=${id}`;
+      }
 
       if (!id) {
-        container.innerHTML = `<p class="error">${t("errorMissingId")}</p>`;
+        container.innerHTML = `<div class="status-box">${t("errorMissingId")}</div>`;
         return;
       }
 
@@ -507,11 +822,12 @@ if (editContractBtn && id) {
 
       if (error || !data) {
         console.error("Load contract error:", error);
-        container.innerHTML = `<p class="error">${t("errorNotFound")}</p>`;
+        container.innerHTML = `<div class="status-box">${t("errorNotFound")}</div>`;
         return;
       }
 
       currentContract = data;
+      applyStaticTranslations();
       renderContract(data);
     });
   </script>
