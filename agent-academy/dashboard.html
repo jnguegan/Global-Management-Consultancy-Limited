@@ -874,21 +874,58 @@
 <script src="/agent-academy/js/academy.js"></script>
 
 <script>
+  function getQuestionAccessByPlan(plan) {
+    const normalized = (plan || "free").toLowerCase();
+
+    if (normalized === "starter") {
+      return { current: 300, total: 2000, percent: 15 };
+    }
+
+    if (
+      normalized === "professional" ||
+      normalized === "platinum" ||
+      normalized === "premium" ||
+      normalized === "premium_intensive"
+    ) {
+      return { current: 2000, total: 2000, percent: 100 };
+    }
+
+    return { current: 50, total: 2000, percent: 2.5 };
+  }
+
+  function updateQuestionAccess(plan) {
+    const access = getQuestionAccessByPlan(plan);
+
+    document.querySelectorAll("#questionAccessValue").forEach((el) => {
+      el.textContent = `${access.current} / ${access.total}`;
+    });
+
+    document.querySelectorAll("#questionAccessFill").forEach((el) => {
+      el.style.width = `${access.percent}%`;
+    });
+  }
+
   document.addEventListener("DOMContentLoaded", async () => {
     const btn = document.getElementById("adminUpgradesBtn");
-    if (!btn) return;
-
     const db = window.supabaseClient || window.sb || null;
+
     if (!db) return;
 
     try {
       const { data: { user } } = await db.auth.getUser();
 
-      if (user && (user.email || "").toLowerCase() === "jnguegan@gmail.com") {
+      if (user && (user.email || "").toLowerCase() === "jnguegan@gmail.com" && btn) {
         btn.style.display = "inline-flex";
       }
+
+      if (user && typeof loadUserAccess === "function") {
+        await loadUserAccess(user.id);
+      }
+
+      updateQuestionAccess(window.userPlan || "free");
     } catch (err) {
-      console.error("Admin dashboard button error:", err);
+      console.error("Dashboard init error:", err);
+      updateQuestionAccess("free");
     }
   });
 </script>
