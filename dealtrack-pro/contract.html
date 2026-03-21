@@ -79,6 +79,26 @@
       flex-wrap: wrap;
     }
 
+    .brand {
+  display: flex;
+  flex-direction: column;
+  margin-right: 12px;
+}
+
+.brand-title {
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: #ffffff;
+}
+
+.brand-sub {
+  font-size: 11px;
+  color: var(--gold-2);
+  opacity: 0.85;
+  letter-spacing: 0.08em;
+}
+
     .back-link,
     .btn,
     .lang-btn {
@@ -408,9 +428,15 @@
 <body>
   <div class="page">
     <div class="topbar">
+      
       <div class="topbar-left">
-        <a class="back-link" href="/dealtrack-pro/contracts.html" data-i18n="backToContracts">← Back to Contracts</a>
-      </div>
+  <div class="brand">
+    <div class="brand-title">DealTrack Pro</div>
+    <div class="brand-sub">by Global Management Consultancy</div>
+  </div>
+
+  <a class="back-link" href="/dealtrack-pro/contracts.html" data-i18n="backToContracts">← Back to Contracts</a>
+</div>
 
       <div class="topbar-right">
         <a id="editContractBtn" class="btn btn-gold" href="#" data-i18n="editContractBtn">✏️ Edit Contract</a>
