@@ -37,7 +37,7 @@
   <input id="player" placeholder="Player Name" />
   <input id="club" placeholder="Club Name" />
 
-  <button onclick="addContract()">Save</button>
+  <button id="saveBtn">Save</button>
 
   <script>
     console.log("Script loaded");
@@ -84,7 +84,8 @@
       window.location.href = "contracts.html";
     }
 
-    init();
+    document.getElementById("saveBtn").addEventListener("click", addContract);
+init();
   </script>
 
 </body>
