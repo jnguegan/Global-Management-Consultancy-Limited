@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>DealTrack Pro — Contract</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/agent-academy/js/supabase-client.js"></script>
+  <script src="/agent-academy/js/auth.js"></script>
+  <script src="/agent-academy/js/guard.js"></script>
+
+  <style>
+    body {
+      font-family: Inter, sans-serif;
+      background: #0b0f1a;
+      color: white;
+      padding: 20px;
+    }
+
+    .btn {
+      padding: 10px 14px;
+      background: #1e90ff;
+      border: none;
+      border-radius: 6px;
+      color: white;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      margin-bottom: 20px;
+    }
+
+    .card {
+      background: #141a2a;
+      padding: 18px;
+      border-radius: 10px;
+      margin-bottom: 16px;
+    }
+
+    .muted {
+      opacity: 0.8;
+    }
+  </style>
+</head>
+<body>
+
+  <a class="btn" href="/dealtrack-pro/contracts.html">← Back to Contracts</a>
+
+  <div id="contractView" class="card">Loading contract...</div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", async () => {
+      const db = window.supabaseClient || window.sb || null;
+      const container = document.getElementById("contractView");
+
+      if (!db) {
+        container.textContent = "Supabase client not available.";
+        return;
+      }
+
+      const { data: { user }, error: userError } = await db.auth.getUser();
+
+      if (userError || !user) {
+        window.location.href = "/agent-academy/login.html";
+        return;
+      }
+
+      const params = new URLSearchParams(window.location.search);
+      const id = params.get("id");
+
+      if (!id) {
+        container.textContent = "Missing contract ID.";
+        return;
+      }
+
+      const { data, error } = await db
+        .from("contracts")
+        .select("*")
+        .eq("id", id)
+        .eq("user_id", user.id)
+        .single();
+
+      if (error || !data) {
+        console.error("Load contract error:", error);
+        container.textContent = "Contract not found.";
+        return;
+      }
+
+      container.innerHTML = `
+        <h1>${data.player_name}</h1>
+        <p><strong>Club:</strong> ${data.club_name || "No club"}</p>
+        <p><strong>Type:</strong> ${data.contract_type || "representation"}</p>
+        <p><strong>Status:</strong> ${data.status || "active"}</p>
+        <p class="muted"><strong>Start:</strong> ${data.start_date || "-"}</p>
+        <p class="muted"><strong>End:</strong> ${data.end_date || "-"}</p>
+      `;
+    });
+  </script>
+
+</body>
+</html>
