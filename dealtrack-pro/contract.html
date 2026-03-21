@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>DealTrack Pro — Contract</title>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -10,51 +11,458 @@
   <script src="/agent-academy/js/guard.js"></script>
 
   <style>
-    body {
-      font-family: Inter, sans-serif;
-      background: #0b0f1a;
-      color: white;
-      padding: 20px;
+    :root {
+      --bg: #0b0f1a;
+      --panel: #141a2a;
+      --panel-2: #101625;
+      --text: #ffffff;
+      --muted: #9aa6c2;
+      --accent: #1e90ff;
+      --border: rgba(255,255,255,0.08);
+      --danger: #ef4444;
     }
 
-    .btn {
-      padding: 10px 14px;
-      background: #1e90ff;
-      border: none;
-      border-radius: 6px;
-      color: white;
-      cursor: pointer;
-      text-decoration: none;
-      display: inline-block;
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Inter, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      padding: 24px;
+    }
+
+    .page {
+      max-width: 980px;
+      margin: 0 auto;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
       margin-bottom: 20px;
     }
 
-    .card {
-      background: #141a2a;
-      padding: 18px;
+    .back-link,
+    .btn {
+      color: var(--text);
+      text-decoration: none;
+      border: 1px solid var(--border);
+      padding: 10px 14px;
       border-radius: 10px;
+      background: var(--panel);
+      display: inline-block;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .lang-switcher {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .lang-btn {
+      border: 1px solid var(--border);
+      background: var(--panel);
+      color: var(--text);
+      padding: 8px 12px;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    .lang-btn.is-active {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      padding: 20px;
+      border-radius: 16px;
       margin-bottom: 16px;
     }
 
-    .muted {
-      opacity: 0.8;
+    h1 {
+      margin: 0 0 8px;
+      font-size: 30px;
+    }
+
+    h2 {
+      margin: 0 0 14px;
+      font-size: 18px;
+      color: #dbe7ff;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      margin: 0 0 22px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .item {
+      background: var(--panel-2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 14px;
+    }
+
+    .label {
+      display: block;
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    .value {
+      font-size: 15px;
+      color: var(--text);
+      word-break: break-word;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .status {
+      color: var(--muted);
+    }
+
+    .error {
+      color: var(--danger);
+    }
+
+    @media (max-width: 760px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
 <body>
+  <div class="page">
+    <div class="topbar">
+      <a class="back-link" href="/dealtrack-pro/contracts.html" data-i18n="backToContracts">← Back to Contracts</a>
 
-  <a class="btn" href="/dealtrack-pro/contracts.html">← Back to Contracts</a>
+      <div class="lang-switcher">
+        <button type="button" class="lang-btn" data-lang-btn="en">EN</button>
+        <button type="button" class="lang-btn" data-lang-btn="fr">FR</button>
+        <button type="button" class="lang-btn" data-lang-btn="es">ES</button>
+      </div>
+    </div>
 
-  <div id="contractView" class="card">Loading contract...</div>
-  <a id="addClauseBtn" class="btn">➕ Add Clause</a>
+    <div class="actions">
+      <a id="addClauseBtn" class="btn btn-primary" href="#" data-i18n="addClauseBtn">➕ Add Clause</a>
+    </div>
+
+    <div id="contractView" class="card">
+      <h1 data-i18n="loadingTitle">Loading contract...</h1>
+      <p class="subtitle" data-i18n="loadingSubtitle">Please wait while the contract details load.</p>
+    </div>
+  </div>
+
+  <script type="application/json" id="dealtrack-contract-i18n">
+  {
+    "en": {
+      "backToContracts": "← Back to Contracts",
+      "addClauseBtn": "➕ Add Clause",
+      "loadingTitle": "Loading contract...",
+      "loadingSubtitle": "Please wait while the contract details load.",
+      "errorSupabase": "Supabase client not available.",
+      "errorMissingId": "Missing contract ID.",
+      "errorNotFound": "Contract not found.",
+      "contractSubtitle": "Master contract details, agent identity, salary baseline, and commission structure.",
+      "sectionClub": "Club",
+      "sectionAgent": "Agent",
+      "sectionContract": "Contract",
+      "sectionSalary": "Salary",
+      "sectionCommission": "Commission",
+      "labelClubName": "Club Name",
+      "labelAgentName": "Name",
+      "labelAgentEmail": "Email",
+      "labelAgentLicence": "Licence Number",
+      "labelAgencyName": "Agency",
+      "labelAgentCountry": "Country",
+      "labelAgentFederation": "Federation",
+      "labelLicensedAgent": "Licensed FIFA Agent",
+      "labelStartDate": "Start Date",
+      "labelEndDate": "End Date",
+      "labelSalaryAmount": "Amount",
+      "labelSalaryFrequency": "Frequency",
+      "labelSalaryCurrency": "Currency",
+      "labelCommissionType": "Type",
+      "labelCommissionValue": "Value",
+      "labelCommissionCurrency": "Currency",
+      "labelCommissionPayer": "Payer",
+      "labelCommissionFrequency": "Frequency",
+      "labelCommissionInstalments": "Instalments",
+      "labelDualRepresentation": "Dual Representation",
+      "yes": "Yes",
+      "no": "No",
+      "na": "-"
+    },
+    "fr": {
+      "backToContracts": "← Retour aux contrats",
+      "addClauseBtn": "➕ Ajouter une clause",
+      "loadingTitle": "Chargement du contrat...",
+      "loadingSubtitle": "Veuillez patienter pendant le chargement des détails du contrat.",
+      "errorSupabase": "Client Supabase indisponible.",
+      "errorMissingId": "ID du contrat manquant.",
+      "errorNotFound": "Contrat introuvable.",
+      "contractSubtitle": "Détails principaux du contrat, identité de l’agent, base salariale et structure de commission.",
+      "sectionClub": "Club",
+      "sectionAgent": "Agent",
+      "sectionContract": "Contrat",
+      "sectionSalary": "Salaire",
+      "sectionCommission": "Commission",
+      "labelClubName": "Nom du club",
+      "labelAgentName": "Nom",
+      "labelAgentEmail": "Email",
+      "labelAgentLicence": "Numéro de licence",
+      "labelAgencyName": "Agence",
+      "labelAgentCountry": "Pays",
+      "labelAgentFederation": "Fédération",
+      "labelLicensedAgent": "Agent FIFA licencié",
+      "labelStartDate": "Date de début",
+      "labelEndDate": "Date de fin",
+      "labelSalaryAmount": "Montant",
+      "labelSalaryFrequency": "Fréquence",
+      "labelSalaryCurrency": "Devise",
+      "labelCommissionType": "Type",
+      "labelCommissionValue": "Valeur",
+      "labelCommissionCurrency": "Devise",
+      "labelCommissionPayer": "Payeur",
+      "labelCommissionFrequency": "Fréquence",
+      "labelCommissionInstalments": "Échéances",
+      "labelDualRepresentation": "Double représentation",
+      "yes": "Oui",
+      "no": "Non",
+      "na": "-"
+    },
+    "es": {
+      "backToContracts": "← Volver a contratos",
+      "addClauseBtn": "➕ Añadir cláusula",
+      "loadingTitle": "Cargando contrato...",
+      "loadingSubtitle": "Espere mientras se cargan los detalles del contrato.",
+      "errorSupabase": "Cliente Supabase no disponible.",
+      "errorMissingId": "Falta el ID del contrato.",
+      "errorNotFound": "Contrato no encontrado.",
+      "contractSubtitle": "Detalles maestros del contrato, identidad del agente, base salarial y estructura de comisión.",
+      "sectionClub": "Club",
+      "sectionAgent": "Agente",
+      "sectionContract": "Contrato",
+      "sectionSalary": "Salario",
+      "sectionCommission": "Comisión",
+      "labelClubName": "Nombre del club",
+      "labelAgentName": "Nombre",
+      "labelAgentEmail": "Correo",
+      "labelAgentLicence": "Número de licencia",
+      "labelAgencyName": "Agencia",
+      "labelAgentCountry": "País",
+      "labelAgentFederation": "Federación",
+      "labelLicensedAgent": "Agente FIFA licenciado",
+      "labelStartDate": "Fecha de inicio",
+      "labelEndDate": "Fecha de finalización",
+      "labelSalaryAmount": "Importe",
+      "labelSalaryFrequency": "Frecuencia",
+      "labelSalaryCurrency": "Moneda",
+      "labelCommissionType": "Tipo",
+      "labelCommissionValue": "Valor",
+      "labelCommissionCurrency": "Moneda",
+      "labelCommissionPayer": "Pagador",
+      "labelCommissionFrequency": "Frecuencia",
+      "labelCommissionInstalments": "Cuotas",
+      "labelDualRepresentation": "Representación dual",
+      "yes": "Sí",
+      "no": "No",
+      "na": "-"
+    }
+  }
+  </script>
 
   <script>
+    const I18N = JSON.parse(document.getElementById("dealtrack-contract-i18n").textContent);
+    let currentLang = localStorage.getItem("lang") || "en";
+    let currentContract = null;
+
+    function t(key) {
+      return I18N[currentLang]?.[key] || I18N.en?.[key] || key;
+    }
+
+    function applyStaticTranslations() {
+      document.documentElement.lang = currentLang;
+
+      document.querySelectorAll("[data-i18n]").forEach((el) => {
+        const key = el.getAttribute("data-i18n");
+        el.textContent = t(key);
+      });
+
+      document.querySelectorAll("[data-lang-btn]").forEach((btn) => {
+        btn.classList.toggle("is-active", btn.getAttribute("data-lang-btn") === currentLang);
+      });
+
+      document.title = "DealTrack Pro — " + t("sectionContract");
+    }
+
+    function safeValue(value) {
+      return value || t("na");
+    }
+
+    function yesNo(value) {
+      return value ? t("yes") : t("no");
+    }
+
+    function renderContract(data) {
+      const container = document.getElementById("contractView");
+
+      container.innerHTML = `
+        <h1>${safeValue(data.player_name)}</h1>
+        <p class="subtitle">${t("contractSubtitle")}</p>
+
+        <div class="card">
+          <h2>${t("sectionClub")}</h2>
+          <div class="grid">
+            <div class="item">
+              <span class="label">${t("labelClubName")}</span>
+              <span class="value">${safeValue(data.club_name)}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>${t("sectionAgent")}</h2>
+          <div class="grid">
+            <div class="item">
+              <span class="label">${t("labelAgentName")}</span>
+              <span class="value">${safeValue(data.agent_name)}</span>
+            </div>
+            <div class="item">
+              <span class="label">${t("labelAgentEmail")}</span>
+              <span class="value">${safeValue(data.agent_email)}</span>
+            </div>
+            <div class="item">
+              <span class="label">${t("labelAgentLicence")}</span>
+              <span class="value">${safeValue(data.agent_licence_number)}</span>
+            </div>
+            <div class="item">
+              <span class="label">${t("labelAgencyName")}</span>
+              <span class="value">${safeValue(data.agency_name)}</span>
+            </div>
+            <div class="item">
+              <span class="label">${t("labelAgentCountry")}</span>
+              <span class="value">${safeValue(data.agent_country)}</span>
+            </div>
+            <div class="item">
+              <span class="label">${t("labelAgentFederation")}</span>
+              <span class="value">${safeValue(data.agent_federation)}</span>
+            </div>
+            <div class="item">
+              <span class="label">${t("labelLicensedAgent")}</span>
+              <span class="value">${yesNo(data.is_licensed_agent)}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>${t("sectionContract")}</h2>
+          <div class="grid">
+            <div class="item">
+              <span class="label">${t("labelStartDate")}</span>
+              <span class="value">${safeValue(data.start_date)}</span>
+            </div>
+            <div class="item">
+              <span class="label">${t("labelEndDate")}</span>
+              <span class="value">${safeValue(data.end_date)}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>${t("sectionSalary")}</h2>
+          <div class="grid">
+            <div class="item">
+              <span class="label">${t("labelSalaryAmount")}</span>
+              <span class="value">${safeValue(data.salary)}</span>
+            </div>
+            <div class="item">
+              <span class="label">${t("labelSalaryFrequency")}</span>
+              <span class="value">${safeValue(data.salary_frequency)}</span>
+            </div>
+            <div class="item">
+              <span class="label">${t("labelSalaryCurrency")}</span>
+              <span class="value">${safeValue(data.salary_currency)}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>${t("sectionCommission")}</h2>
+          <div class="grid">
+            <div class="item">
+              <span class="label">${t("labelCommissionType")}</span>
+              <span class="value">${safeValue(data.commission_type)}</span>
+            </div>
+            <div class="item">
+              <span class="label">${t("labelCommissionValue")}</span>
+              <span class="value">${safeValue(data.commission_value)}</span>
+            </div>
+            <div class="item">
+              <span class="label">${t("labelCommissionCurrency")}</span>
+              <span class="value">${safeValue(data.commission_currency)}</span>
+            </div>
+            <div class="item">
+              <span class="label">${t("labelCommissionPayer")}</span>
+              <span class="value">${safeValue(data.commission_payer)}</span>
+            </div>
+            <div class="item">
+              <span class="label">${t("labelCommissionFrequency")}</span>
+              <span class="value">${safeValue(data.commission_frequency)}</span>
+            </div>
+            <div class="item">
+              <span class="label">${t("labelCommissionInstalments")}</span>
+              <span class="value">${safeValue(data.commission_instalments)}</span>
+            </div>
+            <div class="item">
+              <span class="label">${t("labelDualRepresentation")}</span>
+              <span class="value">${yesNo(data.is_dual_representation)}</span>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
     document.addEventListener("DOMContentLoaded", async () => {
+      applyStaticTranslations();
+
+      document.querySelectorAll("[data-lang-btn]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          currentLang = btn.getAttribute("data-lang-btn");
+          localStorage.setItem("lang", currentLang);
+          applyStaticTranslations();
+          if (currentContract) renderContract(currentContract);
+        });
+      });
+
       const db = window.supabaseClient || window.sb || null;
       const container = document.getElementById("contractView");
 
       if (!db) {
-        container.textContent = "Supabase client not available.";
+        container.innerHTML = `<p class="error">${t("errorSupabase")}</p>`;
         return;
       }
 
@@ -67,14 +475,14 @@
 
       const params = new URLSearchParams(window.location.search);
       const id = params.get("id");
-      const addClauseBtn = document.getElementById("addClauseBtn");
 
-if (addClauseBtn && id) {
-  addClauseBtn.href = `/dealtrack-pro/add-clause.html?contract_id=${id}`;
-}
+      const addClauseBtn = document.getElementById("addClauseBtn");
+      if (addClauseBtn && id) {
+        addClauseBtn.href = `/dealtrack-pro/add-clause.html?contract_id=${id}`;
+      }
 
       if (!id) {
-        container.textContent = "Missing contract ID.";
+        container.innerHTML = `<p class="error">${t("errorMissingId")}</p>`;
         return;
       }
 
@@ -87,44 +495,13 @@ if (addClauseBtn && id) {
 
       if (error || !data) {
         console.error("Load contract error:", error);
-        container.textContent = "Contract not found.";
+        container.innerHTML = `<p class="error">${t("errorNotFound")}</p>`;
         return;
       }
 
-      container.innerHTML = `
-  <h1>${data.player_name}</h1>
-
-  <h3>Club</h3>
-  <p>${data.club_name || "No club"}</p>
-
-  <h3>Agent</h3>
-  <p><strong>Name:</strong> ${data.agent_name || "-"}</p>
-  <p><strong>Email:</strong> ${data.agent_email || "-"}</p>
-  <p><strong>Licence:</strong> ${data.agent_licence_number || "-"}</p>
-  <p><strong>Agency:</strong> ${data.agency_name || "-"}</p>
-  <p><strong>Country:</strong> ${data.agent_country || "-"}</p>
-  <p><strong>Federation:</strong> ${data.agent_federation || "-"}</p>
-  <p><strong>Licensed:</strong> ${data.is_licensed_agent ? "Yes" : "No"}</p>
-
-  <h3>Contract</h3>
-  <p><strong>Start:</strong> ${data.start_date || "-"}</p>
-  <p><strong>End:</strong> ${data.end_date || "-"}</p>
-
-  <h3>Salary</h3>
-  <p><strong>Amount:</strong> ${data.salary || "-"} ${data.salary_currency || ""}</p>
-  <p><strong>Frequency:</strong> ${data.salary_frequency || "-"}</p>
-
-  <h3>Commission</h3>
-  <p><strong>Type:</strong> ${data.commission_type || "-"}</p>
-  <p><strong>Value:</strong> ${data.commission_value || "-"}</p>
-  <p><strong>Currency:</strong> ${data.commission_currency || "-"}</p>
-  <p><strong>Payer:</strong> ${data.commission_payer || "-"}</p>
-  <p><strong>Frequency:</strong> ${data.commission_frequency || "-"}</p>
-  <p><strong>Instalments:</strong> ${data.commission_instalments || "-"}</p>
-  <p><strong>Dual Representation:</strong> ${data.is_dual_representation ? "Yes" : "No"}</p>
-`;
+      currentContract = data;
+      renderContract(data);
     });
   </script>
-
 </body>
 </html>
