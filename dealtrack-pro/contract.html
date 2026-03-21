@@ -173,8 +173,9 @@
     </div>
 
     <div class="actions">
-      <a id="addClauseBtn" class="btn btn-primary" href="#" data-i18n="addClauseBtn">➕ Add Clause</a>
-    </div>
+  <a id="editContractBtn" class="btn" href="#" data-i18n="editContractBtn">✏️ Edit Contract</a>
+  <a id="addClauseBtn" class="btn btn-primary" href="#" data-i18n="addClauseBtn">➕ Add Clause</a>
+</div>
 
     <div id="contractView" class="card">
       <h1 data-i18n="loadingTitle">Loading contract...</h1>
@@ -483,9 +484,14 @@
       const id = params.get("id");
 
       const addClauseBtn = document.getElementById("addClauseBtn");
-      if (addClauseBtn && id) {
+            if (addClauseBtn && id) {
         addClauseBtn.href = `/dealtrack-pro/add-clause.html?contract_id=${id}`;
       }
+      const editContractBtn = document.getElementById("editContractBtn");
+
+if (editContractBtn && id) {
+  editContractBtn.href = `/dealtrack-pro/edit-contract.html?id=${id}`;
+}
 
       if (!id) {
         container.innerHTML = `<p class="error">${t("errorMissingId")}</p>`;
