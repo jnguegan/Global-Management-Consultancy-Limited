@@ -228,6 +228,15 @@
             <label for="club" data-i18n="clubLabel">Club Name</label>
             <input id="club" data-i18n-placeholder="clubPlaceholder" placeholder="Club Name" />
           </div>
+          <div class="field">
+  <label for="clubLeague" data-i18n="clubLeagueLabel">League / Division</label>
+  <input id="clubLeague" data-i18n-placeholder="clubLeaguePlaceholder" placeholder="Premier League" />
+</div>
+
+<div class="field">
+  <label for="clubCountry" data-i18n="clubCountryLabel">Country</label>
+  <input id="clubCountry" data-i18n-placeholder="clubCountryPlaceholder" placeholder="England" />
+</div>
 
           <div class="field">
             <label for="startDate" data-i18n="startDateLabel">Start Date</label>
@@ -445,7 +454,11 @@
       "msgSupabaseMissing": "Supabase client not available.",
       "msgSaving": "Saving contract...",
       "msgSaved": "Contract added successfully.",
-      "msgErrorPrefix": "Error:"
+      "msgErrorPrefix": "Error:",
+    "clubLeagueLabel": "League / Division",
+"clubLeaguePlaceholder": "Premier League",
+"clubCountryLabel": "Country",
+"clubCountryPlaceholder": "England"
     },
     "fr": {
       "backToContracts": "← Retour aux contrats",
@@ -507,7 +520,11 @@
       "msgSupabaseMissing": "Client Supabase indisponible.",
       "msgSaving": "Enregistrement du contrat...",
       "msgSaved": "Contrat ajouté avec succès.",
-      "msgErrorPrefix": "Erreur :"
+      "msgErrorPrefix": "Erreur :",
+    "clubLeagueLabel": "Ligue / Division",
+"clubLeaguePlaceholder": "Premier League",
+"clubCountryLabel": "Pays",
+"clubCountryPlaceholder": "Angleterre"
     },
     "es": {
       "backToContracts": "← Volver a contratos",
@@ -569,7 +586,11 @@
       "msgSupabaseMissing": "Cliente Supabase no disponible.",
       "msgSaving": "Guardando contrato...",
       "msgSaved": "Contrato añadido correctamente.",
-      "msgErrorPrefix": "Error:"
+      "msgErrorPrefix": "Error:",
+    "clubLeagueLabel": "Liga / División",
+"clubLeaguePlaceholder": "Premier League",
+"clubCountryLabel": "País",
+"clubCountryPlaceholder": "Inglaterra"
     }
   }
   </script>
@@ -640,6 +661,8 @@
 
         const player = document.getElementById("player")?.value?.trim();
         const club = document.getElementById("club")?.value?.trim();
+        const clubLeague = document.getElementById("clubLeague")?.value?.trim();
+const clubCountry = document.getElementById("clubCountry")?.value?.trim();
 
         const agentName = document.getElementById("agentName")?.value?.trim();
         const agentEmail = document.getElementById("agentEmail")?.value?.trim();
@@ -682,6 +705,8 @@
             user_id: user.id,
             player_name: player,
             club_name: club || null,
+            club_league: clubLeague || null,
+            club_country: clubCountry || null,
             agent_name: agentName,
             agent_email: agentEmail || null,
             agent_licence_number: agentLicenceNumber || null,
