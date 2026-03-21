@@ -41,7 +41,14 @@
 
   <script>
     console.log("Script loaded");
-  const supabase = window.supabase.createClient(
+  if (!window.supabaseClient) {
+  window.supabaseClient = window.supabase.createClient(
+    "https://ysaxtuvuzqkyfmganven.supabase.co",
+    "YOUR_ANON_KEY"
+  );
+}
+
+const supabase = window.supabaseClient;
   "https://ysaxtuvuzqkyfmganven.supabase.co",
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlzYXh0dXZ1enFreWZtZ2FudmVuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI4NDYzNzMsImV4cCI6MjA4ODQyMjM3M30.gzKSSNA5jtR5JtZWnjP7zVBUDsgxwnCHVnnDZeZb8lo"
 );
