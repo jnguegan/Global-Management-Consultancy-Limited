@@ -2,99 +2,719 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Add Contract</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DealTrack Pro — Add Contract</title>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="/agent-academy/js/supabase-client.js"></script>
-<script src="/agent-academy/js/auth.js"></script>
-<script src="/agent-academy/js/guard.js"></script>
+  <script src="/agent-academy/js/supabase-client.js"></script>
+  <script src="/agent-academy/js/auth.js"></script>
+  <script src="/agent-academy/js/guard.js"></script>
 
   <style>
+    :root {
+      --bg: #0b0f1a;
+      --panel: #141a2a;
+      --panel-2: #101625;
+      --text: #ffffff;
+      --muted: #9aa6c2;
+      --accent: #1e90ff;
+      --border: rgba(255,255,255,0.08);
+      --success: #16a34a;
+      --danger: #ef4444;
+    }
+
+    * { box-sizing: border-box; }
+
     body {
-      font-family: Inter, sans-serif;
-      background: #0b0f1a;
-      color: white;
-      padding: 20px;
+      margin: 0;
+      font-family: Inter, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      padding: 24px;
     }
 
-    input, button {
-      display: block;
-      margin-bottom: 10px;
-      padding: 10px;
-      width: 300px;
+    .page {
+      max-width: 980px;
+      margin: 0 auto;
     }
 
-    button {
-      background: #1e90ff;
-      border: none;
-      color: white;
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .back-link {
+      color: var(--text);
+      text-decoration: none;
+      border: 1px solid var(--border);
+      padding: 10px 14px;
+      border-radius: 10px;
+      background: var(--panel);
+      display: inline-block;
+    }
+
+    .lang-switcher {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .lang-btn {
+      border: 1px solid var(--border);
+      background: var(--panel);
+      color: var(--text);
+      padding: 8px 12px;
+      border-radius: 10px;
       cursor: pointer;
+    }
+
+    .lang-btn.is-active {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 22px;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: 28px;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      margin: 0 0 22px;
+    }
+
+    .section-title {
+      margin: 26px 0 12px;
+      font-size: 16px;
+      color: #dbe7ff;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .field.full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    input,
+    select {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--panel-2);
+      color: var(--text);
+      outline: none;
+    }
+
+    input::placeholder {
+      color: #7f8aa3;
+    }
+
+    .checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-height: 48px;
+      padding-top: 28px;
+    }
+
+    .checkbox-row input[type="checkbox"] {
+      width: auto;
+      margin: 0;
+      transform: scale(1.1);
+    }
+
+    .checkbox-row label {
+      margin: 0;
+      color: var(--text);
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 10px;
+      padding: 12px 18px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: white;
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: white;
+      border: 1px solid var(--border);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .status {
+      margin-top: 14px;
+      min-height: 22px;
+      font-size: 14px;
+    }
+
+    .status.error { color: var(--danger); }
+    .status.success { color: var(--success); }
+
+    @media (max-width: 760px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
-
 <body>
+  <div class="page">
+    <div class="topbar">
+      <a class="back-link" href="/dealtrack-pro/contracts.html" data-i18n="backToContracts">← Back to Contracts</a>
 
-  <h1>➕ Add Contract</h1>
+      <div class="lang-switcher">
+        <button type="button" class="lang-btn" data-lang-btn="en">EN</button>
+        <button type="button" class="lang-btn" data-lang-btn="fr">FR</button>
+        <button type="button" class="lang-btn" data-lang-btn="es">ES</button>
+      </div>
+    </div>
 
-  <input id="player" placeholder="Player Name" />
-  <input id="club" placeholder="Club Name" />
-<input id="startDate" type="date" />
-<input id="endDate" type="date" />
-  
-  <button id="saveBtn">Save</button>
+    <div class="panel">
+      <h1 data-i18n="pageTitle">Add Contract</h1>
+      <p class="subtitle" data-i18n="pageSubtitle">Create the contract master record with legal, agent, and financial baseline data.</p>
 
- <script>
-  document.addEventListener("DOMContentLoaded", async () => {
-    const db = window.supabaseClient || window.sb || null;
+      <form id="contractForm">
+        <div class="section-title" data-i18n="sectionContract">Contract Details</div>
+        <div class="grid">
+          <div class="field">
+            <label for="player" data-i18n="playerLabel">Player Name</label>
+            <input id="player" data-i18n-placeholder="playerPlaceholder" placeholder="Player Name" />
+          </div>
 
-    if (!db) {
-      alert("Supabase client not available");
-      return;
+          <div class="field">
+            <label for="club" data-i18n="clubLabel">Club Name</label>
+            <input id="club" data-i18n-placeholder="clubPlaceholder" placeholder="Club Name" />
+          </div>
+
+          <div class="field">
+            <label for="startDate" data-i18n="startDateLabel">Start Date</label>
+            <input id="startDate" type="date" />
+          </div>
+
+          <div class="field">
+            <label for="endDate" data-i18n="endDateLabel">End Date</label>
+            <input id="endDate" type="date" />
+          </div>
+        </div>
+
+        <div class="section-title" data-i18n="sectionAgent">Licensed Agent Details</div>
+        <div class="grid">
+          <div class="field">
+            <label for="agentName" data-i18n="agentNameLabel">Agent Full Name</label>
+            <input id="agentName" data-i18n-placeholder="agentNamePlaceholder" placeholder="Agent Full Name" />
+          </div>
+
+          <div class="field">
+            <label for="agentEmail" data-i18n="agentEmailLabel">Agent Email</label>
+            <input id="agentEmail" type="email" data-i18n-placeholder="agentEmailPlaceholder" placeholder="Agent Email" />
+          </div>
+
+          <div class="field">
+            <label for="agentLicenceNumber" data-i18n="agentLicenceLabel">FIFA Licence Number</label>
+            <input id="agentLicenceNumber" data-i18n-placeholder="agentLicencePlaceholder" placeholder="FIFA Licence Number" />
+          </div>
+
+          <div class="field">
+            <label for="agencyName" data-i18n="agencyNameLabel">Agency Name</label>
+            <input id="agencyName" data-i18n-placeholder="agencyNamePlaceholder" placeholder="Agency Name (optional)" />
+          </div>
+
+          <div class="field">
+            <label for="agentCountry" data-i18n="agentCountryLabel">Agent Country</label>
+            <input id="agentCountry" data-i18n-placeholder="agentCountryPlaceholder" placeholder="Agent Country" />
+          </div>
+
+          <div class="field">
+            <label for="agentFederation" data-i18n="agentFederationLabel">Agent Federation</label>
+            <input id="agentFederation" data-i18n-placeholder="agentFederationPlaceholder" placeholder="Agent Federation (e.g. English FA)" />
+          </div>
+
+          <div class="field full">
+            <div class="checkbox-row">
+              <input id="isLicensedAgent" type="checkbox" checked />
+              <label for="isLicensedAgent" data-i18n="licensedAgentLabel">Licensed FIFA Agent</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-title" data-i18n="sectionFinancial">Financial Baseline</div>
+        <div class="grid">
+          <div class="field">
+            <label for="salary" data-i18n="salaryLabel">Gross Basic Salary</label>
+            <input id="salary" type="number" step="0.01" data-i18n-placeholder="salaryPlaceholder" placeholder="Gross Basic Salary" />
+          </div>
+
+          <div class="field">
+            <label for="salaryFrequency" data-i18n="salaryFrequencyLabel">Salary Frequency</label>
+            <select id="salaryFrequency">
+              <option value="yearly" data-i18n="salaryFrequencyYearly">Per Year</option>
+              <option value="monthly" data-i18n="salaryFrequencyMonthly">Per Month</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="salaryCurrency" data-i18n="salaryCurrencyLabel">Salary Currency</label>
+            <select id="salaryCurrency">
+              <option value="EUR">EUR</option>
+              <option value="GBP">GBP</option>
+              <option value="USD">USD</option>
+              <option value="CHF">CHF</option>
+              <option value="SAR">SAR</option>
+              <option value="AED">AED</option>
+              <option value="QAR">QAR</option>
+              <option value="KWD">KWD</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="section-title" data-i18n="sectionCommission">Commission Structure</div>
+        <div class="grid">
+          <div class="field">
+            <label for="commissionType" data-i18n="commissionTypeLabel">Commission Type</label>
+            <select id="commissionType">
+              <option value="percentage_salary" data-i18n="commissionTypePercentage">Commission as % of Salary</option>
+              <option value="fixed_amount" data-i18n="commissionTypeFixed">Fixed Commission Amount</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="commissionValue" data-i18n="commissionValueLabel">Commission Value</label>
+            <input id="commissionValue" type="number" step="0.01" data-i18n-placeholder="commissionValuePlaceholder" placeholder="Commission Value" />
+          </div>
+
+          <div class="field">
+            <label for="commissionCurrency" data-i18n="commissionCurrencyLabel">Commission Currency</label>
+            <select id="commissionCurrency">
+              <option value="EUR">EUR</option>
+              <option value="GBP">GBP</option>
+              <option value="USD">USD</option>
+              <option value="CHF">CHF</option>
+              <option value="SAR">SAR</option>
+              <option value="AED">AED</option>
+              <option value="QAR">QAR</option>
+              <option value="KWD">KWD</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="commissionPayer" data-i18n="commissionPayerLabel">Who Pays the Commission</label>
+           select id="commissionPayer">
+  <option value="commission_player" data-i18n="commissionPayerPlayer">Player pays commission</option>
+  <option value="commission_club" data-i18n="commissionPayerClub">Club pays commission</option>
+  <option value="club_on_behalf_of_player" data-i18n="commissionPayerClubPlayer">Club pays on behalf of player</option>
+  <option value="other" data-i18n="commissionPayerOther">Other</option>
+</select>
+          </div>
+
+          <div class="field">
+            <label for="commissionFrequency" data-i18n="commissionFrequencyLabel">Commission Payment Frequency</label>
+            <select id="commissionFrequency">
+              <option value="one_time" data-i18n="commissionFrequencyOneTime">One Time</option>
+              <option value="monthly" data-i18n="commissionFrequencyMonthly">Monthly</option>
+              <option value="quarterly" data-i18n="commissionFrequencyQuarterly">Quarterly</option>
+              <option value="biannual" data-i18n="commissionFrequencyBiannual">Biannual</option>
+              <option value="annual" data-i18n="commissionFrequencyAnnual">Annual</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="commissionInstalments" data-i18n="commissionInstalmentsLabel">Number of Instalments</label>
+            <input id="commissionInstalments" type="number" min="1" step="1" data-i18n-placeholder="commissionInstalmentsPlaceholder" placeholder="Number of Instalments" />
+          </div>
+
+          <div class="field full">
+            <div class="checkbox-row">
+              <input id="isDualRepresentation" type="checkbox" />
+              <label for="isDualRepresentation" data-i18n="dualRepresentationLabel">Dual Representation</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button type="submit" class="btn btn-primary" id="saveBtn" data-i18n="saveBtn">Save Contract</button>
+          <a href="/dealtrack-pro/contracts.html" class="btn btn-secondary" data-i18n="cancelBtn">Cancel</a>
+        </div>
+
+        <div id="statusMessage" class="status"></div>
+      </form>
+    </div>
+  </div>
+
+  <script type="application/json" id="dealtrack-i18n">
+  {
+    "en": {
+      "backToContracts": "← Back to Contracts",
+      "pageTitle": "Add Contract",
+      "pageSubtitle": "Create the contract master record with legal, agent, and financial baseline data.",
+      "sectionContract": "Contract Details",
+      "sectionAgent": "Licensed Agent Details",
+      "sectionFinancial": "Financial Baseline",
+      "sectionCommission": "Commission Structure",
+      "playerLabel": "Player Name",
+      "playerPlaceholder": "Player Name",
+      "clubLabel": "Club Name",
+      "clubPlaceholder": "Club Name",
+      "startDateLabel": "Start Date",
+      "endDateLabel": "End Date",
+      "agentNameLabel": "Agent Full Name",
+      "agentNamePlaceholder": "Agent Full Name",
+      "agentEmailLabel": "Agent Email",
+      "agentEmailPlaceholder": "Agent Email",
+      "agentLicenceLabel": "FIFA Licence Number",
+      "agentLicencePlaceholder": "FIFA Licence Number",
+      "agencyNameLabel": "Agency Name",
+      "agencyNamePlaceholder": "Agency Name (optional)",
+      "agentCountryLabel": "Agent Country",
+      "agentCountryPlaceholder": "Agent Country",
+      "agentFederationLabel": "Agent Federation",
+      "agentFederationPlaceholder": "Agent Federation (e.g. English FA)",
+      "licensedAgentLabel": "Licensed FIFA Agent",
+      "salaryLabel": "Gross Basic Salary",
+      "salaryPlaceholder": "Gross Basic Salary",
+      "salaryFrequencyLabel": "Salary Frequency",
+      "salaryFrequencyYearly": "Per Year",
+      "salaryFrequencyMonthly": "Per Month",
+      "salaryCurrencyLabel": "Salary Currency",
+      "commissionTypeLabel": "Commission Type",
+      "commissionTypePercentage": "Commission as % of Salary",
+      "commissionTypeFixed": "Fixed Commission Amount",
+      "commissionValueLabel": "Commission Value",
+      "commissionValuePlaceholder": "Commission Value",
+      "commissionCurrencyLabel": "Commission Currency",
+      "commissionPayerLabel": "Who Pays the Commission",
+      "commissionPayerPlayer": "Player pays commission",
+"commissionPayerClub": "Club pays commission",
+"commissionPayerClubPlayer": "Club pays on behalf of player",
+      "commissionPayerOther": "Other",
+      "commissionFrequencyLabel": "Commission Payment Frequency",
+      "commissionFrequencyOneTime": "One Time",
+      "commissionFrequencyMonthly": "Monthly",
+      "commissionFrequencyQuarterly": "Quarterly",
+      "commissionFrequencyBiannual": "Biannual",
+      "commissionFrequencyAnnual": "Annual",
+      "commissionInstalmentsLabel": "Number of Instalments",
+      "commissionInstalmentsPlaceholder": "Number of Instalments",
+      "dualRepresentationLabel": "Dual Representation",
+      "saveBtn": "Save Contract",
+      "cancelBtn": "Cancel",
+      "msgPlayerRequired": "Player name is required.",
+      "msgAgentRequired": "Agent full name is required.",
+      "msgSupabaseMissing": "Supabase client not available.",
+      "msgSaving": "Saving contract...",
+      "msgSaved": "Contract added successfully.",
+      "msgErrorPrefix": "Error:"
+    },
+    "fr": {
+      "backToContracts": "← Retour aux contrats",
+      "pageTitle": "Ajouter un contrat",
+      "pageSubtitle": "Créez la fiche principale du contrat avec les données juridiques, agent et financières de base.",
+      "sectionContract": "Détails du contrat",
+      "sectionAgent": "Détails de l’agent licencié",
+      "sectionFinancial": "Base financière",
+      "sectionCommission": "Structure de commission",
+      "playerLabel": "Nom du joueur",
+      "playerPlaceholder": "Nom du joueur",
+      "clubLabel": "Nom du club",
+      "clubPlaceholder": "Nom du club",
+      "startDateLabel": "Date de début",
+      "endDateLabel": "Date de fin",
+      "agentNameLabel": "Nom complet de l’agent",
+      "agentNamePlaceholder": "Nom complet de l’agent",
+      "agentEmailLabel": "Email de l’agent",
+      "agentEmailPlaceholder": "Email de l’agent",
+      "agentLicenceLabel": "Numéro de licence FIFA",
+      "agentLicencePlaceholder": "Numéro de licence FIFA",
+      "agencyNameLabel": "Nom de l’agence",
+      "agencyNamePlaceholder": "Nom de l’agence (facultatif)",
+      "agentCountryLabel": "Pays de l’agent",
+      "agentCountryPlaceholder": "Pays de l’agent",
+      "agentFederationLabel": "Fédération de l’agent",
+      "agentFederationPlaceholder": "Fédération de l’agent (ex. FA anglaise)",
+      "licensedAgentLabel": "Agent FIFA licencié",
+      "salaryLabel": "Salaire brut de base",
+      "salaryPlaceholder": "Salaire brut de base",
+      "salaryFrequencyLabel": "Fréquence du salaire",
+      "salaryFrequencyYearly": "Par an",
+      "salaryFrequencyMonthly": "Par mois",
+      "salaryCurrencyLabel": "Devise du salaire",
+      "commissionTypeLabel": "Type de commission",
+      "commissionTypePercentage": "Commission en % du salaire",
+      "commissionTypeFixed": "Montant fixe de commission",
+      "commissionValueLabel": "Valeur de la commission",
+      "commissionValuePlaceholder": "Valeur de la commission",
+      "commissionCurrencyLabel": "Devise de la commission",
+      "commissionPayerLabel": "Qui paie la commission",
+      "commissionPayerPlayer": "Le joueur paie la commission",
+"commissionPayerClub": "Le club paie la commission",
+"commissionPayerClubPlayer": "Le club paie pour le compte du joueur",
+      "commissionPayerOther": "Autre",
+      "commissionFrequencyLabel": "Fréquence de paiement de la commission",
+      "commissionFrequencyOneTime": "Une seule fois",
+      "commissionFrequencyMonthly": "Mensuelle",
+      "commissionFrequencyQuarterly": "Trimestrielle",
+      "commissionFrequencyBiannual": "Semestrielle",
+      "commissionFrequencyAnnual": "Annuelle",
+      "commissionInstalmentsLabel": "Nombre d’échéances",
+      "commissionInstalmentsPlaceholder": "Nombre d’échéances",
+      "dualRepresentationLabel": "Double représentation",
+      "saveBtn": "Enregistrer le contrat",
+      "cancelBtn": "Annuler",
+      "msgPlayerRequired": "Le nom du joueur est requis.",
+      "msgAgentRequired": "Le nom complet de l’agent est requis.",
+      "msgSupabaseMissing": "Client Supabase indisponible.",
+      "msgSaving": "Enregistrement du contrat...",
+      "msgSaved": "Contrat ajouté avec succès.",
+      "msgErrorPrefix": "Erreur :"
+    },
+    "es": {
+      "backToContracts": "← Volver a contratos",
+      "pageTitle": "Añadir contrato",
+      "pageSubtitle": "Cree el registro maestro del contrato con los datos legales, del agente y la base financiera.",
+      "sectionContract": "Detalles del contrato",
+      "sectionAgent": "Datos del agente licenciado",
+      "sectionFinancial": "Base financiera",
+      "sectionCommission": "Estructura de comisión",
+      "playerLabel": "Nombre del jugador",
+      "playerPlaceholder": "Nombre del jugador",
+      "clubLabel": "Nombre del club",
+      "clubPlaceholder": "Nombre del club",
+      "startDateLabel": "Fecha de inicio",
+      "endDateLabel": "Fecha de finalización",
+      "agentNameLabel": "Nombre completo del agente",
+      "agentNamePlaceholder": "Nombre completo del agente",
+      "agentEmailLabel": "Correo del agente",
+      "agentEmailPlaceholder": "Correo del agente",
+      "agentLicenceLabel": "Número de licencia FIFA",
+      "agentLicencePlaceholder": "Número de licencia FIFA",
+      "agencyNameLabel": "Nombre de la agencia",
+      "agencyNamePlaceholder": "Nombre de la agencia (opcional)",
+      "agentCountryLabel": "País del agente",
+      "agentCountryPlaceholder": "País del agente",
+      "agentFederationLabel": "Federación del agente",
+      "agentFederationPlaceholder": "Federación del agente (ej. FA inglesa)",
+      "licensedAgentLabel": "Agente FIFA licenciado",
+      "salaryLabel": "Salario bruto base",
+      "salaryPlaceholder": "Salario bruto base",
+      "salaryFrequencyLabel": "Frecuencia salarial",
+      "salaryFrequencyYearly": "Por año",
+      "salaryFrequencyMonthly": "Por mes",
+      "salaryCurrencyLabel": "Moneda del salario",
+      "commissionTypeLabel": "Tipo de comisión",
+      "commissionTypePercentage": "Comisión como % del salario",
+      "commissionTypeFixed": "Importe fijo de comisión",
+      "commissionValueLabel": "Valor de la comisión",
+      "commissionValuePlaceholder": "Valor de la comisión",
+      "commissionCurrencyLabel": "Moneda de la comisión",
+      "commissionPayerLabel": "Quién paga la comisión",
+      ""commissionPayerPlayer": "El jugador paga la comisión",
+"commissionPayerClub": "El club paga la comisión",
+"commissionPayerClubPlayer": "El club paga en nombre del jugador",
+      "commissionPayerOther": "Otro",
+      "commissionFrequencyLabel": "Frecuencia de pago de la comisión",
+      "commissionFrequencyOneTime": "Una sola vez",
+      "commissionFrequencyMonthly": "Mensual",
+      "commissionFrequencyQuarterly": "Trimestral",
+      "commissionFrequencyBiannual": "Semestral",
+      "commissionFrequencyAnnual": "Anual",
+      "commissionInstalmentsLabel": "Número de cuotas",
+      "commissionInstalmentsPlaceholder": "Número de cuotas",
+      "dualRepresentationLabel": "Representación dual",
+      "saveBtn": "Guardar contrato",
+      "cancelBtn": "Cancelar",
+      "msgPlayerRequired": "El nombre del jugador es obligatorio.",
+      "msgAgentRequired": "El nombre completo del agente es obligatorio.",
+      "msgSupabaseMissing": "Cliente Supabase no disponible.",
+      "msgSaving": "Guardando contrato...",
+      "msgSaved": "Contrato añadido correctamente.",
+      "msgErrorPrefix": "Error:"
+    }
+  }
+  </script>
+
+  <script>
+    const I18N = JSON.parse(document.getElementById("dealtrack-i18n").textContent);
+    let currentLang = localStorage.getItem("lang") || "en";
+
+    function t(key) {
+      return I18N[currentLang]?.[key] || I18N.en?.[key] || key;
     }
 
-    const { data: { user }, error: userError } = await db.auth.getUser();
+    function applyTranslations() {
+      document.documentElement.lang = currentLang;
 
-    if (userError || !user) {
-      window.location.href = "/agent-academy/login.html";
-      return;
+      document.querySelectorAll("[data-i18n]").forEach((el) => {
+        const key = el.getAttribute("data-i18n");
+        el.textContent = t(key);
+      });
+
+      document.querySelectorAll("[data-i18n-placeholder]").forEach((el) => {
+        const key = el.getAttribute("data-i18n-placeholder");
+        el.setAttribute("placeholder", t(key));
+      });
+
+      document.querySelectorAll("[data-lang-btn]").forEach((btn) => {
+        btn.classList.toggle("is-active", btn.getAttribute("data-lang-btn") === currentLang);
+      });
+
+      document.title = "DealTrack Pro — " + t("pageTitle");
     }
 
-    const saveBtn = document.getElementById("saveBtn");
-    if (!saveBtn) {
-      alert("Save button not found");
-      return;
+    function setStatus(message, type = "") {
+      const box = document.getElementById("statusMessage");
+      box.className = `status ${type}`.trim();
+      box.textContent = message || "";
     }
 
-    saveBtn.addEventListener("click", async () => {
-      const player = document.getElementById("player")?.value?.trim();
-      const club = document.getElementById("club")?.value?.trim();
-      const startDate = document.getElementById("startDate")?.value || null;
-    const endDate = document.getElementById("endDate")?.value || null;
+    document.addEventListener("DOMContentLoaded", async () => {
+      applyTranslations();
 
-      if (!player) {
-        alert("Player name is required");
-        return;
-      }
-
-      const { error } = await db
-        .from("contracts")
-        .insert({
-          user_id: user.id,
-          player_name: player,
-          club_name: club
+      document.querySelectorAll("[data-lang-btn]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          currentLang = btn.getAttribute("data-lang-btn");
+          localStorage.setItem("lang", currentLang);
+          applyTranslations();
         });
+      });
 
-      if (error) {
-        console.error("Insert error:", error);
-        alert("Error: " + error.message);
+      const db = window.supabaseClient || window.sb || null;
+
+      if (!db) {
+        setStatus(t("msgSupabaseMissing"), "error");
         return;
       }
 
-      alert("Contract added!");
-      window.location.href = "/dealtrack/contracts.html";
+      const { data: { user }, error: userError } = await db.auth.getUser();
+
+      if (userError || !user) {
+        window.location.href = "/agent-academy/login.html";
+        return;
+      }
+
+      const form = document.getElementById("contractForm");
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const player = document.getElementById("player")?.value?.trim();
+        const club = document.getElementById("club")?.value?.trim();
+
+        const agentName = document.getElementById("agentName")?.value?.trim();
+        const agentEmail = document.getElementById("agentEmail")?.value?.trim();
+        const agentLicenceNumber = document.getElementById("agentLicenceNumber")?.value?.trim();
+        const agencyName = document.getElementById("agencyName")?.value?.trim();
+        const agentCountry = document.getElementById("agentCountry")?.value?.trim();
+        const agentFederation = document.getElementById("agentFederation")?.value?.trim();
+        const isLicensedAgent = document.getElementById("isLicensedAgent")?.checked || false;
+
+        const startDate = document.getElementById("startDate")?.value || null;
+        const endDate = document.getElementById("endDate")?.value || null;
+
+        const salary = document.getElementById("salary")?.value || null;
+        const salaryFrequency = document.getElementById("salaryFrequency")?.value || "yearly";
+        const salaryCurrency = document.getElementById("salaryCurrency")?.value || "EUR";
+
+        const commissionType = document.getElementById("commissionType")?.value || null;
+        const commissionValue = document.getElementById("commissionValue")?.value || null;
+        const commissionCurrency = document.getElementById("commissionCurrency")?.value || "EUR";
+        const commissionPayer = document.getElementById("commissionPayer")?.value || null;
+        const commissionFrequency = document.getElementById("commissionFrequency")?.value || null;
+        const commissionInstalments = document.getElementById("commissionInstalments")?.value || null;
+        const isDualRepresentation = document.getElementById("isDualRepresentation")?.checked || false;
+
+        if (!player) {
+          setStatus(t("msgPlayerRequired"), "error");
+          return;
+        }
+
+        if (!agentName) {
+          setStatus(t("msgAgentRequired"), "error");
+          return;
+        }
+
+        setStatus(t("msgSaving"));
+
+        const { error } = await db
+          .from("contracts")
+          .insert({
+            user_id: user.id,
+            player_name: player,
+            club_name: club || null,
+            agent_name: agentName,
+            agent_email: agentEmail || null,
+            agent_licence_number: agentLicenceNumber || null,
+            agency_name: agencyName || null,
+            agent_country: agentCountry || null,
+            agent_federation: agentFederation || null,
+            is_licensed_agent: isLicensedAgent,
+            start_date: startDate,
+            end_date: endDate,
+            salary: salary ? Number(salary) : null,
+            salary_frequency: salaryFrequency,
+            salary_currency: salaryCurrency,
+            commission_type: commissionType,
+            commission_value: commissionValue ? Number(commissionValue) : null,
+            commission_currency: commissionCurrency,
+            commission_payer: commissionPayer,
+            commission_frequency: commissionFrequency,
+            commission_instalments: commissionInstalments ? Number(commissionInstalments) : null,
+            is_dual_representation: isDualRepresentation
+          });
+
+        if (error) {
+          console.error("Insert error:", error);
+          setStatus(`${t("msgErrorPrefix")} ${error.message}`, "error");
+          return;
+        }
+
+        setStatus(t("msgSaved"), "success");
+        setTimeout(() => {
+          window.location.href = "/dealtrack-pro/contracts.html";
+        }, 500);
+      });
     });
-  });
-</script>
+  </script>
 </body>
 </html>
