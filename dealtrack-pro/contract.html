@@ -92,13 +92,37 @@ if (addClauseBtn && id) {
       }
 
       container.innerHTML = `
-        <h1>${data.player_name}</h1>
-        <p><strong>Club:</strong> ${data.club_name || "No club"}</p>
-        <p><strong>Type:</strong> ${data.contract_type || "representation"}</p>
-        <p><strong>Status:</strong> ${data.status || "active"}</p>
-        <p class="muted"><strong>Start:</strong> ${data.start_date || "-"}</p>
-        <p class="muted"><strong>End:</strong> ${data.end_date || "-"}</p>
-      `;
+  <h1>${data.player_name}</h1>
+
+  <h3>Club</h3>
+  <p>${data.club_name || "No club"}</p>
+
+  <h3>Agent</h3>
+  <p><strong>Name:</strong> ${data.agent_name || "-"}</p>
+  <p><strong>Email:</strong> ${data.agent_email || "-"}</p>
+  <p><strong>Licence:</strong> ${data.agent_licence_number || "-"}</p>
+  <p><strong>Agency:</strong> ${data.agency_name || "-"}</p>
+  <p><strong>Country:</strong> ${data.agent_country || "-"}</p>
+  <p><strong>Federation:</strong> ${data.agent_federation || "-"}</p>
+  <p><strong>Licensed:</strong> ${data.is_licensed_agent ? "Yes" : "No"}</p>
+
+  <h3>Contract</h3>
+  <p><strong>Start:</strong> ${data.start_date || "-"}</p>
+  <p><strong>End:</strong> ${data.end_date || "-"}</p>
+
+  <h3>Salary</h3>
+  <p><strong>Amount:</strong> ${data.salary || "-"} ${data.salary_currency || ""}</p>
+  <p><strong>Frequency:</strong> ${data.salary_frequency || "-"}</p>
+
+  <h3>Commission</h3>
+  <p><strong>Type:</strong> ${data.commission_type || "-"}</p>
+  <p><strong>Value:</strong> ${data.commission_value || "-"}</p>
+  <p><strong>Currency:</strong> ${data.commission_currency || "-"}</p>
+  <p><strong>Payer:</strong> ${data.commission_payer || "-"}</p>
+  <p><strong>Frequency:</strong> ${data.commission_frequency || "-"}</p>
+  <p><strong>Instalments:</strong> ${data.commission_instalments || "-"}</p>
+  <p><strong>Dual Representation:</strong> ${data.is_dual_representation ? "Yes" : "No"}</p>
+`;
     });
   </script>
 
