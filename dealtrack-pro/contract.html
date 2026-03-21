@@ -536,7 +536,9 @@
       "yes": "Yes",
       "no": "No",
       "na": "Not recorded",
-    "brand.tagline": "Contract Intelligence for Football Agents"
+    "brand.tagline": "Contract Intelligence for Football Agents",
+    "labelClubLeague": "League / Division",
+"labelClubCountry": "Country"
     },
     "fr": {
       "backToContracts": "← Retour aux contrats",
@@ -588,7 +590,9 @@
       "yes": "Oui",
       "no": "Non",
       "na": "Non renseigné",
-    "brand.tagline": "Intelligence contractuelle pour agents de football"
+    "brand.tagline": "Intelligence contractuelle pour agents de football",
+    "labelClubLeague": "Ligue / Division",
+"labelClubCountry": "Pays"
     },
     "es": {
       "backToContracts": "← Volver a contratos",
@@ -640,7 +644,9 @@
       "yes": "Sí",
       "no": "No",
       "na": "No registrado",
-    "brand.tagline": "Inteligencia contractual para agentes de fútbol"
+    "brand.tagline": "Inteligencia contractual para agentes de fútbol",
+    "labelClubLeague": "Liga / División",
+"labelClubCountry": "País"
     }
   }
   </script>
@@ -712,17 +718,19 @@
 
         <div class="layout">
           <div class="stack">
-            <section class="premium-card">
-              <div class="section-head">
-                <div>
-                  <div class="section-kicker">01</div>
-                  <h2 class="section-title">${t("sectionClub")}</h2>
-                </div>
-              </div>
-              <div class="grid">
-                ${renderTile("labelClubName", safeValue(data.club_name))}
-              </div>
-            </section>
+           <section class="premium-card">
+  <div class="section-head">
+    <div>
+      <div class="section-kicker">01</div>
+      <h2 class="section-title">${t("sectionClub")}</h2>
+    </div>
+  </div>
+  <div class="grid">
+    ${renderTile("labelClubName", safeValue(data.club_name))}
+    ${renderTile("labelClubLeague", safeValue(data.club_league))}
+    ${renderTile("labelClubCountry", safeValue(data.club_country))}
+  </div>
+</section>
 
             <section class="premium-card">
               <div class="section-head">
