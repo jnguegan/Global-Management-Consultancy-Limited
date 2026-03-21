@@ -41,51 +41,51 @@
 
   <script>
     console.log("Script loaded");
-  if (!window.supabaseClient) {
-  window.supabaseClient = window.supabase.createClient(
-    "https://ysaxtuvuzqkyfmganven.supabase.co",
-    "YOUR_ANON_KEY"
-  );
-}
 
-const supabase = window.supabaseClient;
-  "https://ysaxtuvuzqkyfmganven.supabase.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlzYXh0dXZ1enFreWZtZ2FudmVuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI4NDYzNzMsImV4cCI6MjA4ODQyMjM3M30.gzKSSNA5jtR5JtZWnjP7zVBUDsgxwnCHVnnDZeZb8lo"
-);
-
-  async function init() {
-    const { data: { session } } = await supabase.auth.getSession();
-
-    if (!session) {
-      alert("You must be logged in");
-      window.location.href = "/login.html";
-      return;
-    }
-  }
-
-  async function addContract() {
-    console.log("addContract triggered");
-    const player = document.getElementById("player").value;
-    const club = document.getElementById("club").value;
-
-    const { error } = await supabase
-      .from("contracts")
-      .insert({
-        player_name: player,
-        club_name: club
-      });
-
-    if (error) {
-      alert("Error: " + error.message);
-      return;
+    // Safe Supabase init (no duplicates)
+    if (!window.supabaseClient) {
+      window.supabaseClient = window.supabase.createClient(
+        "https://ysaxtuvuzqkyfmganven.supabase.co",
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlzYXh0dXZ1enFreWZtZ2FudmVuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI4NDYzNzMsImV4cCI6MjA4ODQyMjM3M30.gzKSSNA5jtR5JtZWnjP7zVBUDsgxwnCHVnnDZeZb8lo"
+      );
     }
 
-    alert("Contract added!");
-    window.location.href = "contracts.html";
-  }
+    const supabase = window.supabaseClient;
 
-  init();
-</script>
+    async function init() {
+      const { data: { session } } = await supabase.auth.getSession();
+
+      if (!session) {
+        alert("You must be logged in");
+        window.location.href = "/login.html";
+        return;
+      }
+    }
+
+    async function addContract() {
+      console.log("addContract triggered");
+
+      const player = document.getElementById("player").value;
+      const club = document.getElementById("club").value;
+
+      const { error } = await supabase
+        .from("contracts")
+        .insert({
+          player_name: player,
+          club_name: club
+        });
+
+      if (error) {
+        alert("Error: " + error.message);
+        return;
+      }
+
+      alert("Contract added!");
+      window.location.href = "contracts.html";
+    }
+
+    init();
+  </script>
 
 </body>
 </html>
