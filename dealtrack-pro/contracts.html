@@ -22,12 +22,22 @@
     }
 
     .topbar {
-      display: flex;
-      gap: 12px;
-      align-items: center;
-      margin-bottom: 20px;
-      flex-wrap: wrap;
-    }
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+
+  padding: 12px 0;
+  margin-bottom: 20px;
+
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+}
 
     .btn {
       padding: 10px 14px;
