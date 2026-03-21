@@ -42,9 +42,9 @@
   <script>
     console.log("Script loaded");
   const supabase = window.supabase.createClient(
-    "YOUR_SUPABASE_URL",
-    "YOUR_SUPABASE_ANON_KEY"
-  );
+  "https://ysaxtuvuzqkyfmganven.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlzYXh0dXZ1enFreWZtZ2FudmVuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI4NDYzNzMsImV4cCI6MjA4ODQyMjM3M30.gzKSSNA5jtR5JtZWnjP7zVBUDsgxwnCHVnnDZeZb8lo"
+);
 
   async function init() {
     const { data: { session } } = await supabase.auth.getSession();
