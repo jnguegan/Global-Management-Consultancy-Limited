@@ -458,7 +458,7 @@ const AgentAcademyDashboard = (() => {
       el.tool2Badge.textContent = txt("unlocked");
       el.tool2Req.textContent = txt("starterReq");
       el.tool2Btn.textContent = txt("openQuiz");
-      el.tool2Btn.href = "/agent-academy/quiz.html";
+      el.tool2Btn.href = "/agent-academy/topics.html";
       el.tool2Btn.classList.add("primary");
     } else {
       el.tool2Badge.textContent = "Starter+";
