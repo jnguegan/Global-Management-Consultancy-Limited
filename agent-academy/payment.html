@@ -225,7 +225,10 @@
     form.addEventListener("submit", async (e) => {
      e.preventDefault();
 
-// 🔹 Send email via FormSubmit
+// 🔹 TEMPORARY: Dual email notification system
+// FormSubmit is kept as a backup to ensure no upgrade request is missed
+// while Netlify/Resend reliability is being validated
+      
 const formData = new FormData(form);
 
 await fetch("https://formsubmit.co/ajax/jnguegan@gmail.com", {
