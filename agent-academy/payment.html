@@ -281,6 +281,9 @@ await fetch("https://formsubmit.co/ajax/jnguegan@gmail.com", {
 
         if (error) throw error;
 
+        // 🔹 PRIMARY (UNDER TEST): Netlify + Resend email notification
+// This will become the main system once fully validated
+        
         await fetch("/.netlify/functions/send-upgrade-request-email", {
           method: "POST",
           headers: {
