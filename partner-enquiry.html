@@ -13,7 +13,7 @@
 
 <div class="wrap">
 
-  <!-- NAV (matches index) -->
+  <!-- NAV -->
   <nav class="nav">
     <a class="brand" href="index.html" aria-label="Global Management Consultancy Limited">
       <img src="assets/images/gmc-logo.png" alt="Global Management Consultancy Limited" />
@@ -25,10 +25,10 @@
         <a href="services.html" data-i18n="nav.services">Services</a>
         <a href="finance.html" data-i18n="nav.finance">Finance</a>
         <a href="contact.html" data-i18n="nav.contact">Contact</a>
+        <a href="agent-academy/index.html" data-i18n="nav.academy">Academy</a>
         <a class="active" href="partner-enquiry.html" data-i18n="nav.partner">Partner Enquiry</a>
       </div>
 
-      <!-- Language Dropdown (ONLY EN/FR/ES) -->
       <div class="lang" aria-label="Language selector">
         <label class="langLabel" for="langSelect" data-i18n="lang.label">Language</label>
         <select id="langSelect" class="langSelect" aria-label="Choose language">
@@ -40,46 +40,57 @@
     </div>
   </nav>
 
-  <!-- GMC Credibility Strip -->
+  <!-- Credibility Strip -->
   <div class="cred-strip" data-i18n="cred.strip">
     Commercial & contractual consulting · Partner onboarding · Global Management Consultancy Limited
   </div>
-  <!-- END GMC Credibility Strip -->
 
-  <!-- Main content aligned to site rails -->
-  <main class="section">
-    <header class="hero" style="margin-top:0;">
-      <h1 class="h1" style="font-size:clamp(1.8rem,3vw,2.2rem);" data-i18n="partner.title">Partner Enquiry</h1>
+  <main class="section partner-page">
+    <section class="partner-hero">
+      <div class="partner-hero-copy">
+        <span class="eyebrow" data-i18n="partner.eyebrow">Commercial & Partner Enquiries</span>
+        <h1 class="h1 partner-title" data-i18n="partner.title">Partner Enquiry</h1>
+        <p class="lead partner-lead" data-i18n="partner.intro">
+          Submit a commercial enquiry for partnership discussions. This form is for general business enquiries and does not
+          constitute regulated financial services onboarding.
+        </p>
+      </div>
 
-      <p class="lead" style="margin-bottom:0;" data-i18n="partner.intro">
-        Submit a commercial enquiry for partnership discussions. This form is for general business enquiries and does not
-        constitute regulated financial services onboarding.
-      </p>
-    </header>
+      <div class="partner-hero-card">
+        <h2 data-i18n="partner.sideTitle">What this form is for</h2>
+        <ul class="partner-points">
+          <li data-i18n="partner.side1">Commercial partnership discussions</li>
+          <li data-i18n="partner.side2">Contractual and consulting enquiries</li>
+          <li data-i18n="partner.side3">Finance-related pre-qualification routing</li>
+        </ul>
+      </div>
+    </section>
 
-    <!-- NETLIFY FORM -->
     <form
       name="partner-enquiry"
       method="POST"
       action="success.html"
       data-netlify="true"
       netlify-honeypot="bot-field"
-      class="form-card"
-      style="max-width:var(--max); margin-left:auto; margin-right:auto;"
+      class="form-card partner-form-card"
     >
       <input type="hidden" name="formType" value="Partner Enquiry" />
       <input type="hidden" name="sourceSite" value="Global Management Consultancy Limited" />
       <input type="hidden" name="submittedFrom" value="Website" />
       <input type="hidden" name="siteLanguage" id="siteLanguage" value="en" />
-
       <input type="hidden" name="form-name" value="partner-enquiry" />
+
       <p class="hidden">
         <label data-i18n="partner.botlabel">Don’t fill this out: <input name="bot-field" /></label>
       </p>
 
-      <!-- Use a 2-col form grid (avoid using .grid which is your 2-card layout) -->
+      <div class="form-section-head">
+        <h2 data-i18n="partner.formHeading">Tell us about your enquiry</h2>
+        <p data-i18n="partner.formLead">Complete the relevant details below and we will review your request.</p>
+      </div>
+
       <div class="form">
-        <div class="split" style="grid-template-columns:1fr 1fr;">
+        <div class="split form-two-col">
           <div>
             <label for="fullName" data-i18n="partner.fullname">Full name *</label>
             <input id="fullName" name="fullName" type="text" autocomplete="name" required />
@@ -117,16 +128,16 @@
           </div>
         </div>
 
-        <div class="split" style="grid-template-columns:1fr 1fr;">
+        <div class="split form-two-col">
           <div>
             <label for="orgType" data-i18n="partner.orgtype">Type of Organisation</label>
             <select id="orgType" name="orgType" required>
               <option value="" selected disabled data-i18n="partner.selectone">Select one…</option>
-              <option data-i18n="partner.org.fintech">Fintech / Payments Provider</option>
-              <option data-i18n="partner.org.broker">Brokerage / Liquidity Provider</option>
-              <option data-i18n="partner.org.club">Football Club / Agency</option>
-              <option data-i18n="partner.org.corp">Corporate / Commercial Partner</option>
-              <option data-i18n="partner.org.individual">Individual (Other)</option>
+              <option value="fintech" data-i18n="partner.org.fintech">Fintech / Payments Provider</option>
+              <option value="broker" data-i18n="partner.org.broker">Brokerage / Liquidity Provider</option>
+              <option value="club" data-i18n="partner.org.club">Football Club / Agency</option>
+              <option value="corp" data-i18n="partner.org.corp">Corporate / Commercial Partner</option>
+              <option value="individual" data-i18n="partner.org.individual">Individual (Other)</option>
             </select>
           </div>
 
@@ -134,41 +145,42 @@
             <label for="jurisdiction" data-i18n="partner.jurisdiction">Jurisdiction of Interest</label>
             <select id="jurisdiction" name="jurisdiction" required>
               <option value="" selected disabled data-i18n="partner.selectone">Select one…</option>
-              <option data-i18n="partner.jur.uk">United Kingdom</option>
-              <option data-i18n="partner.jur.eu">European Union</option>
-              <option data-i18n="partner.jur.africa">Africa</option>
-              <option data-i18n="partner.jur.me">Middle East</option>
-              <option data-i18n="partner.jur.other">Other</option>
+              <option value="uk" data-i18n="partner.jur.uk">United Kingdom</option>
+              <option value="eu" data-i18n="partner.jur.eu">European Union</option>
+              <option value="africa" data-i18n="partner.jur.africa">Africa</option>
+              <option value="me" data-i18n="partner.jur.me">Middle East</option>
+              <option value="other" data-i18n="partner.jur.other">Other</option>
             </select>
           </div>
         </div>
 
-        <div class="split" style="grid-template-columns:1fr 1fr;">
+        <div class="split form-two-col">
           <div>
             <label for="timeline" data-i18n="partner.timeline">Timeline</label>
             <select id="timeline" name="timeline" required>
               <option value="" selected disabled data-i18n="partner.selectone">Select one…</option>
-              <option data-i18n="partner.time.immediate">Immediate (0–2 weeks)</option>
-              <option data-i18n="partner.time.short">Short term (2–6 weeks)</option>
-              <option data-i18n="partner.time.medium">Medium term (6–12 weeks)</option>
-              <option data-i18n="partner.time.exploratory">Exploratory (no fixed timeline)</option>
+              <option value="immediate" data-i18n="partner.time.immediate">Immediate (0–2 weeks)</option>
+              <option value="short" data-i18n="partner.time.short">Short term (2–6 weeks)</option>
+              <option value="medium" data-i18n="partner.time.medium">Medium term (6–12 weeks)</option>
+              <option value="exploratory" data-i18n="partner.time.exploratory">Exploratory (no fixed timeline)</option>
             </select>
           </div>
 
           <div></div>
         </div>
 
-        <!-- ===================== -->
         <!-- GSF PRE-QUALIFICATION -->
-        <!-- ===================== -->
-        <div id="gsfBlock" style="margin-top:10px; padding-top:14px; border-top:1px solid rgba(255,255,255,.10); display:none;">
-          <h2 class="h2" style="font-size:1.15rem; margin:0 0 6px;">Global Sport Finance — Pre-Qualification (optional)</h2>
-          <p class="muted" style="margin-top:0;">
-            This helps us route your request and prepare a fast handover to our regulated onboarding partner.
-            Please do not upload sensitive documents via this enquiry form.
-          </p>
+        <div id="gsfBlock" class="gsf-block" style="display:none;">
+          <div class="gsf-head">
+            <span class="eyebrow">Global Sport Finance</span>
+            <h2>Pre-Qualification</h2>
+            <p>
+              This helps us route your request and prepare a fast handover to our regulated onboarding partner.
+              Please do not upload sensitive documents via this enquiry form.
+            </p>
+          </div>
 
-          <div class="split" style="grid-template-columns:1fr 1fr;">
+          <div class="split form-two-col">
             <div>
               <label for="gsfClientType">Client type (for finance services)</label>
               <select id="gsfClientType" name="gsfClientType">
@@ -185,7 +197,7 @@
             </div>
           </div>
 
-          <div class="split" style="grid-template-columns:1fr 1fr;">
+          <div class="split form-two-col">
             <div>
               <label for="gsfIncorpCountry">Country of incorporation (business only)</label>
               <input id="gsfIncorpCountry" name="gsfIncorpCountry" type="text" placeholder="e.g. United Kingdom" />
@@ -204,7 +216,7 @@
             </div>
           </div>
 
-          <div class="split" style="grid-template-columns:1fr 1fr;">
+          <div class="split form-two-col">
             <div>
               <label for="gsfCurrencies">Currencies needed (comma separated)</label>
               <input id="gsfCurrencies" name="gsfCurrencies" type="text" placeholder="EUR, GBP, USD, XAF, AED…" />
@@ -216,9 +228,9 @@
             </div>
           </div>
 
-          <div style="margin-top:8px;">
+          <div class="gsf-services">
             <label>Services needed (select all that apply)</label>
-            <div class="split" style="grid-template-columns:1fr 1fr; gap:10px;">
+            <div class="split form-two-col gsf-checks">
               <label class="check">
                 <input type="checkbox" name="gsfServices" value="multi_currency_wallets" />
                 <span>Multi-currency accounts / wallets</span>
@@ -243,15 +255,15 @@
                 <input type="checkbox" name="gsfServices" value="expense_controls" />
                 <span>Expense controls</span>
               </label>
-              <label class="check" style="grid-column:1 / -1;">
+              <label class="check check-full">
                 <input type="checkbox" id="gsfCryptoCheck" name="gsfServices" value="crypto_digital_assets" />
                 <span><strong>Crypto / Digital Assets</strong> (e.g. USD ⇄ USDC conversion, crypto wallet)</span>
               </label>
             </div>
           </div>
 
-          <div id="gsfCryptoBlock" style="display:none; margin-top:10px;">
-            <div class="split" style="grid-template-columns:1fr 1fr;">
+          <div id="gsfCryptoBlock" class="gsf-crypto" style="display:none;">
+            <div class="split form-two-col">
               <div>
                 <label for="gsfCryptoType">Crypto activity type</label>
                 <select id="gsfCryptoType" name="gsfCryptoType">
@@ -263,6 +275,7 @@
                   <option value="other">Other</option>
                 </select>
               </div>
+
               <div>
                 <label for="gsfCryptoVol">Estimated crypto monthly volume</label>
                 <select id="gsfCryptoVol" name="gsfCryptoVol">
@@ -275,13 +288,14 @@
                 </select>
               </div>
             </div>
+
             <div>
               <label for="gsfCryptoNotes">Brief crypto description (optional)</label>
               <textarea id="gsfCryptoNotes" name="gsfCryptoNotes" rows="4" placeholder="Explain the stablecoin use case / counterparties / expected flows (no wallet addresses needed)."></textarea>
             </div>
           </div>
 
-          <div class="split" style="grid-template-columns:1fr 1fr; margin-top:10px;">
+          <div class="split form-two-col">
             <div>
               <label for="gsfPEP">PEP (politically exposed person) or close relation?</label>
               <select id="gsfPEP" name="gsfPEP">
@@ -290,6 +304,7 @@
                 <option value="yes">Yes</option>
               </select>
             </div>
+
             <div>
               <label for="gsfSanctions">Any sanctioned / high-risk jurisdictions involved?</label>
               <select id="gsfSanctions" name="gsfSanctions">
@@ -310,7 +325,6 @@
             </label>
           </div>
         </div>
-        <!-- /GSF PRE-QUALIFICATION -->
 
         <div>
           <label for="message" data-i18n="partner.message">Brief description *</label>
@@ -333,19 +347,18 @@
           </label>
         </div>
 
-        <div style="display:flex; gap:12px; flex-wrap:wrap; align-items:center;">
+        <div class="partner-actions">
           <button type="submit" class="btn" data-i18n="partner.submit">Submit enquiry</button>
-          <span class="muted" style="font-size:0.95rem;" data-i18n="partner.sla">We typically respond within 1–2 business days.</span>
+          <span class="muted" data-i18n="partner.sla">We typically respond within 1–2 business days.</span>
         </div>
       </div>
     </form>
 
-    <p class="muted" style="margin-top:18px; max-width:var(--max); margin-left:auto; margin-right:auto;" data-i18n="partner.note">
+    <p class="muted partner-note" data-i18n="partner.note">
       <strong>Note:</strong> Please do not submit account credentials, payment details, or sensitive personal information through this form.
     </p>
   </main>
 
-  <!-- GMC Footer (same as index + i18n keys) -->
   <footer class="site-footer">
     <div class="container">
       <div class="footer-grid">
@@ -380,18 +393,15 @@
     </div>
   </footer>
 
-</div><!-- /.wrap -->
+</div>
 
-<!-- Shared i18n -->
 <script src="assets/js/i18n.js"></script>
 
-<!-- Year (works even if i18n also sets it) -->
 <script>
   const y = document.getElementById("year");
   if (y) y.textContent = new Date().getFullYear();
 </script>
 
-<!-- GSF pre-qual logic -->
 <script>
   (function(){
     const enquiryType = document.getElementById("enquiryType");
@@ -431,19 +441,16 @@
     function refreshGSF(){
       const finance = isFinanceEnquiry();
 
-      // show/hide block
       gsfBlock.style.display = finance ? "block" : "none";
 
-      // Only require a light pre-screen when finance enquiry
       setRequired(gsfClientType, finance);
-      setRequired(gsfClientCountry, false); // optional
+      setRequired(gsfClientCountry, false);
       setRequired(gsfMonthlyVolume, finance);
       setRequired(gsfCurrencies, finance);
       setRequired(gsfPEP, finance);
       setRequired(gsfSanctions, finance);
       setRequired(gsfConsent, finance);
 
-      // crypto conditional requirements
       const cryptoOn = finance && cryptoCheck && cryptoCheck.checked;
       cryptoBlock.style.display = cryptoOn ? "block" : "none";
       setRequired(gsfCryptoType, cryptoOn);
