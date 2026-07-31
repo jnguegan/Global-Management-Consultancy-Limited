@@ -1,0 +1,1720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <meta
+    name="description"
+    content="Step 5 of the Global Sport Finance Financial Blueprint assessment."
+  >
+
+  <title>Goals and Priorities | Financial Blueprint</title>
+
+  <style>
+    :root {
+      --navy-950: #06111f;
+      --navy-900: #091827;
+      --navy-800: #10263d;
+
+      --gold-500: #c9a35a;
+      --gold-400: #d9b86e;
+      --gold-300: #ead39d;
+
+      --white: #ffffff;
+      --text-light: #d9e2ec;
+      --text-muted: #9fb0c1;
+
+      --border: rgba(201, 163, 90, 0.28);
+      --card-bg: rgba(255, 255, 255, 0.045);
+      --shadow: 0 24px 70px rgba(0, 0, 0, 0.34);
+      --error: #ffb3b3;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Arial,
+        sans-serif;
+      color: var(--white);
+      background:
+        radial-gradient(
+          circle at 82% 12%,
+          rgba(201, 163, 90, 0.12),
+          transparent 34%
+        ),
+        radial-gradient(
+          circle at 8% 88%,
+          rgba(23, 56, 84, 0.55),
+          transparent 38%
+        ),
+        linear-gradient(
+          135deg,
+          var(--navy-950),
+          var(--navy-900) 52%,
+          #0b1d30
+        );
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button,
+    select,
+    textarea {
+      font: inherit;
+    }
+
+    .page-shell {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* HEADER */
+
+    .site-header {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(6, 17, 31, 0.8);
+      backdrop-filter: blur(14px);
+    }
+
+    .header-inner {
+      width: min(1180px, calc(100% - 40px));
+      min-height: 82px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .brand {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .brand-title {
+      color: var(--gold-400);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.4rem;
+      font-weight: 600;
+    }
+
+    .brand-subtitle {
+      color: var(--text-muted);
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .back-link {
+      color: var(--text-light);
+      font-size: 0.88rem;
+    }
+
+    .back-link:hover {
+      color: var(--gold-300);
+    }
+
+    .language-switcher {
+      display: flex;
+      padding: 4px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.035);
+    }
+
+    .language-button {
+      min-width: 38px;
+      padding: 7px 9px;
+      border: 0;
+      border-radius: 999px;
+      color: var(--text-muted);
+      background: transparent;
+      cursor: pointer;
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+
+    .language-button.active {
+      color: var(--navy-950);
+      background: var(--gold-400);
+    }
+
+    /* MAIN */
+
+    main {
+      flex: 1;
+      padding: 48px 0 70px;
+    }
+
+    .assessment-container {
+      width: min(980px, calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    .progress-row {
+      margin-bottom: 28px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .progress-label {
+      flex-shrink: 0;
+      color: var(--gold-300);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 5px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.09);
+    }
+
+    .progress-fill {
+      width: 100%;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(
+        90deg,
+        var(--gold-500),
+        var(--gold-300)
+      );
+    }
+
+    .assessment-card {
+      overflow: hidden;
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      background: linear-gradient(
+        145deg,
+        rgba(255, 255, 255, 0.075),
+        rgba(255, 255, 255, 0.025)
+      );
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(16px);
+    }
+
+    .card-top-line {
+      height: 3px;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        var(--gold-400),
+        transparent
+      );
+    }
+
+    .card-content {
+      padding: clamp(32px, 6vw, 64px);
+    }
+
+    .eyebrow {
+      margin-bottom: 14px;
+      color: var(--gold-300);
+      font-size: 0.76rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin-bottom: 14px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.3rem, 5vw, 4rem);
+      font-weight: 500;
+    }
+
+    .intro-text {
+      max-width: 720px;
+      margin-bottom: 36px;
+      color: var(--text-light);
+      font-size: 1rem;
+      line-height: 1.7;
+    }
+
+    .form-section {
+      margin-bottom: 36px;
+    }
+
+    .section-heading {
+      margin-bottom: 9px;
+      color: var(--white);
+      font-size: 1.05rem;
+      font-weight: 750;
+    }
+
+    .section-help {
+      display: block;
+      margin-bottom: 18px;
+      color: var(--text-muted);
+      font-size: 0.82rem;
+      line-height: 1.5;
+    }
+
+    /* GOAL CARDS */
+
+    .goal-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+
+    .goal-option {
+      position: relative;
+    }
+
+    .goal-option input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .goal-option label {
+      min-height: 88px;
+      padding: 18px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.11);
+      border-radius: 16px;
+      color: var(--text-light);
+      background: var(--card-bg);
+      cursor: pointer;
+      font-weight: 650;
+      line-height: 1.35;
+      transition:
+        transform 0.2s ease,
+        border-color 0.2s ease,
+        background 0.2s ease;
+    }
+
+    .goal-option label:hover {
+      transform: translateY(-2px);
+      border-color: var(--border);
+    }
+
+    .goal-check {
+      width: 25px;
+      height: 25px;
+      flex-shrink: 0;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      border-radius: 7px;
+      color: transparent;
+      background: rgba(255, 255, 255, 0.03);
+      font-size: 0.8rem;
+      font-weight: 800;
+    }
+
+    .goal-option input:checked + label {
+      color: var(--white);
+      border-color: var(--gold-400);
+      background: rgba(201, 163, 90, 0.13);
+    }
+
+    .goal-option input:checked + label .goal-check {
+      color: var(--navy-950);
+      border-color: var(--gold-400);
+      background: var(--gold-400);
+    }
+
+    /* PRIORITY */
+
+    .field-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }
+
+    .field-group.full-width {
+      grid-column: 1 / -1;
+    }
+
+    .field-group label {
+      color: var(--text-light);
+      font-size: 0.88rem;
+      font-weight: 650;
+    }
+
+    select,
+    textarea {
+      width: 100%;
+      border: 1px solid rgba(255, 255, 255, 0.13);
+      border-radius: 13px;
+      color: var(--white);
+      background: var(--navy-800);
+      outline: none;
+    }
+
+    select {
+      min-height: 52px;
+      padding: 0 16px;
+    }
+
+    select option {
+      color: var(--white);
+      background: var(--navy-900);
+    }
+
+    textarea {
+      min-height: 126px;
+      padding: 15px 16px;
+      resize: vertical;
+      line-height: 1.55;
+    }
+
+    textarea::placeholder {
+      color: #71869a;
+    }
+
+    select:focus,
+    textarea:focus {
+      border-color: var(--gold-400);
+      box-shadow: 0 0 0 3px rgba(201, 163, 90, 0.12);
+    }
+
+    /* REVIEW */
+
+    .review-box {
+      padding: 22px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.035);
+    }
+
+    .review-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .review-item {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .review-label {
+      color: var(--text-muted);
+      font-size: 0.76rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .review-value {
+      color: var(--gold-300);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.25rem;
+    }
+
+    .completion-note {
+      margin-top: 20px;
+      padding: 18px;
+      border-left: 3px solid var(--gold-400);
+      border-radius: 0 12px 12px 0;
+      color: var(--text-light);
+      background: rgba(201, 163, 90, 0.07);
+      font-size: 0.88rem;
+      line-height: 1.55;
+    }
+
+    .error-message {
+      min-height: 22px;
+      margin-top: 10px;
+      color: var(--error);
+      font-size: 0.85rem;
+    }
+
+    .privacy-note {
+      margin: 10px 0 30px;
+      padding: 16px 18px;
+      border-left: 3px solid var(--gold-400);
+      border-radius: 0 12px 12px 0;
+      color: var(--text-light);
+      background: rgba(201, 163, 90, 0.07);
+      font-size: 0.88rem;
+      line-height: 1.55;
+    }
+
+    .action-row {
+      padding-top: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .secondary-button,
+    .primary-button {
+      min-height: 52px;
+      padding: 0 26px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-weight: 750;
+    }
+
+    .secondary-button {
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: var(--text-light);
+      background: transparent;
+    }
+
+    .secondary-button:hover {
+      border-color: var(--gold-400);
+      color: var(--gold-300);
+    }
+
+    .primary-button {
+      border: 1px solid var(--gold-400);
+      color: var(--navy-950);
+      background: linear-gradient(
+        135deg,
+        var(--gold-300),
+        var(--gold-500)
+      );
+      box-shadow: 0 12px 30px rgba(201, 163, 90, 0.18);
+    }
+
+    .primary-button:hover {
+      transform: translateY(-2px);
+    }
+
+    .site-footer {
+      padding: 22px 20px 30px;
+      color: var(--text-muted);
+      text-align: center;
+      font-size: 0.76rem;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 760px) {
+      .brand-subtitle,
+      .back-link {
+        display: none;
+      }
+
+      .goal-grid,
+      .field-grid,
+      .review-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .field-group.full-width {
+        grid-column: auto;
+      }
+
+      .action-row {
+        align-items: stretch;
+        flex-direction: column-reverse;
+      }
+
+      .secondary-button,
+      .primary-button {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 500px) {
+      .header-inner,
+      .assessment-container {
+        width: min(100% - 24px, 980px);
+      }
+
+      .progress-row {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .assessment-card {
+        border-radius: 20px;
+      }
+
+      .card-content {
+        padding: 30px 22px;
+      }
+
+      .brand-title {
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page-shell">
+
+    <header class="site-header">
+      <div class="header-inner">
+
+        <a class="brand" href="../finance.html">
+          <span class="brand-title">
+            Global Sport Finance
+          </span>
+
+          <span class="brand-subtitle">
+            Powered by Global Management Consultancy
+          </span>
+        </a>
+
+        <div class="header-actions">
+
+          <a
+            class="back-link"
+            href="blueprint-step4.html"
+            data-translate="back"
+          >
+            ← Back
+          </a>
+
+          <div class="language-switcher">
+
+            <button
+              class="language-button active"
+              type="button"
+              data-language="en"
+            >
+              EN
+            </button>
+
+            <button
+              class="language-button"
+              type="button"
+              data-language="fr"
+            >
+              FR
+            </button>
+
+            <button
+              class="language-button"
+              type="button"
+              data-language="es"
+            >
+              ES
+            </button>
+
+          </div>
+
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <div class="assessment-container">
+
+        <div class="progress-row">
+
+          <span
+            class="progress-label"
+            data-translate="progress"
+          >
+            Goals & Priorities · Step 5 of 5
+          </span>
+
+          <div class="progress-track">
+            <div class="progress-fill"></div>
+          </div>
+
+        </div>
+
+        <section class="assessment-card">
+          <div class="card-top-line"></div>
+
+          <div class="card-content">
+
+            <div
+              class="eyebrow"
+              data-translate="eyebrow"
+            >
+              Financial Blueprint
+            </div>
+
+            <h1 data-translate="title">
+              Your Financial Goals and Priorities
+            </h1>
+
+            <p
+              class="intro-text"
+              data-translate="intro"
+            >
+              Select the financial objectives that matter most to you.
+              Your choices will help shape the priorities shown in your
+              Financial Blueprint results.
+            </p>
+
+            <form id="stepFiveForm" novalidate>
+
+              <section class="form-section">
+
+                <h2
+                  class="section-heading"
+                  data-translate="goalsHeading"
+                >
+                  What would you like to achieve?
+                </h2>
+
+                <span
+                  class="section-help"
+                  data-translate="goalsHelp"
+                >
+                  Select all that apply.
+                </span>
+
+                <div class="goal-grid">
+
+                  <div class="goal-option">
+                    <input
+                      type="checkbox"
+                      id="emergencyFund"
+                      name="goals"
+                      value="emergencyFund"
+                    >
+
+                    <label for="emergencyFund">
+                      <span class="goal-check">✓</span>
+                      <span data-translate="emergencyFund">
+                        Build an emergency reserve
+                      </span>
+                    </label>
+                  </div>
+
+                  <div class="goal-option">
+                    <input
+                      type="checkbox"
+                      id="reduceDebt"
+                      name="goals"
+                      value="reduceDebt"
+                    >
+
+                    <label for="reduceDebt">
+                      <span class="goal-check">✓</span>
+                      <span data-translate="reduceDebt">
+                        Reduce outstanding debt
+                      </span>
+                    </label>
+                  </div>
+
+                  <div class="goal-option">
+                    <input
+                      type="checkbox"
+                      id="buyProperty"
+                      name="goals"
+                      value="buyProperty"
+                    >
+
+                    <label for="buyProperty">
+                      <span class="goal-check">✓</span>
+                      <span data-translate="buyProperty">
+                        Buy or invest in property
+                      </span>
+                    </label>
+                  </div>
+
+                  <div class="goal-option">
+                    <input
+                      type="checkbox"
+                      id="growInvestments"
+                      name="goals"
+                      value="growInvestments"
+                    >
+
+                    <label for="growInvestments">
+                      <span class="goal-check">✓</span>
+                      <span data-translate="growInvestments">
+                        Grow investments
+                      </span>
+                    </label>
+                  </div>
+
+                  <div class="goal-option">
+                    <input
+                      type="checkbox"
+                      id="retirementPlanning"
+                      name="goals"
+                      value="retirementPlanning"
+                    >
+
+                    <label for="retirementPlanning">
+                      <span class="goal-check">✓</span>
+                      <span data-translate="retirementPlanning">
+                        Plan for retirement
+                      </span>
+                    </label>
+                  </div>
+
+                  <div class="goal-option">
+                    <input
+                      type="checkbox"
+                      id="protectFamily"
+                      name="goals"
+                      value="protectFamily"
+                    >
+
+                    <label for="protectFamily">
+                      <span class="goal-check">✓</span>
+                      <span data-translate="protectFamily">
+                        Protect my family financially
+                      </span>
+                    </label>
+                  </div>
+
+                  <div class="goal-option">
+                    <input
+                      type="checkbox"
+                      id="taxPlanning"
+                      name="goals"
+                      value="taxPlanning"
+                    >
+
+                    <label for="taxPlanning">
+                      <span class="goal-check">✓</span>
+                      <span data-translate="taxPlanning">
+                        Improve tax planning
+                      </span>
+                    </label>
+                  </div>
+
+                  <div class="goal-option">
+                    <input
+                      type="checkbox"
+                      id="internationalPlanning"
+                      name="goals"
+                      value="internationalPlanning"
+                    >
+
+                    <label for="internationalPlanning">
+                      <span class="goal-check">✓</span>
+                      <span data-translate="internationalPlanning">
+                        International financial planning
+                      </span>
+                    </label>
+                  </div>
+
+                  <div class="goal-option">
+                    <input
+                      type="checkbox"
+                      id="athletePlanning"
+                      name="goals"
+                      value="athletePlanning"
+                    >
+
+                    <label for="athletePlanning">
+                      <span class="goal-check">✓</span>
+                      <span data-translate="athletePlanning">
+                        Athlete career and wealth planning
+                      </span>
+                    </label>
+                  </div>
+
+                  <div class="goal-option">
+                    <input
+                      type="checkbox"
+                      id="educationFunding"
+                      name="goals"
+                      value="educationFunding"
+                    >
+
+                    <label for="educationFunding">
+                      <span class="goal-check">✓</span>
+                      <span data-translate="educationFunding">
+                        Education funding
+                      </span>
+                    </label>
+                  </div>
+
+                  <div class="goal-option">
+                    <input
+                      type="checkbox"
+                      id="businessPlanning"
+                      name="goals"
+                      value="businessPlanning"
+                    >
+
+                    <label for="businessPlanning">
+                      <span class="goal-check">✓</span>
+                      <span data-translate="businessPlanning">
+                        Business financial planning
+                      </span>
+                    </label>
+                  </div>
+
+                  <div class="goal-option">
+                    <input
+                      type="checkbox"
+                      id="estatePlanning"
+                      name="goals"
+                      value="estatePlanning"
+                    >
+
+                    <label for="estatePlanning">
+                      <span class="goal-check">✓</span>
+                      <span data-translate="estatePlanning">
+                        Estate and legacy planning
+                      </span>
+                    </label>
+                  </div>
+
+                </div>
+
+                <div
+                  class="error-message"
+                  id="goalsError"
+                  aria-live="polite"
+                ></div>
+              </section>
+
+              <section class="form-section">
+
+                <h2
+                  class="section-heading"
+                  data-translate="priorityHeading"
+                >
+                  Your Main Priority
+                </h2>
+
+                <span
+                  class="section-help"
+                  data-translate="priorityHelp"
+                >
+                  Choose the single area you would most like to address first.
+                </span>
+
+                <div class="field-grid">
+
+                  <div class="field-group">
+                    <label
+                      for="mainPriority"
+                      data-translate="mainPriorityLabel"
+                    >
+                      Main financial priority
+                    </label>
+
+                    <select
+                      id="mainPriority"
+                      name="mainPriority"
+                    >
+                      <option
+                        value=""
+                        data-translate="selectOption"
+                      >
+                        Select an option
+                      </option>
+
+                      <option value="cashFlow">
+                        Improve monthly cash flow
+                      </option>
+
+                      <option value="emergencyReserve">
+                        Build an emergency reserve
+                      </option>
+
+                      <option value="debt">
+                        Reduce debt
+                      </option>
+
+                      <option value="tax">
+                        Improve tax planning
+                      </option>
+
+                      <option value="investment">
+                        Build an investment strategy
+                      </option>
+
+                      <option value="property">
+                        Property planning
+                      </option>
+
+                      <option value="retirement">
+                        Retirement planning
+                      </option>
+
+                      <option value="family">
+                        Family protection
+                      </option>
+
+                      <option value="international">
+                        International planning
+                      </option>
+
+                      <option value="business">
+                        Business planning
+                      </option>
+
+                      <option value="careerTransition">
+                        Career or athlete transition planning
+                      </option>
+                    </select>
+                  </div>
+
+                  <div class="field-group">
+                    <label
+                      for="timeHorizon"
+                      data-translate="timeHorizonLabel"
+                    >
+                      When would you like to make progress?
+                    </label>
+
+                    <select
+                      id="timeHorizon"
+                      name="timeHorizon"
+                    >
+                      <option
+                        value=""
+                        data-translate="selectOption"
+                      >
+                        Select an option
+                      </option>
+
+                      <option value="immediately">
+                        Immediately
+                      </option>
+
+                      <option value="3-months">
+                        Within 3 months
+                      </option>
+
+                      <option value="6-months">
+                        Within 6 months
+                      </option>
+
+                      <option value="12-months">
+                        Within 12 months
+                      </option>
+
+                      <option value="1-3-years">
+                        Within 1–3 years
+                      </option>
+
+                      <option value="long-term">
+                        Long term
+                      </option>
+                    </select>
+                  </div>
+
+                  <div class="field-group full-width">
+                    <label
+                      for="additionalContext"
+                      data-translate="additionalContextLabel"
+                    >
+                      Anything else you would like to include?
+                    </label>
+
+                    <textarea
+                      id="additionalContext"
+                      name="additionalContext"
+                      maxlength="600"
+                      data-placeholder-key="additionalContextPlaceholder"
+                      placeholder="Optional: briefly describe any financial concern, upcoming change or important objective."
+                    ></textarea>
+                  </div>
+
+                </div>
+
+                <div
+                  class="error-message"
+                  id="priorityError"
+                  aria-live="polite"
+                ></div>
+              </section>
+
+              <section class="form-section">
+
+                <h2
+                  class="section-heading"
+                  data-translate="reviewHeading"
+                >
+                  Assessment Review
+                </h2>
+
+                <div class="review-box">
+
+                  <div class="review-grid">
+
+                    <div class="review-item">
+                      <span
+                        class="review-label"
+                        data-translate="selectedGoalsLabel"
+                      >
+                        Goals selected
+                      </span>
+
+                      <span
+                        class="review-value"
+                        id="selectedGoalsCount"
+                      >
+                        0
+                      </span>
+                    </div>
+
+                    <div class="review-item">
+                      <span
+                        class="review-label"
+                        data-translate="profileLabel"
+                      >
+                        Profile
+                      </span>
+
+                      <span
+                        class="review-value"
+                        id="profileSummary"
+                      >
+                        —
+                      </span>
+                    </div>
+
+                    <div class="review-item">
+                      <span
+                        class="review-label"
+                        data-translate="currencyLabel"
+                      >
+                        Currency
+                      </span>
+
+                      <span
+                        class="review-value"
+                        id="currencySummary"
+                      >
+                        EUR
+                      </span>
+                    </div>
+
+                  </div>
+
+                  <div
+                    class="completion-note"
+                    data-translate="completionNote"
+                  >
+                    When you submit this step, your Financial Blueprint
+                    results will be generated from the information entered
+                    throughout the assessment.
+                  </div>
+
+                </div>
+              </section>
+
+              <div
+                class="privacy-note"
+                data-translate="privacy"
+              >
+                Your assessment remains in this browser. No account is
+                required to view your initial results. You will be invited
+                to create an account only if you choose to save them.
+              </div>
+
+              <div class="action-row">
+
+                <a
+                  class="secondary-button"
+                  href="blueprint-step4.html"
+                  data-translate="previousButton"
+                >
+                  ← Previous
+                </a>
+
+                <button
+                  class="primary-button"
+                  type="submit"
+                >
+                  <span data-translate="resultsButton">
+                    View My Results
+                  </span>
+
+                  <span aria-hidden="true">→</span>
+                </button>
+
+              </div>
+
+            </form>
+          </div>
+        </section>
+
+      </div>
+    </main>
+
+    <footer class="site-footer">
+
+      <p>
+        Global Sport Finance · Global Management Consultancy Limited
+      </p>
+
+      <p data-translate="disclaimer">
+        This assessment provides general guidance and does not constitute
+        regulated financial, investment, tax or legal advice.
+      </p>
+
+    </footer>
+
+  </div>
+
+  <script>
+    const translations = {
+      en: {
+        back: "← Back",
+        progress: "Goals & Priorities · Step 5 of 5",
+        eyebrow: "Financial Blueprint",
+        title: "Your Financial Goals and Priorities",
+
+        intro:
+          "Select the financial objectives that matter most to you. " +
+          "Your choices will help shape the priorities shown in your " +
+          "Financial Blueprint results.",
+
+        goalsHeading: "What would you like to achieve?",
+        goalsHelp: "Select all that apply.",
+
+        emergencyFund: "Build an emergency reserve",
+        reduceDebt: "Reduce outstanding debt",
+        buyProperty: "Buy or invest in property",
+        growInvestments: "Grow investments",
+        retirementPlanning: "Plan for retirement",
+        protectFamily: "Protect my family financially",
+        taxPlanning: "Improve tax planning",
+        internationalPlanning: "International financial planning",
+        athletePlanning: "Athlete career and wealth planning",
+        educationFunding: "Education funding",
+        businessPlanning: "Business financial planning",
+        estatePlanning: "Estate and legacy planning",
+
+        priorityHeading: "Your Main Priority",
+
+        priorityHelp:
+          "Choose the single area you would most like to address first.",
+
+        mainPriorityLabel: "Main financial priority",
+
+        timeHorizonLabel:
+          "When would you like to make progress?",
+
+        additionalContextLabel:
+          "Anything else you would like to include?",
+
+        additionalContextPlaceholder:
+          "Optional: briefly describe any financial concern, upcoming change or important objective.",
+
+        selectOption: "Select an option",
+        reviewHeading: "Assessment Review",
+        selectedGoalsLabel: "Goals selected",
+        profileLabel: "Profile",
+        currencyLabel: "Currency",
+
+        completionNote:
+          "When you submit this step, your Financial Blueprint results " +
+          "will be generated from the information entered throughout " +
+          "the assessment.",
+
+        privacy:
+          "Your assessment remains in this browser. No account is " +
+          "required to view your initial results. You will be invited " +
+          "to create an account only if you choose to save them.",
+
+        previousButton: "← Previous",
+        resultsButton: "View My Results",
+
+        goalsError:
+          "Please select at least one financial goal.",
+
+        priorityError:
+          "Please select your main priority and preferred timeframe.",
+
+        disclaimer:
+          "This assessment provides general guidance and does not " +
+          "constitute regulated financial, investment, tax or legal advice."
+      },
+
+      fr: {
+        back: "← Retour",
+        progress: "Objectifs et priorités · Étape 5 sur 5",
+        eyebrow: "Plan financier",
+        title: "Vos objectifs et priorités financières",
+
+        intro:
+          "Sélectionnez les objectifs financiers qui comptent le plus " +
+          "pour vous. Vos choix permettront de déterminer les priorités " +
+          "présentées dans les résultats de votre plan financier.",
+
+        goalsHeading: "Quels objectifs souhaitez-vous atteindre ?",
+        goalsHelp: "Sélectionnez toutes les réponses pertinentes.",
+
+        emergencyFund: "Constituer une réserve d’urgence",
+        reduceDebt: "Réduire les dettes en cours",
+        buyProperty: "Acheter ou investir dans l’immobilier",
+        growInvestments: "Développer les investissements",
+        retirementPlanning: "Préparer la retraite",
+        protectFamily: "Protéger financièrement ma famille",
+        taxPlanning: "Améliorer la planification fiscale",
+        internationalPlanning: "Planification financière internationale",
+        athletePlanning: "Planification de carrière et de patrimoine sportif",
+        educationFunding: "Financement des études",
+        businessPlanning: "Planification financière de l’entreprise",
+        estatePlanning: "Planification successorale et patrimoniale",
+
+        priorityHeading: "Votre priorité principale",
+
+        priorityHelp:
+          "Choisissez le domaine que vous souhaitez traiter en premier.",
+
+        mainPriorityLabel: "Priorité financière principale",
+
+        timeHorizonLabel:
+          "Quand souhaitez-vous commencer à progresser ?",
+
+        additionalContextLabel:
+          "Souhaitez-vous ajouter une autre information ?",
+
+        additionalContextPlaceholder:
+          "Facultatif : décrivez brièvement une préoccupation financière, un changement à venir ou un objectif important.",
+
+        selectOption: "Sélectionnez une option",
+        reviewHeading: "Résumé de l’évaluation",
+        selectedGoalsLabel: "Objectifs sélectionnés",
+        profileLabel: "Profil",
+        currencyLabel: "Devise",
+
+        completionNote:
+          "Lorsque vous validerez cette étape, les résultats de votre " +
+          "plan financier seront générés à partir des informations " +
+          "saisies pendant l’évaluation.",
+
+        privacy:
+          "Votre évaluation reste dans ce navigateur. Aucun compte " +
+          "n’est nécessaire pour consulter vos premiers résultats. " +
+          "La création d’un compte vous sera proposée uniquement si " +
+          "vous souhaitez les enregistrer.",
+
+        previousButton: "← Précédent",
+        resultsButton: "Voir mes résultats",
+
+        goalsError:
+          "Veuillez sélectionner au moins un objectif financier.",
+
+        priorityError:
+          "Veuillez sélectionner votre priorité principale et votre échéance.",
+
+        disclaimer:
+          "Cette évaluation fournit des orientations générales et ne " +
+          "constitue pas un conseil financier, d’investissement, fiscal " +
+          "ou juridique réglementé."
+      },
+
+      es: {
+        back: "← Volver",
+        progress: "Objetivos y prioridades · Paso 5 de 5",
+        eyebrow: "Plan financiero",
+        title: "Sus objetivos y prioridades financieras",
+
+        intro:
+          "Seleccione los objetivos financieros que más le importan. " +
+          "Sus elecciones ayudarán a definir las prioridades mostradas " +
+          "en los resultados de su plan financiero.",
+
+        goalsHeading: "¿Qué desea conseguir?",
+        goalsHelp: "Seleccione todas las opciones aplicables.",
+
+        emergencyFund: "Crear una reserva de emergencia",
+        reduceDebt: "Reducir las deudas pendientes",
+        buyProperty: "Comprar o invertir en propiedades",
+        growInvestments: "Aumentar las inversiones",
+        retirementPlanning: "Planificar la jubilación",
+        protectFamily: "Proteger económicamente a mi familia",
+        taxPlanning: "Mejorar la planificación fiscal",
+        internationalPlanning: "Planificación financiera internacional",
+        athletePlanning: "Planificación de carrera y patrimonio deportivo",
+        educationFunding: "Financiación de estudios",
+        businessPlanning: "Planificación financiera empresarial",
+        estatePlanning: "Planificación patrimonial y sucesoria",
+
+        priorityHeading: "Su prioridad principal",
+
+        priorityHelp:
+          "Elija el área que desea abordar en primer lugar.",
+
+        mainPriorityLabel: "Prioridad financiera principal",
+
+        timeHorizonLabel:
+          "¿Cuándo desea empezar a avanzar?",
+
+        additionalContextLabel:
+          "¿Desea incluir alguna otra información?",
+
+        additionalContextPlaceholder:
+          "Opcional: describa brevemente una preocupación financiera, un cambio próximo o un objetivo importante.",
+
+        selectOption: "Seleccione una opción",
+        reviewHeading: "Resumen de la evaluación",
+        selectedGoalsLabel: "Objetivos seleccionados",
+        profileLabel: "Perfil",
+        currencyLabel: "Moneda",
+
+        completionNote:
+          "Cuando envíe este paso, los resultados de su plan financiero " +
+          "se generarán a partir de la información introducida durante " +
+          "la evaluación.",
+
+        privacy:
+          "Su evaluación permanece en este navegador. No necesita una " +
+          "cuenta para consultar sus primeros resultados. Solo se le " +
+          "invitará a crear una cuenta si decide guardarlos.",
+
+        previousButton: "← Anterior",
+        resultsButton: "Ver mis resultados",
+
+        goalsError:
+          "Seleccione al menos un objetivo financiero.",
+
+        priorityError:
+          "Seleccione su prioridad principal y el plazo deseado.",
+
+        disclaimer:
+          "Esta evaluación ofrece orientación general y no constituye " +
+          "asesoramiento financiero, de inversión, fiscal o jurídico regulado."
+      }
+    };
+
+    const form =
+      document.getElementById("stepFiveForm");
+
+    const goalInputs =
+      document.querySelectorAll(
+        'input[name="goals"]'
+      );
+
+    const languageButtons =
+      document.querySelectorAll(".language-button");
+
+    const translatedElements =
+      document.querySelectorAll("[data-translate]");
+
+    const goalsError =
+      document.getElementById("goalsError");
+
+    const priorityError =
+      document.getElementById("priorityError");
+
+    const selectedGoalsCount =
+      document.getElementById("selectedGoalsCount");
+
+    const profileSummary =
+      document.getElementById("profileSummary");
+
+    const currencySummary =
+      document.getElementById("currencySummary");
+
+    const mainPriority =
+      document.getElementById("mainPriority");
+
+    const timeHorizon =
+      document.getElementById("timeHorizon");
+
+    const additionalContext =
+      document.getElementById("additionalContext");
+
+    let currentLanguage =
+      localStorage.getItem("gsfBlueprintLanguage") || "en";
+
+    let profileType = "";
+    let selectedCurrency = "EUR";
+
+    const profileNames = {
+      en: {
+        individual: "Individual",
+        family: "Family",
+        entrepreneur: "Entrepreneur",
+        businessOwner: "Business Owner",
+        athlete: "Professional Athlete",
+        sportsProfessional: "Sports Professional"
+      },
+
+      fr: {
+        individual: "Particulier",
+        family: "Famille",
+        entrepreneur: "Entrepreneur",
+        businessOwner: "Chef d’entreprise",
+        athlete: "Athlète professionnel",
+        sportsProfessional: "Professionnel du sport"
+      },
+
+      es: {
+        individual: "Particular",
+        family: "Familia",
+        entrepreneur: "Emprendedor",
+        businessOwner: "Empresario",
+        athlete: "Deportista profesional",
+        sportsProfessional: "Profesional del deporte"
+      }
+    };
+
+    function getSelectedGoals() {
+      return Array.from(goalInputs)
+        .filter((input) => input.checked)
+        .map((input) => input.value);
+    }
+
+    function updateGoalCount() {
+      selectedGoalsCount.textContent =
+        getSelectedGoals().length;
+    }
+
+    function loadStepOneData() {
+      const savedStepOne =
+        localStorage.getItem("gsfBlueprintStep1");
+
+      if (!savedStepOne) {
+        profileSummary.textContent = "—";
+        currencySummary.textContent = selectedCurrency;
+        return;
+      }
+
+      try {
+        const stepOneData =
+          JSON.parse(savedStepOne);
+
+        profileType =
+          stepOneData.profileType || "";
+
+        selectedCurrency =
+          stepOneData.currency || "EUR";
+
+      } catch (error) {
+        console.error(
+          "Unable to load Step 1 data:",
+          error
+        );
+      }
+
+      updateProfileSummary();
+    }
+
+    function updateProfileSummary() {
+      const names =
+        profileNames[currentLanguage] ||
+        profileNames.en;
+
+      profileSummary.textContent =
+        names[profileType] || "—";
+
+      currencySummary.textContent =
+        selectedCurrency;
+    }
+
+    function updatePlaceholders() {
+      const selectedTranslation =
+        translations[currentLanguage];
+
+      document
+        .querySelectorAll("[data-placeholder-key]")
+        .forEach((element) => {
+          const key =
+            element.getAttribute(
+              "data-placeholder-key"
+            );
+
+          if (selectedTranslation[key]) {
+            element.placeholder =
+              selectedTranslation[key];
+          }
+        });
+    }
+
+    function changeLanguage(language) {
+      const selectedTranslation =
+        translations[language];
+
+      if (!selectedTranslation) {
+        return;
+      }
+
+      currentLanguage = language;
+      document.documentElement.lang = language;
+
+      translatedElements.forEach((element) => {
+        const key =
+          element.getAttribute("data-translate");
+
+        if (selectedTranslation[key] !== undefined) {
+          element.textContent =
+            selectedTranslation[key];
+        }
+      });
+
+      languageButtons.forEach((button) => {
+        button.classList.toggle(
+          "active",
+          button.dataset.language === language
+        );
+      });
+
+      localStorage.setItem(
+        "gsfBlueprintLanguage",
+        language
+      );
+
+      updatePlaceholders();
+      updateProfileSummary();
+    }
+
+    function saveStepFive() {
+      const stepFiveData = {
+        goals: getSelectedGoals(),
+        mainPriority: mainPriority.value,
+        timeHorizon: timeHorizon.value,
+        additionalContext:
+          additionalContext.value.trim()
+      };
+
+      localStorage.setItem(
+        "gsfBlueprintStep5",
+        JSON.stringify(stepFiveData)
+      );
+
+      localStorage.setItem(
+        "gsfBlueprintCompleted",
+        "true"
+      );
+    }
+
+    function restoreStepFive() {
+      const savedData =
+        localStorage.getItem("gsfBlueprintStep5");
+
+      if (!savedData) {
+        updateGoalCount();
+        return;
+      }
+
+      try {
+        const data =
+          JSON.parse(savedData);
+
+        if (Array.isArray(data.goals)) {
+          data.goals.forEach((goalValue) => {
+            const goalInput =
+              document.querySelector(
+                `input[name="goals"][value="${goalValue}"]`
+              );
+
+            if (goalInput) {
+              goalInput.checked = true;
+            }
+          });
+        }
+
+        mainPriority.value =
+          data.mainPriority || "";
+
+        timeHorizon.value =
+          data.timeHorizon || "";
+
+        additionalContext.value =
+          data.additionalContext || "";
+
+        updateGoalCount();
+
+      } catch (error) {
+        console.error(
+          "Unable to restore Step 5 data:",
+          error
+        );
+      }
+    }
+
+    goalInputs.forEach((input) => {
+      input.addEventListener(
+        "change",
+        updateGoalCount
+      );
+    });
+
+    languageButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        changeLanguage(button.dataset.language);
+      });
+    });
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+
+      goalsError.textContent = "";
+      priorityError.textContent = "";
+
+      const selectedGoals =
+        getSelectedGoals();
+
+      let valid = true;
+
+      if (selectedGoals.length === 0) {
+        goalsError.textContent =
+          translations[currentLanguage].goalsError;
+
+        valid = false;
+      }
+
+      if (
+        !mainPriority.value ||
+        !timeHorizon.value
+      ) {
+        priorityError.textContent =
+          translations[currentLanguage].priorityError;
+
+        valid = false;
+      }
+
+      if (!valid) {
+        return;
+      }
+
+      saveStepFive();
+
+      window.location.href =
+        "blueprint-results.html";
+    });
+
+    loadStepOneData();
+    restoreStepFive();
+    changeLanguage(currentLanguage);
+  </script>
+</body>
+</html>
