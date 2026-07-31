@@ -582,6 +582,82 @@
       font-size: 0.94rem;
     }
 
+/* SAVE RESULTS / FREE ACCOUNT */
+
+.save-results {
+  margin-bottom: 48px;
+  padding: clamp(30px, 5vw, 52px);
+  display: grid;
+  align-items: center;
+  gap: 36px;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  background:
+    radial-gradient(
+      circle at 90% 10%,
+      rgba(201, 163, 90, 0.14),
+      transparent 36%
+    ),
+    linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.075),
+      rgba(255, 255, 255, 0.025)
+    );
+}
+
+.save-results h2 {
+  margin-bottom: 14px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(2rem, 4vw, 3.4rem);
+  font-weight: 500;
+  line-height: 1.08;
+}
+
+.save-results p {
+  max-width: 720px;
+  color: var(--text-muted);
+  font-size: 0.93rem;
+}
+
+.account-benefits {
+  margin-top: 24px;
+  display: grid;
+  gap: 11px;
+  list-style: none;
+}
+
+.account-benefit {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  color: var(--text-light);
+  font-size: 0.88rem;
+}
+
+.account-benefit-icon {
+  width: 22px;
+  height: 22px;
+  flex: 0 0 22px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: #062015;
+  background: var(--success);
+  font-size: 0.7rem;
+  font-weight: 900;
+}
+
+.account-actions {
+  display: grid;
+  gap: 12px;
+}
+
+.account-note {
+  color: var(--text-muted);
+  text-align: center;
+  font-size: 0.76rem;
+  line-height: 1.5;
+}
+    
     /* PROFESSIONAL REVIEW */
 
     .professional-review {
@@ -734,10 +810,11 @@
     }
 
     @media (max-width: 980px) {
-      .result-intro,
-      .professional-review {
-        grid-template-columns: 1fr;
-      }
+     .result-intro,
+.save-results,
+.professional-review {
+  grid-template-columns: 1fr;
+}
 
       .score-area {
         padding-top: 10px;
@@ -790,10 +867,11 @@
         padding-top: 28px;
       }
 
-      .result-intro,
+           .result-intro,
       .analysis-panel,
       .action-plan,
       .goals-panel,
+      .save-results,
       .professional-review {
         padding: 25px 20px;
         border-radius: 20px;
@@ -1302,6 +1380,129 @@
 
           </section>
 
+          <section class="save-results panel">
+
+  <div>
+    <p
+      class="eyebrow"
+      data-translate="saveEyebrow"
+    >
+      Save Your Results
+    </p>
+
+    <h2 data-translate="saveTitle">
+      Create your free account to save your Financial Blueprint permanently and access future updates.
+    </h2>
+
+    <p data-translate="saveDescription">
+      Your initial assessment has been completed. Create a free Global Sport Finance account to keep your results secure and return to them whenever your circumstances change.
+    </p>
+
+    <ul class="account-benefits">
+
+      <li class="account-benefit">
+        <span
+          class="account-benefit-icon"
+          aria-hidden="true"
+        >
+          ✓
+        </span>
+
+        <span data-translate="saveBenefitOne">
+          Save your assessment permanently
+        </span>
+      </li>
+
+      <li class="account-benefit">
+        <span
+          class="account-benefit-icon"
+          aria-hidden="true"
+        >
+          ✓
+        </span>
+
+        <span data-translate="saveBenefitTwo">
+          Access your results from any device
+        </span>
+      </li>
+
+      <li class="account-benefit">
+        <span
+          class="account-benefit-icon"
+          aria-hidden="true"
+        >
+          ✓
+        </span>
+
+        <span data-translate="saveBenefitThree">
+          Update your financial position over time
+        </span>
+      </li>
+
+      <li class="account-benefit">
+        <span
+          class="account-benefit-icon"
+          aria-hidden="true"
+        >
+          ✓
+        </span>
+
+        <span data-translate="saveBenefitFour">
+          Receive future financial insights and planning tools
+        </span>
+      </li>
+
+      <li class="account-benefit">
+        <span
+          class="account-benefit-icon"
+          aria-hidden="true"
+        >
+          ✓
+        </span>
+
+        <span data-translate="saveBenefitFive">
+          Keep future reports together in one secure dashboard
+        </span>
+      </li>
+
+    </ul>
+  </div>
+
+  <div class="account-actions">
+
+    <a
+      class="button button-primary"
+      href="#"
+      id="createAccountButton"
+    >
+      <span data-translate="createAccount">
+        Create My Free Account
+      </span>
+
+      <span aria-hidden="true">→</span>
+    </a>
+
+    <a
+      class="button button-secondary"
+      href="#"
+      id="signInButton"
+      data-translate="signIn"
+    >
+      Already have an account? Sign in
+    </a>
+
+    <p
+      class="account-note"
+      data-translate="accountNote"
+    >
+      Account creation is free. Your results will remain in this browser until the account connection is completed.
+    </p>
+
+  </div>
+
+</section>
+
+          
           <section class="professional-review panel">
 
             <div>
@@ -1446,6 +1647,38 @@
         mainPriorityLabel: "Main priority",
         timeHorizonLabel: "Preferred timeframe",
 
+        saveEyebrow: "Save Your Results",
+
+saveTitle:
+  "Create your free account to save your Financial Blueprint permanently and access future updates.",
+
+saveDescription:
+  "Your initial assessment has been completed. Create a free Global Sport Finance account to keep your results secure and return to them whenever your circumstances change.",
+
+saveBenefitOne:
+  "Save your assessment permanently",
+
+saveBenefitTwo:
+  "Access your results from any device",
+
+saveBenefitThree:
+  "Update your financial position over time",
+
+saveBenefitFour:
+  "Receive future financial insights and planning tools",
+
+saveBenefitFive:
+  "Keep future reports together in one secure dashboard",
+
+createAccount:
+  "Create My Free Account",
+
+signIn:
+  "Already have an account? Sign in",
+
+accountNote:
+  "Account creation is free. Your results will remain in this browser until the account connection is completed.",
+        
         reviewEyebrow: "Professional Assistance",
         reviewTitle: "Would you like a professional review?",
 
@@ -1705,6 +1938,38 @@
         mainPriorityLabel: "Priorité principale",
         timeHorizonLabel: "Échéance souhaitée",
 
+        saveEyebrow: "Enregistrer vos résultats",
+
+saveTitle:
+  "Créez votre compte gratuit pour enregistrer définitivement votre plan financier et accéder aux futures mises à jour.",
+
+saveDescription:
+  "Votre première évaluation est terminée. Créez gratuitement un compte Global Sport Finance afin de conserver vos résultats en toute sécurité et de les consulter lorsque votre situation évolue.",
+
+saveBenefitOne:
+  "Enregistrer définitivement votre évaluation",
+
+saveBenefitTwo:
+  "Accéder à vos résultats depuis n’importe quel appareil",
+
+saveBenefitThree:
+  "Mettre à jour votre situation financière au fil du temps",
+
+saveBenefitFour:
+  "Recevoir de futurs contenus financiers et outils de planification",
+
+saveBenefitFive:
+  "Conserver vos futurs rapports dans un tableau de bord sécurisé",
+
+createAccount:
+  "Créer mon compte gratuit",
+
+signIn:
+  "Vous avez déjà un compte ? Connectez-vous",
+
+accountNote:
+  "La création du compte est gratuite. Vos résultats resteront dans ce navigateur jusqu’à la connexion du compte.",
+        
         reviewEyebrow: "Assistance professionnelle",
         reviewTitle: "Souhaitez-vous une analyse professionnelle ?",
 
@@ -1971,6 +2236,38 @@
         mainPriorityLabel: "Prioridad principal",
         timeHorizonLabel: "Plazo preferido",
 
+        saveEyebrow: "Guardar sus resultados",
+
+saveTitle:
+  "Cree su cuenta gratuita para guardar permanentemente su plan financiero y acceder a futuras actualizaciones.",
+
+saveDescription:
+  "Su evaluación inicial ha finalizado. Cree una cuenta gratuita de Global Sport Finance para conservar sus resultados de forma segura y volver a consultarlos cuando cambien sus circunstancias.",
+
+saveBenefitOne:
+  "Guardar permanentemente su evaluación",
+
+saveBenefitTwo:
+  "Acceder a sus resultados desde cualquier dispositivo",
+
+saveBenefitThree:
+  "Actualizar su situación financiera con el tiempo",
+
+saveBenefitFour:
+  "Recibir futuros contenidos financieros y herramientas de planificación",
+
+saveBenefitFive:
+  "Conservar sus futuros informes en un panel seguro",
+
+createAccount:
+  "Crear mi cuenta gratuita",
+
+signIn:
+  "¿Ya tiene una cuenta? Inicie sesión",
+
+accountNote:
+  "La creación de la cuenta es gratuita. Sus resultados permanecerán en este navegador hasta completar la conexión de la cuenta.",
+        
         reviewEyebrow: "Asistencia profesional",
         reviewTitle: "¿Desea una revisión profesional?",
 
