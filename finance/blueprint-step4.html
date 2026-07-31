@@ -1,0 +1,1541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <meta
+    name="description"
+    content="Step 4 of the Global Sport Finance Financial Blueprint assessment."
+  >
+
+  <title>Liabilities and Debt | Financial Blueprint</title>
+
+  <style>
+    :root {
+      --navy-950: #06111f;
+      --navy-900: #091827;
+      --navy-800: #10263d;
+
+      --gold-500: #c9a35a;
+      --gold-400: #d9b86e;
+      --gold-300: #ead39d;
+
+      --white: #ffffff;
+      --text-light: #d9e2ec;
+      --text-muted: #9fb0c1;
+
+      --border: rgba(201, 163, 90, 0.28);
+      --card-bg: rgba(255, 255, 255, 0.045);
+      --shadow: 0 24px 70px rgba(0, 0, 0, 0.34);
+      --error: #ffb3b3;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Arial,
+        sans-serif;
+      color: var(--white);
+      background:
+        radial-gradient(
+          circle at 82% 12%,
+          rgba(201, 163, 90, 0.12),
+          transparent 34%
+        ),
+        radial-gradient(
+          circle at 8% 88%,
+          rgba(23, 56, 84, 0.55),
+          transparent 38%
+        ),
+        linear-gradient(
+          135deg,
+          var(--navy-950),
+          var(--navy-900) 52%,
+          #0b1d30
+        );
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    .page-shell {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .site-header {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(6, 17, 31, 0.8);
+      backdrop-filter: blur(14px);
+    }
+
+    .header-inner {
+      width: min(1180px, calc(100% - 40px));
+      min-height: 82px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .brand {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .brand-title {
+      color: var(--gold-400);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.4rem;
+      font-weight: 600;
+    }
+
+    .brand-subtitle {
+      color: var(--text-muted);
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .back-link {
+      color: var(--text-light);
+      font-size: 0.88rem;
+    }
+
+    .back-link:hover {
+      color: var(--gold-300);
+    }
+
+    .language-switcher {
+      display: flex;
+      padding: 4px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.035);
+    }
+
+    .language-button {
+      min-width: 38px;
+      padding: 7px 9px;
+      border: 0;
+      border-radius: 999px;
+      color: var(--text-muted);
+      background: transparent;
+      cursor: pointer;
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+
+    .language-button.active {
+      color: var(--navy-950);
+      background: var(--gold-400);
+    }
+
+    main {
+      flex: 1;
+      padding: 48px 0 70px;
+    }
+
+    .assessment-container {
+      width: min(980px, calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    .progress-row {
+      margin-bottom: 28px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .progress-label {
+      flex-shrink: 0;
+      color: var(--gold-300);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 5px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.09);
+    }
+
+    .progress-fill {
+      width: 80%;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(
+        90deg,
+        var(--gold-500),
+        var(--gold-300)
+      );
+    }
+
+    .assessment-card {
+      overflow: hidden;
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      background: linear-gradient(
+        145deg,
+        rgba(255, 255, 255, 0.075),
+        rgba(255, 255, 255, 0.025)
+      );
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(16px);
+    }
+
+    .card-top-line {
+      height: 3px;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        var(--gold-400),
+        transparent
+      );
+    }
+
+    .card-content {
+      padding: clamp(32px, 6vw, 64px);
+    }
+
+    .eyebrow {
+      margin-bottom: 14px;
+      color: var(--gold-300);
+      font-size: 0.76rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin-bottom: 14px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.3rem, 5vw, 4rem);
+      font-weight: 500;
+    }
+
+    .intro-text {
+      max-width: 720px;
+      margin-bottom: 34px;
+      color: var(--text-light);
+      font-size: 1rem;
+      line-height: 1.7;
+    }
+
+    .currency-banner {
+      margin-bottom: 30px;
+      padding: 15px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: rgba(201, 163, 90, 0.08);
+    }
+
+    .currency-banner span:first-child {
+      color: var(--text-light);
+      font-size: 0.9rem;
+    }
+
+    .currency-code {
+      color: var(--gold-300);
+      font-weight: 800;
+      letter-spacing: 0.08em;
+    }
+
+    .form-section {
+      margin-bottom: 34px;
+    }
+
+    .section-heading {
+      margin-bottom: 18px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      color: var(--white);
+      font-size: 1.05rem;
+      font-weight: 750;
+    }
+
+    .field-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }
+
+    .field-group label {
+      color: var(--text-light);
+      font-size: 0.88rem;
+      font-weight: 650;
+    }
+
+    .field-help {
+      color: var(--text-muted);
+      font-size: 0.76rem;
+      line-height: 1.4;
+    }
+
+    .money-field {
+      position: relative;
+    }
+
+    .currency-prefix {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--gold-300);
+      font-size: 0.82rem;
+      font-weight: 750;
+      pointer-events: none;
+    }
+
+    input {
+      width: 100%;
+      min-height: 52px;
+      padding: 0 16px 0 64px;
+      border: 1px solid rgba(255, 255, 255, 0.13);
+      border-radius: 13px;
+      color: var(--white);
+      background: var(--navy-800);
+      outline: none;
+    }
+
+    input::placeholder {
+      color: #71869a;
+    }
+
+    input:focus {
+      border-color: var(--gold-400);
+      box-shadow: 0 0 0 3px rgba(201, 163, 90, 0.12);
+    }
+
+    .summary-box {
+      margin-top: 12px;
+      padding: 22px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.035);
+    }
+
+    .summary-item {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .summary-label {
+      color: var(--text-muted);
+      font-size: 0.76rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .summary-value {
+      color: var(--white);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.35rem;
+    }
+
+    .summary-value.highlight {
+      color: var(--gold-300);
+    }
+
+    .debt-status {
+      margin-top: 20px;
+      padding: 18px;
+      border-left: 3px solid var(--gold-400);
+      border-radius: 0 12px 12px 0;
+      background: rgba(201, 163, 90, 0.07);
+    }
+
+    .debt-status strong {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--gold-300);
+    }
+
+    .debt-status span {
+      color: var(--text-light);
+      font-size: 0.88rem;
+      line-height: 1.55;
+    }
+
+    .error-message {
+      min-height: 22px;
+      margin-top: 10px;
+      color: var(--error);
+      font-size: 0.85rem;
+    }
+
+    .privacy-note {
+      margin: 10px 0 30px;
+      padding: 16px 18px;
+      border-left: 3px solid var(--gold-400);
+      border-radius: 0 12px 12px 0;
+      color: var(--text-light);
+      background: rgba(201, 163, 90, 0.07);
+      font-size: 0.88rem;
+      line-height: 1.55;
+    }
+
+    .action-row {
+      padding-top: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .secondary-button,
+    .primary-button {
+      min-height: 52px;
+      padding: 0 26px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-weight: 750;
+    }
+
+    .secondary-button {
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: var(--text-light);
+      background: transparent;
+    }
+
+    .secondary-button:hover {
+      border-color: var(--gold-400);
+      color: var(--gold-300);
+    }
+
+    .primary-button {
+      border: 1px solid var(--gold-400);
+      color: var(--navy-950);
+      background: linear-gradient(
+        135deg,
+        var(--gold-300),
+        var(--gold-500)
+      );
+      box-shadow: 0 12px 30px rgba(201, 163, 90, 0.18);
+    }
+
+    .primary-button:hover {
+      transform: translateY(-2px);
+    }
+
+    .site-footer {
+      padding: 22px 20px 30px;
+      color: var(--text-muted);
+      text-align: center;
+      font-size: 0.76rem;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 760px) {
+      .brand-subtitle,
+      .back-link {
+        display: none;
+      }
+
+      .field-grid,
+      .summary-box {
+        grid-template-columns: 1fr;
+      }
+
+      .action-row {
+        align-items: stretch;
+        flex-direction: column-reverse;
+      }
+
+      .secondary-button,
+      .primary-button {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 500px) {
+      .header-inner,
+      .assessment-container {
+        width: min(100% - 24px, 980px);
+      }
+
+      .progress-row {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .assessment-card {
+        border-radius: 20px;
+      }
+
+      .card-content {
+        padding: 30px 22px;
+      }
+
+      .brand-title {
+        font-size: 1rem;
+      }
+
+      .currency-banner {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page-shell">
+
+    <header class="site-header">
+      <div class="header-inner">
+
+        <a class="brand" href="../finance.html">
+          <span class="brand-title">
+            Global Sport Finance
+          </span>
+
+          <span class="brand-subtitle">
+            Powered by Global Management Consultancy
+          </span>
+        </a>
+
+        <div class="header-actions">
+
+          <a
+            class="back-link"
+            href="blueprint-step3.html"
+            data-translate="back"
+          >
+            ← Back
+          </a>
+
+          <div class="language-switcher">
+            <button
+              class="language-button active"
+              type="button"
+              data-language="en"
+            >
+              EN
+            </button>
+
+            <button
+              class="language-button"
+              type="button"
+              data-language="fr"
+            >
+              FR
+            </button>
+
+            <button
+              class="language-button"
+              type="button"
+              data-language="es"
+            >
+              ES
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <div class="assessment-container">
+
+        <div class="progress-row">
+          <span
+            class="progress-label"
+            data-translate="progress"
+          >
+            Liabilities · Step 4 of 5
+          </span>
+
+          <div class="progress-track">
+            <div class="progress-fill"></div>
+          </div>
+        </div>
+
+        <section class="assessment-card">
+          <div class="card-top-line"></div>
+
+          <div class="card-content">
+
+            <div
+              class="eyebrow"
+              data-translate="eyebrow"
+            >
+              Financial Blueprint
+            </div>
+
+            <h1 data-translate="title">
+              Your Liabilities and Outstanding Debt
+            </h1>
+
+            <p
+              class="intro-text"
+              data-translate="intro"
+            >
+              Enter the approximate outstanding balance of your debts
+              and financial obligations. Do not enter the monthly payment
+              amounts again.
+            </p>
+
+            <div class="currency-banner">
+              <span data-translate="currencyMessage">
+                Enter the current outstanding balances in your selected currency.
+              </span>
+
+              <span
+                class="currency-code"
+                id="currencyCode"
+              >
+                EUR
+              </span>
+            </div>
+
+            <form id="stepFourForm" novalidate>
+
+              <section class="form-section">
+
+                <h2
+                  class="section-heading"
+                  data-translate="securedHeading"
+                >
+                  Property and Secured Debt
+                </h2>
+
+                <div class="field-grid">
+
+                  <div class="field-group">
+                    <label
+                      for="mortgageBalance"
+                      data-translate="mortgageLabel"
+                    >
+                      Outstanding mortgage balance
+                    </label>
+
+                    <div class="money-field">
+                      <span class="currency-prefix">EUR</span>
+
+                      <input
+                        type="number"
+                        id="mortgageBalance"
+                        min="0"
+                        step="0.01"
+                        inputmode="decimal"
+                        placeholder="0.00"
+                      >
+                    </div>
+
+                    <span
+                      class="field-help"
+                      data-translate="mortgageHelp"
+                    >
+                      Total amount still owed on residential or investment property.
+                    </span>
+                  </div>
+
+                  <div class="field-group">
+                    <label
+                      for="vehicleFinance"
+                      data-translate="vehicleFinanceLabel"
+                    >
+                      Vehicle finance
+                    </label>
+
+                    <div class="money-field">
+                      <span class="currency-prefix">EUR</span>
+
+                      <input
+                        type="number"
+                        id="vehicleFinance"
+                        min="0"
+                        step="0.01"
+                        inputmode="decimal"
+                        placeholder="0.00"
+                      >
+                    </div>
+                  </div>
+
+                  <div class="field-group">
+                    <label
+                      for="securedLoans"
+                      data-translate="securedLoansLabel"
+                    >
+                      Other secured loans
+                    </label>
+
+                    <div class="money-field">
+                      <span class="currency-prefix">EUR</span>
+
+                      <input
+                        type="number"
+                        id="securedLoans"
+                        min="0"
+                        step="0.01"
+                        inputmode="decimal"
+                        placeholder="0.00"
+                      >
+                    </div>
+                  </div>
+
+                </div>
+              </section>
+
+              <section class="form-section">
+
+                <h2
+                  class="section-heading"
+                  data-translate="unsecuredHeading"
+                >
+                  Loans and Unsecured Debt
+                </h2>
+
+                <div class="field-grid">
+
+                  <div class="field-group">
+                    <label
+                      for="personalLoans"
+                      data-translate="personalLoansLabel"
+                    >
+                      Personal loans
+                    </label>
+
+                    <div class="money-field">
+                      <span class="currency-prefix">EUR</span>
+
+                      <input
+                        type="number"
+                        id="personalLoans"
+                        min="0"
+                        step="0.01"
+                        inputmode="decimal"
+                        placeholder="0.00"
+                      >
+                    </div>
+                  </div>
+
+                  <div class="field-group">
+                    <label
+                      for="creditCards"
+                      data-translate="creditCardsLabel"
+                    >
+                      Credit-card balances
+                    </label>
+
+                    <div class="money-field">
+                      <span class="currency-prefix">EUR</span>
+
+                      <input
+                        type="number"
+                        id="creditCards"
+                        min="0"
+                        step="0.01"
+                        inputmode="decimal"
+                        placeholder="0.00"
+                      >
+                    </div>
+                  </div>
+
+                  <div class="field-group">
+                    <label
+                      for="overdrafts"
+                      data-translate="overdraftsLabel"
+                    >
+                      Overdrafts
+                    </label>
+
+                    <div class="money-field">
+                      <span class="currency-prefix">EUR</span>
+
+                      <input
+                        type="number"
+                        id="overdrafts"
+                        min="0"
+                        step="0.01"
+                        inputmode="decimal"
+                        placeholder="0.00"
+                      >
+                    </div>
+                  </div>
+
+                  <div class="field-group">
+                    <label
+                      for="taxLiabilities"
+                      data-translate="taxLiabilitiesLabel"
+                    >
+                      Outstanding tax liabilities
+                    </label>
+
+                    <div class="money-field">
+                      <span class="currency-prefix">EUR</span>
+
+                      <input
+                        type="number"
+                        id="taxLiabilities"
+                        min="0"
+                        step="0.01"
+                        inputmode="decimal"
+                        placeholder="0.00"
+                      >
+                    </div>
+
+                    <span
+                      class="field-help"
+                      data-translate="taxLiabilitiesHelp"
+                    >
+                      Tax already due or expected to be due, excluding normal future tax.
+                    </span>
+                  </div>
+
+                  <div class="field-group">
+                    <label
+                      for="businessDebt"
+                      data-translate="businessDebtLabel"
+                    >
+                      Business debt
+                    </label>
+
+                    <div class="money-field">
+                      <span class="currency-prefix">EUR</span>
+
+                      <input
+                        type="number"
+                        id="businessDebt"
+                        min="0"
+                        step="0.01"
+                        inputmode="decimal"
+                        placeholder="0.00"
+                      >
+                    </div>
+                  </div>
+
+                  <div class="field-group">
+                    <label
+                      for="otherDebt"
+                      data-translate="otherDebtLabel"
+                    >
+                      Other outstanding debt
+                    </label>
+
+                    <div class="money-field">
+                      <span class="currency-prefix">EUR</span>
+
+                      <input
+                        type="number"
+                        id="otherDebt"
+                        min="0"
+                        step="0.01"
+                        inputmode="decimal"
+                        placeholder="0.00"
+                      >
+                    </div>
+                  </div>
+
+                </div>
+              </section>
+
+              <section class="form-section">
+
+                <h2
+                  class="section-heading"
+                  data-translate="overviewHeading"
+                >
+                  Debt and Net-Worth Overview
+                </h2>
+
+                <div class="summary-box">
+
+                  <div class="summary-item">
+                    <span
+                      class="summary-label"
+                      data-translate="totalLiabilitiesLabel"
+                    >
+                      Total liabilities
+                    </span>
+
+                    <span
+                      class="summary-value"
+                      id="totalLiabilities"
+                    >
+                      EUR 0.00
+                    </span>
+                  </div>
+
+                  <div class="summary-item">
+                    <span
+                      class="summary-label"
+                      data-translate="netWorthLabel"
+                    >
+                      Estimated net worth
+                    </span>
+
+                    <span
+                      class="summary-value highlight"
+                      id="netWorth"
+                    >
+                      EUR 0.00
+                    </span>
+                  </div>
+
+                  <div class="summary-item">
+                    <span
+                      class="summary-label"
+                      data-translate="debtRatioLabel"
+                    >
+                      Debt-to-asset ratio
+                    </span>
+
+                    <span
+                      class="summary-value"
+                      id="debtRatio"
+                    >
+                      0.0%
+                    </span>
+                  </div>
+
+                </div>
+
+                <div class="debt-status">
+                  <strong data-translate="debtStatusTitle">
+                    Debt Position Indicator
+                  </strong>
+
+                  <span id="debtStatusText">
+                    Enter your outstanding balances to review your debt position.
+                  </span>
+                </div>
+
+                <div
+                  class="error-message"
+                  id="formError"
+                  aria-live="polite"
+                ></div>
+              </section>
+
+              <div
+                class="privacy-note"
+                data-translate="privacy"
+              >
+                These figures remain temporarily in your browser during
+                the assessment and are not transmitted to Global
+                Management Consultancy at this stage.
+              </div>
+
+              <div class="action-row">
+
+                <a
+                  class="secondary-button"
+                  href="blueprint-step3.html"
+                  data-translate="previousButton"
+                >
+                  ← Previous
+                </a>
+
+                <button
+                  class="primary-button"
+                  type="submit"
+                >
+                  <span data-translate="continueButton">
+                    Continue
+                  </span>
+
+                  <span aria-hidden="true">→</span>
+                </button>
+
+              </div>
+
+            </form>
+          </div>
+        </section>
+
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <p>
+        Global Sport Finance · Global Management Consultancy Limited
+      </p>
+
+      <p data-translate="disclaimer">
+        This assessment provides general guidance and does not constitute
+        regulated financial, investment, tax or legal advice.
+      </p>
+    </footer>
+
+  </div>
+
+  <script>
+    const translations = {
+      en: {
+        back: "← Back",
+        progress: "Liabilities · Step 4 of 5",
+        eyebrow: "Financial Blueprint",
+        title: "Your Liabilities and Outstanding Debt",
+
+        intro:
+          "Enter the approximate outstanding balance of your debts " +
+          "and financial obligations. Do not enter the monthly payment " +
+          "amounts again.",
+
+        currencyMessage:
+          "Enter the current outstanding balances in your selected currency.",
+
+        securedHeading: "Property and Secured Debt",
+        mortgageLabel: "Outstanding mortgage balance",
+        mortgageHelp:
+          "Total amount still owed on residential or investment property.",
+
+        vehicleFinanceLabel: "Vehicle finance",
+        securedLoansLabel: "Other secured loans",
+
+        unsecuredHeading: "Loans and Unsecured Debt",
+        personalLoansLabel: "Personal loans",
+        creditCardsLabel: "Credit-card balances",
+        overdraftsLabel: "Overdrafts",
+        taxLiabilitiesLabel: "Outstanding tax liabilities",
+
+        taxLiabilitiesHelp:
+          "Tax already due or expected to be due, excluding normal future tax.",
+
+        businessDebtLabel: "Business debt",
+        otherDebtLabel: "Other outstanding debt",
+
+        overviewHeading: "Debt and Net-Worth Overview",
+        totalLiabilitiesLabel: "Total liabilities",
+        netWorthLabel: "Estimated net worth",
+        debtRatioLabel: "Debt-to-asset ratio",
+        debtStatusTitle: "Debt Position Indicator",
+
+        noDebt:
+          "No outstanding debt has been entered.",
+
+        lowDebt:
+          "Your liabilities appear low in relation to the assets entered.",
+
+        moderateDebt:
+          "Your liabilities represent a moderate proportion of the assets entered.",
+
+        highDebt:
+          "Your liabilities represent a significant proportion of the assets entered and may require closer review.",
+
+        noAssets:
+          "Complete Step 3 to calculate your estimated net worth and debt ratio.",
+
+        invalidValues:
+          "Please ensure all figures are zero or positive numbers.",
+
+        privacy:
+          "These figures remain temporarily in your browser during the " +
+          "assessment and are not transmitted to Global Management " +
+          "Consultancy at this stage.",
+
+        previousButton: "← Previous",
+        continueButton: "Continue",
+
+        disclaimer:
+          "This assessment provides general guidance and does not " +
+          "constitute regulated financial, investment, tax or legal advice."
+      },
+
+      fr: {
+        back: "← Retour",
+        progress: "Dettes et engagements · Étape 4 sur 5",
+        eyebrow: "Plan financier",
+        title: "Vos dettes et engagements financiers",
+
+        intro:
+          "Indiquez le solde approximatif restant dû de vos dettes et " +
+          "engagements financiers. Ne saisissez pas à nouveau les mensualités.",
+
+        currencyMessage:
+          "Indiquez les soldes actuellement dus dans la devise sélectionnée.",
+
+        securedHeading: "Dettes immobilières et garanties",
+        mortgageLabel: "Solde du crédit immobilier",
+        mortgageHelp:
+          "Montant total restant dû sur les biens immobiliers résidentiels ou locatifs.",
+
+        vehicleFinanceLabel: "Financement de véhicules",
+        securedLoansLabel: "Autres prêts garantis",
+
+        unsecuredHeading: "Prêts et dettes non garanties",
+        personalLoansLabel: "Prêts personnels",
+        creditCardsLabel: "Soldes de cartes de crédit",
+        overdraftsLabel: "Découverts bancaires",
+        taxLiabilitiesLabel: "Dettes fiscales en cours",
+
+        taxLiabilitiesHelp:
+          "Impôts déjà dus ou qui devraient prochainement l’être, hors fiscalité future normale.",
+
+        businessDebtLabel: "Dette professionnelle",
+        otherDebtLabel: "Autres dettes en cours",
+
+        overviewHeading: "Aperçu des dettes et du patrimoine net",
+        totalLiabilitiesLabel: "Total des dettes",
+        netWorthLabel: "Patrimoine net estimé",
+        debtRatioLabel: "Ratio dettes-actifs",
+        debtStatusTitle: "Indicateur de niveau d’endettement",
+
+        noDebt:
+          "Aucune dette en cours n’a été indiquée.",
+
+        lowDebt:
+          "Vos dettes semblent faibles par rapport aux actifs indiqués.",
+
+        moderateDebt:
+          "Vos dettes représentent une proportion modérée des actifs indiqués.",
+
+        highDebt:
+          "Vos dettes représentent une part importante des actifs indiqués et peuvent nécessiter une analyse plus approfondie.",
+
+        noAssets:
+          "Complétez l’étape 3 afin de calculer votre patrimoine net et votre ratio d’endettement.",
+
+        invalidValues:
+          "Veuillez vérifier que tous les montants sont nuls ou positifs.",
+
+        privacy:
+          "Ces montants restent temporairement enregistrés dans votre " +
+          "navigateur pendant l’évaluation et ne sont pas transmis à " +
+          "Global Management Consultancy à ce stade.",
+
+        previousButton: "← Précédent",
+        continueButton: "Continuer",
+
+        disclaimer:
+          "Cette évaluation fournit des orientations générales et ne " +
+          "constitue pas un conseil financier, d’investissement, fiscal " +
+          "ou juridique réglementé."
+      },
+
+      es: {
+        back: "← Volver",
+        progress: "Deudas y obligaciones · Paso 4 de 5",
+        eyebrow: "Plan financiero",
+        title: "Sus deudas y obligaciones financieras",
+
+        intro:
+          "Introduzca el saldo pendiente aproximado de sus deudas y " +
+          "obligaciones financieras. No vuelva a introducir los pagos mensuales.",
+
+        currencyMessage:
+          "Introduzca los saldos actualmente pendientes en la moneda seleccionada.",
+
+        securedHeading: "Deuda inmobiliaria y garantizada",
+        mortgageLabel: "Saldo pendiente de hipoteca",
+        mortgageHelp:
+          "Cantidad total todavía pendiente sobre propiedades residenciales o de inversión.",
+
+        vehicleFinanceLabel: "Financiación de vehículos",
+        securedLoansLabel: "Otros préstamos garantizados",
+
+        unsecuredHeading: "Préstamos y deuda no garantizada",
+        personalLoansLabel: "Préstamos personales",
+        creditCardsLabel: "Saldos de tarjetas de crédito",
+        overdraftsLabel: "Descubiertos bancarios",
+        taxLiabilitiesLabel: "Deudas fiscales pendientes",
+
+        taxLiabilitiesHelp:
+          "Impuestos ya vencidos o que se espera que venzan, excluyendo impuestos futuros normales.",
+
+        businessDebtLabel: "Deuda empresarial",
+        otherDebtLabel: "Otras deudas pendientes",
+
+        overviewHeading: "Resumen de deuda y patrimonio neto",
+        totalLiabilitiesLabel: "Pasivos totales",
+        netWorthLabel: "Patrimonio neto estimado",
+        debtRatioLabel: "Ratio deuda-activos",
+        debtStatusTitle: "Indicador de nivel de deuda",
+
+        noDebt:
+          "No se ha introducido ninguna deuda pendiente.",
+
+        lowDebt:
+          "Sus deudas parecen bajas en relación con los activos introducidos.",
+
+        moderateDebt:
+          "Sus deudas representan una proporción moderada de los activos introducidos.",
+
+        highDebt:
+          "Sus deudas representan una parte importante de los activos introducidos y pueden requerir una revisión más detallada.",
+
+        noAssets:
+          "Complete el paso 3 para calcular su patrimonio neto estimado y su ratio de deuda.",
+
+        invalidValues:
+          "Compruebe que todas las cantidades sean cero o números positivos.",
+
+        privacy:
+          "Estas cantidades permanecen temporalmente en su navegador " +
+          "durante la evaluación y no se transmiten a Global Management " +
+          "Consultancy en esta fase.",
+
+        previousButton: "← Anterior",
+        continueButton: "Continuar",
+
+        disclaimer:
+          "Esta evaluación ofrece orientación general y no constituye " +
+          "asesoramiento financiero, de inversión, fiscal o jurídico regulado."
+      }
+    };
+
+    const form =
+      document.getElementById("stepFourForm");
+
+    const fieldIds = [
+      "mortgageBalance",
+      "vehicleFinance",
+      "securedLoans",
+      "personalLoans",
+      "creditCards",
+      "overdrafts",
+      "taxLiabilities",
+      "businessDebt",
+      "otherDebt"
+    ];
+
+    const languageButtons =
+      document.querySelectorAll(".language-button");
+
+    const translatedElements =
+      document.querySelectorAll("[data-translate]");
+
+    const currencyPrefixes =
+      document.querySelectorAll(".currency-prefix");
+
+    const currencyCodeElement =
+      document.getElementById("currencyCode");
+
+    const totalLiabilitiesElement =
+      document.getElementById("totalLiabilities");
+
+    const netWorthElement =
+      document.getElementById("netWorth");
+
+    const debtRatioElement =
+      document.getElementById("debtRatio");
+
+    const debtStatusText =
+      document.getElementById("debtStatusText");
+
+    const formError =
+      document.getElementById("formError");
+
+    let currentLanguage =
+      localStorage.getItem("gsfBlueprintLanguage") || "en";
+
+    let selectedCurrency = "EUR";
+    let totalAssets = 0;
+
+    function getNumber(fieldId) {
+      const value =
+        Number.parseFloat(
+          document.getElementById(fieldId).value
+        );
+
+      return Number.isNaN(value) ? 0 : value;
+    }
+
+    function formatMoney(value) {
+      return (
+        selectedCurrency +
+        " " +
+        value.toLocaleString(undefined, {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2
+        })
+      );
+    }
+
+    function loadPreviousData() {
+      const stepOne =
+        localStorage.getItem("gsfBlueprintStep1");
+
+      if (stepOne) {
+        try {
+          const stepOneData =
+            JSON.parse(stepOne);
+
+          if (stepOneData.currency) {
+            selectedCurrency =
+              stepOneData.currency;
+          }
+        } catch (error) {
+          console.error(
+            "Unable to load Step 1:",
+            error
+          );
+        }
+      }
+
+      const stepThree =
+        localStorage.getItem("gsfBlueprintStep3");
+
+      if (stepThree) {
+        try {
+          const stepThreeData =
+            JSON.parse(stepThree);
+
+          totalAssets =
+            Number(stepThreeData.totalAssets) || 0;
+        } catch (error) {
+          console.error(
+            "Unable to load Step 3:",
+            error
+          );
+        }
+      }
+
+      currencyCodeElement.textContent =
+        selectedCurrency;
+
+      currencyPrefixes.forEach((prefix) => {
+        prefix.textContent =
+          selectedCurrency;
+      });
+    }
+
+    function updateSummary() {
+      const totalLiabilities =
+        fieldIds.reduce((total, fieldId) => {
+          return total + getNumber(fieldId);
+        }, 0);
+
+      const netWorth =
+        totalAssets - totalLiabilities;
+
+      const debtRatio =
+        totalAssets > 0
+          ? (totalLiabilities / totalAssets) * 100
+          : 0;
+
+      totalLiabilitiesElement.textContent =
+        formatMoney(totalLiabilities);
+
+      netWorthElement.textContent =
+        formatMoney(netWorth);
+
+      debtRatioElement.textContent =
+        debtRatio.toFixed(1) + "%";
+
+      const language =
+        translations[currentLanguage];
+
+      if (totalAssets <= 0) {
+        debtStatusText.textContent =
+          language.noAssets;
+      } else if (totalLiabilities <= 0) {
+        debtStatusText.textContent =
+          language.noDebt;
+      } else if (debtRatio < 30) {
+        debtStatusText.textContent =
+          language.lowDebt;
+      } else if (debtRatio <= 60) {
+        debtStatusText.textContent =
+          language.moderateDebt;
+      } else {
+        debtStatusText.textContent =
+          language.highDebt;
+      }
+    }
+
+    function changeLanguage(language) {
+      const selectedTranslation =
+        translations[language];
+
+      if (!selectedTranslation) {
+        return;
+      }
+
+      currentLanguage = language;
+      document.documentElement.lang = language;
+
+      translatedElements.forEach((element) => {
+        const key =
+          element.getAttribute("data-translate");
+
+        if (selectedTranslation[key] !== undefined) {
+          element.textContent =
+            selectedTranslation[key];
+        }
+      });
+
+      languageButtons.forEach((button) => {
+        button.classList.toggle(
+          "active",
+          button.dataset.language === language
+        );
+      });
+
+      localStorage.setItem(
+        "gsfBlueprintLanguage",
+        language
+      );
+
+      updateSummary();
+    }
+
+    function saveStepFour() {
+      const data = {};
+
+      fieldIds.forEach((fieldId) => {
+        data[fieldId] =
+          getNumber(fieldId);
+      });
+
+      data.totalLiabilities =
+        fieldIds.reduce((total, fieldId) => {
+          return total + getNumber(fieldId);
+        }, 0);
+
+      data.netWorth =
+        totalAssets - data.totalLiabilities;
+
+      data.debtRatio =
+        totalAssets > 0
+          ? (data.totalLiabilities / totalAssets) * 100
+          : 0;
+
+      data.currency =
+        selectedCurrency;
+
+      localStorage.setItem(
+        "gsfBlueprintStep4",
+        JSON.stringify(data)
+      );
+    }
+
+    function restoreStepFour() {
+      const savedData =
+        localStorage.getItem("gsfBlueprintStep4");
+
+      if (!savedData) {
+        updateSummary();
+        return;
+      }
+
+      try {
+        const data =
+          JSON.parse(savedData);
+
+        fieldIds.forEach((fieldId) => {
+          if (
+            data[fieldId] !== undefined &&
+            data[fieldId] !== null
+          ) {
+            document.getElementById(fieldId).value =
+              data[fieldId];
+          }
+        });
+
+        updateSummary();
+
+      } catch (error) {
+        console.error(
+          "Unable to restore Step 4:",
+          error
+        );
+      }
+    }
+
+    languageButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        changeLanguage(button.dataset.language);
+      });
+    });
+
+    fieldIds.forEach((fieldId) => {
+      document
+        .getElementById(fieldId)
+        .addEventListener("input", updateSummary);
+    });
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+
+      formError.textContent = "";
+
+      const containsNegativeValue =
+        fieldIds.some((fieldId) => {
+          const field =
+            document.getElementById(fieldId);
+
+          return (
+            field.value !== "" &&
+            Number.parseFloat(field.value) < 0
+          );
+        });
+
+      if (containsNegativeValue) {
+        formError.textContent =
+          translations[currentLanguage].invalidValues;
+
+        return;
+      }
+
+      saveStepFour();
+
+      window.location.href =
+        "blueprint-step5.html";
+    });
+
+    loadPreviousData();
+    restoreStepFour();
+    changeLanguage(currentLanguage);
+  </script>
+</body>
+</html>
