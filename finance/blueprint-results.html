@@ -1,0 +1,3455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <meta
+    name="description"
+    content="View your Global Sport Finance Financial Blueprint results, financial health score and personalised next steps."
+  >
+
+  <title>Your Financial Blueprint Results | Global Sport Finance</title>
+
+  <style>
+    :root {
+      --navy-950: #06111f;
+      --navy-900: #091827;
+      --navy-850: #0c1d30;
+      --navy-800: #10263d;
+      --navy-700: #173854;
+
+      --gold-500: #c9a35a;
+      --gold-400: #d9b86e;
+      --gold-300: #ead39d;
+
+      --white: #ffffff;
+      --text-light: #d9e2ec;
+      --text-muted: #9fb0c1;
+
+      --border: rgba(201, 163, 90, 0.28);
+      --line: rgba(255, 255, 255, 0.09);
+      --card-bg: rgba(255, 255, 255, 0.045);
+
+      --success: #72d5a2;
+      --warning: #efc768;
+      --attention: #ffb3a7;
+
+      --shadow: 0 24px 70px rgba(0, 0, 0, 0.34);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-height: 100vh;
+      overflow-x: hidden;
+      color: var(--white);
+      background:
+        radial-gradient(
+          circle at 82% 8%,
+          rgba(201, 163, 90, 0.13),
+          transparent 30%
+        ),
+        radial-gradient(
+          circle at 8% 78%,
+          rgba(23, 56, 84, 0.55),
+          transparent 38%
+        ),
+        linear-gradient(
+          135deg,
+          var(--navy-950),
+          var(--navy-900) 52%,
+          #0b1d30
+        );
+      font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Arial,
+        sans-serif;
+      line-height: 1.6;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      font: inherit;
+    }
+
+    .page-shell {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* HEADER */
+
+    .site-header {
+      position: sticky;
+      z-index: 50;
+      top: 0;
+      border-bottom: 1px solid var(--line);
+      background: rgba(6, 17, 31, 0.9);
+      backdrop-filter: blur(16px);
+    }
+
+    .header-inner {
+      width: min(1180px, calc(100% - 40px));
+      min-height: 82px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .brand {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .brand-title {
+      color: var(--gold-400);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.4rem;
+      font-weight: 600;
+    }
+
+    .brand-subtitle {
+      color: var(--text-muted);
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .header-link {
+      color: var(--text-light);
+      font-size: 0.86rem;
+      transition: color 0.2s ease;
+    }
+
+    .header-link:hover {
+      color: var(--gold-300);
+    }
+
+    .language-switcher {
+      display: flex;
+      padding: 4px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.035);
+    }
+
+    .language-button {
+      min-width: 38px;
+      padding: 7px 9px;
+      border: 0;
+      border-radius: 999px;
+      color: var(--text-muted);
+      background: transparent;
+      cursor: pointer;
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+
+    .language-button.active {
+      color: var(--navy-950);
+      background: var(--gold-400);
+    }
+
+    /* GENERAL */
+
+    main {
+      flex: 1;
+      padding: 48px 0 90px;
+    }
+
+    .container {
+      width: min(1180px, calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    .eyebrow {
+      margin-bottom: 13px;
+      color: var(--gold-300);
+      font-size: 0.76rem;
+      font-weight: 750;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+
+    .section-heading {
+      margin-bottom: 26px;
+    }
+
+    .section-heading h2 {
+      margin-bottom: 10px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2rem, 4.5vw, 3.4rem);
+      font-weight: 500;
+      line-height: 1.08;
+    }
+
+    .section-heading p {
+      max-width: 720px;
+      color: var(--text-muted);
+      font-size: 0.96rem;
+    }
+
+    .panel {
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      background:
+        linear-gradient(
+          145deg,
+          rgba(255, 255, 255, 0.07),
+          rgba(255, 255, 255, 0.025)
+        );
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(15px);
+    }
+
+    /* INTRO / SCORE */
+
+    .result-intro {
+      margin-bottom: 32px;
+      padding: clamp(28px, 5vw, 58px);
+      display: grid;
+      align-items: center;
+      gap: 48px;
+      grid-template-columns: minmax(0, 1fr) 300px;
+    }
+
+    .result-intro h1 {
+      margin-bottom: 18px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.6rem, 6vw, 5.2rem);
+      font-weight: 500;
+      letter-spacing: -0.045em;
+      line-height: 0.98;
+    }
+
+    .result-intro h1 span {
+      color: var(--gold-400);
+    }
+
+    .result-intro-text {
+      max-width: 720px;
+      margin-bottom: 24px;
+      color: var(--text-light);
+      font-size: 1rem;
+      line-height: 1.75;
+    }
+
+    .profile-line {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .profile-pill {
+      padding: 7px 12px;
+      border: 1px solid rgba(255, 255, 255, 0.11);
+      border-radius: 999px;
+      color: var(--text-light);
+      background: rgba(255, 255, 255, 0.035);
+      font-size: 0.76rem;
+      font-weight: 650;
+    }
+
+    .score-area {
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      text-align: center;
+    }
+
+    .score-ring {
+      --score-angle: 0deg;
+
+      position: relative;
+      width: 220px;
+      height: 220px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background:
+        conic-gradient(
+          var(--gold-400) var(--score-angle),
+          rgba(255, 255, 255, 0.09) 0
+        );
+      box-shadow:
+        0 0 0 1px rgba(201, 163, 90, 0.12),
+        0 24px 60px rgba(0, 0, 0, 0.3);
+    }
+
+    .score-ring::before {
+      position: absolute;
+      inset: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 50%;
+      content: "";
+      background: var(--navy-900);
+    }
+
+    .score-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .score-number {
+      display: block;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 4.3rem;
+      line-height: 1;
+    }
+
+    .score-out-of {
+      color: var(--text-muted);
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+    }
+
+    .score-status {
+      margin-top: 19px;
+      color: var(--gold-300);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.35rem;
+    }
+
+    .score-description {
+      max-width: 270px;
+      margin-top: 8px;
+      color: var(--text-muted);
+      font-size: 0.82rem;
+    }
+
+    /* METRICS */
+
+    .metrics-grid {
+      margin-bottom: 42px;
+      display: grid;
+      gap: 16px;
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    .metric-card {
+      min-height: 170px;
+      padding: 23px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: var(--card-bg);
+    }
+
+    .metric-label {
+      display: block;
+      margin-bottom: 14px;
+      color: var(--text-muted);
+      font-size: 0.7rem;
+      font-weight: 750;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+
+    .metric-value {
+      display: block;
+      margin-bottom: 13px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.55rem;
+      line-height: 1.2;
+    }
+
+    .metric-note {
+      color: var(--text-muted);
+      font-size: 0.79rem;
+      line-height: 1.5;
+    }
+
+    .metric-bar {
+      height: 5px;
+      margin-top: 16px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.09);
+    }
+
+    .metric-bar span {
+      display: block;
+      width: 0;
+      height: 100%;
+      border-radius: inherit;
+      background:
+        linear-gradient(
+          90deg,
+          var(--gold-500),
+          var(--gold-300)
+        );
+      transition: width 0.7s ease;
+    }
+
+    /* STRENGTHS AND PRIORITIES */
+
+    .analysis-grid {
+      margin-bottom: 48px;
+      display: grid;
+      gap: 20px;
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .analysis-panel {
+      padding: 30px;
+    }
+
+    .analysis-panel h2 {
+      margin-bottom: 20px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.75rem;
+      font-weight: 500;
+    }
+
+    .result-list {
+      display: grid;
+      gap: 13px;
+      list-style: none;
+    }
+
+    .result-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 14px 15px;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: rgba(255, 255, 255, 0.025);
+      color: var(--text-light);
+      font-size: 0.88rem;
+    }
+
+    .result-icon {
+      width: 23px;
+      height: 23px;
+      flex: 0 0 23px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      font-size: 0.7rem;
+      font-weight: 900;
+    }
+
+    .strength-icon {
+      color: #062015;
+      background: var(--success);
+    }
+
+    .priority-icon {
+      color: #251801;
+      background: var(--warning);
+    }
+
+    .empty-message {
+      color: var(--text-muted);
+      font-size: 0.88rem;
+    }
+
+    /* ACTION PLAN */
+
+    .action-plan {
+      margin-bottom: 48px;
+      padding: clamp(28px, 5vw, 48px);
+    }
+
+    .recommendation-list {
+      display: grid;
+      gap: 15px;
+      counter-reset: recommendations;
+    }
+
+    .recommendation {
+      position: relative;
+      min-height: 98px;
+      padding: 20px 20px 20px 80px;
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.03);
+      counter-increment: recommendations;
+    }
+
+    .recommendation::before {
+      position: absolute;
+      top: 22px;
+      left: 20px;
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      color: var(--gold-300);
+      content: counter(recommendations, decimal-leading-zero);
+      background: rgba(201, 163, 90, 0.07);
+      font-size: 0.78rem;
+      font-weight: 800;
+    }
+
+    .recommendation h3 {
+      margin-bottom: 5px;
+      font-size: 1rem;
+    }
+
+    .recommendation p {
+      color: var(--text-muted);
+      font-size: 0.84rem;
+    }
+
+    /* SELECTED GOALS */
+
+    .goals-panel {
+      margin-bottom: 48px;
+      padding: 34px;
+    }
+
+    .goal-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .goal-tag {
+      padding: 9px 13px;
+      border: 1px solid rgba(201, 163, 90, 0.25);
+      border-radius: 999px;
+      color: var(--gold-300);
+      background: rgba(201, 163, 90, 0.065);
+      font-size: 0.79rem;
+      font-weight: 650;
+    }
+
+    .priority-summary {
+      margin-top: 26px;
+      padding-top: 24px;
+      display: grid;
+      gap: 18px;
+      border-top: 1px solid var(--line);
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .priority-summary-card {
+      padding: 17px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.025);
+    }
+
+    .priority-summary-card span {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--text-muted);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .priority-summary-card strong {
+      color: var(--white);
+      font-size: 0.94rem;
+    }
+
+    /* PROFESSIONAL REVIEW */
+
+    .professional-review {
+      padding: clamp(30px, 5vw, 52px);
+      display: grid;
+      align-items: center;
+      gap: 38px;
+      grid-template-columns: minmax(0, 1fr) 340px;
+      background:
+        radial-gradient(
+          circle at 90% 10%,
+          rgba(201, 163, 90, 0.12),
+          transparent 35%
+        ),
+        linear-gradient(
+          145deg,
+          rgba(255, 255, 255, 0.065),
+          rgba(255, 255, 255, 0.02)
+        );
+    }
+
+    .professional-review h2 {
+      margin-bottom: 14px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2rem, 4vw, 3.4rem);
+      font-weight: 500;
+      line-height: 1.08;
+    }
+
+    .professional-review p {
+      max-width: 700px;
+      color: var(--text-muted);
+      font-size: 0.93rem;
+    }
+
+    .review-actions {
+      display: grid;
+      gap: 12px;
+    }
+
+    .button {
+      min-height: 52px;
+      padding: 0 24px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      border: 1px solid transparent;
+      border-radius: 999px;
+      cursor: pointer;
+      font-weight: 750;
+      text-align: center;
+      transition:
+        transform 0.2s ease,
+        border-color 0.2s ease,
+        background 0.2s ease;
+    }
+
+    .button:hover {
+      transform: translateY(-2px);
+    }
+
+    .button-primary {
+      color: var(--navy-950);
+      background:
+        linear-gradient(
+          135deg,
+          var(--gold-300),
+          var(--gold-500)
+        );
+      box-shadow: 0 12px 30px rgba(201, 163, 90, 0.18);
+    }
+
+    .button-secondary {
+      border-color: rgba(255, 255, 255, 0.14);
+      color: var(--text-light);
+      background: rgba(255, 255, 255, 0.035);
+    }
+
+    .button-secondary:hover {
+      border-color: var(--gold-400);
+      color: var(--gold-300);
+    }
+
+    /* PAGE ACTIONS */
+
+    .page-actions {
+      margin-top: 26px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .small-button {
+      min-height: 44px;
+      padding: 0 18px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(255, 255, 255, 0.13);
+      border-radius: 999px;
+      color: var(--text-muted);
+      background: rgba(255, 255, 255, 0.025);
+      cursor: pointer;
+      font-size: 0.79rem;
+      font-weight: 700;
+    }
+
+    .small-button:hover {
+      border-color: var(--gold-400);
+      color: var(--gold-300);
+    }
+
+    /* MISSING RESULTS */
+
+    .missing-data {
+      display: none;
+      max-width: 760px;
+      margin: 80px auto;
+      padding: 44px;
+      text-align: center;
+    }
+
+    .missing-data h1 {
+      margin-bottom: 16px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 2.5rem;
+      font-weight: 500;
+    }
+
+    .missing-data p {
+      margin-bottom: 24px;
+      color: var(--text-muted);
+    }
+
+    /* FOOTER */
+
+    .site-footer {
+      padding: 30px 20px 38px;
+      border-top: 1px solid var(--line);
+      color: var(--text-muted);
+      text-align: center;
+      font-size: 0.75rem;
+      line-height: 1.65;
+    }
+
+    .site-footer strong {
+      color: var(--gold-300);
+    }
+
+    @media (max-width: 980px) {
+      .result-intro,
+      .professional-review {
+        grid-template-columns: 1fr;
+      }
+
+      .score-area {
+        padding-top: 10px;
+      }
+
+      .metrics-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .review-actions {
+        max-width: 480px;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .brand-subtitle,
+      .header-link {
+        display: none;
+      }
+
+      .analysis-grid,
+      .priority-summary {
+        grid-template-columns: 1fr;
+      }
+
+      .result-intro {
+        text-align: center;
+      }
+
+      .profile-line {
+        justify-content: center;
+      }
+
+      .result-intro-text {
+        margin-inline: auto;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .header-inner,
+      .container {
+        width: min(100% - 24px, 1180px);
+      }
+
+      .brand-title {
+        font-size: 1rem;
+      }
+
+      main {
+        padding-top: 28px;
+      }
+
+      .result-intro,
+      .analysis-panel,
+      .action-plan,
+      .goals-panel,
+      .professional-review {
+        padding: 25px 20px;
+        border-radius: 20px;
+      }
+
+      .metrics-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .score-ring {
+        width: 190px;
+        height: 190px;
+      }
+
+      .score-number {
+        font-size: 3.7rem;
+      }
+
+      .recommendation {
+        padding: 72px 18px 20px;
+      }
+
+      .recommendation::before {
+        top: 18px;
+        left: 18px;
+      }
+
+      .page-actions {
+        display: grid;
+      }
+
+      .small-button {
+        width: 100%;
+      }
+    }
+
+    @media print {
+      body {
+        color: #111111;
+        background: #ffffff;
+      }
+
+      .site-header,
+      .review-actions,
+      .page-actions,
+      .site-footer {
+        display: none !important;
+      }
+
+      main {
+        padding: 0;
+      }
+
+      .panel,
+      .metric-card,
+      .result-item,
+      .recommendation,
+      .priority-summary-card {
+        border-color: #cccccc;
+        color: #111111;
+        background: #ffffff;
+        box-shadow: none;
+      }
+
+      .result-intro,
+      .analysis-grid,
+      .action-plan,
+      .goals-panel,
+      .professional-review {
+        break-inside: avoid;
+      }
+
+      .result-intro h1,
+      .section-heading h2,
+      .analysis-panel h2,
+      .professional-review h2,
+      .metric-value,
+      .summary-value,
+      .review-value {
+        color: #111111;
+      }
+
+      .result-intro-text,
+      .section-heading p,
+      .metric-note,
+      .result-item,
+      .recommendation p,
+      .professional-review p,
+      .score-description {
+        color: #444444;
+      }
+
+      .score-ring {
+        border: 8px solid #c9a35a;
+        background: #ffffff;
+        box-shadow: none;
+      }
+
+      .score-ring::before {
+        background: #ffffff;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page-shell">
+
+    <header class="site-header">
+      <div class="header-inner">
+
+        <a
+          class="brand"
+          href="../finance.html"
+        >
+          <span class="brand-title">
+            Global Sport Finance
+          </span>
+
+          <span class="brand-subtitle">
+            Powered by Global Management Consultancy
+          </span>
+        </a>
+
+        <div class="header-actions">
+
+          <a
+            class="header-link"
+            href="blueprint-step5.html"
+            data-translate="editAssessment"
+          >
+            ← Edit Assessment
+          </a>
+
+          <div class="language-switcher">
+
+            <button
+              class="language-button active"
+              type="button"
+              data-language="en"
+            >
+              EN
+            </button>
+
+            <button
+              class="language-button"
+              type="button"
+              data-language="fr"
+            >
+              FR
+            </button>
+
+            <button
+              class="language-button"
+              type="button"
+              data-language="es"
+            >
+              ES
+            </button>
+
+          </div>
+        </div>
+
+      </div>
+    </header>
+
+    <main>
+      <div class="container">
+
+        <section
+          class="missing-data panel"
+          id="missingData"
+        >
+          <h1 data-translate="missingTitle">
+            Your assessment is not complete
+          </h1>
+
+          <p data-translate="missingText">
+            Please complete the Financial Blueprint assessment before
+            viewing your personalised results.
+          </p>
+
+          <a
+            class="button button-primary"
+            href="blueprint.html"
+            data-translate="startAssessment"
+          >
+            Start the Assessment
+          </a>
+        </section>
+
+        <div id="resultsContent">
+
+          <section class="result-intro panel">
+
+            <div>
+              <p
+                class="eyebrow"
+                data-translate="eyebrow"
+              >
+                Your Initial Financial Blueprint
+              </p>
+
+              <h1 data-translate="title">
+                Your Financial
+                <span>Health Overview</span>
+              </h1>
+
+              <p
+                class="result-intro-text"
+                data-translate="intro"
+              >
+                This initial assessment summarises the information you
+                entered and highlights areas that may deserve further
+                attention. It is designed as a practical starting point,
+                not as regulated financial advice.
+              </p>
+
+              <div class="profile-line">
+
+                <span
+                  class="profile-pill"
+                  id="profilePill"
+                >
+                  Profile
+                </span>
+
+                <span
+                  class="profile-pill"
+                  id="countryPill"
+                >
+                  Country
+                </span>
+
+                <span
+                  class="profile-pill"
+                  id="currencyPill"
+                >
+                  EUR
+                </span>
+
+                <span
+                  class="profile-pill"
+                  id="timeframePill"
+                >
+                  Timeframe
+                </span>
+
+              </div>
+            </div>
+
+            <div class="score-area">
+
+              <div
+                class="score-ring"
+                id="scoreRing"
+              >
+                <div class="score-content">
+                  <span
+                    class="score-number"
+                    id="scoreNumber"
+                  >
+                    0
+                  </span>
+
+                  <span
+                    class="score-out-of"
+                    data-translate="outOfOneHundred"
+                  >
+                    out of 100
+                  </span>
+                </div>
+              </div>
+
+              <div
+                class="score-status"
+                id="scoreStatus"
+              >
+                Assessment
+              </div>
+
+              <p
+                class="score-description"
+                id="scoreDescription"
+              ></p>
+
+            </div>
+
+          </section>
+
+          <section class="metrics-grid">
+
+            <article class="metric-card">
+              <span
+                class="metric-label"
+                data-translate="monthlyBalanceLabel"
+              >
+                Monthly balance
+              </span>
+
+              <strong
+                class="metric-value"
+                id="monthlyBalanceValue"
+              >
+                EUR 0.00
+              </strong>
+
+              <p
+                class="metric-note"
+                id="monthlyBalanceNote"
+              ></p>
+
+              <div class="metric-bar">
+                <span id="monthlyBalanceBar"></span>
+              </div>
+            </article>
+
+            <article class="metric-card">
+              <span
+                class="metric-label"
+                data-translate="netWorthLabel"
+              >
+                Estimated net worth
+              </span>
+
+              <strong
+                class="metric-value"
+                id="netWorthValue"
+              >
+                EUR 0.00
+              </strong>
+
+              <p
+                class="metric-note"
+                id="netWorthNote"
+              ></p>
+
+              <div class="metric-bar">
+                <span id="netWorthBar"></span>
+              </div>
+            </article>
+
+            <article class="metric-card">
+              <span
+                class="metric-label"
+                data-translate="emergencyCoverageLabel"
+              >
+                Emergency coverage
+              </span>
+
+              <strong
+                class="metric-value"
+                id="emergencyCoverageValue"
+              >
+                0.0 months
+              </strong>
+
+              <p
+                class="metric-note"
+                id="emergencyCoverageNote"
+              ></p>
+
+              <div class="metric-bar">
+                <span id="emergencyCoverageBar"></span>
+              </div>
+            </article>
+
+            <article class="metric-card">
+              <span
+                class="metric-label"
+                data-translate="debtRatioLabel"
+              >
+                Debt-to-asset ratio
+              </span>
+
+              <strong
+                class="metric-value"
+                id="debtRatioValue"
+              >
+                0.0%
+              </strong>
+
+              <p
+                class="metric-note"
+                id="debtRatioNote"
+              ></p>
+
+              <div class="metric-bar">
+                <span id="debtRatioBar"></span>
+              </div>
+            </article>
+
+          </section>
+
+          <section class="analysis-grid">
+
+            <article class="analysis-panel panel">
+              <p
+                class="eyebrow"
+                data-translate="strengthsEyebrow"
+              >
+                Positive Indicators
+              </p>
+
+              <h2 data-translate="strengthsTitle">
+                Your Financial Strengths
+              </h2>
+
+              <ul
+                class="result-list"
+                id="strengthsList"
+              ></ul>
+            </article>
+
+            <article class="analysis-panel panel">
+              <p
+                class="eyebrow"
+                data-translate="prioritiesEyebrow"
+              >
+                Areas for Attention
+              </p>
+
+              <h2 data-translate="prioritiesTitle">
+                Your Priority Areas
+              </h2>
+
+              <ul
+                class="result-list"
+                id="prioritiesList"
+              ></ul>
+            </article>
+
+          </section>
+
+          <section class="action-plan panel">
+
+            <div class="section-heading">
+              <p
+                class="eyebrow"
+                data-translate="actionEyebrow"
+              >
+                Financial Action Centre
+              </p>
+
+              <h2 data-translate="actionTitle">
+                Recommended Next Steps
+              </h2>
+
+              <p data-translate="actionDescription">
+                These initial actions are generated from the information
+                entered during your assessment. They should be reviewed
+                in the context of your full circumstances before implementation.
+              </p>
+            </div>
+
+            <div
+              class="recommendation-list"
+              id="recommendationList"
+            ></div>
+
+          </section>
+
+          <section class="goals-panel panel">
+
+            <div class="section-heading">
+              <p
+                class="eyebrow"
+                data-translate="goalsEyebrow"
+              >
+                Your Objectives
+              </p>
+
+              <h2 data-translate="goalsTitle">
+                Selected Financial Goals
+              </h2>
+            </div>
+
+            <div
+              class="goal-tags"
+              id="goalTags"
+            ></div>
+
+            <div class="priority-summary">
+
+              <div class="priority-summary-card">
+                <span data-translate="mainPriorityLabel">
+                  Main priority
+                </span>
+
+                <strong id="mainPriorityValue">
+                  —
+                </strong>
+              </div>
+
+              <div class="priority-summary-card">
+                <span data-translate="timeHorizonLabel">
+                  Preferred timeframe
+                </span>
+
+                <strong id="timeHorizonValue">
+                  —
+                </strong>
+              </div>
+
+            </div>
+
+          </section>
+
+          <section class="professional-review panel">
+
+            <div>
+              <p
+                class="eyebrow"
+                data-translate="reviewEyebrow"
+              >
+                Professional Assistance
+              </p>
+
+              <h2 data-translate="reviewTitle">
+                Would you like a professional review?
+              </h2>
+
+              <p data-translate="reviewDescription">
+                A professional review can consider the wider context
+                behind these figures, including taxation, international
+                arrangements, family obligations, career planning and
+                long-term objectives.
+              </p>
+            </div>
+
+            <div class="review-actions">
+
+              <a
+                class="button button-primary"
+                id="requestReviewButton"
+                href="mailto:info@globalmgm.co.uk?subject=Financial%20Blueprint%20Professional%20Review"
+              >
+                <span data-translate="requestReview">
+                  Request Professional Review
+                </span>
+                <span aria-hidden="true">→</span>
+              </a>
+
+              <a
+                class="button button-secondary"
+                href="../finance.html"
+                data-translate="returnToFinance"
+              >
+                Return to Global Sport Finance
+              </a>
+
+            </div>
+
+          </section>
+
+          <div class="page-actions">
+
+            <button
+              class="small-button"
+              type="button"
+              id="printButton"
+              data-translate="printResults"
+            >
+              Print or Save as PDF
+            </button>
+
+            <a
+              class="small-button"
+              href="blueprint-step1.html"
+              data-translate="editAnswers"
+            >
+              Review My Answers
+            </a>
+
+            <button
+              class="small-button"
+              type="button"
+              id="restartButton"
+              data-translate="restartAssessment"
+            >
+              Start a New Assessment
+            </button>
+
+          </div>
+
+        </div>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+
+      <p>
+        <strong>Global Sport Finance</strong>
+        · Global Management Consultancy Limited
+      </p>
+
+      <p data-translate="footerDisclaimer">
+        This automated assessment provides general educational guidance
+        based solely on the information entered. It is not a complete
+        financial analysis and does not constitute regulated financial,
+        investment, tax, accounting or legal advice.
+      </p>
+
+    </footer>
+
+  </div>
+
+  <script>
+    const translations = {
+      en: {
+        editAssessment: "← Edit Assessment",
+        missingTitle: "Your assessment is not complete",
+        missingText:
+          "Please complete the Financial Blueprint assessment before " +
+          "viewing your personalised results.",
+
+        startAssessment: "Start the Assessment",
+        eyebrow: "Your Initial Financial Blueprint",
+        title:
+          'Your Financial <span>Health Overview</span>',
+
+        intro:
+          "This initial assessment summarises the information you " +
+          "entered and highlights areas that may deserve further " +
+          "attention. It is designed as a practical starting point, " +
+          "not as regulated financial advice.",
+
+        outOfOneHundred: "out of 100",
+
+        monthlyBalanceLabel: "Monthly balance",
+        netWorthLabel: "Estimated net worth",
+        emergencyCoverageLabel: "Emergency coverage",
+        debtRatioLabel: "Debt-to-asset ratio",
+
+        strengthsEyebrow: "Positive Indicators",
+        strengthsTitle: "Your Financial Strengths",
+        prioritiesEyebrow: "Areas for Attention",
+        prioritiesTitle: "Your Priority Areas",
+
+        actionEyebrow: "Financial Action Centre",
+        actionTitle: "Recommended Next Steps",
+
+        actionDescription:
+          "These initial actions are generated from the information " +
+          "entered during your assessment. They should be reviewed in " +
+          "the context of your full circumstances before implementation.",
+
+        goalsEyebrow: "Your Objectives",
+        goalsTitle: "Selected Financial Goals",
+        mainPriorityLabel: "Main priority",
+        timeHorizonLabel: "Preferred timeframe",
+
+        reviewEyebrow: "Professional Assistance",
+        reviewTitle: "Would you like a professional review?",
+
+        reviewDescription:
+          "A professional review can consider the wider context behind " +
+          "these figures, including taxation, international arrangements, " +
+          "family obligations, career planning and long-term objectives.",
+
+        requestReview: "Request Professional Review",
+        returnToFinance: "Return to Global Sport Finance",
+        printResults: "Print or Save as PDF",
+        editAnswers: "Review My Answers",
+        restartAssessment: "Start a New Assessment",
+
+        footerDisclaimer:
+          "This automated assessment provides general educational guidance " +
+          "based solely on the information entered. It is not a complete " +
+          "financial analysis and does not constitute regulated financial, " +
+          "investment, tax, accounting or legal advice.",
+
+        scoreExcellent: "Strong Financial Position",
+        scoreGood: "Good Foundation",
+        scoreDeveloping: "Developing Financial Position",
+        scoreAttention: "Priority Attention Required",
+
+        scoreExcellentDescription:
+          "Your answers indicate a comparatively strong overall position, although regular review remains important.",
+
+        scoreGoodDescription:
+          "Your answers indicate a positive foundation with some areas that may benefit from further planning.",
+
+        scoreDevelopingDescription:
+          "Your answers indicate that several parts of your financial structure may benefit from focused attention.",
+
+        scoreAttentionDescription:
+          "Your answers indicate important financial pressures or gaps that may require prompt review.",
+
+        monthlyPositive:
+          "Your entered income currently exceeds your regular monthly commitments.",
+
+        monthlyTight:
+          "Your monthly surplus appears limited in relation to your income.",
+
+        monthlyNegative:
+          "Your entered monthly commitments currently exceed your income.",
+
+        netWorthPositive:
+          "The assets entered exceed your outstanding liabilities.",
+
+        netWorthNegative:
+          "The liabilities entered exceed the value of the assets recorded.",
+
+        netWorthNeutral:
+          "Your recorded assets and liabilities are currently close in value.",
+
+        emergencyStrong:
+          "Your liquid reserves cover more than six months of regular commitments.",
+
+        emergencyModerate:
+          "Your liquid reserves cover approximately three to six months of commitments.",
+
+        emergencyLow:
+          "Your liquid reserves cover less than three months of regular commitments.",
+
+        emergencyNone:
+          "No meaningful emergency coverage was identified from the figures entered.",
+
+        debtLow:
+          "Your liabilities are relatively low compared with the assets entered.",
+
+        debtModerate:
+          "Your debt level represents a moderate proportion of the assets entered.",
+
+        debtHigh:
+          "Your liabilities represent a significant proportion of the assets entered.",
+
+        strengthCashFlow:
+          "Positive monthly cash flow has been identified.",
+
+        strengthEmergency:
+          "Your emergency reserves provide useful financial protection.",
+
+        strengthNetWorth:
+          "Your recorded assets exceed your outstanding liabilities.",
+
+        strengthDebt:
+          "Your debt-to-asset position appears comparatively controlled.",
+
+        strengthSavings:
+          "You have recorded dedicated savings or financial reserves.",
+
+        strengthInvestments:
+          "You have begun building investment or retirement assets.",
+
+        priorityCashFlow:
+          "Monthly cash flow may need to be improved or more closely controlled.",
+
+        priorityEmergency:
+          "Your emergency reserve may need to be strengthened.",
+
+        priorityDebt:
+          "Your level of debt may require a structured reduction plan.",
+
+        priorityNetWorth:
+          "Your liabilities currently exceed the assets recorded.",
+
+        priorityTax:
+          "Your tax reserve may need to be reviewed against expected liabilities.",
+
+        priorityRetirement:
+          "Retirement or pension provision appears limited based on the figures entered.",
+
+        priorityInvestment:
+          "Long-term investment holdings appear limited in relation to your stated goals.",
+
+        priorityGoals:
+          "Your selected goals may require clearer funding targets and timelines.",
+
+        recommendationCashFlowTitle:
+          "Review your monthly cash flow",
+
+        recommendationCashFlowText:
+          "Separate essential commitments, discretionary spending, tax reserves and planned savings to identify a sustainable monthly surplus.",
+
+        recommendationEmergencyTitle:
+          "Build your emergency reserve",
+
+        recommendationEmergencyText:
+          "Work towards a reserve capable of covering an appropriate number of months of essential commitments.",
+
+        recommendationDebtTitle:
+          "Create a debt-management plan",
+
+        recommendationDebtText:
+          "Review interest costs, repayment priorities and the effect of outstanding debt on your wider financial position.",
+
+        recommendationTaxTitle:
+          "Review your tax-reserve strategy",
+
+        recommendationTaxText:
+          "Compare the tax reserve held with expected liabilities and consider separating tax funds from everyday spending.",
+
+        recommendationInvestmentTitle:
+          "Define a long-term investment strategy",
+
+        recommendationInvestmentText:
+          "Clarify your objectives, timeframe, risk capacity and required liquidity before making investment decisions.",
+
+        recommendationRetirementTitle:
+          "Strengthen retirement planning",
+
+        recommendationRetirementText:
+          "Estimate the future income required and review whether existing pension or retirement provision is likely to be sufficient.",
+
+        recommendationGoalTitle:
+          "Turn your goals into measurable targets",
+
+        recommendationGoalText:
+          "Assign an estimated cost, target date and regular contribution to each priority financial goal.",
+
+        recommendationReviewTitle:
+          "Arrange a professional financial review",
+
+        recommendationReviewText:
+          "A personalised review may help test the assumptions behind this initial assessment and coordinate tax, family, business or international considerations.",
+
+        noStrength:
+          "No clear strength was identified from the information entered. This does not mean that none exists; the assessment may need more complete figures.",
+
+        noPriority:
+          "No major warning indicator was identified from the information entered.",
+
+        months: "months",
+
+        goalEmergencyFund: "Build an emergency reserve",
+        goalReduceDebt: "Reduce outstanding debt",
+        goalBuyProperty: "Buy or invest in property",
+        goalGrowInvestments: "Grow investments",
+        goalRetirementPlanning: "Plan for retirement",
+        goalProtectFamily: "Protect my family financially",
+        goalTaxPlanning: "Improve tax planning",
+        goalInternationalPlanning: "International financial planning",
+        goalAthletePlanning: "Athlete career and wealth planning",
+        goalEducationFunding: "Education funding",
+        goalBusinessPlanning: "Business financial planning",
+        goalEstatePlanning: "Estate and legacy planning",
+
+        profileIndividual: "Individual",
+        profileFamily: "Family",
+        profileEntrepreneur: "Entrepreneur",
+        profileBusinessOwner: "Business Owner",
+        profileAthlete: "Professional Athlete",
+        profileSportsProfessional: "Sports Professional",
+
+        priorityCashFlowName: "Improve monthly cash flow",
+        priorityEmergencyReserveName: "Build an emergency reserve",
+        priorityDebtName: "Reduce debt",
+        priorityTaxName: "Improve tax planning",
+        priorityInvestmentName: "Build an investment strategy",
+        priorityPropertyName: "Property planning",
+        priorityRetirementName: "Retirement planning",
+        priorityFamilyName: "Family protection",
+        priorityInternationalName: "International planning",
+        priorityBusinessName: "Business planning",
+        priorityCareerTransitionName:
+          "Career or athlete transition planning",
+
+        timeframeImmediately: "Immediately",
+        timeframeThreeMonths: "Within 3 months",
+        timeframeSixMonths: "Within 6 months",
+        timeframeTwelveMonths: "Within 12 months",
+        timeframeOneToThreeYears: "Within 1–3 years",
+        timeframeLongTerm: "Long term"
+      },
+
+      fr: {
+        editAssessment: "← Modifier l’évaluation",
+        missingTitle: "Votre évaluation n’est pas terminée",
+
+        missingText:
+          "Veuillez terminer l’évaluation du plan financier avant de " +
+          "consulter vos résultats personnalisés.",
+
+        startAssessment: "Commencer l’évaluation",
+        eyebrow: "Votre plan financier initial",
+        title:
+          'Aperçu de votre <span>santé financière</span>',
+
+        intro:
+          "Cette première évaluation résume les informations saisies et " +
+          "met en évidence les domaines qui peuvent mériter une attention " +
+          "particulière. Elle constitue un point de départ pratique et non " +
+          "un conseil financier réglementé.",
+
+        outOfOneHundred: "sur 100",
+
+        monthlyBalanceLabel: "Solde mensuel",
+        netWorthLabel: "Patrimoine net estimé",
+        emergencyCoverageLabel: "Couverture d’urgence",
+        debtRatioLabel: "Ratio dettes-actifs",
+
+        strengthsEyebrow: "Indicateurs positifs",
+        strengthsTitle: "Vos points forts financiers",
+        prioritiesEyebrow: "Domaines à surveiller",
+        prioritiesTitle: "Vos domaines prioritaires",
+
+        actionEyebrow: "Centre d’actions financières",
+        actionTitle: "Prochaines étapes recommandées",
+
+        actionDescription:
+          "Ces premières actions sont générées à partir des informations " +
+          "saisies pendant l’évaluation. Elles doivent être examinées dans " +
+          "le contexte de votre situation complète avant toute mise en œuvre.",
+
+        goalsEyebrow: "Vos objectifs",
+        goalsTitle: "Objectifs financiers sélectionnés",
+        mainPriorityLabel: "Priorité principale",
+        timeHorizonLabel: "Échéance souhaitée",
+
+        reviewEyebrow: "Assistance professionnelle",
+        reviewTitle: "Souhaitez-vous une analyse professionnelle ?",
+
+        reviewDescription:
+          "Une analyse professionnelle peut tenir compte du contexte " +
+          "complet de ces chiffres, notamment la fiscalité, les structures " +
+          "internationales, les obligations familiales, la carrière et " +
+          "les objectifs à long terme.",
+
+        requestReview: "Demander une analyse professionnelle",
+        returnToFinance: "Retour à Global Sport Finance",
+        printResults: "Imprimer ou enregistrer en PDF",
+        editAnswers: "Revoir mes réponses",
+        restartAssessment: "Commencer une nouvelle évaluation",
+
+        footerDisclaimer:
+          "Cette évaluation automatisée fournit des orientations éducatives " +
+          "générales uniquement à partir des informations saisies. Elle ne " +
+          "constitue pas une analyse financière complète ni un conseil " +
+          "financier, d’investissement, fiscal, comptable ou juridique réglementé.",
+
+        scoreExcellent: "Situation financière solide",
+        scoreGood: "Bonne base financière",
+        scoreDeveloping: "Situation financière en développement",
+        scoreAttention: "Attention prioritaire nécessaire",
+
+        scoreExcellentDescription:
+          "Vos réponses indiquent une situation globale relativement solide, même si un suivi régulier reste important.",
+
+        scoreGoodDescription:
+          "Vos réponses indiquent une base positive avec certains domaines qui pourraient bénéficier d’une planification complémentaire.",
+
+        scoreDevelopingDescription:
+          "Vos réponses indiquent que plusieurs éléments de votre organisation financière pourraient nécessiter une attention ciblée.",
+
+        scoreAttentionDescription:
+          "Vos réponses indiquent des pressions ou lacunes financières importantes qui peuvent nécessiter une analyse rapide.",
+
+        monthlyPositive:
+          "Les revenus saisis dépassent actuellement vos engagements mensuels réguliers.",
+
+        monthlyTight:
+          "Votre excédent mensuel semble limité par rapport à vos revenus.",
+
+        monthlyNegative:
+          "Les engagements mensuels saisis dépassent actuellement vos revenus.",
+
+        netWorthPositive:
+          "Les actifs saisis dépassent vos dettes en cours.",
+
+        netWorthNegative:
+          "Les dettes saisies dépassent la valeur des actifs enregistrés.",
+
+        netWorthNeutral:
+          "Vos actifs et vos dettes sont actuellement proches en valeur.",
+
+        emergencyStrong:
+          "Vos réserves liquides couvrent plus de six mois d’engagements réguliers.",
+
+        emergencyModerate:
+          "Vos réserves liquides couvrent environ trois à six mois d’engagements.",
+
+        emergencyLow:
+          "Vos réserves liquides couvrent moins de trois mois d’engagements réguliers.",
+
+        emergencyNone:
+          "Aucune couverture d’urgence significative n’a été identifiée à partir des montants saisis.",
+
+        debtLow:
+          "Vos dettes sont relativement faibles par rapport aux actifs saisis.",
+
+        debtModerate:
+          "Votre dette représente une proportion modérée des actifs saisis.",
+
+        debtHigh:
+          "Vos dettes représentent une proportion importante des actifs saisis.",
+
+        strengthCashFlow:
+          "Un flux de trésorerie mensuel positif a été identifié.",
+
+        strengthEmergency:
+          "Vos réserves d’urgence apportent une protection financière utile.",
+
+        strengthNetWorth:
+          "Vos actifs enregistrés dépassent vos dettes en cours.",
+
+        strengthDebt:
+          "Votre ratio dettes-actifs semble relativement maîtrisé.",
+
+        strengthSavings:
+          "Vous avez enregistré une épargne ou des réserves financières dédiées.",
+
+        strengthInvestments:
+          "Vous avez commencé à constituer des investissements ou des actifs de retraite.",
+
+        priorityCashFlow:
+          "Votre trésorerie mensuelle peut nécessiter une amélioration ou un contrôle plus rigoureux.",
+
+        priorityEmergency:
+          "Votre réserve d’urgence peut nécessiter un renforcement.",
+
+        priorityDebt:
+          "Votre niveau d’endettement peut nécessiter un plan de réduction structuré.",
+
+        priorityNetWorth:
+          "Vos dettes dépassent actuellement les actifs enregistrés.",
+
+        priorityTax:
+          "Votre réserve fiscale peut nécessiter une comparaison avec les obligations prévues.",
+
+        priorityRetirement:
+          "Votre provision de retraite semble limitée sur la base des montants saisis.",
+
+        priorityInvestment:
+          "Vos investissements à long terme semblent limités par rapport à vos objectifs déclarés.",
+
+        priorityGoals:
+          "Vos objectifs sélectionnés peuvent nécessiter des montants cibles et des échéances plus précises.",
+
+        recommendationCashFlowTitle:
+          "Analysez votre trésorerie mensuelle",
+
+        recommendationCashFlowText:
+          "Séparez les engagements essentiels, les dépenses discrétionnaires, les réserves fiscales et l’épargne afin d’identifier un excédent mensuel durable.",
+
+        recommendationEmergencyTitle:
+          "Renforcez votre réserve d’urgence",
+
+        recommendationEmergencyText:
+          "Travaillez à constituer une réserve couvrant un nombre approprié de mois d’engagements essentiels.",
+
+        recommendationDebtTitle:
+          "Établissez un plan de gestion des dettes",
+
+        recommendationDebtText:
+          "Examinez les intérêts, les priorités de remboursement et l’effet de vos dettes sur votre situation financière globale.",
+
+        recommendationTaxTitle:
+          "Réexaminez votre stratégie de réserve fiscale",
+
+        recommendationTaxText:
+          "Comparez la réserve fiscale disponible aux obligations prévues et envisagez de séparer les fonds fiscaux des dépenses courantes.",
+
+        recommendationInvestmentTitle:
+          "Définissez une stratégie d’investissement à long terme",
+
+        recommendationInvestmentText:
+          "Clarifiez vos objectifs, votre horizon, votre capacité de risque et vos besoins de liquidité avant toute décision d’investissement.",
+
+        recommendationRetirementTitle:
+          "Renforcez votre planification de retraite",
+
+        recommendationRetirementText:
+          "Estimez le revenu futur nécessaire et examinez si les pensions ou provisions existantes seront probablement suffisantes.",
+
+        recommendationGoalTitle:
+          "Transformez vos objectifs en cibles mesurables",
+
+        recommendationGoalText:
+          "Attribuez un coût estimé, une date cible et une contribution régulière à chaque objectif financier prioritaire.",
+
+        recommendationReviewTitle:
+          "Organisez une analyse financière professionnelle",
+
+        recommendationReviewText:
+          "Une analyse personnalisée peut aider à tester les hypothèses de cette première évaluation et à coordonner la fiscalité, la famille, l’entreprise ou les aspects internationaux.",
+
+        noStrength:
+          "Aucun point fort évident n’a été identifié à partir des informations saisies. Cela ne signifie pas qu’il n’en existe aucun ; des chiffres plus complets peuvent être nécessaires.",
+
+        noPriority:
+          "Aucun indicateur d’alerte majeur n’a été identifié à partir des informations saisies.",
+
+        months: "mois",
+
+        goalEmergencyFund: "Constituer une réserve d’urgence",
+        goalReduceDebt: "Réduire les dettes en cours",
+        goalBuyProperty: "Acheter ou investir dans l’immobilier",
+        goalGrowInvestments: "Développer les investissements",
+        goalRetirementPlanning: "Préparer la retraite",
+        goalProtectFamily: "Protéger financièrement ma famille",
+        goalTaxPlanning: "Améliorer la planification fiscale",
+        goalInternationalPlanning:
+          "Planification financière internationale",
+        goalAthletePlanning:
+          "Planification de carrière et de patrimoine sportif",
+        goalEducationFunding: "Financement des études",
+        goalBusinessPlanning:
+          "Planification financière de l’entreprise",
+        goalEstatePlanning:
+          "Planification successorale et patrimoniale",
+
+        profileIndividual: "Particulier",
+        profileFamily: "Famille",
+        profileEntrepreneur: "Entrepreneur",
+        profileBusinessOwner: "Chef d’entreprise",
+        profileAthlete: "Athlète professionnel",
+        profileSportsProfessional: "Professionnel du sport",
+
+        priorityCashFlowName: "Améliorer la trésorerie mensuelle",
+        priorityEmergencyReserveName:
+          "Constituer une réserve d’urgence",
+        priorityDebtName: "Réduire les dettes",
+        priorityTaxName: "Améliorer la planification fiscale",
+        priorityInvestmentName:
+          "Construire une stratégie d’investissement",
+        priorityPropertyName: "Planification immobilière",
+        priorityRetirementName: "Planification de retraite",
+        priorityFamilyName: "Protection familiale",
+        priorityInternationalName: "Planification internationale",
+        priorityBusinessName: "Planification d’entreprise",
+        priorityCareerTransitionName:
+          "Planification de transition de carrière ou sportive",
+
+        timeframeImmediately: "Immédiatement",
+        timeframeThreeMonths: "Dans les 3 mois",
+        timeframeSixMonths: "Dans les 6 mois",
+        timeframeTwelveMonths: "Dans les 12 mois",
+        timeframeOneToThreeYears: "Dans 1 à 3 ans",
+        timeframeLongTerm: "Long terme"
+      },
+
+      es: {
+        editAssessment: "← Editar evaluación",
+        missingTitle: "Su evaluación no está completa",
+
+        missingText:
+          "Complete la evaluación del plan financiero antes de consultar " +
+          "sus resultados personalizados.",
+
+        startAssessment: "Comenzar la evaluación",
+        eyebrow: "Su plan financiero inicial",
+        title:
+          'Resumen de su <span>salud financiera</span>',
+
+        intro:
+          "Esta evaluación inicial resume la información introducida y " +
+          "señala las áreas que pueden requerir mayor atención. Está " +
+          "diseñada como un punto de partida práctico y no como " +
+          "asesoramiento financiero regulado.",
+
+        outOfOneHundred: "de 100",
+
+        monthlyBalanceLabel: "Saldo mensual",
+        netWorthLabel: "Patrimonio neto estimado",
+        emergencyCoverageLabel: "Cobertura de emergencia",
+        debtRatioLabel: "Ratio deuda-activos",
+
+        strengthsEyebrow: "Indicadores positivos",
+        strengthsTitle: "Sus fortalezas financieras",
+        prioritiesEyebrow: "Áreas de atención",
+        prioritiesTitle: "Sus áreas prioritarias",
+
+        actionEyebrow: "Centro de acciones financieras",
+        actionTitle: "Próximos pasos recomendados",
+
+        actionDescription:
+          "Estas acciones iniciales se generan a partir de la información " +
+          "introducida durante la evaluación. Deben revisarse dentro del " +
+          "contexto de sus circunstancias completas antes de aplicarse.",
+
+        goalsEyebrow: "Sus objetivos",
+        goalsTitle: "Objetivos financieros seleccionados",
+        mainPriorityLabel: "Prioridad principal",
+        timeHorizonLabel: "Plazo preferido",
+
+        reviewEyebrow: "Asistencia profesional",
+        reviewTitle: "¿Desea una revisión profesional?",
+
+        reviewDescription:
+          "Una revisión profesional puede considerar el contexto completo " +
+          "de estas cifras, incluida la fiscalidad, los acuerdos internacionales, " +
+          "las obligaciones familiares, la carrera y los objetivos a largo plazo.",
+
+        requestReview: "Solicitar revisión profesional",
+        returnToFinance: "Volver a Global Sport Finance",
+        printResults: "Imprimir o guardar como PDF",
+        editAnswers: "Revisar mis respuestas",
+        restartAssessment: "Comenzar una nueva evaluación",
+
+        footerDisclaimer:
+          "Esta evaluación automatizada proporciona orientación educativa " +
+          "general únicamente a partir de la información introducida. No " +
+          "constituye un análisis financiero completo ni asesoramiento " +
+          "financiero, de inversión, fiscal, contable o jurídico regulado.",
+
+        scoreExcellent: "Posición financiera sólida",
+        scoreGood: "Buena base financiera",
+        scoreDeveloping: "Posición financiera en desarrollo",
+        scoreAttention: "Atención prioritaria necesaria",
+
+        scoreExcellentDescription:
+          "Sus respuestas indican una posición general comparativamente sólida, aunque sigue siendo importante revisarla periódicamente.",
+
+        scoreGoodDescription:
+          "Sus respuestas indican una base positiva con algunas áreas que podrían beneficiarse de una planificación adicional.",
+
+        scoreDevelopingDescription:
+          "Sus respuestas indican que varios elementos de su estructura financiera podrían beneficiarse de una atención específica.",
+
+        scoreAttentionDescription:
+          "Sus respuestas indican presiones o carencias financieras importantes que pueden requerir una revisión rápida.",
+
+        monthlyPositive:
+          "Los ingresos introducidos superan actualmente sus compromisos mensuales habituales.",
+
+        monthlyTight:
+          "Su excedente mensual parece limitado en relación con sus ingresos.",
+
+        monthlyNegative:
+          "Los compromisos mensuales introducidos superan actualmente sus ingresos.",
+
+        netWorthPositive:
+          "Los activos introducidos superan sus pasivos pendientes.",
+
+        netWorthNegative:
+          "Los pasivos introducidos superan el valor de los activos registrados.",
+
+        netWorthNeutral:
+          "Sus activos y pasivos registrados tienen actualmente valores similares.",
+
+        emergencyStrong:
+          "Sus reservas líquidas cubren más de seis meses de compromisos habituales.",
+
+        emergencyModerate:
+          "Sus reservas líquidas cubren aproximadamente entre tres y seis meses de compromisos.",
+
+        emergencyLow:
+          "Sus reservas líquidas cubren menos de tres meses de compromisos habituales.",
+
+        emergencyNone:
+          "No se identificó una cobertura de emergencia significativa con las cifras introducidas.",
+
+        debtLow:
+          "Sus deudas son relativamente bajas en comparación con los activos introducidos.",
+
+        debtModerate:
+          "Su deuda representa una proporción moderada de los activos introducidos.",
+
+        debtHigh:
+          "Sus pasivos representan una proporción importante de los activos introducidos.",
+
+        strengthCashFlow:
+          "Se ha identificado un flujo de caja mensual positivo.",
+
+        strengthEmergency:
+          "Sus reservas de emergencia ofrecen una protección financiera útil.",
+
+        strengthNetWorth:
+          "Sus activos registrados superan sus pasivos pendientes.",
+
+        strengthDebt:
+          "Su posición de deuda frente a activos parece relativamente controlada.",
+
+        strengthSavings:
+          "Ha registrado ahorros o reservas financieras específicas.",
+
+        strengthInvestments:
+          "Ha comenzado a acumular inversiones o activos para la jubilación.",
+
+        priorityCashFlow:
+          "Puede ser necesario mejorar o controlar más de cerca su flujo de caja mensual.",
+
+        priorityEmergency:
+          "Puede ser necesario reforzar su reserva de emergencia.",
+
+        priorityDebt:
+          "Su nivel de deuda puede requerir un plan estructurado de reducción.",
+
+        priorityNetWorth:
+          "Sus pasivos superan actualmente los activos registrados.",
+
+        priorityTax:
+          "Puede ser necesario comparar su reserva fiscal con las obligaciones previstas.",
+
+        priorityRetirement:
+          "La provisión para jubilación parece limitada según las cifras introducidas.",
+
+        priorityInvestment:
+          "Las inversiones a largo plazo parecen limitadas en relación con sus objetivos declarados.",
+
+        priorityGoals:
+          "Sus objetivos seleccionados pueden necesitar cantidades objetivo y plazos más claros.",
+
+        recommendationCashFlowTitle:
+          "Revise su flujo de caja mensual",
+
+        recommendationCashFlowText:
+          "Separe los compromisos esenciales, el gasto discrecional, las reservas fiscales y el ahorro previsto para identificar un excedente mensual sostenible.",
+
+        recommendationEmergencyTitle:
+          "Construya su reserva de emergencia",
+
+        recommendationEmergencyText:
+          "Trabaje para crear una reserva capaz de cubrir un número apropiado de meses de compromisos esenciales.",
+
+        recommendationDebtTitle:
+          "Cree un plan de gestión de deudas",
+
+        recommendationDebtText:
+          "Revise los intereses, las prioridades de pago y el efecto de las deudas pendientes sobre su posición financiera general.",
+
+        recommendationTaxTitle:
+          "Revise su estrategia de reserva fiscal",
+
+        recommendationTaxText:
+          "Compare la reserva fiscal disponible con las obligaciones previstas y considere separar los fondos fiscales del dinero de uso diario.",
+
+        recommendationInvestmentTitle:
+          "Defina una estrategia de inversión a largo plazo",
+
+        recommendationInvestmentText:
+          "Aclare sus objetivos, plazo, capacidad de riesgo y necesidades de liquidez antes de tomar decisiones de inversión.",
+
+        recommendationRetirementTitle:
+          "Refuerce la planificación de jubilación",
+
+        recommendationRetirementText:
+          "Estime los ingresos futuros necesarios y revise si las pensiones o provisiones existentes probablemente serán suficientes.",
+
+        recommendationGoalTitle:
+          "Convierta sus objetivos en metas medibles",
+
+        recommendationGoalText:
+          "Asigne un coste estimado, una fecha objetivo y una aportación periódica a cada objetivo financiero prioritario.",
+
+        recommendationReviewTitle:
+          "Solicite una revisión financiera profesional",
+
+        recommendationReviewText:
+          "Una revisión personalizada puede ayudar a comprobar las hipótesis de esta evaluación inicial y coordinar aspectos fiscales, familiares, empresariales o internacionales.",
+
+        noStrength:
+          "No se identificó una fortaleza clara con la información introducida. Esto no significa que no exista; la evaluación puede necesitar cifras más completas.",
+
+        noPriority:
+          "No se identificó ningún indicador importante de advertencia con la información introducida.",
+
+        months: "meses",
+
+        goalEmergencyFund: "Crear una reserva de emergencia",
+        goalReduceDebt: "Reducir las deudas pendientes",
+        goalBuyProperty: "Comprar o invertir en propiedades",
+        goalGrowInvestments: "Aumentar las inversiones",
+        goalRetirementPlanning: "Planificar la jubilación",
+        goalProtectFamily: "Proteger económicamente a mi familia",
+        goalTaxPlanning: "Mejorar la planificación fiscal",
+        goalInternationalPlanning:
+          "Planificación financiera internacional",
+        goalAthletePlanning:
+          "Planificación de carrera y patrimonio deportivo",
+        goalEducationFunding: "Financiación de estudios",
+        goalBusinessPlanning:
+          "Planificación financiera empresarial",
+        goalEstatePlanning:
+          "Planificación patrimonial y sucesoria",
+
+        profileIndividual: "Particular",
+        profileFamily: "Familia",
+        profileEntrepreneur: "Emprendedor",
+        profileBusinessOwner: "Empresario",
+        profileAthlete: "Deportista profesional",
+        profileSportsProfessional: "Profesional del deporte",
+
+        priorityCashFlowName: "Mejorar el flujo de caja mensual",
+        priorityEmergencyReserveName:
+          "Crear una reserva de emergencia",
+        priorityDebtName: "Reducir deudas",
+        priorityTaxName: "Mejorar la planificación fiscal",
+        priorityInvestmentName:
+          "Crear una estrategia de inversión",
+        priorityPropertyName: "Planificación inmobiliaria",
+        priorityRetirementName: "Planificación de jubilación",
+        priorityFamilyName: "Protección familiar",
+        priorityInternationalName: "Planificación internacional",
+        priorityBusinessName: "Planificación empresarial",
+        priorityCareerTransitionName:
+          "Planificación de transición profesional o deportiva",
+
+        timeframeImmediately: "Inmediatamente",
+        timeframeThreeMonths: "Dentro de 3 meses",
+        timeframeSixMonths: "Dentro de 6 meses",
+        timeframeTwelveMonths: "Dentro de 12 meses",
+        timeframeOneToThreeYears: "Dentro de 1–3 años",
+        timeframeLongTerm: "A largo plazo"
+      }
+    };
+
+    const storageKeys = [
+      "gsfBlueprintStep1",
+      "gsfBlueprintStep2",
+      "gsfBlueprintStep3",
+      "gsfBlueprintStep4",
+      "gsfBlueprintStep5"
+    ];
+
+    const languageButtons =
+      document.querySelectorAll(".language-button");
+
+    const translatedElements =
+      document.querySelectorAll("[data-translate]");
+
+    const resultsContent =
+      document.getElementById("resultsContent");
+
+    const missingData =
+      document.getElementById("missingData");
+
+    let currentLanguage =
+      localStorage.getItem("gsfBlueprintLanguage") || "en";
+
+    let blueprintData = null;
+
+    function readStoredObject(key) {
+      const storedValue = localStorage.getItem(key);
+
+      if (!storedValue) {
+        return null;
+      }
+
+      try {
+        return JSON.parse(storedValue);
+      } catch (error) {
+        console.error(
+          "Unable to read stored Blueprint information:",
+          key,
+          error
+        );
+
+        return null;
+      }
+    }
+
+    function loadBlueprintData() {
+      const step1 =
+        readStoredObject("gsfBlueprintStep1");
+
+      const step2 =
+        readStoredObject("gsfBlueprintStep2");
+
+      const step3 =
+        readStoredObject("gsfBlueprintStep3");
+
+      const step4 =
+        readStoredObject("gsfBlueprintStep4");
+
+      const step5 =
+        readStoredObject("gsfBlueprintStep5");
+
+      if (
+        !step1 ||
+        !step2 ||
+        !step3 ||
+        !step4 ||
+        !step5
+      ) {
+        return null;
+      }
+
+      return {
+        step1,
+        step2,
+        step3,
+        step4,
+        step5
+      };
+    }
+
+    function numberValue(value) {
+      const number = Number(value);
+
+      return Number.isFinite(number)
+        ? number
+        : 0;
+    }
+
+    function formatMoney(value, currency) {
+      const safeCurrency =
+        currency || "EUR";
+
+      try {
+        return new Intl.NumberFormat(
+          currentLanguage === "fr"
+            ? "fr-FR"
+            : currentLanguage === "es"
+              ? "es-ES"
+              : "en-GB",
+          {
+            style: "currency",
+            currency: safeCurrency,
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+          }
+        ).format(value);
+
+      } catch (error) {
+        return (
+          safeCurrency +
+          " " +
+          numberValue(value).toLocaleString(undefined, {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+          })
+        );
+      }
+    }
+
+    function clamp(value, minimum, maximum) {
+      return Math.min(
+        Math.max(value, minimum),
+        maximum
+      );
+    }
+
+    function calculateScore(data) {
+      const income =
+        numberValue(data.step2.totalIncome);
+
+      const commitments =
+        numberValue(data.step2.totalCommitments);
+
+      const balance =
+        numberValue(data.step2.monthlyBalance);
+
+      const reserves =
+        numberValue(data.step3.liquidReserves);
+
+      const reserveMonths =
+        numberValue(data.step3.reserveMonths);
+
+      const totalAssets =
+        numberValue(data.step3.totalAssets);
+
+      const liabilities =
+        numberValue(data.step4.totalLiabilities);
+
+      const netWorth =
+        numberValue(data.step4.netWorth);
+
+      const debtRatio =
+        numberValue(data.step4.debtRatio);
+
+      const taxReserve =
+        numberValue(data.step2.taxReserve);
+
+      const taxSavings =
+        numberValue(data.step3.taxSavings);
+
+      const investments =
+        numberValue(data.step3.investments);
+
+      const pension =
+        numberValue(data.step3.pensionValue);
+
+      let score = 0;
+
+      /*
+        Score allocation:
+        Cash flow:            25 points
+        Emergency reserves:   20 points
+        Net worth:            20 points
+        Debt position:        15 points
+        Tax preparedness:     10 points
+        Long-term planning:   10 points
+      */
+
+      if (income > 0) {
+        const surplusRatio =
+          balance / income;
+
+        if (surplusRatio >= 0.2) {
+          score += 25;
+        } else if (surplusRatio >= 0.1) {
+          score += 20;
+        } else if (surplusRatio > 0) {
+          score += 13;
+        } else if (surplusRatio === 0) {
+          score += 7;
+        }
+      }
+
+      if (reserveMonths >= 6) {
+        score += 20;
+      } else if (reserveMonths >= 3) {
+        score += 15;
+      } else if (reserveMonths >= 1) {
+        score += 8;
+      } else if (reserves > 0) {
+        score += 4;
+      }
+
+      if (netWorth > 0 && totalAssets > 0) {
+        const netWorthRatio =
+          netWorth / totalAssets;
+
+        if (netWorthRatio >= 0.7) {
+          score += 20;
+        } else if (netWorthRatio >= 0.4) {
+          score += 15;
+        } else if (netWorthRatio > 0) {
+          score += 10;
+        }
+      } else if (netWorth === 0 && totalAssets > 0) {
+        score += 5;
+      }
+
+      if (liabilities === 0 && totalAssets > 0) {
+        score += 15;
+      } else if (debtRatio < 30) {
+        score += 13;
+      } else if (debtRatio <= 60) {
+        score += 8;
+      } else if (debtRatio <= 85) {
+        score += 3;
+      }
+
+      if (
+        taxReserve > 0 ||
+        taxSavings > 0
+      ) {
+        score += 6;
+
+        if (
+          taxSavings >= taxReserve * 3 ||
+          taxReserve >= income * 0.1
+        ) {
+          score += 4;
+        }
+      }
+
+      if (
+        investments > 0 ||
+        pension > 0
+      ) {
+        score += 5;
+      }
+
+      if (
+        investments + pension >=
+        Math.max(income * 6, 1)
+      ) {
+        score += 5;
+      }
+
+      return Math.round(
+        clamp(score, 0, 100)
+      );
+    }
+
+    function getScoreCategory(score) {
+      const language =
+        translations[currentLanguage];
+
+      if (score >= 80) {
+        return {
+          status: language.scoreExcellent,
+          description:
+            language.scoreExcellentDescription
+        };
+      }
+
+      if (score >= 65) {
+        return {
+          status: language.scoreGood,
+          description:
+            language.scoreGoodDescription
+        };
+      }
+
+      if (score >= 45) {
+        return {
+          status: language.scoreDeveloping,
+          description:
+            language.scoreDevelopingDescription
+        };
+      }
+
+      return {
+        status: language.scoreAttention,
+        description:
+          language.scoreAttentionDescription
+      };
+    }
+
+    function getProfileName(profileType) {
+      const language =
+        translations[currentLanguage];
+
+      const names = {
+        individual:
+          language.profileIndividual,
+
+        family:
+          language.profileFamily,
+
+        entrepreneur:
+          language.profileEntrepreneur,
+
+        businessOwner:
+          language.profileBusinessOwner,
+
+        athlete:
+          language.profileAthlete,
+
+        sportsProfessional:
+          language.profileSportsProfessional
+      };
+
+      return names[profileType] || "—";
+    }
+
+    function getPriorityName(priority) {
+      const language =
+        translations[currentLanguage];
+
+      const names = {
+        cashFlow:
+          language.priorityCashFlowName,
+
+        emergencyReserve:
+          language.priorityEmergencyReserveName,
+
+        debt:
+          language.priorityDebtName,
+
+        tax:
+          language.priorityTaxName,
+
+        investment:
+          language.priorityInvestmentName,
+
+        property:
+          language.priorityPropertyName,
+
+        retirement:
+          language.priorityRetirementName,
+
+        family:
+          language.priorityFamilyName,
+
+        international:
+          language.priorityInternationalName,
+
+        business:
+          language.priorityBusinessName,
+
+        careerTransition:
+          language.priorityCareerTransitionName
+      };
+
+      return names[priority] || "—";
+    }
+
+    function getTimeframeName(timeframe) {
+      const language =
+        translations[currentLanguage];
+
+      const names = {
+        immediately:
+          language.timeframeImmediately,
+
+        "3-months":
+          language.timeframeThreeMonths,
+
+        "6-months":
+          language.timeframeSixMonths,
+
+        "12-months":
+          language.timeframeTwelveMonths,
+
+        "1-3-years":
+          language.timeframeOneToThreeYears,
+
+        "long-term":
+          language.timeframeLongTerm
+      };
+
+      return names[timeframe] || "—";
+    }
+
+    function getGoalName(goal) {
+      const language =
+        translations[currentLanguage];
+
+      const names = {
+        emergencyFund:
+          language.goalEmergencyFund,
+
+        reduceDebt:
+          language.goalReduceDebt,
+
+        buyProperty:
+          language.goalBuyProperty,
+
+        growInvestments:
+          language.goalGrowInvestments,
+
+        retirementPlanning:
+          language.goalRetirementPlanning,
+
+        protectFamily:
+          language.goalProtectFamily,
+
+        taxPlanning:
+          language.goalTaxPlanning,
+
+        internationalPlanning:
+          language.goalInternationalPlanning,
+
+        athletePlanning:
+          language.goalAthletePlanning,
+
+        educationFunding:
+          language.goalEducationFunding,
+
+        businessPlanning:
+          language.goalBusinessPlanning,
+
+        estatePlanning:
+          language.goalEstatePlanning
+      };
+
+      return names[goal] || goal;
+    }
+
+    function calculateAnalysis(data) {
+      const language =
+        translations[currentLanguage];
+
+      const income =
+        numberValue(data.step2.totalIncome);
+
+      const balance =
+        numberValue(data.step2.monthlyBalance);
+
+      const reserves =
+        numberValue(data.step3.liquidReserves);
+
+      const reserveMonths =
+        numberValue(data.step3.reserveMonths);
+
+      const investments =
+        numberValue(data.step3.investments);
+
+      const pension =
+        numberValue(data.step3.pensionValue);
+
+      const taxReserve =
+        numberValue(data.step2.taxReserve);
+
+      const taxSavings =
+        numberValue(data.step3.taxSavings);
+
+      const totalAssets =
+        numberValue(data.step3.totalAssets);
+
+      const netWorth =
+        numberValue(data.step4.netWorth);
+
+      const liabilities =
+        numberValue(data.step4.totalLiabilities);
+
+      const debtRatio =
+        numberValue(data.step4.debtRatio);
+
+      const goals =
+        Array.isArray(data.step5.goals)
+          ? data.step5.goals
+          : [];
+
+      const strengths = [];
+      const priorities = [];
+      const recommendations = [];
+
+      if (balance > 0) {
+        strengths.push(
+          language.strengthCashFlow
+        );
+      } else {
+        priorities.push(
+          language.priorityCashFlow
+        );
+
+        recommendations.push({
+          title:
+            language.recommendationCashFlowTitle,
+
+          text:
+            language.recommendationCashFlowText
+        });
+      }
+
+      if (reserveMonths >= 3) {
+        strengths.push(
+          language.strengthEmergency
+        );
+      } else {
+        priorities.push(
+          language.priorityEmergency
+        );
+
+        recommendations.push({
+          title:
+            language.recommendationEmergencyTitle,
+
+          text:
+            language.recommendationEmergencyText
+        });
+      }
+
+      if (netWorth > 0) {
+        strengths.push(
+          language.strengthNetWorth
+        );
+      } else if (netWorth < 0) {
+        priorities.push(
+          language.priorityNetWorth
+        );
+      }
+
+      if (
+        liabilities === 0 ||
+        debtRatio < 30
+      ) {
+        strengths.push(
+          language.strengthDebt
+        );
+      } else if (debtRatio > 60) {
+        priorities.push(
+          language.priorityDebt
+        );
+
+        recommendations.push({
+          title:
+            language.recommendationDebtTitle,
+
+          text:
+            language.recommendationDebtText
+        });
+      }
+
+      if (reserves > 0) {
+        strengths.push(
+          language.strengthSavings
+        );
+      }
+
+      if (
+        investments > 0 ||
+        pension > 0
+      ) {
+        strengths.push(
+          language.strengthInvestments
+        );
+      }
+
+      if (
+        goals.includes("taxPlanning") &&
+        taxReserve <= 0 &&
+        taxSavings <= 0
+      ) {
+        priorities.push(
+          language.priorityTax
+        );
+
+        recommendations.push({
+          title:
+            language.recommendationTaxTitle,
+
+          text:
+            language.recommendationTaxText
+        });
+      }
+
+      if (
+        goals.includes("retirementPlanning") &&
+        pension <= 0
+      ) {
+        priorities.push(
+          language.priorityRetirement
+        );
+
+        recommendations.push({
+          title:
+            language.recommendationRetirementTitle,
+
+          text:
+            language.recommendationRetirementText
+        });
+      }
+
+      if (
+        goals.includes("growInvestments") &&
+        investments <= 0
+      ) {
+        priorities.push(
+          language.priorityInvestment
+        );
+
+        recommendations.push({
+          title:
+            language.recommendationInvestmentTitle,
+
+          text:
+            language.recommendationInvestmentText
+        });
+      }
+
+      if (goals.length >= 3) {
+        priorities.push(
+          language.priorityGoals
+        );
+
+        recommendations.push({
+          title:
+            language.recommendationGoalTitle,
+
+          text:
+            language.recommendationGoalText
+        });
+      }
+
+      if (
+        data.step1.profileType === "athlete" ||
+        data.step1.profileType === "sportsProfessional" ||
+        goals.includes("internationalPlanning") ||
+        goals.includes("athletePlanning") ||
+        data.step5.mainPriority === "international" ||
+        data.step5.mainPriority === "careerTransition"
+      ) {
+        recommendations.push({
+          title:
+            language.recommendationReviewTitle,
+
+          text:
+            language.recommendationReviewText
+        });
+      }
+
+      if (recommendations.length < 3) {
+        recommendations.push({
+          title:
+            language.recommendationGoalTitle,
+
+          text:
+            language.recommendationGoalText
+        });
+      }
+
+      if (recommendations.length < 4) {
+        recommendations.push({
+          title:
+            language.recommendationReviewTitle,
+
+          text:
+            language.recommendationReviewText
+        });
+      }
+
+      return {
+        strengths:
+          Array.from(new Set(strengths)).slice(0, 6),
+
+        priorities:
+          Array.from(new Set(priorities)).slice(0, 6),
+
+        recommendations:
+          recommendations
+            .filter((item, index, list) => {
+              return (
+                list.findIndex(
+                  (other) =>
+                    other.title === item.title
+                ) === index
+              );
+            })
+            .slice(0, 6)
+      };
+    }
+
+    function createResultItem(text, type) {
+      const listItem =
+        document.createElement("li");
+
+      listItem.className =
+        "result-item";
+
+      const icon =
+        document.createElement("span");
+
+      icon.className =
+        "result-icon " +
+        (type === "strength"
+          ? "strength-icon"
+          : "priority-icon");
+
+      icon.textContent =
+        type === "strength"
+          ? "✓"
+          : "!";
+
+      const content =
+        document.createElement("span");
+
+      content.textContent = text;
+
+      listItem.appendChild(icon);
+      listItem.appendChild(content);
+
+      return listItem;
+    }
+
+    function renderAnalysis(analysis) {
+      const language =
+        translations[currentLanguage];
+
+      const strengthsList =
+        document.getElementById("strengthsList");
+
+      const prioritiesList =
+        document.getElementById("prioritiesList");
+
+      strengthsList.innerHTML = "";
+      prioritiesList.innerHTML = "";
+
+      if (analysis.strengths.length === 0) {
+        const message =
+          document.createElement("li");
+
+        message.className =
+          "empty-message";
+
+        message.textContent =
+          language.noStrength;
+
+        strengthsList.appendChild(message);
+      } else {
+        analysis.strengths.forEach((strength) => {
+          strengthsList.appendChild(
+            createResultItem(
+              strength,
+              "strength"
+            )
+          );
+        });
+      }
+
+      if (analysis.priorities.length === 0) {
+        const message =
+          document.createElement("li");
+
+        message.className =
+          "empty-message";
+
+        message.textContent =
+          language.noPriority;
+
+        prioritiesList.appendChild(message);
+      } else {
+        analysis.priorities.forEach((priority) => {
+          prioritiesList.appendChild(
+            createResultItem(
+              priority,
+              "priority"
+            )
+          );
+        });
+      }
+
+      const recommendationList =
+        document.getElementById(
+          "recommendationList"
+        );
+
+      recommendationList.innerHTML = "";
+
+      analysis.recommendations.forEach(
+        (recommendation) => {
+          const card =
+            document.createElement("article");
+
+          card.className =
+            "recommendation";
+
+          const title =
+            document.createElement("h3");
+
+          title.textContent =
+            recommendation.title;
+
+          const text =
+            document.createElement("p");
+
+          text.textContent =
+            recommendation.text;
+
+          card.appendChild(title);
+          card.appendChild(text);
+
+          recommendationList.appendChild(card);
+        }
+      );
+    }
+
+    function renderGoals(data) {
+      const goalTags =
+        document.getElementById("goalTags");
+
+      goalTags.innerHTML = "";
+
+      const goals =
+        Array.isArray(data.step5.goals)
+          ? data.step5.goals
+          : [];
+
+      goals.forEach((goal) => {
+        const tag =
+          document.createElement("span");
+
+        tag.className =
+          "goal-tag";
+
+        tag.textContent =
+          getGoalName(goal);
+
+        goalTags.appendChild(tag);
+      });
+
+      document.getElementById(
+        "mainPriorityValue"
+      ).textContent =
+        getPriorityName(
+          data.step5.mainPriority
+        );
+
+      document.getElementById(
+        "timeHorizonValue"
+      ).textContent =
+        getTimeframeName(
+          data.step5.timeHorizon
+        );
+    }
+
+    function renderMetrics(data) {
+      const language =
+        translations[currentLanguage];
+
+      const currency =
+        data.step1.currency || "EUR";
+
+      const income =
+        numberValue(data.step2.totalIncome);
+
+      const balance =
+        numberValue(data.step2.monthlyBalance);
+
+      const netWorth =
+        numberValue(data.step4.netWorth);
+
+      const reserveMonths =
+        numberValue(data.step3.reserveMonths);
+
+      const debtRatio =
+        numberValue(data.step4.debtRatio);
+
+      document.getElementById(
+        "monthlyBalanceValue"
+      ).textContent =
+        formatMoney(balance, currency);
+
+      document.getElementById(
+        "netWorthValue"
+      ).textContent =
+        formatMoney(netWorth, currency);
+
+      document.getElementById(
+        "emergencyCoverageValue"
+      ).textContent =
+        reserveMonths.toFixed(1) +
+        " " +
+        language.months;
+
+      document.getElementById(
+        "debtRatioValue"
+      ).textContent =
+        debtRatio.toFixed(1) + "%";
+
+      let monthlyNote;
+      let monthlyProgress;
+
+      if (balance < 0) {
+        monthlyNote =
+          language.monthlyNegative;
+
+        monthlyProgress = 10;
+      } else if (
+        income > 0 &&
+        balance / income < 0.1
+      ) {
+        monthlyNote =
+          language.monthlyTight;
+
+        monthlyProgress = 40;
+      } else {
+        monthlyNote =
+          language.monthlyPositive;
+
+        monthlyProgress =
+          clamp(
+            income > 0
+              ? (balance / income) * 300
+              : 0,
+            55,
+            100
+          );
+      }
+
+      document.getElementById(
+        "monthlyBalanceNote"
+      ).textContent =
+        monthlyNote;
+
+      document.getElementById(
+        "monthlyBalanceBar"
+      ).style.width =
+        monthlyProgress + "%";
+
+      let netWorthNote;
+      let netWorthProgress;
+
+      if (netWorth > 0) {
+        netWorthNote =
+          language.netWorthPositive;
+
+        netWorthProgress = 85;
+      } else if (netWorth < 0) {
+        netWorthNote =
+          language.netWorthNegative;
+
+        netWorthProgress = 15;
+      } else {
+        netWorthNote =
+          language.netWorthNeutral;
+
+        netWorthProgress = 45;
+      }
+
+      document.getElementById(
+        "netWorthNote"
+      ).textContent =
+        netWorthNote;
+
+      document.getElementById(
+        "netWorthBar"
+      ).style.width =
+        netWorthProgress + "%";
+
+      let reserveNote;
+      let reserveProgress;
+
+      if (reserveMonths >= 6) {
+        reserveNote =
+          language.emergencyStrong;
+
+        reserveProgress = 100;
+      } else if (reserveMonths >= 3) {
+        reserveNote =
+          language.emergencyModerate;
+
+        reserveProgress = 65;
+      } else if (reserveMonths > 0) {
+        reserveNote =
+          language.emergencyLow;
+
+        reserveProgress =
+          clamp(
+            reserveMonths / 6 * 100,
+            12,
+            50
+          );
+      } else {
+        reserveNote =
+          language.emergencyNone;
+
+        reserveProgress = 5;
+      }
+
+      document.getElementById(
+        "emergencyCoverageNote"
+      ).textContent =
+        reserveNote;
+
+      document.getElementById(
+        "emergencyCoverageBar"
+      ).style.width =
+        reserveProgress + "%";
+
+      let debtNote;
+      let debtProgress;
+
+      if (debtRatio < 30) {
+        debtNote =
+          language.debtLow;
+
+        debtProgress = 90;
+      } else if (debtRatio <= 60) {
+        debtNote =
+          language.debtModerate;
+
+        debtProgress = 55;
+      } else {
+        debtNote =
+          language.debtHigh;
+
+        debtProgress = 20;
+      }
+
+      document.getElementById(
+        "debtRatioNote"
+      ).textContent =
+        debtNote;
+
+      document.getElementById(
+        "debtRatioBar"
+      ).style.width =
+        debtProgress + "%";
+    }
+
+    function renderProfile(data) {
+      document.getElementById(
+        "profilePill"
+      ).textContent =
+        getProfileName(
+          data.step1.profileType
+        );
+
+      document.getElementById(
+        "countryPill"
+      ).textContent =
+        data.step1.country || "—";
+
+      document.getElementById(
+        "currencyPill"
+      ).textContent =
+        data.step1.currency || "EUR";
+
+      document.getElementById(
+        "timeframePill"
+      ).textContent =
+        getTimeframeName(
+          data.step5.timeHorizon
+        );
+    }
+
+    function renderScore(data) {
+      const score =
+        calculateScore(data);
+
+      const category =
+        getScoreCategory(score);
+
+      document.getElementById(
+        "scoreNumber"
+      ).textContent =
+        score;
+
+      document.getElementById(
+        "scoreStatus"
+      ).textContent =
+        category.status;
+
+      document.getElementById(
+        "scoreDescription"
+      ).textContent =
+        category.description;
+
+      document.getElementById(
+        "scoreRing"
+      ).style.setProperty(
+        "--score-angle",
+        score * 3.6 + "deg"
+      );
+    }
+
+    function updateTranslatedElements(language) {
+      const selectedTranslation =
+        translations[language];
+
+      if (!selectedTranslation) {
+        return;
+      }
+
+      currentLanguage = language;
+      document.documentElement.lang = language;
+
+      translatedElements.forEach((element) => {
+        const key =
+          element.getAttribute("data-translate");
+
+        if (
+          selectedTranslation[key] === undefined
+        ) {
+          return;
+        }
+
+        if (key === "title") {
+          element.innerHTML =
+            selectedTranslation[key];
+        } else {
+          element.textContent =
+            selectedTranslation[key];
+        }
+      });
+
+      languageButtons.forEach((button) => {
+        button.classList.toggle(
+          "active",
+          button.dataset.language === language
+        );
+      });
+
+      localStorage.setItem(
+        "gsfBlueprintLanguage",
+        language
+      );
+    }
+
+    function renderResults() {
+      blueprintData =
+        loadBlueprintData();
+
+      if (!blueprintData) {
+        resultsContent.style.display =
+          "none";
+
+        missingData.style.display =
+          "block";
+
+        return;
+      }
+
+      missingData.style.display =
+        "none";
+
+      resultsContent.style.display =
+        "block";
+
+      renderProfile(blueprintData);
+      renderScore(blueprintData);
+      renderMetrics(blueprintData);
+
+      const analysis =
+        calculateAnalysis(blueprintData);
+
+      renderAnalysis(analysis);
+      renderGoals(blueprintData);
+
+      const profileName =
+        getProfileName(
+          blueprintData.step1.profileType
+        );
+
+      const subject =
+        encodeURIComponent(
+          "Financial Blueprint Professional Review"
+        );
+
+      const body =
+        encodeURIComponent(
+          "Hello Global Management Consultancy,\n\n" +
+          "I have completed the Global Sport Finance Financial Blueprint assessment and would like to request a professional review.\n\n" +
+          "Profile: " + profileName + "\n" +
+          "Country: " +
+          (blueprintData.step1.country || "Not stated") +
+          "\n" +
+          "Currency: " +
+          (blueprintData.step1.currency || "EUR") +
+          "\n" +
+          "Main priority: " +
+          getPriorityName(
+            blueprintData.step5.mainPriority
+          ) +
+          "\n\n" +
+          "Please contact me regarding the next steps."
+        );
+
+      document.getElementById(
+        "requestReviewButton"
+      ).href =
+        "mailto:info@globalmgm.co.uk" +
+        "?subject=" + subject +
+        "&body=" + body;
+    }
+
+    languageButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        updateTranslatedElements(
+          button.dataset.language
+        );
+
+        renderResults();
+      });
+    });
+
+    document.getElementById(
+      "printButton"
+    ).addEventListener("click", () => {
+      window.print();
+    });
+
+    document.getElementById(
+      "restartButton"
+    ).addEventListener("click", () => {
+      const confirmationMessage =
+        currentLanguage === "fr"
+          ? "Voulez-vous effacer cette évaluation et recommencer ?"
+          : currentLanguage === "es"
+            ? "¿Desea borrar esta evaluación y comenzar de nuevo?"
+            : "Do you want to clear this assessment and start again?";
+
+      if (!window.confirm(confirmationMessage)) {
+        return;
+      }
+
+      storageKeys.forEach((key) => {
+        localStorage.removeItem(key);
+      });
+
+      localStorage.removeItem(
+        "gsfBlueprintCompleted"
+      );
+
+      window.location.href =
+        "blueprint.html";
+    });
+
+    if (!translations[currentLanguage]) {
+      currentLanguage = "en";
+    }
+
+    updateTranslatedElements(
+      currentLanguage
+    );
+
+    renderResults();
+  </script>
+</body>
+</html>
