@@ -1,0 +1,3926 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, viewport-fit=cover"
+  />
+
+  <meta
+    name="description"
+    content="Global Sport Finance helps individuals, families, entrepreneurs and professional athletes understand, organise and improve their financial lives."
+  />
+
+  <title>Global Sport Finance | Global Management Consultancy</title>
+
+  <style>
+    :root {
+      --navy-950: #030817;
+      --navy-900: #071126;
+      --navy-850: #0a1730;
+      --navy-800: #0d1d39;
+
+      --gold-500: #d6a43d;
+      --gold-400: #efc768;
+      --gold-300: #f8dfa0;
+
+      --white: #ffffff;
+      --ivory: #f8f5ed;
+      --muted: #aeb8ca;
+      --line: rgba(255, 255, 255, 0.11);
+      --card: rgba(255, 255, 255, 0.045);
+
+      --shadow:
+        0 22px 70px rgba(0, 0, 0, 0.34);
+
+      --radius-lg: 30px;
+      --radius-md: 20px;
+      --radius-sm: 14px;
+
+      --max-width: 1220px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      overflow-x: hidden;
+      color: var(--white);
+      background:
+        radial-gradient(
+          circle at 82% 10%,
+          rgba(214, 164, 61, 0.12),
+          transparent 27%
+        ),
+        radial-gradient(
+          circle at 10% 45%,
+          rgba(31, 91, 166, 0.13),
+          transparent 30%
+        ),
+        linear-gradient(
+          180deg,
+          var(--navy-950) 0%,
+          var(--navy-900) 55%,
+          #040a17 100%
+        );
+      font-family:
+        Inter,
+        ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+      line-height: 1.6;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    button,
+    a {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    section {
+      scroll-margin-top: 110px;
+    }
+
+    .container {
+      width: min(calc(100% - 40px), var(--max-width));
+      margin-inline: auto;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin: 0 0 18px;
+      color: var(--gold-400);
+      font-size: 0.77rem;
+      font-weight: 800;
+      letter-spacing: 0.17em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before {
+      width: 34px;
+      height: 1px;
+      content: "";
+      background: linear-gradient(
+        90deg,
+        var(--gold-500),
+        var(--gold-300)
+      );
+    }
+
+    .section-heading {
+      max-width: 760px;
+      margin-bottom: 46px;
+    }
+
+    .section-heading.center {
+      margin-inline: auto;
+      text-align: center;
+    }
+
+    .section-heading.center .eyebrow {
+      justify-content: center;
+    }
+
+    .section-heading.center .eyebrow::before {
+      display: none;
+    }
+
+    .section-heading h2 {
+      margin: 0 0 18px;
+      color: var(--white);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.2rem, 5vw, 4.1rem);
+      font-weight: 500;
+      letter-spacing: -0.045em;
+      line-height: 1.03;
+    }
+
+    .section-heading p {
+      max-width: 680px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 1.05rem;
+    }
+
+    .section-heading.center p {
+      margin-inline: auto;
+    }
+
+    .site-header {
+      position: fixed;
+      z-index: 1000;
+      top: 0;
+      right: 0;
+      left: 0;
+      border-bottom: 1px solid transparent;
+      background: rgba(3, 8, 23, 0.7);
+      backdrop-filter: blur(18px);
+      transition:
+        background 0.25s ease,
+        border-color 0.25s ease;
+    }
+
+    .site-header.scrolled {
+      border-color: var(--line);
+      background: rgba(3, 8, 23, 0.94);
+    }
+
+    .header-inner {
+      display: flex;
+      min-height: 90px;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .brand {
+      display: flex;
+      min-width: 0;
+      align-items: center;
+      gap: 13px;
+    }
+
+    .brand-logo {
+      width: 56px;
+      height: 56px;
+      flex: 0 0 56px;
+      border: 1px solid rgba(239, 199, 104, 0.35);
+      border-radius: 15px;
+      object-fit: contain;
+      background: #050b1b;
+      box-shadow:
+        0 9px 30px rgba(0, 0, 0, 0.3),
+        0 0 28px rgba(214, 164, 61, 0.08);
+    }
+
+    .brand-copy {
+      min-width: 0;
+    }
+
+    .brand-name {
+      overflow: hidden;
+      margin: 0;
+      color: var(--white);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.08rem;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+      line-height: 1.15;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .brand-parent {
+      margin: 4px 0 0;
+      color: var(--gold-400);
+      font-size: 0.67rem;
+      font-weight: 800;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+    }
+
+    .desktop-nav {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 23px;
+    }
+
+    .nav-links a {
+      position: relative;
+      color: #d5dbea;
+      font-size: 0.85rem;
+      font-weight: 650;
+      transition: color 0.2s ease;
+    }
+
+    .nav-links a::after {
+      position: absolute;
+      right: 0;
+      bottom: -7px;
+      left: 0;
+      height: 1px;
+      content: "";
+      background: var(--gold-400);
+      transform: scaleX(0);
+      transform-origin: center;
+      transition: transform 0.2s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--white);
+    }
+
+    .nav-links a:hover::after {
+      transform: scaleX(1);
+    }
+
+    .language-switcher {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.035);
+    }
+
+    .language-switcher button {
+      min-width: 40px;
+      padding: 7px 10px;
+      border: 0;
+      border-radius: 999px;
+      color: var(--muted);
+      background: transparent;
+      cursor: pointer;
+      font-size: 0.73rem;
+      font-weight: 800;
+      transition:
+        color 0.2s ease,
+        background 0.2s ease;
+    }
+
+    .language-switcher button:hover,
+    .language-switcher button.active {
+      color: #0b1020;
+      background: linear-gradient(
+        135deg,
+        var(--gold-300),
+        var(--gold-500)
+      );
+    }
+
+    .mobile-menu-button {
+      display: none;
+      width: 46px;
+      height: 46px;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      color: var(--white);
+      background: rgba(255, 255, 255, 0.04);
+      cursor: pointer;
+    }
+
+    .mobile-menu-button span,
+    .mobile-menu-button span::before,
+    .mobile-menu-button span::after {
+      display: block;
+      width: 20px;
+      height: 2px;
+      border-radius: 999px;
+      background: currentColor;
+    }
+
+    .mobile-menu-button span {
+      position: relative;
+    }
+
+    .mobile-menu-button span::before,
+    .mobile-menu-button span::after {
+      position: absolute;
+      left: 0;
+      content: "";
+    }
+
+    .mobile-menu-button span::before {
+      top: -6px;
+    }
+
+    .mobile-menu-button span::after {
+      top: 6px;
+    }
+
+    .mobile-nav {
+      display: none;
+      padding: 0 0 22px;
+    }
+
+    .mobile-nav.open {
+      display: block;
+    }
+
+    .mobile-nav-inner {
+      display: grid;
+      gap: 6px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      background: rgba(7, 17, 38, 0.98);
+    }
+
+    .mobile-nav a {
+      padding: 12px 10px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+      color: #e4e8f1;
+      font-weight: 650;
+    }
+
+    .mobile-language {
+      margin-top: 10px;
+    }
+
+    .hero {
+      position: relative;
+      display: flex;
+      min-height: 100vh;
+      align-items: center;
+      overflow: hidden;
+      padding: 150px 0 84px;
+    }
+
+    .hero::before {
+      position: absolute;
+      top: 16%;
+      right: -14%;
+      width: 650px;
+      height: 650px;
+      border: 1px solid rgba(239, 199, 104, 0.11);
+      border-radius: 50%;
+      content: "";
+      box-shadow:
+        0 0 0 90px rgba(239, 199, 104, 0.018),
+        0 0 0 180px rgba(239, 199, 104, 0.012);
+    }
+
+    .hero-grid {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      align-items: center;
+      gap: 70px;
+      grid-template-columns: minmax(0, 1.08fr) minmax(360px, 0.92fr);
+    }
+
+    .hero-copy h1 {
+      max-width: 760px;
+      margin: 0 0 24px;
+      color: var(--white);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(3.3rem, 7vw, 6.9rem);
+      font-weight: 500;
+      letter-spacing: -0.065em;
+      line-height: 0.94;
+    }
+
+    .hero-copy h1 span {
+      display: block;
+      margin-top: 10px;
+      color: transparent;
+      background:
+        linear-gradient(
+          110deg,
+          var(--gold-500),
+          var(--gold-300),
+          var(--gold-500)
+        );
+      background-clip: text;
+      -webkit-background-clip: text;
+    }
+
+    .hero-description {
+      max-width: 660px;
+      margin: 0 0 32px;
+      color: #bac4d6;
+      font-size: clamp(1rem, 1.8vw, 1.2rem);
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 13px;
+    }
+
+    .button {
+      display: inline-flex;
+      min-height: 51px;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 13px 23px;
+      border: 1px solid transparent;
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 0.88rem;
+      font-weight: 800;
+      letter-spacing: 0.015em;
+      transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        border-color 0.2s ease,
+        background 0.2s ease;
+    }
+
+    .button:hover {
+      transform: translateY(-2px);
+    }
+
+    .button-primary {
+      color: #101321;
+      background:
+        linear-gradient(
+          135deg,
+          var(--gold-300),
+          var(--gold-500)
+        );
+      box-shadow:
+        0 14px 34px rgba(214, 164, 61, 0.2);
+    }
+
+    .button-primary:hover {
+      box-shadow:
+        0 18px 42px rgba(214, 164, 61, 0.3);
+    }
+
+    .button-secondary {
+      border-color: rgba(255, 255, 255, 0.16);
+      color: var(--white);
+      background: rgba(255, 255, 255, 0.035);
+    }
+
+    .button-secondary:hover {
+      border-color: rgba(239, 199, 104, 0.48);
+      background: rgba(239, 199, 104, 0.06);
+    }
+
+    .button-arrow {
+      font-size: 1.05rem;
+      transition: transform 0.2s ease;
+    }
+
+    .button:hover .button-arrow {
+      transform: translateX(3px);
+    }
+
+    .hero-panel {
+      position: relative;
+      padding: 26px;
+      border: 1px solid rgba(239, 199, 104, 0.2);
+      border-radius: var(--radius-lg);
+      background:
+        linear-gradient(
+          145deg,
+          rgba(255, 255, 255, 0.075),
+          rgba(255, 255, 255, 0.018)
+        );
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(20px);
+    }
+
+    .hero-panel::before {
+      position: absolute;
+      inset: -1px;
+      z-index: -1;
+      border-radius: inherit;
+      content: "";
+      background:
+        linear-gradient(
+          135deg,
+          rgba(239, 199, 104, 0.13),
+          transparent 35%,
+          transparent 65%,
+          rgba(239, 199, 104, 0.06)
+        );
+    }
+
+    .hero-logo-wrap {
+      display: grid;
+      min-height: 345px;
+      place-items: center;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: 22px;
+      background:
+        radial-gradient(
+          circle,
+          rgba(214, 164, 61, 0.13),
+          transparent 55%
+        ),
+        #040a19;
+    }
+
+    .hero-logo {
+      width: min(82%, 360px);
+      filter:
+        drop-shadow(0 18px 35px rgba(0, 0, 0, 0.35));
+    }
+
+    .hero-panel-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 22px;
+      padding-top: 22px;
+    }
+
+    .hero-panel-footer strong {
+      display: block;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.18rem;
+      font-weight: 500;
+    }
+
+    .hero-panel-footer span {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 0.81rem;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      flex: 0 0 auto;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border: 1px solid rgba(75, 210, 139, 0.2);
+      border-radius: 999px;
+      color: #b9f1d0;
+      background: rgba(75, 210, 139, 0.07);
+      font-size: 0.71rem;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .status-pill::before {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      content: "";
+      background: #4bd28b;
+      box-shadow: 0 0 12px rgba(75, 210, 139, 0.6);
+    }
+
+    .trust-strip {
+      position: relative;
+      z-index: 3;
+      margin-top: -34px;
+    }
+
+    .trust-grid {
+      display: grid;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: rgba(7, 17, 38, 0.88);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    .trust-item {
+      min-height: 118px;
+      padding: 24px;
+      border-right: 1px solid var(--line);
+    }
+
+    .trust-item:last-child {
+      border-right: 0;
+    }
+
+    .trust-number {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--gold-400);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.5rem;
+    }
+
+    .trust-label {
+      color: #d8deeb;
+      font-size: 0.87rem;
+      font-weight: 650;
+    }
+
+    .journey {
+      padding: 140px 0 100px;
+    }
+
+    .journey-grid {
+      display: grid;
+      gap: 18px;
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    .journey-card {
+      position: relative;
+      min-height: 272px;
+      padding: 28px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      background: var(--card);
+      transition:
+        transform 0.25s ease,
+        border-color 0.25s ease,
+        background 0.25s ease;
+    }
+
+    .journey-card:hover {
+      border-color: rgba(239, 199, 104, 0.32);
+      background: rgba(255, 255, 255, 0.064);
+      transform: translateY(-5px);
+    }
+
+    .journey-number {
+      position: absolute;
+      top: 12px;
+      right: 20px;
+      color: rgba(239, 199, 104, 0.1);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 4.7rem;
+      line-height: 1;
+    }
+
+    .journey-icon {
+      display: grid;
+      width: 48px;
+      height: 48px;
+      margin-bottom: 42px;
+      place-items: center;
+      border: 1px solid rgba(239, 199, 104, 0.25);
+      border-radius: 14px;
+      color: var(--gold-400);
+      background: rgba(239, 199, 104, 0.07);
+      font-size: 1.18rem;
+    }
+
+    .journey-card h3 {
+      margin: 0 0 11px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.45rem;
+      font-weight: 500;
+    }
+
+    .journey-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    .blueprint {
+      padding: 100px 0;
+    }
+
+    .feature-shell {
+      display: grid;
+      align-items: stretch;
+      gap: 22px;
+      padding: 22px;
+      border: 1px solid rgba(239, 199, 104, 0.18);
+      border-radius: 34px;
+      background:
+        linear-gradient(
+          135deg,
+          rgba(214, 164, 61, 0.08),
+          rgba(255, 255, 255, 0.025)
+        );
+      box-shadow: var(--shadow);
+      grid-template-columns: 0.95fr 1.05fr;
+    }
+
+    .feature-content {
+      display: flex;
+      padding: clamp(24px, 5vw, 58px);
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .feature-content h2 {
+      margin: 0 0 20px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.35rem, 5vw, 4.3rem);
+      font-weight: 500;
+      letter-spacing: -0.05em;
+      line-height: 1.02;
+    }
+
+    .feature-content > p {
+      margin: 0 0 26px;
+      color: var(--muted);
+      font-size: 1.03rem;
+    }
+
+    .check-list {
+      display: grid;
+      gap: 13px;
+      margin: 0 0 32px;
+      padding: 0;
+      list-style: none;
+    }
+
+    .check-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 11px;
+      color: #e3e7ef;
+      font-size: 0.91rem;
+    }
+
+    .check-list li::before {
+      display: grid;
+      width: 21px;
+      height: 21px;
+      flex: 0 0 21px;
+      place-items: center;
+      margin-top: 1px;
+      border-radius: 50%;
+      color: #0b1020;
+      content: "✓";
+      background: linear-gradient(
+        135deg,
+        var(--gold-300),
+        var(--gold-500)
+      );
+      font-size: 0.7rem;
+      font-weight: 900;
+    }
+
+    .blueprint-preview {
+      display: flex;
+      min-height: 540px;
+      padding: 25px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 24px;
+      background:
+        radial-gradient(
+          circle at 70% 20%,
+          rgba(214, 164, 61, 0.13),
+          transparent 28%
+        ),
+        #071126;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .preview-window {
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 22px;
+      background: rgba(2, 7, 20, 0.8);
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
+    }
+
+    .preview-topbar {
+      display: flex;
+      min-height: 58px;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .preview-dots {
+      display: flex;
+      gap: 7px;
+    }
+
+    .preview-dots span {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.18);
+    }
+
+    .preview-title {
+      color: var(--muted);
+      font-size: 0.7rem;
+      font-weight: 750;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .preview-body {
+      padding: 22px;
+    }
+
+    .score-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 25px;
+      padding: 22px;
+      border: 1px solid rgba(239, 199, 104, 0.16);
+      border-radius: 18px;
+      background:
+        linear-gradient(
+          135deg,
+          rgba(239, 199, 104, 0.1),
+          rgba(255, 255, 255, 0.025)
+        );
+    }
+
+    .score-card small {
+      display: block;
+      margin-bottom: 5px;
+      color: var(--muted);
+    }
+
+    .score-card strong {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.35rem;
+      font-weight: 500;
+    }
+
+    .score-circle {
+      display: grid;
+      width: 82px;
+      height: 82px;
+      flex: 0 0 82px;
+      place-items: center;
+      border: 6px solid rgba(239, 199, 104, 0.18);
+      border-top-color: var(--gold-400);
+      border-right-color: var(--gold-400);
+      border-radius: 50%;
+      color: var(--gold-300);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.34rem;
+    }
+
+    .preview-metrics {
+      display: grid;
+      gap: 12px;
+      margin-top: 14px;
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .metric {
+      min-height: 104px;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.025);
+    }
+
+    .metric span {
+      display: block;
+      margin-bottom: 10px;
+      color: var(--muted);
+      font-size: 0.72rem;
+    }
+
+    .metric strong {
+      display: block;
+      font-size: 1rem;
+    }
+
+    .metric-bar {
+      height: 5px;
+      margin-top: 13px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.09);
+    }
+
+    .metric-bar i {
+      display: block;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(
+        90deg,
+        var(--gold-500),
+        var(--gold-300)
+      );
+    }
+
+    .insights {
+      padding: 110px 0;
+    }
+
+    .insights-grid {
+      display: grid;
+      gap: 20px;
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .insight-card {
+      display: flex;
+      min-height: 430px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      background: var(--card);
+      flex-direction: column;
+      transition:
+        transform 0.25s ease,
+        border-color 0.25s ease;
+    }
+
+    .insight-card:hover {
+      border-color: rgba(239, 199, 104, 0.3);
+      transform: translateY(-5px);
+    }
+
+    .insight-image {
+      position: relative;
+      display: flex;
+      min-height: 205px;
+      align-items: flex-end;
+      padding: 20px;
+      overflow: hidden;
+      background:
+        radial-gradient(
+          circle at 75% 20%,
+          rgba(239, 199, 104, 0.3),
+          transparent 30%
+        ),
+        linear-gradient(
+          145deg,
+          #111f3f,
+          #060c1c
+        );
+    }
+
+    .insight-image::before {
+      position: absolute;
+      top: 40px;
+      right: 30px;
+      width: 120px;
+      height: 120px;
+      border: 1px solid rgba(239, 199, 104, 0.34);
+      border-radius: 50%;
+      content: "";
+      box-shadow:
+        0 0 0 18px rgba(239, 199, 104, 0.04),
+        0 0 0 36px rgba(239, 199, 104, 0.025);
+    }
+
+    .insight-image.two {
+      background:
+        radial-gradient(
+          circle at 20% 25%,
+          rgba(68, 120, 200, 0.3),
+          transparent 32%
+        ),
+        linear-gradient(
+          145deg,
+          #0d2140,
+          #050b19
+        );
+    }
+
+    .insight-image.three {
+      background:
+        radial-gradient(
+          circle at 70% 40%,
+          rgba(214, 164, 61, 0.22),
+          transparent 36%
+        ),
+        linear-gradient(
+          145deg,
+          #201a18,
+          #070b16
+        );
+    }
+
+    .insight-icon {
+      position: relative;
+      z-index: 1;
+      color: var(--gold-300);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 3.8rem;
+      line-height: 1;
+    }
+
+    .insight-content {
+      display: flex;
+      padding: 24px;
+      flex: 1;
+      flex-direction: column;
+    }
+
+    .insight-meta {
+      margin-bottom: 12px;
+      color: var(--gold-400);
+      font-size: 0.7rem;
+      font-weight: 800;
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+    }
+
+    .insight-card h3 {
+      margin: 0 0 12px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.35rem;
+      font-weight: 500;
+      line-height: 1.2;
+    }
+
+    .insight-card p {
+      margin: 0 0 22px;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .text-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: auto;
+      color: var(--gold-400);
+      font-size: 0.82rem;
+      font-weight: 800;
+    }
+
+    .text-link:hover {
+      color: var(--gold-300);
+    }
+
+    .insights-footer {
+      display: flex;
+      justify-content: center;
+      margin-top: 35px;
+    }
+
+    .tools {
+      padding: 110px 0;
+    }
+
+    .tools-grid {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .tool-card {
+      position: relative;
+      min-height: 250px;
+      padding: 27px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      background:
+        linear-gradient(
+          145deg,
+          rgba(255, 255, 255, 0.045),
+          rgba(255, 255, 255, 0.018)
+        );
+    }
+
+    .tool-card::after {
+      position: absolute;
+      right: -35px;
+      bottom: -40px;
+      width: 130px;
+      height: 130px;
+      border: 1px solid rgba(239, 199, 104, 0.08);
+      border-radius: 50%;
+      content: "";
+    }
+
+    .tool-tag {
+      display: inline-flex;
+      margin-bottom: 27px;
+      padding: 6px 10px;
+      border: 1px solid rgba(239, 199, 104, 0.19);
+      border-radius: 999px;
+      color: var(--gold-400);
+      background: rgba(239, 199, 104, 0.05);
+      font-size: 0.65rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .tool-card h3 {
+      margin: 0 0 11px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.35rem;
+      font-weight: 500;
+    }
+
+    .tool-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.89rem;
+    }
+
+    .advisory {
+      padding: 110px 0;
+    }
+
+    .advisory-shell {
+      display: grid;
+      gap: 34px;
+      padding: clamp(27px, 5vw, 62px);
+      border: 1px solid rgba(239, 199, 104, 0.19);
+      border-radius: 32px;
+      background:
+        radial-gradient(
+          circle at 85% 20%,
+          rgba(214, 164, 61, 0.13),
+          transparent 26%
+        ),
+        linear-gradient(
+          135deg,
+          #0c1a35,
+          #060c1c
+        );
+      box-shadow: var(--shadow);
+      grid-template-columns: 1fr 0.8fr;
+    }
+
+    .advisory-copy h2 {
+      margin: 0 0 18px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.3rem, 5vw, 4rem);
+      font-weight: 500;
+      letter-spacing: -0.045em;
+      line-height: 1.03;
+    }
+
+    .advisory-copy p {
+      max-width: 670px;
+      margin: 0 0 28px;
+      color: var(--muted);
+    }
+
+    .service-list {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .service-item {
+      padding: 14px 15px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      color: #e1e6ef;
+      background: rgba(255, 255, 255, 0.025);
+      font-size: 0.85rem;
+    }
+
+    .advisory-action {
+      display: flex;
+      padding: 25px;
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.035);
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .advisory-action strong {
+      display: block;
+      margin-bottom: 12px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.5rem;
+      font-weight: 500;
+    }
+
+    .advisory-action p {
+      margin: 0 0 24px;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .solutions {
+      padding: 110px 0;
+    }
+
+    .solutions-grid {
+      display: grid;
+      gap: 18px;
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    .solution-card {
+      min-height: 235px;
+      padding: 25px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .solution-icon {
+      display: grid;
+      width: 46px;
+      height: 46px;
+      margin-bottom: 28px;
+      place-items: center;
+      border-radius: 13px;
+      color: var(--gold-400);
+      background: rgba(239, 199, 104, 0.07);
+      font-size: 1.18rem;
+    }
+
+    .solution-card h3 {
+      margin: 0 0 10px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.22rem;
+      font-weight: 500;
+    }
+
+    .solution-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.86rem;
+    }
+
+    .solution-cta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 30px;
+      margin-top: 32px;
+      padding: 25px 28px;
+      border: 1px solid rgba(239, 199, 104, 0.18);
+      border-radius: var(--radius-md);
+      background: rgba(239, 199, 104, 0.055);
+    }
+
+    .solution-cta p {
+      margin: 0;
+      color: #d9deea;
+      font-size: 0.94rem;
+    }
+
+    .final-cta {
+      padding: 105px 0 120px;
+    }
+
+    .final-cta-shell {
+      position: relative;
+      padding: clamp(48px, 8vw, 90px) 30px;
+      overflow: hidden;
+      border: 1px solid rgba(239, 199, 104, 0.25);
+      border-radius: 34px;
+      text-align: center;
+      background:
+        radial-gradient(
+          circle at 50% 20%,
+          rgba(239, 199, 104, 0.17),
+          transparent 34%
+        ),
+        #071126;
+      box-shadow: var(--shadow);
+    }
+
+    .final-cta-shell::before,
+    .final-cta-shell::after {
+      position: absolute;
+      width: 240px;
+      height: 240px;
+      border: 1px solid rgba(239, 199, 104, 0.08);
+      border-radius: 50%;
+      content: "";
+    }
+
+    .final-cta-shell::before {
+      top: -130px;
+      left: -90px;
+    }
+
+    .final-cta-shell::after {
+      right: -90px;
+      bottom: -140px;
+    }
+
+    .final-cta h2 {
+      position: relative;
+      z-index: 1;
+      max-width: 800px;
+      margin: 0 auto 18px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.5rem, 6vw, 5rem);
+      font-weight: 500;
+      letter-spacing: -0.055em;
+      line-height: 1;
+    }
+
+    .final-cta p {
+      position: relative;
+      z-index: 1;
+      max-width: 640px;
+      margin: 0 auto 30px;
+      color: var(--muted);
+    }
+
+    .final-cta .button {
+      position: relative;
+      z-index: 1;
+    }
+
+    .site-footer {
+      border-top: 1px solid var(--line);
+      background: rgba(2, 6, 16, 0.72);
+    }
+
+    .footer-main {
+      display: grid;
+      gap: 48px;
+      padding: 65px 0 44px;
+      grid-template-columns: 1.2fr 0.8fr 0.8fr;
+    }
+
+    .footer-brand {
+      max-width: 440px;
+    }
+
+    .footer-brand .brand {
+      margin-bottom: 20px;
+    }
+
+    .footer-brand > p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .footer-column h3 {
+      margin: 0 0 17px;
+      color: var(--gold-400);
+      font-size: 0.73rem;
+      font-weight: 800;
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+    }
+
+    .footer-links {
+      display: grid;
+      gap: 11px;
+    }
+
+    .footer-links a {
+      color: var(--muted);
+      font-size: 0.86rem;
+      transition: color 0.2s ease;
+    }
+
+    .footer-links a:hover {
+      color: var(--white);
+    }
+
+    .footer-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 25px;
+      padding: 22px 0 28px;
+      border-top: 1px solid var(--line);
+      color: #8490a4;
+      font-size: 0.76rem;
+    }
+
+    .regulatory-note {
+      max-width: 760px;
+    }
+
+    .fade-up {
+      opacity: 0;
+      transform: translateY(24px);
+      transition:
+        opacity 0.7s ease,
+        transform 0.7s ease;
+    }
+
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 1050px) {
+      .desktop-nav {
+        display: none;
+      }
+
+      .mobile-menu-button {
+        display: inline-flex;
+      }
+
+      .hero-grid,
+      .feature-shell,
+      .advisory-shell {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        min-height: auto;
+      }
+
+      .hero-copy {
+        text-align: center;
+      }
+
+      .hero-copy h1,
+      .hero-description {
+        margin-inline: auto;
+      }
+
+      .hero-actions {
+        justify-content: center;
+      }
+
+      .hero-panel {
+        width: min(100%, 650px);
+        margin-inline: auto;
+      }
+
+      .journey-grid,
+      .solutions-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .tools-grid,
+      .insights-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .insights-grid .insight-card:last-child {
+        grid-column: 1 / -1;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .container {
+        width: min(calc(100% - 28px), var(--max-width));
+      }
+
+      .header-inner {
+        min-height: 76px;
+      }
+
+      .brand-logo {
+        width: 47px;
+        height: 47px;
+        flex-basis: 47px;
+      }
+
+      .brand-name {
+        font-size: 0.92rem;
+      }
+
+      .brand-parent {
+        font-size: 0.57rem;
+      }
+
+      .hero {
+        padding-top: 120px;
+      }
+
+      .hero-grid {
+        gap: 42px;
+      }
+
+      .hero-copy h1 {
+        font-size: clamp(3rem, 15vw, 4.8rem);
+      }
+
+      .hero-actions {
+        display: grid;
+      }
+
+      .hero-actions .button {
+        width: 100%;
+      }
+
+      .hero-panel {
+        padding: 16px;
+        border-radius: 24px;
+      }
+
+      .hero-logo-wrap {
+        min-height: 290px;
+      }
+
+      .hero-panel-footer {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .trust-strip {
+        margin-top: 0;
+        padding-top: 20px;
+      }
+
+      .trust-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .trust-item {
+        border-bottom: 1px solid var(--line);
+      }
+
+      .trust-item:nth-child(2) {
+        border-right: 0;
+      }
+
+      .trust-item:nth-child(3),
+      .trust-item:nth-child(4) {
+        border-bottom: 0;
+      }
+
+      .journey,
+      .blueprint,
+      .insights,
+      .tools,
+      .advisory,
+      .solutions {
+        padding: 82px 0;
+      }
+
+      .journey-grid,
+      .insights-grid,
+      .tools-grid,
+      .solutions-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .insights-grid .insight-card:last-child {
+        grid-column: auto;
+      }
+
+      .feature-shell {
+        padding: 12px;
+        border-radius: 25px;
+      }
+
+      .feature-content {
+        padding: 28px 18px;
+      }
+
+      .blueprint-preview {
+        min-height: auto;
+        padding: 14px;
+      }
+
+      .preview-metrics,
+      .service-list {
+        grid-template-columns: 1fr;
+      }
+
+      .advisory-shell {
+        padding: 26px 18px;
+      }
+
+      .solution-cta {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      .solution-cta .button {
+        width: 100%;
+      }
+
+      .footer-main {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-bottom {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+
+    @media (max-width: 450px) {
+      .brand-parent {
+        display: none;
+      }
+
+      .trust-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .trust-item {
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .trust-item:nth-child(3) {
+        border-bottom: 1px solid var(--line);
+      }
+
+      .trust-item:last-child {
+        border-bottom: 0;
+      }
+
+      .score-card {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      *,
+      *::before,
+      *::after {
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+      }
+
+      .fade-up {
+        opacity: 1;
+        transform: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="site-header" id="siteHeader">
+    <div class="container">
+      <div class="header-inner">
+        <a class="brand" href="/finance/" aria-label="Global Sport Finance home">
+          <img
+            class="brand-logo"
+            src="/assets/images/gmc-logo.png"
+            alt="Global Management Consultancy logo"
+          />
+
+          <div class="brand-copy">
+            <p class="brand-name">Global Sport Finance</p>
+            <p
+              class="brand-parent"
+              data-i18n="poweredBy"
+            >
+              Powered by Global Management Consultancy
+            </p>
+          </div>
+        </a>
+
+        <nav class="desktop-nav" aria-label="Primary navigation">
+          <div class="nav-links">
+            <a href="#blueprint" data-i18n="navBlueprint">
+              Blueprint
+            </a>
+
+            <a href="#insights" data-i18n="navInsights">
+              Financial Insights
+            </a>
+
+            <a href="#tools" data-i18n="navTools">
+              Financial Tools
+            </a>
+
+            <a href="#advisory" data-i18n="navAdvice">
+              Advisory
+            </a>
+
+            <a href="#solutions" data-i18n="navSolutions">
+              Financial Solutions
+            </a>
+          </div>
+
+          <div
+            class="language-switcher"
+            aria-label="Select language"
+          >
+            <button
+              type="button"
+              class="active"
+              data-language="en"
+              aria-label="English"
+            >
+              EN
+            </button>
+
+            <button
+              type="button"
+              data-language="fr"
+              aria-label="Français"
+            >
+              FR
+            </button>
+
+            <button
+              type="button"
+              data-language="es"
+              aria-label="Español"
+            >
+              ES
+            </button>
+          </div>
+        </nav>
+
+        <button
+          class="mobile-menu-button"
+          id="mobileMenuButton"
+          type="button"
+          aria-label="Open menu"
+          aria-expanded="false"
+          aria-controls="mobileNav"
+        >
+          <span></span>
+        </button>
+      </div>
+
+      <nav
+        class="mobile-nav"
+        id="mobileNav"
+        aria-label="Mobile navigation"
+      >
+        <div class="mobile-nav-inner">
+          <a href="#blueprint" data-i18n="navBlueprint">
+            Blueprint
+          </a>
+
+          <a href="#insights" data-i18n="navInsights">
+            Financial Insights
+          </a>
+
+          <a href="#tools" data-i18n="navTools">
+            Financial Tools
+          </a>
+
+          <a href="#advisory" data-i18n="navAdvice">
+            Advisory
+          </a>
+
+          <a href="#solutions" data-i18n="navSolutions">
+            Financial Solutions
+          </a>
+
+          <div
+            class="language-switcher mobile-language"
+            aria-label="Select language"
+          >
+            <button
+              type="button"
+              class="active"
+              data-language="en"
+              aria-label="English"
+            >
+              EN
+            </button>
+
+            <button
+              type="button"
+              data-language="fr"
+              aria-label="Français"
+            >
+              FR
+            </button>
+
+            <button
+              type="button"
+              data-language="es"
+              aria-label="Español"
+            >
+              ES
+            </button>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="hero-grid">
+          <div class="hero-copy fade-up">
+            <p class="eyebrow" data-i18n="heroEyebrow">
+              Personal Financial Management & Advisory
+            </p>
+
+            <h1>
+              <span data-i18n="heroTitleLine1">
+                Understand your finances.
+              </span>
+
+              <span data-i18n="heroTitleLine2">
+                Build your future.
+              </span>
+            </h1>
+
+            <p
+              class="hero-description"
+              data-i18n="heroDescription"
+            >
+              A financial management and advisory platform helping
+              individuals, families, entrepreneurs and professional
+              athletes organise their finances, make informed decisions
+              and work towards their goals.
+            </p>
+
+            <div class="hero-actions">
+              <a
+                class="button button-primary"
+                href="#blueprint"
+              >
+                <span data-i18n="startBlueprint">
+                  Start Your Financial Blueprint
+                </span>
+
+                <span class="button-arrow" aria-hidden="true">
+                  →
+                </span>
+              </a>
+
+              <a
+                class="button button-secondary"
+                href="#insights"
+                data-i18n="exploreInsights"
+              >
+                Explore Financial Insights
+              </a>
+            </div>
+          </div>
+
+          <div class="hero-panel fade-up">
+            <div class="hero-logo-wrap">
+              <img
+                class="hero-logo"
+                src="/assets/images/gmc-logo.png"
+                alt="GMC Global Management Consultancy"
+              />
+            </div>
+
+            <div class="hero-panel-footer">
+              <div>
+                <strong data-i18n="heroPanelTitle">
+                  Global Sport Finance
+                </strong>
+
+                <span data-i18n="heroPanelSubtitle">
+                  Financial clarity for every stage of life
+                </span>
+              </div>
+
+              <div class="status-pill" data-i18n="platformStatus">
+                Platform Development
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="trust-strip">
+      <div class="container">
+        <div class="trust-grid fade-up">
+          <div class="trust-item">
+            <span class="trust-number">01</span>
+            <span class="trust-label" data-i18n="trustPersonal">
+              Personalised financial organisation
+            </span>
+          </div>
+
+          <div class="trust-item">
+            <span class="trust-number">02</span>
+            <span class="trust-label" data-i18n="trustInternational">
+              International financial experience
+            </span>
+          </div>
+
+          <div class="trust-item">
+            <span class="trust-number">03</span>
+            <span class="trust-label" data-i18n="trustPractical">
+              Practical tools and clear actions
+            </span>
+          </div>
+
+          <div class="trust-item">
+            <span class="trust-number">04</span>
+            <span class="trust-label" data-i18n="trustAdvice">
+              Professional support when needed
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <section class="journey" id="journey">
+      <div class="container">
+        <div class="section-heading center fade-up">
+          <p class="eyebrow" data-i18n="journeyEyebrow">
+            Your Financial Journey
+          </p>
+
+          <h2 data-i18n="journeyTitle">
+            A clearer way to manage your financial life
+          </h2>
+
+          <p data-i18n="journeyDescription">
+            Learn from practical guidance, assess your current
+            position, organise your finances and receive professional
+            assistance when your situation requires it.
+          </p>
+        </div>
+
+        <div class="journey-grid">
+          <article class="journey-card fade-up">
+            <span class="journey-number">01</span>
+            <div class="journey-icon" aria-hidden="true">◇</div>
+
+            <h3 data-i18n="learnTitle">Learn</h3>
+
+            <p data-i18n="learnText">
+              Access clear Financial Insights covering everyday money,
+              financial planning and major financial decisions.
+            </p>
+          </article>
+
+          <article class="journey-card fade-up">
+            <span class="journey-number">02</span>
+            <div class="journey-icon" aria-hidden="true">◎</div>
+
+            <h3 data-i18n="assessTitle">Assess</h3>
+
+            <p data-i18n="assessText">
+              Understand your financial position through your
+              personalised Financial Blueprint and health review.
+            </p>
+          </article>
+
+          <article class="journey-card fade-up">
+            <span class="journey-number">03</span>
+            <div class="journey-icon" aria-hidden="true">▦</div>
+
+            <h3 data-i18n="manageTitle">Manage</h3>
+
+            <p data-i18n="manageText">
+              Organise income, expenses, reserves, savings and goals
+              using practical financial planning tools.
+            </p>
+          </article>
+
+          <article class="journey-card fade-up">
+            <span class="journey-number">04</span>
+            <div class="journey-icon" aria-hidden="true">↗</div>
+
+            <h3 data-i18n="adviceTitle">Get Advice</h3>
+
+            <p data-i18n="adviceText">
+              Request professional assistance for matters requiring
+              personalised analysis, implementation or specialist support.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="blueprint" id="blueprint">
+      <div class="container">
+        <div class="feature-shell fade-up">
+          <div class="feature-content">
+            <p class="eyebrow" data-i18n="blueprintEyebrow">
+              Your Starting Point
+            </p>
+
+            <h2 data-i18n="blueprintTitle">
+              Build your Personal Financial Blueprint
+            </h2>
+
+            <p data-i18n="blueprintDescription">
+              Your Financial Blueprint brings your income, expenses,
+              savings, obligations and goals together so you can see
+              where you stand and identify the actions that matter most.
+            </p>
+
+            <ul class="check-list">
+              <li data-i18n="blueprintBenefit1">
+                Review your income and regular commitments
+              </li>
+
+              <li data-i18n="blueprintBenefit2">
+                Understand your monthly cash-flow position
+              </li>
+
+              <li data-i18n="blueprintBenefit3">
+                Assess your emergency and tax reserves
+              </li>
+
+              <li data-i18n="blueprintBenefit4">
+                Define your savings and financial priorities
+              </li>
+
+              <li data-i18n="blueprintBenefit5">
+                Receive clear and practical next actions
+              </li>
+            </ul>
+
+            <a
+              class="button button-primary"
+              href="#tools"
+            >
+              <span data-i18n="beginAssessment">
+                Begin Your Assessment
+              </span>
+
+              <span class="button-arrow" aria-hidden="true">
+                →
+              </span>
+            </a>
+          </div>
+
+          <div class="blueprint-preview">
+            <div class="preview-window">
+              <div class="preview-topbar">
+                <div class="preview-dots" aria-hidden="true">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </div>
+
+                <span
+                  class="preview-title"
+                  data-i18n="previewTitle"
+                >
+                  My Financial Hub
+                </span>
+              </div>
+
+              <div class="preview-body">
+                <div class="score-card">
+                  <div>
+                    <small data-i18n="financialScoreLabel">
+                      Financial Health Overview
+                    </small>
+
+                    <strong data-i18n="financialScoreStatus">
+                      Building a stronger foundation
+                    </strong>
+                  </div>
+
+                  <div
+                    class="score-circle"
+                    aria-label="Financial health score preview"
+                  >
+                    72
+                  </div>
+                </div>
+
+                <div class="preview-metrics">
+                  <div class="metric">
+                    <span data-i18n="metricBudget">
+                      Monthly Budget
+                    </span>
+
+                    <strong data-i18n="metricBudgetStatus">
+                      Review required
+                    </strong>
+
+                    <div class="metric-bar">
+                      <i style="width: 66%"></i>
+                    </div>
+                  </div>
+
+                  <div class="metric">
+                    <span data-i18n="metricEmergency">
+                      Emergency Reserve
+                    </span>
+
+                    <strong data-i18n="metricEmergencyStatus">
+                      3.2 months
+                    </strong>
+
+                    <div class="metric-bar">
+                      <i style="width: 53%"></i>
+                    </div>
+                  </div>
+
+                  <div class="metric">
+                    <span data-i18n="metricTax">
+                      Tax Reserve
+                    </span>
+
+                    <strong data-i18n="metricTaxStatus">
+                      Action required
+                    </strong>
+
+                    <div class="metric-bar">
+                      <i style="width: 38%"></i>
+                    </div>
+                  </div>
+
+                  <div class="metric">
+                    <span data-i18n="metricSavings">
+                      Savings Goal
+                    </span>
+
+                    <strong data-i18n="metricSavingsStatus">
+                      On track
+                    </strong>
+
+                    <div class="metric-bar">
+                      <i style="width: 78%"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="insights" id="insights">
+      <div class="container">
+        <div class="section-heading fade-up">
+          <p class="eyebrow" data-i18n="insightsEyebrow">
+            Financial Insights
+          </p>
+
+          <h2 data-i18n="insightsTitle">
+            Practical knowledge for better financial decisions
+          </h2>
+
+          <p data-i18n="insightsDescription">
+            Explore accessible publications designed to help you
+            understand financial risks, improve your habits and prepare
+            for important decisions.
+          </p>
+        </div>
+
+        <div class="insights-grid">
+          <article class="insight-card fade-up">
+            <div class="insight-image">
+              <span class="insight-icon" aria-hidden="true">€</span>
+            </div>
+
+            <div class="insight-content">
+              <div
+                class="insight-meta"
+                data-i18n="insightType"
+              >
+                Financial Insight
+              </div>
+
+              <h3 data-i18n="insight1Title">
+                Is your bank account working as hard as you are?
+              </h3>
+
+              <p data-i18n="insight1Text">
+                Discover why separating salary, tax, emergency,
+                investment and everyday money can create greater control.
+              </p>
+
+              <a
+                class="text-link"
+                href="#"
+                data-i18n="readInsight"
+              >
+                Read Insight →
+              </a>
+            </div>
+          </article>
+
+          <article class="insight-card fade-up">
+            <div class="insight-image two">
+              <span class="insight-icon" aria-hidden="true">⌂</span>
+            </div>
+
+            <div class="insight-content">
+              <div
+                class="insight-meta"
+                data-i18n="insightType"
+              >
+                Financial Insight
+              </div>
+
+              <h3 data-i18n="insight2Title">
+                How much emergency cash should you keep?
+              </h3>
+
+              <p data-i18n="insight2Text">
+                Understand how your lifestyle, commitments and income
+                stability influence the reserve you may need.
+              </p>
+
+              <a
+                class="text-link"
+                href="#"
+                data-i18n="readInsight"
+              >
+                Read Insight →
+              </a>
+            </div>
+          </article>
+
+          <article class="insight-card fade-up">
+            <div class="insight-image three">
+              <span class="insight-icon" aria-hidden="true">%</span>
+            </div>
+
+            <div class="insight-content">
+              <div
+                class="insight-meta"
+                data-i18n="insightType"
+              >
+                Financial Insight
+              </div>
+
+              <h3 data-i18n="insight3Title">
+                Why your tax reserve needs its own plan
+              </h3>
+
+              <p data-i18n="insight3Text">
+                Preparing gradually for tax can help prevent avoidable
+                pressure, debt and disruption when liabilities fall due.
+              </p>
+
+              <a
+                class="text-link"
+                href="#"
+                data-i18n="readInsight"
+              >
+                Read Insight →
+              </a>
+            </div>
+          </article>
+        </div>
+
+        <div class="insights-footer fade-up">
+          <a
+            class="button button-secondary"
+            href="#"
+            data-i18n="viewAllInsights"
+          >
+            View All Financial Insights
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="tools" id="tools">
+      <div class="container">
+        <div class="section-heading center fade-up">
+          <p class="eyebrow" data-i18n="toolsEyebrow">
+            Financial Tools
+          </p>
+
+          <h2 data-i18n="toolsTitle">
+            Turn financial information into practical action
+          </h2>
+
+          <p data-i18n="toolsDescription">
+            Use focused planning tools to organise your monthly finances,
+            prepare for obligations and measure progress towards your goals.
+          </p>
+        </div>
+
+        <div class="tools-grid">
+          <article class="tool-card fade-up">
+            <span class="tool-tag" data-i18n="earlyAccess">
+              Early Access
+            </span>
+
+            <h3 data-i18n="budgetPlannerTitle">
+              Budget Planner
+            </h3>
+
+            <p data-i18n="budgetPlannerText">
+              Record income and expenses to understand how much money
+              remains available each month.
+            </p>
+          </article>
+
+          <article class="tool-card fade-up">
+            <span class="tool-tag" data-i18n="earlyAccess">
+              Early Access
+            </span>
+
+            <h3 data-i18n="cashFlowTitle">
+              Cash-Flow Planner
+            </h3>
+
+            <p data-i18n="cashFlowText">
+              See how income, bills, tax reserves, savings and other
+              commitments interact.
+            </p>
+          </article>
+
+          <article class="tool-card fade-up">
+            <span class="tool-tag" data-i18n="earlyAccess">
+              Early Access
+            </span>
+
+            <h3 data-i18n="emergencyPlannerTitle">
+              Emergency Fund Planner
+            </h3>
+
+            <p data-i18n="emergencyPlannerText">
+              Estimate the emergency reserve appropriate for your
+              monthly living costs and personal circumstances.
+            </p>
+          </article>
+
+          <article class="tool-card fade-up">
+            <span class="tool-tag" data-i18n="earlyAccess">
+              Early Access
+            </span>
+
+            <h3 data-i18n="taxPlannerTitle">
+              Tax Reserve Planner
+            </h3>
+
+            <p data-i18n="taxPlannerText">
+              Estimate the funds that should be separated gradually for
+              expected tax obligations.
+            </p>
+          </article>
+
+          <article class="tool-card fade-up">
+            <span class="tool-tag" data-i18n="earlyAccess">
+              Early Access
+            </span>
+
+            <h3 data-i18n="savingsPlannerTitle">
+              Savings Planner
+            </h3>
+
+            <p data-i18n="savingsPlannerText">
+              Set a savings target, choose a timeframe and calculate the
+              monthly contribution required.
+            </p>
+          </article>
+
+          <article class="tool-card fade-up">
+            <span class="tool-tag" data-i18n="earlyAccess">
+              Early Access
+            </span>
+
+            <h3 data-i18n="actionCentreTitle">
+              Financial Action Centre
+            </h3>
+
+            <p data-i18n="actionCentreText">
+              Receive a clear list of priority actions based on your
+              Financial Blueprint and progress.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="advisory" id="advisory">
+      <div class="container">
+        <div class="advisory-shell fade-up">
+          <div class="advisory-copy">
+            <p class="eyebrow" data-i18n="advisoryEyebrow">
+              Professional Advisory
+            </p>
+
+            <h2 data-i18n="advisoryTitle">
+              Some financial decisions require more than a calculator
+            </h2>
+
+            <p data-i18n="advisoryDescription">
+              When your situation requires personalised analysis,
+              coordination or implementation, you can request
+              professional assistance from Global Management Consultancy.
+            </p>
+
+            <div class="service-list">
+              <div
+                class="service-item"
+                data-i18n="servicePersonalFinance"
+              >
+                Personal financial organisation
+              </div>
+
+              <div
+                class="service-item"
+                data-i18n="serviceTaxPlanning"
+              >
+                Tax planning coordination
+              </div>
+
+              <div
+                class="service-item"
+                data-i18n="serviceInternational"
+              >
+                International financial matters
+              </div>
+
+              <div
+                class="service-item"
+                data-i18n="serviceProperty"
+              >
+                Property and major purchases
+              </div>
+
+              <div
+                class="service-item"
+                data-i18n="serviceWealth"
+              >
+                Savings and wealth planning
+              </div>
+
+              <div
+                class="service-item"
+                data-i18n="serviceAthletes"
+              >
+                Professional athlete finance
+              </div>
+            </div>
+          </div>
+
+          <div class="advisory-action">
+            <div>
+              <strong data-i18n="advisoryActionTitle">
+                Tell us how we can help
+              </strong>
+
+              <p data-i18n="advisoryActionText">
+                Submit a structured request explaining your financial
+                need. The information will help us determine the most
+                appropriate next step.
+              </p>
+            </div>
+
+            <a
+              class="button button-primary"
+              href="mailto:info@globalmgm.co.uk?subject=Professional%20Financial%20Assistance"
+            >
+              <span data-i18n="requestAdvice">
+                Request Professional Assistance
+              </span>
+
+              <span class="button-arrow" aria-hidden="true">
+                →
+              </span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="solutions" id="solutions">
+      <div class="container">
+        <div class="section-heading fade-up">
+          <p class="eyebrow" data-i18n="solutionsEyebrow">
+            Financial Solutions
+          </p>
+
+          <h2 data-i18n="solutionsTitle">
+            International banking and payment support
+          </h2>
+
+          <p data-i18n="solutionsDescription">
+            Where appropriate, we help eligible individuals and
+            organisations explore financial solutions delivered through
+            trusted and regulated service providers.
+          </p>
+        </div>
+
+        <div class="solutions-grid">
+          <article class="solution-card fade-up">
+            <div class="solution-icon" aria-hidden="true">◎</div>
+
+            <h3 data-i18n="multiCurrencyTitle">
+              Multi-Currency Solutions
+            </h3>
+
+            <p data-i18n="multiCurrencyText">
+              Explore suitable structures for receiving, holding and
+              managing funds in different currencies.
+            </p>
+          </article>
+
+          <article class="solution-card fade-up">
+            <div class="solution-icon" aria-hidden="true">⇄</div>
+
+            <h3 data-i18n="fxTitle">
+              Foreign Exchange
+            </h3>
+
+            <p data-i18n="fxText">
+              Access support for international currency conversion and
+              cross-border financial requirements.
+            </p>
+          </article>
+
+          <article class="solution-card fade-up">
+            <div class="solution-icon" aria-hidden="true">→</div>
+
+            <h3 data-i18n="paymentsTitle">
+              International Payments
+            </h3>
+
+            <p data-i18n="paymentsText">
+              Explore payment solutions for international personal,
+              professional and commercial activity.
+            </p>
+          </article>
+
+          <article class="solution-card fade-up">
+            <div class="solution-icon" aria-hidden="true">▭</div>
+
+            <h3 data-i18n="cardsTitle">
+              Cards & Expense Solutions
+            </h3>
+
+            <p data-i18n="cardsText">
+              Consider appropriate card and expense-management options
+              for eligible individuals and organisations.
+            </p>
+          </article>
+        </div>
+
+        <div class="solution-cta fade-up">
+          <p data-i18n="solutionsCtaText">
+            Looking specifically for banking, payments, foreign exchange
+            or card solutions?
+          </p>
+
+          <a
+            class="button button-primary"
+            href="/finance/onboarding.html"
+          >
+            <span data-i18n="startApplication">
+              Start Financial Solutions Application
+            </span>
+
+            <span class="button-arrow" aria-hidden="true">
+              →
+            </span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="final-cta">
+      <div class="container">
+        <div class="final-cta-shell fade-up">
+          <p class="eyebrow" data-i18n="finalEyebrow">
+            Your Next Step
+          </p>
+
+          <h2 data-i18n="finalTitle">
+            Your financial future deserves a clear plan
+          </h2>
+
+          <p data-i18n="finalDescription">
+            Start by understanding your current position and identifying
+            the practical actions that can help you build greater
+            financial stability.
+          </p>
+
+          <a
+            class="button button-primary"
+            href="#blueprint"
+          >
+            <span data-i18n="startBlueprint">
+              Start Your Financial Blueprint
+            </span>
+
+            <span class="button-arrow" aria-hidden="true">
+              →
+            </span>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-main">
+        <div class="footer-brand">
+          <a class="brand" href="/finance/">
+            <img
+              class="brand-logo"
+              src="/assets/images/gmc-logo.png"
+              alt="Global Management Consultancy logo"
+            />
+
+            <div class="brand-copy">
+              <p class="brand-name">Global Sport Finance</p>
+              <p
+                class="brand-parent"
+                data-i18n="poweredBy"
+              >
+                Powered by Global Management Consultancy
+              </p>
+            </div>
+          </a>
+
+          <p data-i18n="footerDescription">
+            Financial education, planning tools, advisory support and
+            access to international financial solutions.
+          </p>
+        </div>
+
+        <div class="footer-column">
+          <h3 data-i18n="footerPlatform">Platform</h3>
+
+          <div class="footer-links">
+            <a href="#blueprint" data-i18n="navBlueprint">
+              Blueprint
+            </a>
+
+            <a href="#insights" data-i18n="navInsights">
+              Financial Insights
+            </a>
+
+            <a href="#tools" data-i18n="navTools">
+              Financial Tools
+            </a>
+
+            <a href="#advisory" data-i18n="navAdvice">
+              Advisory
+            </a>
+          </div>
+        </div>
+
+        <div class="footer-column">
+          <h3 data-i18n="footerCompany">Company</h3>
+
+          <div class="footer-links">
+            <a href="/" data-i18n="footerGmc">
+              Global Management Consultancy
+            </a>
+
+            <a href="mailto:info@globalmgm.co.uk">
+              info@globalmgm.co.uk
+            </a>
+
+            <a href="/privacy.html" data-i18n="footerPrivacy">
+              Privacy
+            </a>
+
+            <a href="/legal.html" data-i18n="footerLegal">
+              Legal Notice
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>
+          © <span id="currentYear"></span>
+          Global Management Consultancy Limited.
+          <span data-i18n="rightsReserved">
+            All rights reserved.
+          </span>
+        </div>
+
+        <div
+          class="regulatory-note"
+          data-i18n="regulatoryNote"
+        >
+          Global Management Consultancy does not operate as a bank.
+          Regulated financial products and services, where available,
+          are provided by appropriately authorised third-party providers
+          and remain subject to eligibility, compliance and approval.
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const translations = {
+      en: {
+        pageTitle:
+          "Global Sport Finance | Global Management Consultancy",
+
+        metaDescription:
+          "Global Sport Finance helps individuals, families, entrepreneurs and professional athletes understand, organise and improve their financial lives.",
+
+        poweredBy:
+          "Powered by Global Management Consultancy",
+
+        navBlueprint: "Blueprint",
+        navInsights: "Financial Insights",
+        navTools: "Financial Tools",
+        navAdvice: "Advisory",
+        navSolutions: "Financial Solutions",
+
+        heroEyebrow:
+          "Personal Financial Management & Advisory",
+
+        heroTitleLine1:
+          "Understand your finances.",
+
+        heroTitleLine2:
+          "Build your future.",
+
+        heroDescription:
+          "A financial management and advisory platform helping individuals, families, entrepreneurs and professional athletes organise their finances, make informed decisions and work towards their goals.",
+
+        startBlueprint:
+          "Start Your Financial Blueprint",
+
+        exploreInsights:
+          "Explore Financial Insights",
+
+        heroPanelTitle:
+          "Global Sport Finance",
+
+        heroPanelSubtitle:
+          "Financial clarity for every stage of life",
+
+        platformStatus:
+          "Platform Development",
+
+        trustPersonal:
+          "Personalised financial organisation",
+
+        trustInternational:
+          "International financial experience",
+
+        trustPractical:
+          "Practical tools and clear actions",
+
+        trustAdvice:
+          "Professional support when needed",
+
+        journeyEyebrow:
+          "Your Financial Journey",
+
+        journeyTitle:
+          "A clearer way to manage your financial life",
+
+        journeyDescription:
+          "Learn from practical guidance, assess your current position, organise your finances and receive professional assistance when your situation requires it.",
+
+        learnTitle: "Learn",
+
+        learnText:
+          "Access clear Financial Insights covering everyday money, financial planning and major financial decisions.",
+
+        assessTitle: "Assess",
+
+        assessText:
+          "Understand your financial position through your personalised Financial Blueprint and health review.",
+
+        manageTitle: "Manage",
+
+        manageText:
+          "Organise income, expenses, reserves, savings and goals using practical financial planning tools.",
+
+        adviceTitle: "Get Advice",
+
+        adviceText:
+          "Request professional assistance for matters requiring personalised analysis, implementation or specialist support.",
+
+        blueprintEyebrow:
+          "Your Starting Point",
+
+        blueprintTitle:
+          "Build your Personal Financial Blueprint",
+
+        blueprintDescription:
+          "Your Financial Blueprint brings your income, expenses, savings, obligations and goals together so you can see where you stand and identify the actions that matter most.",
+
+        blueprintBenefit1:
+          "Review your income and regular commitments",
+
+        blueprintBenefit2:
+          "Understand your monthly cash-flow position",
+
+        blueprintBenefit3:
+          "Assess your emergency and tax reserves",
+
+        blueprintBenefit4:
+          "Define your savings and financial priorities",
+
+        blueprintBenefit5:
+          "Receive clear and practical next actions",
+
+        beginAssessment:
+          "Begin Your Assessment",
+
+        previewTitle:
+          "My Financial Hub",
+
+        financialScoreLabel:
+          "Financial Health Overview",
+
+        financialScoreStatus:
+          "Building a stronger foundation",
+
+        metricBudget:
+          "Monthly Budget",
+
+        metricBudgetStatus:
+          "Review required",
+
+        metricEmergency:
+          "Emergency Reserve",
+
+        metricEmergencyStatus:
+          "3.2 months",
+
+        metricTax:
+          "Tax Reserve",
+
+        metricTaxStatus:
+          "Action required",
+
+        metricSavings:
+          "Savings Goal",
+
+        metricSavingsStatus:
+          "On track",
+
+        insightsEyebrow:
+          "Financial Insights",
+
+        insightsTitle:
+          "Practical knowledge for better financial decisions",
+
+        insightsDescription:
+          "Explore accessible publications designed to help you understand financial risks, improve your habits and prepare for important decisions.",
+
+        insightType:
+          "Financial Insight",
+
+        insight1Title:
+          "Is your bank account working as hard as you are?",
+
+        insight1Text:
+          "Discover why separating salary, tax, emergency, investment and everyday money can create greater control.",
+
+        insight2Title:
+          "How much emergency cash should you keep?",
+
+        insight2Text:
+          "Understand how your lifestyle, commitments and income stability influence the reserve you may need.",
+
+        insight3Title:
+          "Why your tax reserve needs its own plan",
+
+        insight3Text:
+          "Preparing gradually for tax can help prevent avoidable pressure, debt and disruption when liabilities fall due.",
+
+        readInsight:
+          "Read Insight →",
+
+        viewAllInsights:
+          "View All Financial Insights",
+
+        toolsEyebrow:
+          "Financial Tools",
+
+        toolsTitle:
+          "Turn financial information into practical action",
+
+        toolsDescription:
+          "Use focused planning tools to organise your monthly finances, prepare for obligations and measure progress towards your goals.",
+
+        earlyAccess:
+          "Early Access",
+
+        budgetPlannerTitle:
+          "Budget Planner",
+
+        budgetPlannerText:
+          "Record income and expenses to understand how much money remains available each month.",
+
+        cashFlowTitle:
+          "Cash-Flow Planner",
+
+        cashFlowText:
+          "See how income, bills, tax reserves, savings and other commitments interact.",
+
+        emergencyPlannerTitle:
+          "Emergency Fund Planner",
+
+        emergencyPlannerText:
+          "Estimate the emergency reserve appropriate for your monthly living costs and personal circumstances.",
+
+        taxPlannerTitle:
+          "Tax Reserve Planner",
+
+        taxPlannerText:
+          "Estimate the funds that should be separated gradually for expected tax obligations.",
+
+        savingsPlannerTitle:
+          "Savings Planner",
+
+        savingsPlannerText:
+          "Set a savings target, choose a timeframe and calculate the monthly contribution required.",
+
+        actionCentreTitle:
+          "Financial Action Centre",
+
+        actionCentreText:
+          "Receive a clear list of priority actions based on your Financial Blueprint and progress.",
+
+        advisoryEyebrow:
+          "Professional Advisory",
+
+        advisoryTitle:
+          "Some financial decisions require more than a calculator",
+
+        advisoryDescription:
+          "When your situation requires personalised analysis, coordination or implementation, you can request professional assistance from Global Management Consultancy.",
+
+        servicePersonalFinance:
+          "Personal financial organisation",
+
+        serviceTaxPlanning:
+          "Tax planning coordination",
+
+        serviceInternational:
+          "International financial matters",
+
+        serviceProperty:
+          "Property and major purchases",
+
+        serviceWealth:
+          "Savings and wealth planning",
+
+        serviceAthletes:
+          "Professional athlete finance",
+
+        advisoryActionTitle:
+          "Tell us how we can help",
+
+        advisoryActionText:
+          "Submit a structured request explaining your financial need. The information will help us determine the most appropriate next step.",
+
+        requestAdvice:
+          "Request Professional Assistance",
+
+        solutionsEyebrow:
+          "Financial Solutions",
+
+        solutionsTitle:
+          "International banking and payment support",
+
+        solutionsDescription:
+          "Where appropriate, we help eligible individuals and organisations explore financial solutions delivered through trusted and regulated service providers.",
+
+        multiCurrencyTitle:
+          "Multi-Currency Solutions",
+
+        multiCurrencyText:
+          "Explore suitable structures for receiving, holding and managing funds in different currencies.",
+
+        fxTitle:
+          "Foreign Exchange",
+
+        fxText:
+          "Access support for international currency conversion and cross-border financial requirements.",
+
+        paymentsTitle:
+          "International Payments",
+
+        paymentsText:
+          "Explore payment solutions for international personal, professional and commercial activity.",
+
+        cardsTitle:
+          "Cards & Expense Solutions",
+
+        cardsText:
+          "Consider appropriate card and expense-management options for eligible individuals and organisations.",
+
+        solutionsCtaText:
+          "Looking specifically for banking, payments, foreign exchange or card solutions?",
+
+        startApplication:
+          "Start Financial Solutions Application",
+
+        finalEyebrow:
+          "Your Next Step",
+
+        finalTitle:
+          "Your financial future deserves a clear plan",
+
+        finalDescription:
+          "Start by understanding your current position and identifying the practical actions that can help you build greater financial stability.",
+
+        footerDescription:
+          "Financial education, planning tools, advisory support and access to international financial solutions.",
+
+        footerPlatform:
+          "Platform",
+
+        footerCompany:
+          "Company",
+
+        footerGmc:
+          "Global Management Consultancy",
+
+        footerPrivacy:
+          "Privacy",
+
+        footerLegal:
+          "Legal Notice",
+
+        rightsReserved:
+          "All rights reserved.",
+
+        regulatoryNote:
+          "Global Management Consultancy does not operate as a bank. Regulated financial products and services, where available, are provided by appropriately authorised third-party providers and remain subject to eligibility, compliance and approval."
+      },
+
+      fr: {
+        pageTitle:
+          "Global Sport Finance | Global Management Consultancy",
+
+        metaDescription:
+          "Global Sport Finance aide les particuliers, les familles, les entrepreneurs et les sportifs professionnels à comprendre, organiser et améliorer leur vie financière.",
+
+        poweredBy:
+          "Une plateforme de Global Management Consultancy",
+
+        navBlueprint:
+          "Plan financier",
+
+        navInsights:
+          "Perspectives financières",
+
+        navTools:
+          "Outils financiers",
+
+        navAdvice:
+          "Conseil",
+
+        navSolutions:
+          "Solutions financières",
+
+        heroEyebrow:
+          "Gestion financière personnelle et conseil",
+
+        heroTitleLine1:
+          "Comprenez vos finances.",
+
+        heroTitleLine2:
+          "Construisez votre avenir.",
+
+        heroDescription:
+          "Une plateforme de gestion financière et de conseil qui aide les particuliers, les familles, les entrepreneurs et les sportifs professionnels à organiser leurs finances, prendre des décisions éclairées et progresser vers leurs objectifs.",
+
+        startBlueprint:
+          "Commencer votre plan financier",
+
+        exploreInsights:
+          "Explorer les perspectives financières",
+
+        heroPanelTitle:
+          "Global Sport Finance",
+
+        heroPanelSubtitle:
+          "Une vision financière claire à chaque étape de la vie",
+
+        platformStatus:
+          "Plateforme en développement",
+
+        trustPersonal:
+          "Organisation financière personnalisée",
+
+        trustInternational:
+          "Expérience financière internationale",
+
+        trustPractical:
+          "Outils pratiques et actions claires",
+
+        trustAdvice:
+          "Accompagnement professionnel lorsque nécessaire",
+
+        journeyEyebrow:
+          "Votre parcours financier",
+
+        journeyTitle:
+          "Une manière plus claire de gérer votre vie financière",
+
+        journeyDescription:
+          "Apprenez grâce à des conseils pratiques, évaluez votre situation actuelle, organisez vos finances et sollicitez une assistance professionnelle lorsque votre situation l'exige.",
+
+        learnTitle:
+          "Apprendre",
+
+        learnText:
+          "Accédez à des perspectives financières claires sur la gestion quotidienne, la planification financière et les décisions importantes.",
+
+        assessTitle:
+          "Évaluer",
+
+        assessText:
+          "Comprenez votre situation financière grâce à votre plan financier personnalisé et à votre bilan financier.",
+
+        manageTitle:
+          "Gérer",
+
+        manageText:
+          "Organisez vos revenus, dépenses, réserves, économies et objectifs grâce à des outils pratiques.",
+
+        adviceTitle:
+          "Obtenir des conseils",
+
+        adviceText:
+          "Demandez une assistance professionnelle pour les questions nécessitant une analyse personnalisée, une mise en œuvre ou une expertise spécialisée.",
+
+        blueprintEyebrow:
+          "Votre point de départ",
+
+        blueprintTitle:
+          "Construisez votre plan financier personnel",
+
+        blueprintDescription:
+          "Votre plan financier rassemble vos revenus, dépenses, économies, obligations et objectifs afin de vous permettre de comprendre votre situation et d'identifier les actions prioritaires.",
+
+        blueprintBenefit1:
+          "Analysez vos revenus et vos engagements réguliers",
+
+        blueprintBenefit2:
+          "Comprenez votre situation mensuelle de trésorerie",
+
+        blueprintBenefit3:
+          "Évaluez vos réserves d'urgence et fiscales",
+
+        blueprintBenefit4:
+          "Définissez vos priorités d'épargne et financières",
+
+        blueprintBenefit5:
+          "Recevez des actions suivantes claires et pratiques",
+
+        beginAssessment:
+          "Commencer votre évaluation",
+
+        previewTitle:
+          "Mon espace financier",
+
+        financialScoreLabel:
+          "Aperçu de votre santé financière",
+
+        financialScoreStatus:
+          "Construire une base plus solide",
+
+        metricBudget:
+          "Budget mensuel",
+
+        metricBudgetStatus:
+          "Révision nécessaire",
+
+        metricEmergency:
+          "Réserve d'urgence",
+
+        metricEmergencyStatus:
+          "3,2 mois",
+
+        metricTax:
+          "Réserve fiscale",
+
+        metricTaxStatus:
+          "Action nécessaire",
+
+        metricSavings:
+          "Objectif d'épargne",
+
+        metricSavingsStatus:
+          "En bonne voie",
+
+        insightsEyebrow:
+          "Perspectives financières",
+
+        insightsTitle:
+          "Des connaissances pratiques pour de meilleures décisions financières",
+
+        insightsDescription:
+          "Découvrez des publications accessibles conçues pour vous aider à comprendre les risques financiers, améliorer vos habitudes et préparer les décisions importantes.",
+
+        insightType:
+          "Perspective financière",
+
+        insight1Title:
+          "Votre compte bancaire travaille-t-il aussi dur que vous ?",
+
+        insight1Text:
+          "Découvrez pourquoi séparer le salaire, les impôts, l'urgence, les investissements et les dépenses courantes peut améliorer votre contrôle financier.",
+
+        insight2Title:
+          "Combien devez-vous conserver comme réserve d'urgence ?",
+
+        insight2Text:
+          "Comprenez comment votre mode de vie, vos engagements et la stabilité de vos revenus déterminent la réserve dont vous pourriez avoir besoin.",
+
+        insight3Title:
+          "Pourquoi votre réserve fiscale nécessite son propre plan",
+
+        insight3Text:
+          "Préparer progressivement vos impôts peut éviter une pression financière, un endettement ou des perturbations lorsque les échéances arrivent.",
+
+        readInsight:
+          "Lire la publication →",
+
+        viewAllInsights:
+          "Voir toutes les perspectives financières",
+
+        toolsEyebrow:
+          "Outils financiers",
+
+        toolsTitle:
+          "Transformez vos informations financières en actions concrètes",
+
+        toolsDescription:
+          "Utilisez des outils de planification ciblés pour organiser vos finances mensuelles, préparer vos obligations et mesurer vos progrès.",
+
+        earlyAccess:
+          "Accès anticipé",
+
+        budgetPlannerTitle:
+          "Planificateur de budget",
+
+        budgetPlannerText:
+          "Enregistrez vos revenus et vos dépenses afin de comprendre le montant restant disponible chaque mois.",
+
+        cashFlowTitle:
+          "Planificateur de trésorerie",
+
+        cashFlowText:
+          "Visualisez l'interaction entre vos revenus, factures, réserves fiscales, économies et autres engagements.",
+
+        emergencyPlannerTitle:
+          "Planificateur de fonds d'urgence",
+
+        emergencyPlannerText:
+          "Estimez la réserve d'urgence adaptée à vos dépenses mensuelles et à votre situation personnelle.",
+
+        taxPlannerTitle:
+          "Planificateur de réserve fiscale",
+
+        taxPlannerText:
+          "Estimez les fonds à mettre progressivement de côté pour couvrir vos obligations fiscales prévues.",
+
+        savingsPlannerTitle:
+          "Planificateur d'épargne",
+
+        savingsPlannerText:
+          "Définissez un objectif, choisissez une échéance et calculez la contribution mensuelle nécessaire.",
+
+        actionCentreTitle:
+          "Centre d'actions financières",
+
+        actionCentreText:
+          "Recevez une liste claire d'actions prioritaires basée sur votre plan financier et vos progrès.",
+
+        advisoryEyebrow:
+          "Conseil professionnel",
+
+        advisoryTitle:
+          "Certaines décisions financières nécessitent plus qu'un calculateur",
+
+        advisoryDescription:
+          "Lorsque votre situation nécessite une analyse personnalisée, une coordination ou une mise en œuvre, vous pouvez solliciter l'assistance professionnelle de Global Management Consultancy.",
+
+        servicePersonalFinance:
+          "Organisation financière personnelle",
+
+        serviceTaxPlanning:
+          "Coordination de la planification fiscale",
+
+        serviceInternational:
+          "Questions financières internationales",
+
+        serviceProperty:
+          "Immobilier et achats importants",
+
+        serviceWealth:
+          "Planification de l'épargne et du patrimoine",
+
+        serviceAthletes:
+          "Finance des sportifs professionnels",
+
+        advisoryActionTitle:
+          "Expliquez-nous comment nous pouvons vous aider",
+
+        advisoryActionText:
+          "Soumettez une demande structurée décrivant votre besoin financier. Ces informations nous aideront à déterminer l'étape suivante la plus appropriée.",
+
+        requestAdvice:
+          "Demander une assistance professionnelle",
+
+        solutionsEyebrow:
+          "Solutions financières",
+
+        solutionsTitle:
+          "Accompagnement bancaire et paiements internationaux",
+
+        solutionsDescription:
+          "Lorsque cela est approprié, nous aidons les particuliers et organisations éligibles à explorer des solutions financières proposées par des prestataires fiables et réglementés.",
+
+        multiCurrencyTitle:
+          "Solutions multidevises",
+
+        multiCurrencyText:
+          "Explorez des structures adaptées pour recevoir, détenir et gérer des fonds dans différentes devises.",
+
+        fxTitle:
+          "Change de devises",
+
+        fxText:
+          "Accédez à un accompagnement pour les conversions de devises et les besoins financiers transfrontaliers.",
+
+        paymentsTitle:
+          "Paiements internationaux",
+
+        paymentsText:
+          "Explorez des solutions de paiement pour vos activités personnelles, professionnelles et commerciales internationales.",
+
+        cardsTitle:
+          "Cartes et gestion des dépenses",
+
+        cardsText:
+          "Étudiez des solutions adaptées de cartes et de gestion des dépenses pour les personnes et organisations éligibles.",
+
+        solutionsCtaText:
+          "Vous recherchez spécifiquement des solutions bancaires, de paiement, de change ou de cartes ?",
+
+        startApplication:
+          "Commencer la demande de solutions financières",
+
+        finalEyebrow:
+          "Votre prochaine étape",
+
+        finalTitle:
+          "Votre avenir financier mérite un plan clair",
+
+        finalDescription:
+          "Commencez par comprendre votre situation actuelle et identifier les actions concrètes qui peuvent renforcer votre stabilité financière.",
+
+        footerDescription:
+          "Éducation financière, outils de planification, conseil professionnel et accès à des solutions financières internationales.",
+
+        footerPlatform:
+          "Plateforme",
+
+        footerCompany:
+          "Société",
+
+        footerGmc:
+          "Global Management Consultancy",
+
+        footerPrivacy:
+          "Confidentialité",
+
+        footerLegal:
+          "Mentions légales",
+
+        rightsReserved:
+          "Tous droits réservés.",
+
+        regulatoryNote:
+          "Global Management Consultancy n'est pas une banque. Les produits et services financiers réglementés, lorsqu'ils sont disponibles, sont fournis par des prestataires tiers dûment autorisés et restent soumis à des critères d'éligibilité, de conformité et d'approbation."
+      },
+
+      es: {
+        pageTitle:
+          "Global Sport Finance | Global Management Consultancy",
+
+        metaDescription:
+          "Global Sport Finance ayuda a particulares, familias, emprendedores y deportistas profesionales a comprender, organizar y mejorar su vida financiera.",
+
+        poweredBy:
+          "Una plataforma de Global Management Consultancy",
+
+        navBlueprint:
+          "Plan financiero",
+
+        navInsights:
+          "Perspectivas financieras",
+
+        navTools:
+          "Herramientas financieras",
+
+        navAdvice:
+          "Asesoramiento",
+
+        navSolutions:
+          "Soluciones financieras",
+
+        heroEyebrow:
+          "Gestión financiera personal y asesoramiento",
+
+        heroTitleLine1:
+          "Comprenda sus finanzas.",
+
+        heroTitleLine2:
+          "Construya su futuro.",
+
+        heroDescription:
+          "Una plataforma de gestión financiera y asesoramiento que ayuda a particulares, familias, emprendedores y deportistas profesionales a organizar sus finanzas, tomar decisiones informadas y avanzar hacia sus objetivos.",
+
+        startBlueprint:
+          "Comenzar su plan financiero",
+
+        exploreInsights:
+          "Explorar perspectivas financieras",
+
+        heroPanelTitle:
+          "Global Sport Finance",
+
+        heroPanelSubtitle:
+          "Claridad financiera para cada etapa de la vida",
+
+        platformStatus:
+          "Plataforma en desarrollo",
+
+        trustPersonal:
+          "Organización financiera personalizada",
+
+        trustInternational:
+          "Experiencia financiera internacional",
+
+        trustPractical:
+          "Herramientas prácticas y acciones claras",
+
+        trustAdvice:
+          "Apoyo profesional cuando sea necesario",
+
+        journeyEyebrow:
+          "Su recorrido financiero",
+
+        journeyTitle:
+          "Una forma más clara de gestionar su vida financiera",
+
+        journeyDescription:
+          "Aprenda mediante orientación práctica, evalúe su situación actual, organice sus finanzas y solicite asistencia profesional cuando su situación lo requiera.",
+
+        learnTitle:
+          "Aprender",
+
+        learnText:
+          "Acceda a perspectivas financieras claras sobre el dinero cotidiano, la planificación financiera y las decisiones importantes.",
+
+        assessTitle:
+          "Evaluar",
+
+        assessText:
+          "Comprenda su situación financiera mediante su plan financiero personalizado y su evaluación de salud financiera.",
+
+        manageTitle:
+          "Gestionar",
+
+        manageText:
+          "Organice ingresos, gastos, reservas, ahorros y objetivos mediante herramientas prácticas de planificación.",
+
+        adviceTitle:
+          "Obtener asesoramiento",
+
+        adviceText:
+          "Solicite asistencia profesional para asuntos que requieran análisis personalizado, implementación o apoyo especializado.",
+
+        blueprintEyebrow:
+          "Su punto de partida",
+
+        blueprintTitle:
+          "Construya su plan financiero personal",
+
+        blueprintDescription:
+          "Su plan financiero reúne sus ingresos, gastos, ahorros, obligaciones y objetivos para que pueda comprender su posición e identificar las acciones más importantes.",
+
+        blueprintBenefit1:
+          "Revise sus ingresos y compromisos habituales",
+
+        blueprintBenefit2:
+          "Comprenda su posición mensual de flujo de caja",
+
+        blueprintBenefit3:
+          "Evalúe sus reservas de emergencia y fiscales",
+
+        blueprintBenefit4:
+          "Defina sus prioridades de ahorro y financieras",
+
+        blueprintBenefit5:
+          "Reciba próximos pasos claros y prácticos",
+
+        beginAssessment:
+          "Comenzar la evaluación",
+
+        previewTitle:
+          "Mi espacio financiero",
+
+        financialScoreLabel:
+          "Resumen de salud financiera",
+
+        financialScoreStatus:
+          "Construyendo una base más sólida",
+
+        metricBudget:
+          "Presupuesto mensual",
+
+        metricBudgetStatus:
+          "Revisión necesaria",
+
+        metricEmergency:
+          "Reserva de emergencia",
+
+        metricEmergencyStatus:
+          "3,2 meses",
+
+        metricTax:
+          "Reserva fiscal",
+
+        metricTaxStatus:
+          "Acción necesaria",
+
+        metricSavings:
+          "Objetivo de ahorro",
+
+        metricSavingsStatus:
+          "En buen camino",
+
+        insightsEyebrow:
+          "Perspectivas financieras",
+
+        insightsTitle:
+          "Conocimiento práctico para tomar mejores decisiones financieras",
+
+        insightsDescription:
+          "Explore publicaciones accesibles diseñadas para ayudarle a comprender los riesgos financieros, mejorar sus hábitos y prepararse para decisiones importantes.",
+
+        insightType:
+          "Perspectiva financiera",
+
+        insight1Title:
+          "¿Su cuenta bancaria trabaja tanto como usted?",
+
+        insight1Text:
+          "Descubra por qué separar salario, impuestos, emergencias, inversiones y gastos cotidianos puede ofrecerle un mayor control.",
+
+        insight2Title:
+          "¿Cuánto dinero de emergencia debería mantener?",
+
+        insight2Text:
+          "Comprenda cómo su estilo de vida, sus compromisos y la estabilidad de sus ingresos influyen en la reserva que puede necesitar.",
+
+        insight3Title:
+          "Por qué su reserva fiscal necesita su propio plan",
+
+        insight3Text:
+          "Preparar los impuestos de forma gradual puede evitar presiones, deudas y problemas cuando llegue el momento de pagar.",
+
+        readInsight:
+          "Leer publicación →",
+
+        viewAllInsights:
+          "Ver todas las perspectivas financieras",
+
+        toolsEyebrow:
+          "Herramientas financieras",
+
+        toolsTitle:
+          "Convierta su información financiera en acciones prácticas",
+
+        toolsDescription:
+          "Utilice herramientas de planificación específicas para organizar sus finanzas mensuales, prepararse para sus obligaciones y medir su progreso.",
+
+        earlyAccess:
+          "Acceso anticipado",
+
+        budgetPlannerTitle:
+          "Planificador de presupuesto",
+
+        budgetPlannerText:
+          "Registre ingresos y gastos para comprender cuánto dinero queda disponible cada mes.",
+
+        cashFlowTitle:
+          "Planificador de flujo de caja",
+
+        cashFlowText:
+          "Comprenda cómo interactúan sus ingresos, facturas, reservas fiscales, ahorros y otros compromisos.",
+
+        emergencyPlannerTitle:
+          "Planificador de fondo de emergencia",
+
+        emergencyPlannerText:
+          "Calcule la reserva de emergencia adecuada para sus gastos mensuales y circunstancias personales.",
+
+        taxPlannerTitle:
+          "Planificador de reserva fiscal",
+
+        taxPlannerText:
+          "Estime los fondos que deberían separarse gradualmente para cubrir sus obligaciones fiscales previstas.",
+
+        savingsPlannerTitle:
+          "Planificador de ahorro",
+
+        savingsPlannerText:
+          "Establezca un objetivo, elija un plazo y calcule la aportación mensual necesaria.",
+
+        actionCentreTitle:
+          "Centro de acciones financieras",
+
+        actionCentreText:
+          "Reciba una lista clara de acciones prioritarias basada en su plan financiero y su progreso.",
+
+        advisoryEyebrow:
+          "Asesoramiento profesional",
+
+        advisoryTitle:
+          "Algunas decisiones financieras requieren más que una calculadora",
+
+        advisoryDescription:
+          "Cuando su situación requiera análisis personalizado, coordinación o implementación, puede solicitar asistencia profesional de Global Management Consultancy.",
+
+        servicePersonalFinance:
+          "Organización financiera personal",
+
+        serviceTaxPlanning:
+          "Coordinación de planificación fiscal",
+
+        serviceInternational:
+          "Asuntos financieros internacionales",
+
+        serviceProperty:
+          "Inmuebles y compras importantes",
+
+        serviceWealth:
+          "Planificación de ahorro y patrimonio",
+
+        serviceAthletes:
+          "Finanzas para deportistas profesionales",
+
+        advisoryActionTitle:
+          "Díganos cómo podemos ayudarle",
+
+        advisoryActionText:
+          "Envíe una solicitud estructurada explicando su necesidad financiera. La información nos ayudará a determinar el siguiente paso más apropiado.",
+
+        requestAdvice:
+          "Solicitar asistencia profesional",
+
+        solutionsEyebrow:
+          "Soluciones financieras",
+
+        solutionsTitle:
+          "Apoyo bancario y pagos internacionales",
+
+        solutionsDescription:
+          "Cuando sea apropiado, ayudamos a particulares y organizaciones elegibles a explorar soluciones financieras ofrecidas por proveedores fiables y regulados.",
+
+        multiCurrencyTitle:
+          "Soluciones multidivisa",
+
+        multiCurrencyText:
+          "Explore estructuras adecuadas para recibir, mantener y gestionar fondos en diferentes divisas.",
+
+        fxTitle:
+          "Cambio de divisas",
+
+        fxText:
+          "Acceda a apoyo para conversiones de divisas y necesidades financieras transfronterizas.",
+
+        paymentsTitle:
+          "Pagos internacionales",
+
+        paymentsText:
+          "Explore soluciones de pago para actividades personales, profesionales y comerciales internacionales.",
+
+        cardsTitle:
+          "Tarjetas y gestión de gastos",
+
+        cardsText:
+          "Considere opciones adecuadas de tarjetas y gestión de gastos para particulares y organizaciones elegibles.",
+
+        solutionsCtaText:
+          "¿Busca específicamente soluciones bancarias, pagos, cambio de divisas o tarjetas?",
+
+        startApplication:
+          "Comenzar solicitud de soluciones financieras",
+
+        finalEyebrow:
+          "Su próximo paso",
+
+        finalTitle:
+          "Su futuro financiero merece un plan claro",
+
+        finalDescription:
+          "Comience comprendiendo su situación actual e identificando las acciones prácticas que pueden ayudarle a construir una mayor estabilidad financiera.",
+
+        footerDescription:
+          "Educación financiera, herramientas de planificación, asesoramiento y acceso a soluciones financieras internacionales.",
+
+        footerPlatform:
+          "Plataforma",
+
+        footerCompany:
+          "Empresa",
+
+        footerGmc:
+          "Global Management Consultancy",
+
+        footerPrivacy:
+          "Privacidad",
+
+        footerLegal:
+          "Aviso legal",
+
+        rightsReserved:
+          "Todos los derechos reservados.",
+
+        regulatoryNote:
+          "Global Management Consultancy no opera como banco. Los productos y servicios financieros regulados, cuando estén disponibles, son proporcionados por proveedores externos debidamente autorizados y están sujetos a elegibilidad, cumplimiento normativo y aprobación."
+      }
+    };
+
+    const languageButtons =
+      document.querySelectorAll("[data-language]");
+
+    const translatedElements =
+      document.querySelectorAll("[data-i18n]");
+
+    const mobileMenuButton =
+      document.getElementById("mobileMenuButton");
+
+    const mobileNav =
+      document.getElementById("mobileNav");
+
+    const siteHeader =
+      document.getElementById("siteHeader");
+
+    function setLanguage(language) {
+      const selectedLanguage =
+        translations[language] ? language : "en";
+
+      const dictionary =
+        translations[selectedLanguage];
+
+      translatedElements.forEach((element) => {
+        const key =
+          element.getAttribute("data-i18n");
+
+        if (dictionary[key]) {
+          element.textContent = dictionary[key];
+        }
+      });
+
+      languageButtons.forEach((button) => {
+        const isActive =
+          button.dataset.language === selectedLanguage;
+
+        button.classList.toggle("active", isActive);
+        button.setAttribute(
+          "aria-pressed",
+          String(isActive)
+        );
+      });
+
+      document.documentElement.lang =
+        selectedLanguage;
+
+      document.title =
+        dictionary.pageTitle;
+
+      const metaDescription =
+        document.querySelector(
+          'meta[name="description"]'
+        );
+
+      if (metaDescription) {
+        metaDescription.setAttribute(
+          "content",
+          dictionary.metaDescription
+        );
+      }
+
+      localStorage.setItem(
+        "gsf-language",
+        selectedLanguage
+      );
+    }
+
+    languageButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        setLanguage(button.dataset.language);
+      });
+    });
+
+    mobileMenuButton.addEventListener("click", () => {
+      const isOpen =
+        mobileNav.classList.toggle("open");
+
+      mobileMenuButton.setAttribute(
+        "aria-expanded",
+        String(isOpen)
+      );
+    });
+
+    mobileNav
+      .querySelectorAll("a")
+      .forEach((link) => {
+        link.addEventListener("click", () => {
+          mobileNav.classList.remove("open");
+
+          mobileMenuButton.setAttribute(
+            "aria-expanded",
+            "false"
+          );
+        });
+      });
+
+    window.addEventListener("scroll", () => {
+      siteHeader.classList.toggle(
+        "scrolled",
+        window.scrollY > 24
+      );
+    });
+
+    const observer =
+      new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("visible");
+              observer.unobserve(entry.target);
+            }
+          });
+        },
+        {
+          threshold: 0.12
+        }
+      );
+
+    document
+      .querySelectorAll(".fade-up")
+      .forEach((element) => {
+        observer.observe(element);
+      });
+
+    document.getElementById(
+      "currentYear"
+    ).textContent = new Date().getFullYear();
+
+    const savedLanguage =
+      localStorage.getItem("gsf-language");
+
+    const browserLanguage =
+      navigator.language
+        .slice(0, 2)
+        .toLowerCase();
+
+    const initialLanguage =
+      savedLanguage ||
+      (translations[browserLanguage]
+        ? browserLanguage
+        : "en");
+
+    setLanguage(initialLanguage);
+  </script>
+</body>
+</html>
