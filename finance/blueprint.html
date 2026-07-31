@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <meta
+    name="description"
+    content="Begin your Global Sport Finance Financial Blueprint assessment and receive a structured overview of your financial position."
+  >
+
+  <title>Financial Blueprint | Global Sport Finance</title>
+
+  <style>
+    :root {
+      --navy-950: #06111f;
+      --navy-900: #091827;
+      --navy-800: #10263d;
+      --navy-700: #173854;
+
+      --gold-500: #c9a35a;
+      --gold-400: #d9b86e;
+      --gold-300: #ead39d;
+
+      --white: #ffffff;
+      --ivory: #f7f4ec;
+      --text-light: #d9e2ec;
+      --text-muted: #9fb0c1;
+
+      --border: rgba(201, 163, 90, 0.26);
+      --card-bg: rgba(255, 255, 255, 0.045);
+      --shadow: 0 24px 70px rgba(0, 0, 0, 0.34);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Arial,
+        sans-serif;
+      color: var(--white);
+      background:
+        radial-gradient(
+          circle at 80% 15%,
+          rgba(201, 163, 90, 0.12),
+          transparent 34%
+        ),
+        radial-gradient(
+          circle at 10% 85%,
+          rgba(23, 56, 84, 0.55),
+          transparent 38%
+        ),
+        linear-gradient(
+          135deg,
+          var(--navy-950) 0%,
+          var(--navy-900) 48%,
+          #0b1d30 100%
+        );
+    }
+
+    button,
+    a {
+      font: inherit;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page-shell {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* HEADER */
+
+    .site-header {
+      width: 100%;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(6, 17, 31, 0.78);
+      backdrop-filter: blur(14px);
+      position: relative;
+      z-index: 10;
+    }
+
+    .header-inner {
+      width: min(1180px, calc(100% - 40px));
+      margin: 0 auto;
+      min-height: 82px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .brand {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .brand-title {
+      color: var(--gold-400);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(1.15rem, 2vw, 1.5rem);
+      font-weight: 600;
+      letter-spacing: 0.04em;
+    }
+
+    .brand-subtitle {
+      color: var(--text-muted);
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .back-link {
+      color: var(--text-light);
+      font-size: 0.88rem;
+      transition:
+        color 0.2s ease,
+        transform 0.2s ease;
+    }
+
+    .back-link:hover {
+      color: var(--gold-300);
+      transform: translateX(-2px);
+    }
+
+    .language-switcher {
+      display: flex;
+      align-items: center;
+      padding: 4px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.035);
+    }
+
+    .language-button {
+      min-width: 38px;
+      padding: 7px 9px;
+      border: 0;
+      border-radius: 999px;
+      color: var(--text-muted);
+      background: transparent;
+      cursor: pointer;
+      font-size: 0.72rem;
+      font-weight: 700;
+      transition:
+        background 0.2s ease,
+        color 0.2s ease;
+    }
+
+    .language-button:hover {
+      color: var(--white);
+    }
+
+    .language-button.active {
+      color: var(--navy-950);
+      background: var(--gold-400);
+    }
+
+    /* MAIN CONTENT */
+
+    main {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      padding: 56px 0 70px;
+    }
+
+    .assessment-container {
+      width: min(1180px, calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    .progress-row {
+      max-width: 940px;
+      margin: 0 auto 28px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .progress-label {
+      flex-shrink: 0;
+      color: var(--gold-300);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 5px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.09);
+    }
+
+    .progress-fill {
+      width: 4%;
+      height: 100%;
+      border-radius: inherit;
+      background:
+        linear-gradient(
+          90deg,
+          var(--gold-500),
+          var(--gold-300)
+        );
+    }
+
+    .assessment-card {
+      max-width: 940px;
+      margin: 0 auto;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      background:
+        linear-gradient(
+          145deg,
+          rgba(255, 255, 255, 0.075),
+          rgba(255, 255, 255, 0.025)
+        );
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(16px);
+    }
+
+    .card-top-line {
+      height: 3px;
+      background:
+        linear-gradient(
+          90deg,
+          transparent,
+          var(--gold-400),
+          transparent
+        );
+    }
+
+    .card-content {
+      padding: clamp(34px, 6vw, 70px);
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      margin-bottom: 22px;
+      color: var(--gold-300);
+      font-size: 0.76rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 28px;
+      height: 1px;
+      background: var(--gold-400);
+    }
+
+    h1 {
+      max-width: 760px;
+      margin-bottom: 22px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.4rem, 6vw, 4.7rem);
+      font-weight: 500;
+      line-height: 1.04;
+      letter-spacing: -0.035em;
+    }
+
+    h1 span {
+      color: var(--gold-400);
+    }
+
+    .intro-text {
+      max-width: 760px;
+      color: var(--text-light);
+      font-size: clamp(1rem, 2vw, 1.14rem);
+      line-height: 1.75;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin: 40px 0;
+    }
+
+    .feature-card {
+      min-height: 158px;
+      padding: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      border-radius: 18px;
+      background: var(--card-bg);
+      transition:
+        transform 0.25s ease,
+        border-color 0.25s ease,
+        background 0.25s ease;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--border);
+      background: rgba(255, 255, 255, 0.065);
+    }
+
+    .feature-icon {
+      width: 42px;
+      height: 42px;
+      margin-bottom: 18px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      color: var(--gold-300);
+      background: rgba(201, 163, 90, 0.08);
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    .feature-card h2 {
+      margin-bottom: 9px;
+      color: var(--white);
+      font-size: 1rem;
+      font-weight: 650;
+    }
+
+    .feature-card p {
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      line-height: 1.55;
+    }
+
+    .privacy-note {
+      margin-bottom: 30px;
+      padding: 17px 20px;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      border-left: 3px solid var(--gold-400);
+      border-radius: 0 12px 12px 0;
+      color: var(--text-light);
+      background: rgba(201, 163, 90, 0.07);
+      font-size: 0.9rem;
+      line-height: 1.55;
+    }
+
+    .privacy-symbol {
+      color: var(--gold-300);
+      font-size: 1rem;
+      line-height: 1.4;
+    }
+
+    .action-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      padding-top: 30px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .time-estimate {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    .time-icon {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 50%;
+      color: var(--gold-300);
+    }
+
+    .start-button {
+      min-height: 54px;
+      padding: 0 30px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 13px;
+      border: 1px solid var(--gold-400);
+      border-radius: 999px;
+      color: var(--navy-950);
+      background:
+        linear-gradient(
+          135deg,
+          var(--gold-300),
+          var(--gold-500)
+        );
+      box-shadow: 0 12px 30px rgba(201, 163, 90, 0.18);
+      font-weight: 750;
+      transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        filter 0.2s ease;
+    }
+
+    .start-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 16px 38px rgba(201, 163, 90, 0.28);
+      filter: brightness(1.04);
+    }
+
+    .button-arrow {
+      font-size: 1.05rem;
+      transition: transform 0.2s ease;
+    }
+
+    .start-button:hover .button-arrow {
+      transform: translateX(4px);
+    }
+
+    /* FOOTER */
+
+    .site-footer {
+      padding: 24px 20px 30px;
+      color: var(--text-muted);
+      text-align: center;
+      font-size: 0.76rem;
+      line-height: 1.6;
+    }
+
+    .site-footer strong {
+      color: var(--gold-300);
+      font-weight: 600;
+    }
+
+    /* RESPONSIVE */
+
+    @media (max-width: 820px) {
+      .header-inner {
+        min-height: 74px;
+      }
+
+      .brand-subtitle {
+        display: none;
+      }
+
+      .back-link {
+        display: none;
+      }
+
+      main {
+        align-items: flex-start;
+        padding-top: 36px;
+      }
+
+      .feature-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .feature-card {
+        min-height: auto;
+      }
+
+      .action-row {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      .start-button {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .header-inner,
+      .assessment-container {
+        width: min(100% - 24px, 1180px);
+      }
+
+      .header-inner {
+        gap: 10px;
+      }
+
+      .brand-title {
+        font-size: 1rem;
+      }
+
+      .language-button {
+        min-width: 34px;
+        padding: 6px 7px;
+      }
+
+      .progress-row {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .assessment-card {
+        border-radius: 20px;
+      }
+
+      .card-content {
+        padding: 30px 22px;
+      }
+
+      h1 {
+        font-size: clamp(2.15rem, 12vw, 3rem);
+      }
+
+      .feature-card {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page-shell">
+
+    <header class="site-header">
+      <div class="header-inner">
+
+        <a
+          class="brand"
+          href="../finance.html"
+          aria-label="Return to Global Sport Finance"
+        >
+          <span class="brand-title">
+            Global Sport Finance
+          </span>
+
+          <span class="brand-subtitle">
+            Powered by Global Management Consultancy
+          </span>
+        </a>
+
+        <div class="header-actions">
+
+          <a
+            class="back-link"
+            href="../finance.html"
+            data-translate="backToFinance"
+          >
+            ← Back to Global Sport Finance
+          </a>
+
+          <div
+            class="language-switcher"
+            aria-label="Select language"
+          >
+            <button
+              class="language-button active"
+              type="button"
+              data-language="en"
+            >
+              EN
+            </button>
+
+            <button
+              class="language-button"
+              type="button"
+              data-language="fr"
+            >
+              FR
+            </button>
+
+            <button
+              class="language-button"
+              type="button"
+              data-language="es"
+            >
+              ES
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <div class="assessment-container">
+
+        <div
+          class="progress-row"
+          aria-label="Assessment progress"
+        >
+          <span
+            class="progress-label"
+            data-translate="progress"
+          >
+            Introduction · Step 0 of 5
+          </span>
+
+          <div class="progress-track">
+            <div class="progress-fill"></div>
+          </div>
+        </div>
+
+        <section class="assessment-card">
+          <div class="card-top-line"></div>
+
+          <div class="card-content">
+
+            <div
+              class="eyebrow"
+              data-translate="eyebrow"
+            >
+              Your Financial Journey
+            </div>
+
+            <h1 data-translate="title">
+              Build Your
+              <span>Financial Blueprint</span>
+            </h1>
+
+            <p
+              class="intro-text"
+              data-translate="intro"
+            >
+              Gain a clearer understanding of your current financial
+              position, identify areas for improvement and receive
+              structured guidance for your next financial steps.
+            </p>
+
+            <div class="feature-grid">
+
+              <article class="feature-card">
+                <div class="feature-icon">01</div>
+
+                <h2 data-translate="featureOneTitle">
+                  Financial Health Overview
+                </h2>
+
+                <p data-translate="featureOneText">
+                  Review the key elements of your income, spending,
+                  assets, liabilities and financial resilience.
+                </p>
+              </article>
+
+              <article class="feature-card">
+                <div class="feature-icon">02</div>
+
+                <h2 data-translate="featureTwoTitle">
+                  Personalised Priorities
+                </h2>
+
+                <p data-translate="featureTwoText">
+                  Identify the financial areas that may require your
+                  attention and establish clear priorities.
+                </p>
+              </article>
+
+              <article class="feature-card">
+                <div class="feature-icon">03</div>
+
+                <h2 data-translate="featureThreeTitle">
+                  Clear Next Steps
+                </h2>
+
+                <p data-translate="featureThreeText">
+                  Receive a structured summary designed to help you
+                  plan your next financial actions.
+                </p>
+              </article>
+
+            </div>
+
+            <div class="privacy-note">
+              <span
+                class="privacy-symbol"
+                aria-hidden="true"
+              >
+                ◈
+              </span>
+
+              <span data-translate="privacy">
+                You do not need to create an account to begin.
+                Your answers will remain in this browser during the
+                assessment. You will only be invited to create an
+                account if you choose to save your completed Blueprint.
+              </span>
+            </div>
+
+            <div class="action-row">
+
+              <div class="time-estimate">
+                <span
+                  class="time-icon"
+                  aria-hidden="true"
+                >
+                  ◷
+                </span>
+
+                <span data-translate="time">
+                  Approximately 5–7 minutes
+                </span>
+              </div>
+
+              <a
+                class="start-button"
+                href="blueprint-step1.html"
+              >
+                <span data-translate="startButton">
+                  Begin Assessment
+                </span>
+
+                <span
+                  class="button-arrow"
+                  aria-hidden="true"
+                >
+                  →
+                </span>
+              </a>
+
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <p>
+        <strong>Global Sport Finance</strong>
+        · Global Management Consultancy Limited
+      </p>
+
+      <p data-translate="footerDisclaimer">
+        This assessment provides general financial guidance and does
+        not constitute regulated financial, investment, tax or legal advice.
+      </p>
+    </footer>
+
+  </div>
+
+  <script>
+    const translations = {
+      en: {
+        backToFinance: "← Back to Global Sport Finance",
+        progress: "Introduction · Step 0 of 5",
+        eyebrow: "Your Financial Journey",
+        title: 'Build Your <span>Financial Blueprint</span>',
+        intro:
+          "Gain a clearer understanding of your current financial " +
+          "position, identify areas for improvement and receive " +
+          "structured guidance for your next financial steps.",
+
+        featureOneTitle: "Financial Health Overview",
+        featureOneText:
+          "Review the key elements of your income, spending, assets, " +
+          "liabilities and financial resilience.",
+
+        featureTwoTitle: "Personalised Priorities",
+        featureTwoText:
+          "Identify the financial areas that may require your attention " +
+          "and establish clear priorities.",
+
+        featureThreeTitle: "Clear Next Steps",
+        featureThreeText:
+          "Receive a structured summary designed to help you plan your " +
+          "next financial actions.",
+
+        privacy:
+          "You do not need to create an account to begin. Your answers " +
+          "will remain in this browser during the assessment. You will " +
+          "only be invited to create an account if you choose to save " +
+          "your completed Blueprint.",
+
+        time: "Approximately 5–7 minutes",
+        startButton: "Begin Assessment",
+
+        footerDisclaimer:
+          "This assessment provides general financial guidance and does " +
+          "not constitute regulated financial, investment, tax or legal advice."
+      },
+
+      fr: {
+        backToFinance: "← Retour à Global Sport Finance",
+        progress: "Introduction · Étape 0 sur 5",
+        eyebrow: "Votre parcours financier",
+        title:
+          'Construisez votre <span>Plan Financier Personnel</span>',
+
+        intro:
+          "Obtenez une vision plus claire de votre situation financière " +
+          "actuelle, identifiez les domaines à améliorer et recevez une " +
+          "orientation structurée pour vos prochaines étapes financières.",
+
+        featureOneTitle: "Vue d’ensemble financière",
+        featureOneText:
+          "Examinez les éléments essentiels de vos revenus, dépenses, " +
+          "actifs, dettes et de votre résilience financière.",
+
+        featureTwoTitle: "Priorités personnalisées",
+        featureTwoText:
+          "Identifiez les domaines financiers nécessitant votre attention " +
+          "et définissez des priorités claires.",
+
+        featureThreeTitle: "Prochaines étapes claires",
+        featureThreeText:
+          "Recevez un résumé structuré pour vous aider à planifier vos " +
+          "prochaines décisions financières.",
+
+        privacy:
+          "Vous n’avez pas besoin de créer un compte pour commencer. " +
+          "Vos réponses resteront dans ce navigateur pendant l’évaluation. " +
+          "La création d’un compte vous sera proposée uniquement si vous " +
+          "souhaitez enregistrer votre plan financier finalisé.",
+
+        time: "Environ 5 à 7 minutes",
+        startButton: "Commencer l’évaluation",
+
+        footerDisclaimer:
+          "Cette évaluation fournit des orientations financières générales " +
+          "et ne constitue pas un conseil réglementé en matière financière, " +
+          "d’investissement, fiscale ou juridique."
+      },
+
+      es: {
+        backToFinance: "← Volver a Global Sport Finance",
+        progress: "Introducción · Paso 0 de 5",
+        eyebrow: "Su recorrido financiero",
+        title:
+          'Cree su <span>Plan Financiero Personal</span>',
+
+        intro:
+          "Obtenga una visión más clara de su situación financiera actual, " +
+          "identifique áreas de mejora y reciba orientación estructurada " +
+          "para sus próximos pasos financieros.",
+
+        featureOneTitle: "Resumen de salud financiera",
+        featureOneText:
+          "Revise los elementos principales de sus ingresos, gastos, " +
+          "activos, deudas y capacidad de resistencia financiera.",
+
+        featureTwoTitle: "Prioridades personalizadas",
+        featureTwoText:
+          "Identifique las áreas financieras que requieren su atención " +
+          "y establezca prioridades claras.",
+
+        featureThreeTitle: "Próximos pasos claros",
+        featureThreeText:
+          "Reciba un resumen estructurado para ayudarle a planificar " +
+          "sus próximas decisiones financieras.",
+
+        privacy:
+          "No necesita crear una cuenta para comenzar. Sus respuestas " +
+          "permanecerán en este navegador durante la evaluación. Solo se " +
+          "le invitará a crear una cuenta si decide guardar su plan " +
+          "financiero completado.",
+
+        time: "Aproximadamente 5–7 minutos",
+        startButton: "Comenzar evaluación",
+
+        footerDisclaimer:
+          "Esta evaluación ofrece orientación financiera general y no " +
+          "constituye asesoramiento financiero, de inversión, fiscal o " +
+          "jurídico regulado."
+      }
+    };
+
+    const languageButtons =
+      document.querySelectorAll(".language-button");
+
+    const translatedElements =
+      document.querySelectorAll("[data-translate]");
+
+    function changeLanguage(language) {
+      const selectedTranslation = translations[language];
+
+      if (!selectedTranslation) {
+        return;
+      }
+
+      document.documentElement.lang = language;
+
+      translatedElements.forEach((element) => {
+        const translationKey =
+          element.getAttribute("data-translate");
+
+        const translatedValue =
+          selectedTranslation[translationKey];
+
+        if (translatedValue === undefined) {
+          return;
+        }
+
+        if (translationKey === "title") {
+          element.innerHTML = translatedValue;
+        } else {
+          element.textContent = translatedValue;
+        }
+      });
+
+      languageButtons.forEach((button) => {
+        const isActive =
+          button.dataset.language === language;
+
+        button.classList.toggle("active", isActive);
+      });
+
+      localStorage.setItem(
+        "gsfBlueprintLanguage",
+        language
+      );
+    }
+
+    languageButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        changeLanguage(button.dataset.language);
+      });
+    });
+
+    const savedLanguage =
+      localStorage.getItem("gsfBlueprintLanguage");
+
+    if (savedLanguage && translations[savedLanguage]) {
+      changeLanguage(savedLanguage);
+    }
+  </script>
+</body>
+</html>
