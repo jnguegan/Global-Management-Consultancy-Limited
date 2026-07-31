@@ -1,0 +1,1237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <meta
+    name="description"
+    content="Step 1 of the Global Sport Finance Financial Blueprint assessment."
+  >
+
+  <title>About You | Financial Blueprint</title>
+
+  <style>
+    :root {
+      --navy-950: #06111f;
+      --navy-900: #091827;
+      --navy-800: #10263d;
+
+      --gold-500: #c9a35a;
+      --gold-400: #d9b86e;
+      --gold-300: #ead39d;
+
+      --white: #ffffff;
+      --text-light: #d9e2ec;
+      --text-muted: #9fb0c1;
+
+      --border: rgba(201, 163, 90, 0.28);
+      --card-bg: rgba(255, 255, 255, 0.045);
+      --shadow: 0 24px 70px rgba(0, 0, 0, 0.34);
+      --error: #ffb3b3;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Arial,
+        sans-serif;
+      color: var(--white);
+      background:
+        radial-gradient(
+          circle at 82% 12%,
+          rgba(201, 163, 90, 0.12),
+          transparent 34%
+        ),
+        radial-gradient(
+          circle at 8% 88%,
+          rgba(23, 56, 84, 0.55),
+          transparent 38%
+        ),
+        linear-gradient(
+          135deg,
+          var(--navy-950),
+          var(--navy-900) 52%,
+          #0b1d30
+        );
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    .page-shell {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* HEADER */
+
+    .site-header {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(6, 17, 31, 0.8);
+      backdrop-filter: blur(14px);
+    }
+
+    .header-inner {
+      width: min(1180px, calc(100% - 40px));
+      min-height: 82px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .brand {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .brand-title {
+      color: var(--gold-400);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.4rem;
+      font-weight: 600;
+    }
+
+    .brand-subtitle {
+      color: var(--text-muted);
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .back-link {
+      color: var(--text-light);
+      font-size: 0.88rem;
+    }
+
+    .back-link:hover {
+      color: var(--gold-300);
+    }
+
+    .language-switcher {
+      display: flex;
+      padding: 4px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.035);
+    }
+
+    .language-button {
+      min-width: 38px;
+      padding: 7px 9px;
+      border: 0;
+      border-radius: 999px;
+      color: var(--text-muted);
+      background: transparent;
+      cursor: pointer;
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+
+    .language-button.active {
+      color: var(--navy-950);
+      background: var(--gold-400);
+    }
+
+    /* MAIN */
+
+    main {
+      flex: 1;
+      padding: 48px 0 70px;
+    }
+
+    .assessment-container {
+      width: min(980px, calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    .progress-row {
+      margin-bottom: 28px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .progress-label {
+      flex-shrink: 0;
+      color: var(--gold-300);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 5px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.09);
+    }
+
+    .progress-fill {
+      width: 20%;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(
+        90deg,
+        var(--gold-500),
+        var(--gold-300)
+      );
+    }
+
+    .assessment-card {
+      overflow: hidden;
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      background: linear-gradient(
+        145deg,
+        rgba(255, 255, 255, 0.075),
+        rgba(255, 255, 255, 0.025)
+      );
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(16px);
+    }
+
+    .card-top-line {
+      height: 3px;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        var(--gold-400),
+        transparent
+      );
+    }
+
+    .card-content {
+      padding: clamp(32px, 6vw, 64px);
+    }
+
+    .eyebrow {
+      margin-bottom: 14px;
+      color: var(--gold-300);
+      font-size: 0.76rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin-bottom: 14px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.3rem, 5vw, 4rem);
+      font-weight: 500;
+    }
+
+    .intro-text {
+      max-width: 700px;
+      margin-bottom: 38px;
+      color: var(--text-light);
+      font-size: 1rem;
+      line-height: 1.7;
+    }
+
+    .form-section {
+      margin-bottom: 34px;
+    }
+
+    .section-label {
+      display: block;
+      margin-bottom: 16px;
+      color: var(--white);
+      font-size: 1rem;
+      font-weight: 700;
+    }
+
+    .profile-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+
+    .profile-option {
+      position: relative;
+    }
+
+    .profile-option input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .profile-option label {
+      min-height: 92px;
+      padding: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(255, 255, 255, 0.11);
+      border-radius: 16px;
+      color: var(--text-light);
+      background: var(--card-bg);
+      cursor: pointer;
+      text-align: center;
+      font-weight: 650;
+      line-height: 1.35;
+      transition:
+        transform 0.2s ease,
+        border-color 0.2s ease,
+        background 0.2s ease,
+        color 0.2s ease;
+    }
+
+    .profile-option label:hover {
+      transform: translateY(-2px);
+      border-color: var(--border);
+    }
+
+    .profile-option input:checked + label {
+      color: var(--white);
+      border-color: var(--gold-400);
+      background: rgba(201, 163, 90, 0.13);
+      box-shadow: 0 0 0 1px rgba(201, 163, 90, 0.14);
+    }
+
+    .field-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }
+
+    .field-group label {
+      color: var(--text-light);
+      font-size: 0.88rem;
+      font-weight: 650;
+    }
+
+    select {
+      width: 100%;
+      min-height: 52px;
+      padding: 0 16px;
+      border: 1px solid rgba(255, 255, 255, 0.13);
+      border-radius: 13px;
+      color: var(--white);
+      background: var(--navy-800);
+      outline: none;
+    }
+
+    select:focus {
+      border-color: var(--gold-400);
+      box-shadow: 0 0 0 3px rgba(201, 163, 90, 0.12);
+    }
+
+    select option {
+      color: var(--white);
+      background: var(--navy-900);
+    }
+
+    .error-message {
+      min-height: 22px;
+      margin-top: 8px;
+      color: var(--error);
+      font-size: 0.85rem;
+    }
+
+    .privacy-note {
+      margin: 10px 0 30px;
+      padding: 16px 18px;
+      border-left: 3px solid var(--gold-400);
+      border-radius: 0 12px 12px 0;
+      color: var(--text-light);
+      background: rgba(201, 163, 90, 0.07);
+      font-size: 0.88rem;
+      line-height: 1.55;
+    }
+
+    .action-row {
+      padding-top: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .secondary-button,
+    .primary-button {
+      min-height: 52px;
+      padding: 0 26px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-weight: 750;
+    }
+
+    .secondary-button {
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: var(--text-light);
+      background: transparent;
+    }
+
+    .secondary-button:hover {
+      border-color: var(--gold-400);
+      color: var(--gold-300);
+    }
+
+    .primary-button {
+      border: 1px solid var(--gold-400);
+      color: var(--navy-950);
+      background: linear-gradient(
+        135deg,
+        var(--gold-300),
+        var(--gold-500)
+      );
+      box-shadow: 0 12px 30px rgba(201, 163, 90, 0.18);
+    }
+
+    .primary-button:hover {
+      transform: translateY(-2px);
+    }
+
+    .site-footer {
+      padding: 22px 20px 30px;
+      color: var(--text-muted);
+      text-align: center;
+      font-size: 0.76rem;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 760px) {
+      .brand-subtitle,
+      .back-link {
+        display: none;
+      }
+
+      .profile-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .field-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .action-row {
+        align-items: stretch;
+        flex-direction: column-reverse;
+      }
+
+      .secondary-button,
+      .primary-button {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 500px) {
+      .header-inner,
+      .assessment-container {
+        width: min(100% - 24px, 980px);
+      }
+
+      .profile-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .progress-row {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .assessment-card {
+        border-radius: 20px;
+      }
+
+      .card-content {
+        padding: 30px 22px;
+      }
+
+      .brand-title {
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page-shell">
+
+    <header class="site-header">
+      <div class="header-inner">
+
+        <a
+          class="brand"
+          href="../finance.html"
+        >
+          <span class="brand-title">
+            Global Sport Finance
+          </span>
+
+          <span class="brand-subtitle">
+            Powered by Global Management Consultancy
+          </span>
+        </a>
+
+        <div class="header-actions">
+
+          <a
+            class="back-link"
+            href="blueprint.html"
+            data-translate="back"
+          >
+            ← Back
+          </a>
+
+          <div class="language-switcher">
+            <button
+              class="language-button active"
+              type="button"
+              data-language="en"
+            >
+              EN
+            </button>
+
+            <button
+              class="language-button"
+              type="button"
+              data-language="fr"
+            >
+              FR
+            </button>
+
+            <button
+              class="language-button"
+              type="button"
+              data-language="es"
+            >
+              ES
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <div class="assessment-container">
+
+        <div class="progress-row">
+          <span
+            class="progress-label"
+            data-translate="progress"
+          >
+            About You · Step 1 of 5
+          </span>
+
+          <div class="progress-track">
+            <div class="progress-fill"></div>
+          </div>
+        </div>
+
+        <section class="assessment-card">
+          <div class="card-top-line"></div>
+
+          <div class="card-content">
+
+            <div
+              class="eyebrow"
+              data-translate="eyebrow"
+            >
+              Financial Blueprint
+            </div>
+
+            <h1 data-translate="title">
+              Tell Us About You
+            </h1>
+
+            <p
+              class="intro-text"
+              data-translate="intro"
+            >
+              This information helps us tailor the assessment to your
+              circumstances. You can begin without creating an account.
+            </p>
+
+            <form id="stepOneForm" novalidate>
+
+              <div class="form-section">
+
+                <span
+                  class="section-label"
+                  data-translate="profileQuestion"
+                >
+                  Which description best represents you?
+                </span>
+
+                <div class="profile-grid">
+
+                  <div class="profile-option">
+                    <input
+                      type="radio"
+                      id="individual"
+                      name="profileType"
+                      value="individual"
+                    >
+                    <label
+                      for="individual"
+                      data-translate="individual"
+                    >
+                      Individual
+                    </label>
+                  </div>
+
+                  <div class="profile-option">
+                    <input
+                      type="radio"
+                      id="family"
+                      name="profileType"
+                      value="family"
+                    >
+                    <label
+                      for="family"
+                      data-translate="family"
+                    >
+                      Family
+                    </label>
+                  </div>
+
+                  <div class="profile-option">
+                    <input
+                      type="radio"
+                      id="entrepreneur"
+                      name="profileType"
+                      value="entrepreneur"
+                    >
+                    <label
+                      for="entrepreneur"
+                      data-translate="entrepreneur"
+                    >
+                      Entrepreneur
+                    </label>
+                  </div>
+
+                  <div class="profile-option">
+                    <input
+                      type="radio"
+                      id="businessOwner"
+                      name="profileType"
+                      value="businessOwner"
+                    >
+                    <label
+                      for="businessOwner"
+                      data-translate="businessOwner"
+                    >
+                      Business Owner
+                    </label>
+                  </div>
+
+                  <div class="profile-option">
+                    <input
+                      type="radio"
+                      id="athlete"
+                      name="profileType"
+                      value="athlete"
+                    >
+                    <label
+                      for="athlete"
+                      data-translate="athlete"
+                    >
+                      Professional Athlete
+                    </label>
+                  </div>
+
+                  <div class="profile-option">
+                    <input
+                      type="radio"
+                      id="sportsProfessional"
+                      name="profileType"
+                      value="sportsProfessional"
+                    >
+                    <label
+                      for="sportsProfessional"
+                      data-translate="sportsProfessional"
+                    >
+                      Sports Professional
+                    </label>
+                  </div>
+
+                </div>
+
+                <div
+                  class="error-message"
+                  id="profileError"
+                  aria-live="polite"
+                ></div>
+              </div>
+
+              <div class="field-grid">
+
+                <div class="field-group">
+                  <label
+                    for="country"
+                    data-translate="countryLabel"
+                  >
+                    Country of residence
+                  </label>
+
+                  <select id="country" name="country">
+                    <option value="" data-translate="selectOption">
+                      Select an option
+                    </option>
+
+                    <option value="spain">Spain</option>
+                    <option value="united-kingdom">
+                      United Kingdom
+                    </option>
+                    <option value="france">France</option>
+                    <option value="germany">Germany</option>
+                    <option value="italy">Italy</option>
+                    <option value="portugal">Portugal</option>
+                    <option value="luxembourg">Luxembourg</option>
+                    <option value="switzerland">Switzerland</option>
+                    <option value="united-arab-emirates">
+                      United Arab Emirates
+                    </option>
+                    <option value="cameroon">Cameroon</option>
+                    <option value="ivory-coast">
+                      Côte d’Ivoire
+                    </option>
+                    <option value="senegal">Senegal</option>
+                    <option value="mali">Mali</option>
+                    <option value="ghana">Ghana</option>
+                    <option value="nigeria">Nigeria</option>
+                    <option value="united-states">
+                      United States
+                    </option>
+                    <option value="other">Other</option>
+                  </select>
+                </div>
+
+                <div class="field-group">
+                  <label
+                    for="ageGroup"
+                    data-translate="ageLabel"
+                  >
+                    Age group
+                  </label>
+
+                  <select id="ageGroup" name="ageGroup">
+                    <option value="" data-translate="selectOption">
+                      Select an option
+                    </option>
+                    <option value="under-25">
+                      Under 25
+                    </option>
+                    <option value="25-34">
+                      25–34
+                    </option>
+                    <option value="35-44">
+                      35–44
+                    </option>
+                    <option value="45-54">
+                      45–54
+                    </option>
+                    <option value="55-64">
+                      55–64
+                    </option>
+                    <option value="65-plus">
+                      65+
+                    </option>
+                  </select>
+                </div>
+
+                <div class="field-group">
+                  <label
+                    for="employmentStatus"
+                    data-translate="employmentLabel"
+                  >
+                    Employment status
+                  </label>
+
+                  <select
+                    id="employmentStatus"
+                    name="employmentStatus"
+                  >
+                    <option value="" data-translate="selectOption">
+                      Select an option
+                    </option>
+                    <option value="employed">
+                      Employed
+                    </option>
+                    <option value="self-employed">
+                      Self-employed
+                    </option>
+                    <option value="business-owner">
+                      Business owner
+                    </option>
+                    <option value="professional-athlete">
+                      Professional athlete
+                    </option>
+                    <option value="sports-professional">
+                      Sports professional
+                    </option>
+                    <option value="retired">
+                      Retired
+                    </option>
+                    <option value="student">
+                      Student
+                    </option>
+                    <option value="not-working">
+                      Not currently working
+                    </option>
+                  </select>
+                </div>
+
+                <div class="field-group">
+                  <label
+                    for="currency"
+                    data-translate="currencyLabel"
+                  >
+                    Preferred currency
+                  </label>
+
+                  <select id="currency" name="currency">
+                    <option value="" data-translate="selectOption">
+                      Select an option
+                    </option>
+                    <option value="EUR">EUR — Euro</option>
+                    <option value="GBP">
+                      GBP — British Pound
+                    </option>
+                    <option value="USD">
+                      USD — US Dollar
+                    </option>
+                    <option value="CHF">
+                      CHF — Swiss Franc
+                    </option>
+                    <option value="AED">
+                      AED — UAE Dirham
+                    </option>
+                    <option value="XOF">
+                      XOF — West African CFA Franc
+                    </option>
+                    <option value="XAF">
+                      XAF — Central African CFA Franc
+                    </option>
+                  </select>
+                </div>
+
+              </div>
+
+              <div
+                class="error-message"
+                id="fieldError"
+                aria-live="polite"
+              ></div>
+
+              <div
+                class="privacy-note"
+                data-translate="privacy"
+              >
+                Your information is stored temporarily in this browser
+                so you can continue the assessment. It is not submitted
+                to Global Management Consultancy at this stage.
+              </div>
+
+              <div class="action-row">
+
+                <a
+                  class="secondary-button"
+                  href="blueprint.html"
+                  data-translate="previousButton"
+                >
+                  ← Previous
+                </a>
+
+                <button
+                  class="primary-button"
+                  type="submit"
+                >
+                  <span data-translate="continueButton">
+                    Continue
+                  </span>
+                  <span aria-hidden="true">→</span>
+                </button>
+
+              </div>
+
+            </form>
+          </div>
+        </section>
+
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <p>
+        Global Sport Finance · Global Management Consultancy Limited
+      </p>
+
+      <p data-translate="disclaimer">
+        This assessment provides general guidance and does not
+        constitute regulated financial, investment, tax or legal advice.
+      </p>
+    </footer>
+
+  </div>
+
+  <script>
+    const translations = {
+      en: {
+        back: "← Back",
+        progress: "About You · Step 1 of 5",
+        eyebrow: "Financial Blueprint",
+        title: "Tell Us About You",
+        intro:
+          "This information helps us tailor the assessment to your " +
+          "circumstances. You can begin without creating an account.",
+
+        profileQuestion:
+          "Which description best represents you?",
+
+        individual: "Individual",
+        family: "Family",
+        entrepreneur: "Entrepreneur",
+        businessOwner: "Business Owner",
+        athlete: "Professional Athlete",
+        sportsProfessional: "Sports Professional",
+
+        countryLabel: "Country of residence",
+        ageLabel: "Age group",
+        employmentLabel: "Employment status",
+        currencyLabel: "Preferred currency",
+        selectOption: "Select an option",
+
+        privacy:
+          "Your information is stored temporarily in this browser so " +
+          "you can continue the assessment. It is not submitted to " +
+          "Global Management Consultancy at this stage.",
+
+        previousButton: "← Previous",
+        continueButton: "Continue",
+
+        profileError:
+          "Please select the description that best represents you.",
+
+        fieldError:
+          "Please complete all four fields before continuing.",
+
+        disclaimer:
+          "This assessment provides general guidance and does not " +
+          "constitute regulated financial, investment, tax or legal advice."
+      },
+
+      fr: {
+        back: "← Retour",
+        progress: "À propos de vous · Étape 1 sur 5",
+        eyebrow: "Plan financier",
+        title: "Parlez-nous de vous",
+
+        intro:
+          "Ces informations nous permettent d’adapter l’évaluation à " +
+          "votre situation. Vous pouvez commencer sans créer de compte.",
+
+        profileQuestion:
+          "Quelle description vous correspond le mieux ?",
+
+        individual: "Particulier",
+        family: "Famille",
+        entrepreneur: "Entrepreneur",
+        businessOwner: "Chef d’entreprise",
+        athlete: "Athlète professionnel",
+        sportsProfessional: "Professionnel du sport",
+
+        countryLabel: "Pays de résidence",
+        ageLabel: "Tranche d’âge",
+        employmentLabel: "Situation professionnelle",
+        currencyLabel: "Devise préférée",
+        selectOption: "Sélectionnez une option",
+
+        privacy:
+          "Vos informations sont temporairement enregistrées dans ce " +
+          "navigateur afin que vous puissiez poursuivre l’évaluation. " +
+          "Elles ne sont pas transmises à Global Management Consultancy " +
+          "à ce stade.",
+
+        previousButton: "← Précédent",
+        continueButton: "Continuer",
+
+        profileError:
+          "Veuillez sélectionner la description qui vous correspond le mieux.",
+
+        fieldError:
+          "Veuillez compléter les quatre champs avant de continuer.",
+
+        disclaimer:
+          "Cette évaluation fournit des orientations générales et ne " +
+          "constitue pas un conseil financier, d’investissement, fiscal " +
+          "ou juridique réglementé."
+      },
+
+      es: {
+        back: "← Volver",
+        progress: "Sobre usted · Paso 1 de 5",
+        eyebrow: "Plan financiero",
+        title: "Háblenos de usted",
+
+        intro:
+          "Esta información nos permite adaptar la evaluación a sus " +
+          "circunstancias. Puede comenzar sin crear una cuenta.",
+
+        profileQuestion:
+          "¿Qué descripción le representa mejor?",
+
+        individual: "Particular",
+        family: "Familia",
+        entrepreneur: "Emprendedor",
+        businessOwner: "Empresario",
+        athlete: "Deportista profesional",
+        sportsProfessional: "Profesional del deporte",
+
+        countryLabel: "País de residencia",
+        ageLabel: "Grupo de edad",
+        employmentLabel: "Situación laboral",
+        currencyLabel: "Moneda preferida",
+        selectOption: "Seleccione una opción",
+
+        privacy:
+          "Su información se guarda temporalmente en este navegador " +
+          "para que pueda continuar la evaluación. No se envía a " +
+          "Global Management Consultancy en esta fase.",
+
+        previousButton: "← Anterior",
+        continueButton: "Continuar",
+
+        profileError:
+          "Seleccione la descripción que mejor le representa.",
+
+        fieldError:
+          "Complete los cuatro campos antes de continuar.",
+
+        disclaimer:
+          "Esta evaluación ofrece orientación general y no constituye " +
+          "asesoramiento financiero, de inversión, fiscal o jurídico regulado."
+      }
+    };
+
+    const form = document.getElementById("stepOneForm");
+    const profileError =
+      document.getElementById("profileError");
+    const fieldError =
+      document.getElementById("fieldError");
+
+    const languageButtons =
+      document.querySelectorAll(".language-button");
+
+    const translatedElements =
+      document.querySelectorAll("[data-translate]");
+
+    let currentLanguage =
+      localStorage.getItem("gsfBlueprintLanguage") || "en";
+
+    function changeLanguage(language) {
+      const selectedTranslation = translations[language];
+
+      if (!selectedTranslation) {
+        return;
+      }
+
+      currentLanguage = language;
+      document.documentElement.lang = language;
+
+      translatedElements.forEach((element) => {
+        const key =
+          element.getAttribute("data-translate");
+
+        if (selectedTranslation[key] !== undefined) {
+          element.textContent = selectedTranslation[key];
+        }
+      });
+
+      languageButtons.forEach((button) => {
+        button.classList.toggle(
+          "active",
+          button.dataset.language === language
+        );
+      });
+
+      localStorage.setItem(
+        "gsfBlueprintLanguage",
+        language
+      );
+    }
+
+    languageButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        changeLanguage(button.dataset.language);
+      });
+    });
+
+    function saveStepOne() {
+      const selectedProfile =
+        document.querySelector(
+          'input[name="profileType"]:checked'
+        );
+
+      const stepOneData = {
+        profileType: selectedProfile
+          ? selectedProfile.value
+          : "",
+        country:
+          document.getElementById("country").value,
+        ageGroup:
+          document.getElementById("ageGroup").value,
+        employmentStatus:
+          document.getElementById("employmentStatus").value,
+        currency:
+          document.getElementById("currency").value
+      };
+
+      localStorage.setItem(
+        "gsfBlueprintStep1",
+        JSON.stringify(stepOneData)
+      );
+    }
+
+    function restoreStepOne() {
+      const savedData =
+        localStorage.getItem("gsfBlueprintStep1");
+
+      if (!savedData) {
+        return;
+      }
+
+      try {
+        const data = JSON.parse(savedData);
+
+        if (data.profileType) {
+          const profileInput =
+            document.querySelector(
+              `input[name="profileType"][value="${data.profileType}"]`
+            );
+
+          if (profileInput) {
+            profileInput.checked = true;
+          }
+        }
+
+        document.getElementById("country").value =
+          data.country || "";
+
+        document.getElementById("ageGroup").value =
+          data.ageGroup || "";
+
+        document.getElementById("employmentStatus").value =
+          data.employmentStatus || "";
+
+        document.getElementById("currency").value =
+          data.currency || "";
+
+      } catch (error) {
+        console.error(
+          "Unable to restore Step 1 data:",
+          error
+        );
+      }
+    }
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+
+      profileError.textContent = "";
+      fieldError.textContent = "";
+
+      const selectedProfile =
+        document.querySelector(
+          'input[name="profileType"]:checked'
+        );
+
+      const country =
+        document.getElementById("country").value;
+
+      const ageGroup =
+        document.getElementById("ageGroup").value;
+
+      const employmentStatus =
+        document.getElementById("employmentStatus").value;
+
+      const currency =
+        document.getElementById("currency").value;
+
+      let valid = true;
+
+      if (!selectedProfile) {
+        profileError.textContent =
+          translations[currentLanguage].profileError;
+
+        valid = false;
+      }
+
+      if (
+        !country ||
+        !ageGroup ||
+        !employmentStatus ||
+        !currency
+      ) {
+        fieldError.textContent =
+          translations[currentLanguage].fieldError;
+
+        valid = false;
+      }
+
+      if (!valid) {
+        return;
+      }
+
+      saveStepOne();
+
+      window.location.href =
+        "blueprint-step2.html";
+    });
+
+    restoreStepOne();
+    changeLanguage(currentLanguage);
+  </script>
+</body>
+</html>
