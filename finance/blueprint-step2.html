@@ -1,0 +1,1519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <meta
+    name="description"
+    content="Step 2 of the Global Sport Finance Financial Blueprint assessment."
+  >
+
+  <title>Income and Commitments | Financial Blueprint</title>
+
+  <style>
+    :root {
+      --navy-950: #06111f;
+      --navy-900: #091827;
+      --navy-800: #10263d;
+      --navy-700: #173854;
+
+      --gold-500: #c9a35a;
+      --gold-400: #d9b86e;
+      --gold-300: #ead39d;
+
+      --white: #ffffff;
+      --text-light: #d9e2ec;
+      --text-muted: #9fb0c1;
+
+      --border: rgba(201, 163, 90, 0.28);
+      --card-bg: rgba(255, 255, 255, 0.045);
+      --shadow: 0 24px 70px rgba(0, 0, 0, 0.34);
+      --error: #ffb3b3;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Arial,
+        sans-serif;
+      color: var(--white);
+      background:
+        radial-gradient(
+          circle at 82% 12%,
+          rgba(201, 163, 90, 0.12),
+          transparent 34%
+        ),
+        radial-gradient(
+          circle at 8% 88%,
+          rgba(23, 56, 84, 0.55),
+          transparent 38%
+        ),
+        linear-gradient(
+          135deg,
+          var(--navy-950),
+          var(--navy-900) 52%,
+          #0b1d30
+        );
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    .page-shell {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* HEADER */
+
+    .site-header {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(6, 17, 31, 0.8);
+      backdrop-filter: blur(14px);
+    }
+
+    .header-inner {
+      width: min(1180px, calc(100% - 40px));
+      min-height: 82px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .brand {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .brand-title {
+      color: var(--gold-400);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.4rem;
+      font-weight: 600;
+    }
+
+    .brand-subtitle {
+      color: var(--text-muted);
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .back-link {
+      color: var(--text-light);
+      font-size: 0.88rem;
+    }
+
+    .back-link:hover {
+      color: var(--gold-300);
+    }
+
+    .language-switcher {
+      display: flex;
+      padding: 4px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.035);
+    }
+
+    .language-button {
+      min-width: 38px;
+      padding: 7px 9px;
+      border: 0;
+      border-radius: 999px;
+      color: var(--text-muted);
+      background: transparent;
+      cursor: pointer;
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+
+    .language-button.active {
+      color: var(--navy-950);
+      background: var(--gold-400);
+    }
+
+    /* MAIN */
+
+    main {
+      flex: 1;
+      padding: 48px 0 70px;
+    }
+
+    .assessment-container {
+      width: min(980px, calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    .progress-row {
+      margin-bottom: 28px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .progress-label {
+      flex-shrink: 0;
+      color: var(--gold-300);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 5px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.09);
+    }
+
+    .progress-fill {
+      width: 40%;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(
+        90deg,
+        var(--gold-500),
+        var(--gold-300)
+      );
+    }
+
+    .assessment-card {
+      overflow: hidden;
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      background: linear-gradient(
+        145deg,
+        rgba(255, 255, 255, 0.075),
+        rgba(255, 255, 255, 0.025)
+      );
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(16px);
+    }
+
+    .card-top-line {
+      height: 3px;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        var(--gold-400),
+        transparent
+      );
+    }
+
+    .card-content {
+      padding: clamp(32px, 6vw, 64px);
+    }
+
+    .eyebrow {
+      margin-bottom: 14px;
+      color: var(--gold-300);
+      font-size: 0.76rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin-bottom: 14px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.3rem, 5vw, 4rem);
+      font-weight: 500;
+    }
+
+    .intro-text {
+      max-width: 720px;
+      margin-bottom: 34px;
+      color: var(--text-light);
+      font-size: 1rem;
+      line-height: 1.7;
+    }
+
+    .currency-banner {
+      margin-bottom: 30px;
+      padding: 15px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: rgba(201, 163, 90, 0.08);
+    }
+
+    .currency-banner span:first-child {
+      color: var(--text-light);
+      font-size: 0.9rem;
+    }
+
+    .currency-code {
+      color: var(--gold-300);
+      font-size: 1rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+    }
+
+    .form-section {
+      margin-bottom: 34px;
+    }
+
+    .section-heading {
+      margin-bottom: 18px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      color: var(--white);
+      font-size: 1.05rem;
+      font-weight: 750;
+    }
+
+    .field-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }
+
+    .field-group.full-width {
+      grid-column: 1 / -1;
+    }
+
+    .field-group label {
+      color: var(--text-light);
+      font-size: 0.88rem;
+      font-weight: 650;
+    }
+
+    .field-help {
+      color: var(--text-muted);
+      font-size: 0.76rem;
+      line-height: 1.4;
+    }
+
+    .money-field {
+      position: relative;
+    }
+
+    .currency-prefix {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--gold-300);
+      font-size: 0.82rem;
+      font-weight: 750;
+      pointer-events: none;
+    }
+
+    input,
+    select {
+      width: 100%;
+      min-height: 52px;
+      border: 1px solid rgba(255, 255, 255, 0.13);
+      border-radius: 13px;
+      color: var(--white);
+      background: var(--navy-800);
+      outline: none;
+    }
+
+    input {
+      padding: 0 16px;
+    }
+
+    .money-field input {
+      padding-left: 64px;
+    }
+
+    input::placeholder {
+      color: #71869a;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: var(--gold-400);
+      box-shadow: 0 0 0 3px rgba(201, 163, 90, 0.12);
+    }
+
+    select {
+      padding: 0 16px;
+    }
+
+    select option {
+      color: var(--white);
+      background: var(--navy-900);
+    }
+
+    .summary-box {
+      margin-top: 12px;
+      padding: 22px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.035);
+    }
+
+    .summary-item {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .summary-label {
+      color: var(--text-muted);
+      font-size: 0.76rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .summary-value {
+      color: var(--white);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.35rem;
+    }
+
+    .summary-value.positive {
+      color: var(--gold-300);
+    }
+
+    .error-message {
+      min-height: 22px;
+      margin-top: 10px;
+      color: var(--error);
+      font-size: 0.85rem;
+    }
+
+    .privacy-note {
+      margin: 10px 0 30px;
+      padding: 16px 18px;
+      border-left: 3px solid var(--gold-400);
+      border-radius: 0 12px 12px 0;
+      color: var(--text-light);
+      background: rgba(201, 163, 90, 0.07);
+      font-size: 0.88rem;
+      line-height: 1.55;
+    }
+
+    .action-row {
+      padding-top: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .secondary-button,
+    .primary-button {
+      min-height: 52px;
+      padding: 0 26px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-weight: 750;
+    }
+
+    .secondary-button {
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: var(--text-light);
+      background: transparent;
+    }
+
+    .secondary-button:hover {
+      border-color: var(--gold-400);
+      color: var(--gold-300);
+    }
+
+    .primary-button {
+      border: 1px solid var(--gold-400);
+      color: var(--navy-950);
+      background: linear-gradient(
+        135deg,
+        var(--gold-300),
+        var(--gold-500)
+      );
+      box-shadow: 0 12px 30px rgba(201, 163, 90, 0.18);
+    }
+
+    .primary-button:hover {
+      transform: translateY(-2px);
+    }
+
+    .site-footer {
+      padding: 22px 20px 30px;
+      color: var(--text-muted);
+      text-align: center;
+      font-size: 0.76rem;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 760px) {
+      .brand-subtitle,
+      .back-link {
+        display: none;
+      }
+
+      .field-grid,
+      .summary-box {
+        grid-template-columns: 1fr;
+      }
+
+      .field-group.full-width {
+        grid-column: auto;
+      }
+
+      .action-row {
+        align-items: stretch;
+        flex-direction: column-reverse;
+      }
+
+      .secondary-button,
+      .primary-button {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 500px) {
+      .header-inner,
+      .assessment-container {
+        width: min(100% - 24px, 980px);
+      }
+
+      .progress-row {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .assessment-card {
+        border-radius: 20px;
+      }
+
+      .card-content {
+        padding: 30px 22px;
+      }
+
+      .brand-title {
+        font-size: 1rem;
+      }
+
+      .currency-banner {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page-shell">
+
+    <header class="site-header">
+      <div class="header-inner">
+
+        <a
+          class="brand"
+          href="../finance.html"
+        >
+          <span class="brand-title">
+            Global Sport Finance
+          </span>
+
+          <span class="brand-subtitle">
+            Powered by Global Management Consultancy
+          </span>
+        </a>
+
+        <div class="header-actions">
+
+          <a
+            class="back-link"
+            href="blueprint-step1.html"
+            data-translate="back"
+          >
+            ← Back
+          </a>
+
+          <div class="language-switcher">
+            <button
+              class="language-button active"
+              type="button"
+              data-language="en"
+            >
+              EN
+            </button>
+
+            <button
+              class="language-button"
+              type="button"
+              data-language="fr"
+            >
+              FR
+            </button>
+
+            <button
+              class="language-button"
+              type="button"
+              data-language="es"
+            >
+              ES
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <div class="assessment-container">
+
+        <div class="progress-row">
+          <span
+            class="progress-label"
+            data-translate="progress"
+          >
+            Income & Commitments · Step 2 of 5
+          </span>
+
+          <div class="progress-track">
+            <div class="progress-fill"></div>
+          </div>
+        </div>
+
+        <section class="assessment-card">
+          <div class="card-top-line"></div>
+
+          <div class="card-content">
+
+            <div
+              class="eyebrow"
+              data-translate="eyebrow"
+            >
+              Financial Blueprint
+            </div>
+
+            <h1 data-translate="title">
+              Your Monthly Financial Position
+            </h1>
+
+            <p
+              class="intro-text"
+              data-translate="intro"
+            >
+              Enter your average monthly income and regular financial
+              commitments. Estimates are acceptable if exact figures
+              are not immediately available.
+            </p>
+
+            <div class="currency-banner">
+              <span data-translate="currencyMessage">
+                Figures entered on this page will use your selected currency.
+              </span>
+
+              <span
+                class="currency-code"
+                id="currencyCode"
+              >
+                EUR
+              </span>
+            </div>
+
+            <form id="stepTwoForm" novalidate>
+
+              <section class="form-section">
+
+                <h2
+                  class="section-heading"
+                  data-translate="incomeHeading"
+                >
+                  Monthly Income
+                </h2>
+
+                <div class="field-grid">
+
+                  <div class="field-group">
+                    <label
+                      for="primaryIncome"
+                      data-translate="primaryIncomeLabel"
+                    >
+                      Primary monthly income
+                    </label>
+
+                    <div class="money-field">
+                      <span class="currency-prefix">EUR</span>
+
+                      <input
+                        type="number"
+                        id="primaryIncome"
+                        name="primaryIncome"
+                        min="0"
+                        step="0.01"
+                        inputmode="decimal"
+                        placeholder="0.00"
+                      >
+                    </div>
+
+                    <span
+                      class="field-help"
+                      data-translate="primaryIncomeHelp"
+                    >
+                      Salary, professional earnings or regular business drawings.
+                    </span>
+                  </div>
+
+                  <div class="field-group">
+                    <label
+                      for="otherIncome"
+                      data-translate="otherIncomeLabel"
+                    >
+                      Other monthly income
+                    </label>
+
+                    <div class="money-field">
+                      <span class="currency-prefix">EUR</span>
+
+                      <input
+                        type="number"
+                        id="otherIncome"
+                        name="otherIncome"
+                        min="0"
+                        step="0.01"
+                        inputmode="decimal"
+                        placeholder="0.00"
+                      >
+                    </div>
+
+                    <span
+                      class="field-help"
+                      data-translate="otherIncomeHelp"
+                    >
+                      Rental income, bonuses, investments or other regular income.
+                    </span>
+                  </div>
+
+                </div>
+              </section>
+
+              <section class="form-section">
+
+                <h2
+                  class="section-heading"
+                  data-translate="commitmentsHeading"
+                >
+                  Monthly Commitments
+                </h2>
+
+                <div class="field-grid">
+
+                  <div class="field-group">
+                    <label
+                      for="housingCost"
+                      data-translate="housingLabel"
+                    >
+                      Rent or mortgage
+                    </label>
+
+                    <div class="money-field">
+                      <span class="currency-prefix">EUR</span>
+
+                      <input
+                        type="number"
+                        id="housingCost"
+                        name="housingCost"
+                        min="0"
+                        step="0.01"
+                        inputmode="decimal"
+                        placeholder="0.00"
+                      >
+                    </div>
+                  </div>
+
+                  <div class="field-group">
+                    <label
+                      for="livingExpenses"
+                      data-translate="livingExpensesLabel"
+                    >
+                      General living expenses
+                    </label>
+
+                    <div class="money-field">
+                      <span class="currency-prefix">EUR</span>
+
+                      <input
+                        type="number"
+                        id="livingExpenses"
+                        name="livingExpenses"
+                        min="0"
+                        step="0.01"
+                        inputmode="decimal"
+                        placeholder="0.00"
+                      >
+                    </div>
+
+                    <span
+                      class="field-help"
+                      data-translate="livingExpensesHelp"
+                    >
+                      Food, utilities, transport and everyday household spending.
+                    </span>
+                  </div>
+
+                  <div class="field-group">
+                    <label
+                      for="loanPayments"
+                      data-translate="loanPaymentsLabel"
+                    >
+                      Loan and credit repayments
+                    </label>
+
+                    <div class="money-field">
+                      <span class="currency-prefix">EUR</span>
+
+                      <input
+                        type="number"
+                        id="loanPayments"
+                        name="loanPayments"
+                        min="0"
+                        step="0.01"
+                        inputmode="decimal"
+                        placeholder="0.00"
+                      >
+                    </div>
+                  </div>
+
+                  <div class="field-group">
+                    <label
+                      for="insuranceCosts"
+                      data-translate="insuranceLabel"
+                    >
+                      Insurance and protection
+                    </label>
+
+                    <div class="money-field">
+                      <span class="currency-prefix">EUR</span>
+
+                      <input
+                        type="number"
+                        id="insuranceCosts"
+                        name="insuranceCosts"
+                        min="0"
+                        step="0.01"
+                        inputmode="decimal"
+                        placeholder="0.00"
+                      >
+                    </div>
+                  </div>
+
+                  <div class="field-group">
+                    <label
+                      for="taxReserve"
+                      data-translate="taxReserveLabel"
+                    >
+                      Monthly tax reserve
+                    </label>
+
+                    <div class="money-field">
+                      <span class="currency-prefix">EUR</span>
+
+                      <input
+                        type="number"
+                        id="taxReserve"
+                        name="taxReserve"
+                        min="0"
+                        step="0.01"
+                        inputmode="decimal"
+                        placeholder="0.00"
+                      >
+                    </div>
+
+                    <span
+                      class="field-help"
+                      data-translate="taxReserveHelp"
+                    >
+                      Amount regularly set aside for tax obligations.
+                    </span>
+                  </div>
+
+                  <div class="field-group">
+                    <label
+                      for="otherCommitments"
+                      data-translate="otherCommitmentsLabel"
+                    >
+                      Other regular commitments
+                    </label>
+
+                    <div class="money-field">
+                      <span class="currency-prefix">EUR</span>
+
+                      <input
+                        type="number"
+                        id="otherCommitments"
+                        name="otherCommitments"
+                        min="0"
+                        step="0.01"
+                        inputmode="decimal"
+                        placeholder="0.00"
+                      >
+                    </div>
+
+                    <span
+                      class="field-help"
+                      data-translate="otherCommitmentsHelp"
+                    >
+                      School fees, family support, subscriptions or other obligations.
+                    </span>
+                  </div>
+
+                </div>
+              </section>
+
+              <section class="form-section">
+
+                <h2
+                  class="section-heading"
+                  data-translate="overviewHeading"
+                >
+                  Monthly Overview
+                </h2>
+
+                <div class="summary-box">
+
+                  <div class="summary-item">
+                    <span
+                      class="summary-label"
+                      data-translate="totalIncomeLabel"
+                    >
+                      Total income
+                    </span>
+
+                    <span
+                      class="summary-value"
+                      id="totalIncome"
+                    >
+                      EUR 0.00
+                    </span>
+                  </div>
+
+                  <div class="summary-item">
+                    <span
+                      class="summary-label"
+                      data-translate="totalCommitmentsLabel"
+                    >
+                      Total commitments
+                    </span>
+
+                    <span
+                      class="summary-value"
+                      id="totalCommitments"
+                    >
+                      EUR 0.00
+                    </span>
+                  </div>
+
+                  <div class="summary-item">
+                    <span
+                      class="summary-label"
+                      data-translate="monthlyBalanceLabel"
+                    >
+                      Estimated monthly balance
+                    </span>
+
+                    <span
+                      class="summary-value positive"
+                      id="monthlyBalance"
+                    >
+                      EUR 0.00
+                    </span>
+                  </div>
+
+                </div>
+
+                <div
+                  class="error-message"
+                  id="formError"
+                  aria-live="polite"
+                ></div>
+              </section>
+
+              <div
+                class="privacy-note"
+                data-translate="privacy"
+              >
+                These figures remain temporarily in your browser during
+                the assessment. They are not transmitted to Global
+                Management Consultancy at this stage.
+              </div>
+
+              <div class="action-row">
+
+                <a
+                  class="secondary-button"
+                  href="blueprint-step1.html"
+                  data-translate="previousButton"
+                >
+                  ← Previous
+                </a>
+
+                <button
+                  class="primary-button"
+                  type="submit"
+                >
+                  <span data-translate="continueButton">
+                    Continue
+                  </span>
+
+                  <span aria-hidden="true">→</span>
+                </button>
+
+              </div>
+
+            </form>
+          </div>
+        </section>
+
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <p>
+        Global Sport Finance · Global Management Consultancy Limited
+      </p>
+
+      <p data-translate="disclaimer">
+        This assessment provides general guidance and does not constitute
+        regulated financial, investment, tax or legal advice.
+      </p>
+    </footer>
+
+  </div>
+
+  <script>
+    const translations = {
+      en: {
+        back: "← Back",
+        progress: "Income & Commitments · Step 2 of 5",
+        eyebrow: "Financial Blueprint",
+        title: "Your Monthly Financial Position",
+
+        intro:
+          "Enter your average monthly income and regular financial " +
+          "commitments. Estimates are acceptable if exact figures are " +
+          "not immediately available.",
+
+        currencyMessage:
+          "Figures entered on this page will use your selected currency.",
+
+        incomeHeading: "Monthly Income",
+        primaryIncomeLabel: "Primary monthly income",
+        primaryIncomeHelp:
+          "Salary, professional earnings or regular business drawings.",
+
+        otherIncomeLabel: "Other monthly income",
+        otherIncomeHelp:
+          "Rental income, bonuses, investments or other regular income.",
+
+        commitmentsHeading: "Monthly Commitments",
+        housingLabel: "Rent or mortgage",
+        livingExpensesLabel: "General living expenses",
+        livingExpensesHelp:
+          "Food, utilities, transport and everyday household spending.",
+
+        loanPaymentsLabel: "Loan and credit repayments",
+        insuranceLabel: "Insurance and protection",
+        taxReserveLabel: "Monthly tax reserve",
+        taxReserveHelp:
+          "Amount regularly set aside for tax obligations.",
+
+        otherCommitmentsLabel: "Other regular commitments",
+        otherCommitmentsHelp:
+          "School fees, family support, subscriptions or other obligations.",
+
+        overviewHeading: "Monthly Overview",
+        totalIncomeLabel: "Total income",
+        totalCommitmentsLabel: "Total commitments",
+        monthlyBalanceLabel: "Estimated monthly balance",
+
+        privacy:
+          "These figures remain temporarily in your browser during the " +
+          "assessment. They are not transmitted to Global Management " +
+          "Consultancy at this stage.",
+
+        previousButton: "← Previous",
+        continueButton: "Continue",
+
+        requiredIncome:
+          "Please enter your primary monthly income before continuing.",
+
+        invalidValues:
+          "Please ensure all figures are zero or positive numbers.",
+
+        disclaimer:
+          "This assessment provides general guidance and does not " +
+          "constitute regulated financial, investment, tax or legal advice."
+      },
+
+      fr: {
+        back: "← Retour",
+        progress: "Revenus et engagements · Étape 2 sur 5",
+        eyebrow: "Plan financier",
+        title: "Votre situation financière mensuelle",
+
+        intro:
+          "Indiquez vos revenus mensuels moyens et vos engagements " +
+          "financiers réguliers. Vous pouvez utiliser des estimations si " +
+          "vous ne disposez pas encore des montants exacts.",
+
+        currencyMessage:
+          "Les montants saisis sur cette page utiliseront la devise sélectionnée.",
+
+        incomeHeading: "Revenus mensuels",
+        primaryIncomeLabel: "Revenu mensuel principal",
+        primaryIncomeHelp:
+          "Salaire, revenus professionnels ou prélèvements réguliers de l’entreprise.",
+
+        otherIncomeLabel: "Autres revenus mensuels",
+        otherIncomeHelp:
+          "Revenus locatifs, primes, investissements ou autres revenus réguliers.",
+
+        commitmentsHeading: "Engagements mensuels",
+        housingLabel: "Loyer ou crédit immobilier",
+        livingExpensesLabel: "Dépenses courantes",
+        livingExpensesHelp:
+          "Alimentation, charges, transport et dépenses quotidiennes du foyer.",
+
+        loanPaymentsLabel: "Remboursements de prêts et crédits",
+        insuranceLabel: "Assurances et protection",
+        taxReserveLabel: "Réserve fiscale mensuelle",
+        taxReserveHelp:
+          "Montant régulièrement mis de côté pour les obligations fiscales.",
+
+        otherCommitmentsLabel: "Autres engagements réguliers",
+        otherCommitmentsHelp:
+          "Frais scolaires, aide familiale, abonnements ou autres obligations.",
+
+        overviewHeading: "Aperçu mensuel",
+        totalIncomeLabel: "Revenus totaux",
+        totalCommitmentsLabel: "Engagements totaux",
+        monthlyBalanceLabel: "Solde mensuel estimé",
+
+        privacy:
+          "Ces montants restent temporairement enregistrés dans votre " +
+          "navigateur pendant l’évaluation. Ils ne sont pas transmis à " +
+          "Global Management Consultancy à ce stade.",
+
+        previousButton: "← Précédent",
+        continueButton: "Continuer",
+
+        requiredIncome:
+          "Veuillez indiquer votre revenu mensuel principal avant de continuer.",
+
+        invalidValues:
+          "Veuillez vérifier que tous les montants sont nuls ou positifs.",
+
+        disclaimer:
+          "Cette évaluation fournit des orientations générales et ne " +
+          "constitue pas un conseil financier, d’investissement, fiscal " +
+          "ou juridique réglementé."
+      },
+
+      es: {
+        back: "← Volver",
+        progress: "Ingresos y compromisos · Paso 2 de 5",
+        eyebrow: "Plan financiero",
+        title: "Su situación financiera mensual",
+
+        intro:
+          "Introduzca sus ingresos mensuales medios y sus compromisos " +
+          "financieros habituales. Puede utilizar estimaciones si todavía " +
+          "no dispone de las cifras exactas.",
+
+        currencyMessage:
+          "Las cantidades introducidas utilizarán la moneda seleccionada.",
+
+        incomeHeading: "Ingresos mensuales",
+        primaryIncomeLabel: "Ingreso mensual principal",
+        primaryIncomeHelp:
+          "Salario, ingresos profesionales o retiradas habituales del negocio.",
+
+        otherIncomeLabel: "Otros ingresos mensuales",
+        otherIncomeHelp:
+          "Alquileres, bonificaciones, inversiones u otros ingresos habituales.",
+
+        commitmentsHeading: "Compromisos mensuales",
+        housingLabel: "Alquiler o hipoteca",
+        livingExpensesLabel: "Gastos generales de vida",
+        livingExpensesHelp:
+          "Alimentación, suministros, transporte y gastos cotidianos del hogar.",
+
+        loanPaymentsLabel: "Pagos de préstamos y créditos",
+        insuranceLabel: "Seguros y protección",
+        taxReserveLabel: "Reserva fiscal mensual",
+        taxReserveHelp:
+          "Cantidad reservada regularmente para obligaciones fiscales.",
+
+        otherCommitmentsLabel: "Otros compromisos habituales",
+        otherCommitmentsHelp:
+          "Colegios, ayuda familiar, suscripciones u otras obligaciones.",
+
+        overviewHeading: "Resumen mensual",
+        totalIncomeLabel: "Ingresos totales",
+        totalCommitmentsLabel: "Compromisos totales",
+        monthlyBalanceLabel: "Saldo mensual estimado",
+
+        privacy:
+          "Estas cifras permanecen temporalmente en su navegador durante " +
+          "la evaluación. No se transmiten a Global Management Consultancy " +
+          "en esta fase.",
+
+        previousButton: "← Anterior",
+        continueButton: "Continuar",
+
+        requiredIncome:
+          "Introduzca su ingreso mensual principal antes de continuar.",
+
+        invalidValues:
+          "Compruebe que todas las cantidades sean cero o números positivos.",
+
+        disclaimer:
+          "Esta evaluación ofrece orientación general y no constituye " +
+          "asesoramiento financiero, de inversión, fiscal o jurídico regulado."
+      }
+    };
+
+    const form = document.getElementById("stepTwoForm");
+
+    const fieldIds = [
+      "primaryIncome",
+      "otherIncome",
+      "housingCost",
+      "livingExpenses",
+      "loanPayments",
+      "insuranceCosts",
+      "taxReserve",
+      "otherCommitments"
+    ];
+
+    const languageButtons =
+      document.querySelectorAll(".language-button");
+
+    const translatedElements =
+      document.querySelectorAll("[data-translate]");
+
+    const currencyCodeElement =
+      document.getElementById("currencyCode");
+
+    const currencyPrefixes =
+      document.querySelectorAll(".currency-prefix");
+
+    const totalIncomeElement =
+      document.getElementById("totalIncome");
+
+    const totalCommitmentsElement =
+      document.getElementById("totalCommitments");
+
+    const monthlyBalanceElement =
+      document.getElementById("monthlyBalance");
+
+    const formError =
+      document.getElementById("formError");
+
+    let currentLanguage =
+      localStorage.getItem("gsfBlueprintLanguage") || "en";
+
+    let selectedCurrency = "EUR";
+
+    function getNumber(fieldId) {
+      const field = document.getElementById(fieldId);
+      const value = Number.parseFloat(field.value);
+
+      if (Number.isNaN(value)) {
+        return 0;
+      }
+
+      return value;
+    }
+
+    function formatMoney(value) {
+      return (
+        selectedCurrency +
+        " " +
+        value.toLocaleString(undefined, {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2
+        })
+      );
+    }
+
+    function updateSummary() {
+      const totalIncome =
+        getNumber("primaryIncome") +
+        getNumber("otherIncome");
+
+      const totalCommitments =
+        getNumber("housingCost") +
+        getNumber("livingExpenses") +
+        getNumber("loanPayments") +
+        getNumber("insuranceCosts") +
+        getNumber("taxReserve") +
+        getNumber("otherCommitments");
+
+      const monthlyBalance =
+        totalIncome - totalCommitments;
+
+      totalIncomeElement.textContent =
+        formatMoney(totalIncome);
+
+      totalCommitmentsElement.textContent =
+        formatMoney(totalCommitments);
+
+      monthlyBalanceElement.textContent =
+        formatMoney(monthlyBalance);
+
+      monthlyBalanceElement.classList.toggle(
+        "positive",
+        monthlyBalance >= 0
+      );
+    }
+
+    function loadCurrency() {
+      const savedStepOne =
+        localStorage.getItem("gsfBlueprintStep1");
+
+      if (savedStepOne) {
+        try {
+          const stepOneData =
+            JSON.parse(savedStepOne);
+
+          if (stepOneData.currency) {
+            selectedCurrency =
+              stepOneData.currency;
+          }
+        } catch (error) {
+          console.error(
+            "Unable to load Step 1 currency:",
+            error
+          );
+        }
+      }
+
+      currencyCodeElement.textContent =
+        selectedCurrency;
+
+      currencyPrefixes.forEach((prefix) => {
+        prefix.textContent =
+          selectedCurrency;
+      });
+    }
+
+    function changeLanguage(language) {
+      const selectedTranslation =
+        translations[language];
+
+      if (!selectedTranslation) {
+        return;
+      }
+
+      currentLanguage = language;
+      document.documentElement.lang = language;
+
+      translatedElements.forEach((element) => {
+        const key =
+          element.getAttribute("data-translate");
+
+        if (selectedTranslation[key] !== undefined) {
+          element.textContent =
+            selectedTranslation[key];
+        }
+      });
+
+      languageButtons.forEach((button) => {
+        button.classList.toggle(
+          "active",
+          button.dataset.language === language
+        );
+      });
+
+      localStorage.setItem(
+        "gsfBlueprintLanguage",
+        language
+      );
+    }
+
+    function saveStepTwo() {
+      const stepTwoData = {};
+
+      fieldIds.forEach((fieldId) => {
+        stepTwoData[fieldId] =
+          getNumber(fieldId);
+      });
+
+      stepTwoData.totalIncome =
+        getNumber("primaryIncome") +
+        getNumber("otherIncome");
+
+      stepTwoData.totalCommitments =
+        getNumber("housingCost") +
+        getNumber("livingExpenses") +
+        getNumber("loanPayments") +
+        getNumber("insuranceCosts") +
+        getNumber("taxReserve") +
+        getNumber("otherCommitments");
+
+      stepTwoData.monthlyBalance =
+        stepTwoData.totalIncome -
+        stepTwoData.totalCommitments;
+
+      stepTwoData.currency =
+        selectedCurrency;
+
+      localStorage.setItem(
+        "gsfBlueprintStep2",
+        JSON.stringify(stepTwoData)
+      );
+    }
+
+    function restoreStepTwo() {
+      const savedData =
+        localStorage.getItem("gsfBlueprintStep2");
+
+      if (!savedData) {
+        updateSummary();
+        return;
+      }
+
+      try {
+        const data =
+          JSON.parse(savedData);
+
+        fieldIds.forEach((fieldId) => {
+          const field =
+            document.getElementById(fieldId);
+
+          if (
+            data[fieldId] !== undefined &&
+            data[fieldId] !== null
+          ) {
+            field.value =
+              data[fieldId];
+          }
+        });
+
+        updateSummary();
+
+      } catch (error) {
+        console.error(
+          "Unable to restore Step 2 data:",
+          error
+        );
+      }
+    }
+
+    languageButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        changeLanguage(button.dataset.language);
+      });
+    });
+
+    fieldIds.forEach((fieldId) => {
+      const field =
+        document.getElementById(fieldId);
+
+      field.addEventListener(
+        "input",
+        updateSummary
+      );
+    });
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+
+      formError.textContent = "";
+
+      const primaryIncome =
+        getNumber("primaryIncome");
+
+      const containsNegativeValue =
+        fieldIds.some((fieldId) => {
+          const field =
+            document.getElementById(fieldId);
+
+          return (
+            field.value !== "" &&
+            Number.parseFloat(field.value) < 0
+          );
+        });
+
+      if (containsNegativeValue) {
+        formError.textContent =
+          translations[currentLanguage].invalidValues;
+
+        return;
+      }
+
+      if (primaryIncome <= 0) {
+        formError.textContent =
+          translations[currentLanguage].requiredIncome;
+
+        document
+          .getElementById("primaryIncome")
+          .focus();
+
+        return;
+      }
+
+      saveStepTwo();
+
+      window.location.href =
+        "blueprint-step3.html";
+    });
+
+    loadCurrency();
+    restoreStepTwo();
+    changeLanguage(currentLanguage);
+  </script>
+</body>
+</html>
