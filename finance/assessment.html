@@ -980,13 +980,13 @@
             </a>
 
             <button
-              class="button button-secondary"
-              type="button"
-              disabled
-              data-translate="downloadReport"
-            >
-              Download Assessment Report
-            </button>
+                class="button button-secondary"
+                type="button"
+                id="downloadReportButton"
+                data-translate="downloadReport"
+              >
+                Download Assessment Report
+              </button>
 
           </div>
 
@@ -1646,7 +1646,11 @@ function renderSavedAssessment() {
     if (!translations[currentLanguage]) {
       currentLanguage = "en";
     }
-
+    document.getElementById(
+      "downloadReportButton"
+    ).addEventListener("click", () => {
+      window.print();
+    });
     changeLanguage(currentLanguage);
     initialisePage();
   </script>
