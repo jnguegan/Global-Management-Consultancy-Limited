@@ -977,26 +977,37 @@
         "Member"
       );
     }
+    
+   function getDisplayName(user) {
+  const metadata = user.user_metadata || {};
 
-    function displayUser(user) {
-      const displayName =
+  const fullName =
+    metadata.full_name ||
+    metadata.name ||
+    [
+      metadata.given_name,
+      metadata.first_name,
+      metadata.last_name
+    ].filter(Boolean).join(" ") ||
+    user.email?.split("@")[0] ||
+    "Member";
+
+  return fullName.split(" ")[0];
+}
+
+function displayUser(user) {
+    const displayName =
         getDisplayName(user);
 
-      document.getElementById(
-        "welcomeName"
-      ).textContent =
+    document.getElementById("welcomeName").textContent =
         displayName;
 
-      document.getElementById(
-        "userName"
-      ).textContent =
+    document.getElementById("userName").textContent =
         displayName;
 
-      document.getElementById(
-        "userEmail"
-      ).textContent =
-        user.email || "—";
-    }
+    document.getElementById("userEmail").textContent =
+        user.email || "";
+}
 
     function showDashboard(user) {
       displayUser(user);
