@@ -1748,7 +1748,83 @@ es: {
     "Es posible que ya exista una cuenta con esta dirección de correo electrónico. Intente iniciar sesión."
   }
 };
-     
+
+    const languageButtons =
+  document.querySelectorAll(".language-button");
+
+const translatedElements =
+  document.querySelectorAll("[data-translate]");
+
+const translatedHtmlElements =
+  document.querySelectorAll("[data-translate-html]");
+
+let currentLanguage =
+  localStorage.getItem("gsfLanguage") ||
+  localStorage.getItem("gsfBlueprintLanguage") ||
+  "en";
+
+    function changeLanguage(language) {
+  const selectedTranslation =
+    translations[language];
+
+  if (!selectedTranslation) {
+    return;
+  }
+
+  currentLanguage = language;
+  document.documentElement.lang = language;
+
+  translatedElements.forEach((element) => {
+    const key =
+      element.dataset.translate;
+
+    if (selectedTranslation[key] !== undefined) {
+      element.textContent =
+        selectedTranslation[key];
+    }
+  });
+
+  translatedHtmlElements.forEach((element) => {
+    const key =
+      element.dataset.translateHtml;
+
+    if (selectedTranslation[key] !== undefined) {
+      element.innerHTML =
+        selectedTranslation[key];
+    }
+  });
+
+  languageButtons.forEach((button) => {
+    button.classList.toggle(
+      "active",
+      button.dataset.language === language
+    );
+  });
+
+  localStorage.setItem(
+    "gsfLanguage",
+    language
+  );
+
+  localStorage.setItem(
+    "gsfBlueprintLanguage",
+    language
+  );
+}
+
+languageButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    changeLanguage(
+      button.dataset.language
+    );
+  });
+});
+
+if (!translations[currentLanguage]) {
+  currentLanguage = "en";
+}
+
+changeLanguage(currentLanguage);
   
 
   document.querySelectorAll(".password-toggle").forEach((button) => {
