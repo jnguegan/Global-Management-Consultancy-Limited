@@ -1509,6 +1509,25 @@
   });
 });
 
+
+const googleSignupButton =
+  document.getElementById("googleSignupButton");
+
+googleSignupButton.addEventListener("click", async () => {
+  const { error } =
+    await supabaseClient.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo:
+          window.location.origin + "/finance/dashboard.html"
+      }
+    });
+
+  if (error) {
+    alert(error.message);
+  }
+});    
+    
     
 </script>
 </body>
