@@ -1,0 +1,1596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <meta
+    name="description"
+    content="Sign in to your Global Sport Finance account."
+  >
+
+  <title>Sign In | Global Sport Finance</title>
+
+  <style>
+    :root {
+      --navy-950: #06111f;
+      --navy-900: #091827;
+      --navy-850: #0c1d30;
+      --navy-800: #10263d;
+
+      --gold-500: #c9a35a;
+      --gold-400: #d9b86e;
+      --gold-300: #ead39d;
+
+      --white: #ffffff;
+      --text-light: #d9e2ec;
+      --text-muted: #9fb0c1;
+
+      --border: rgba(201, 163, 90, 0.28);
+      --line: rgba(255, 255, 255, 0.1);
+
+      --success: #72d5a2;
+      --error: #ffaaa3;
+
+      --shadow: 0 28px 80px rgba(0, 0, 0, 0.38);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      overflow-x: hidden;
+      color: var(--white);
+      background:
+        radial-gradient(
+          circle at 86% 8%,
+          rgba(201, 163, 90, 0.14),
+          transparent 30%
+        ),
+        radial-gradient(
+          circle at 10% 88%,
+          rgba(23, 56, 84, 0.58),
+          transparent 38%
+        ),
+        linear-gradient(
+          135deg,
+          var(--navy-950),
+          var(--navy-900) 52%,
+          #0b1d30
+        );
+      font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Arial,
+        sans-serif;
+      line-height: 1.6;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .page-shell {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .site-header {
+      border-bottom: 1px solid var(--line);
+      background: rgba(6, 17, 31, 0.86);
+      backdrop-filter: blur(16px);
+    }
+
+    .header-inner {
+      width: min(1180px, calc(100% - 40px));
+      min-height: 82px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .brand {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .brand-title {
+      color: var(--gold-400);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.4rem;
+      font-weight: 600;
+    }
+
+    .brand-subtitle {
+      color: var(--text-muted);
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .back-link {
+      color: var(--text-light);
+      font-size: 0.86rem;
+    }
+
+    .back-link:hover {
+      color: var(--gold-300);
+    }
+
+    .language-switcher {
+      display: flex;
+      padding: 4px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.035);
+    }
+
+    .language-button {
+      min-width: 38px;
+      padding: 7px 9px;
+      border: 0;
+      border-radius: 999px;
+      color: var(--text-muted);
+      background: transparent;
+      font-size: 0.72rem;
+      font-weight: 750;
+    }
+
+    .language-button.active {
+      color: var(--navy-950);
+      background: var(--gold-400);
+    }
+
+    main {
+      flex: 1;
+      padding: 54px 0 76px;
+    }
+
+    .login-layout {
+      width: min(1080px, calc(100% - 40px));
+      margin: 0 auto;
+      display: grid;
+      align-items: stretch;
+      gap: 28px;
+      grid-template-columns: minmax(0, 0.95fr) minmax(410px, 1.05fr);
+    }
+
+    .information-panel,
+    .login-card {
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      background:
+        linear-gradient(
+          145deg,
+          rgba(255, 255, 255, 0.075),
+          rgba(255, 255, 255, 0.025)
+        );
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(16px);
+    }
+
+    .information-panel {
+      position: relative;
+      overflow: hidden;
+      padding: clamp(34px, 5vw, 58px);
+    }
+
+    .information-panel::after {
+      position: absolute;
+      right: -90px;
+      bottom: -110px;
+      width: 300px;
+      height: 300px;
+      border: 1px solid rgba(201, 163, 90, 0.12);
+      border-radius: 50%;
+      content: "";
+      box-shadow:
+        0 0 0 36px rgba(201, 163, 90, 0.025),
+        0 0 0 72px rgba(201, 163, 90, 0.018);
+    }
+
+    .eyebrow {
+      margin-bottom: 15px;
+      color: var(--gold-300);
+      font-size: 0.76rem;
+      font-weight: 750;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+
+    .information-panel h1 {
+      position: relative;
+      z-index: 1;
+      margin-bottom: 20px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.5rem, 5vw, 4.5rem);
+      font-weight: 500;
+      letter-spacing: -0.04em;
+      line-height: 1;
+    }
+
+    .information-panel h1 span {
+      color: var(--gold-400);
+    }
+
+    .information-intro {
+      position: relative;
+      z-index: 1;
+      max-width: 580px;
+      color: var(--text-light);
+      font-size: 1rem;
+      line-height: 1.75;
+    }
+
+    .benefit-list {
+      position: relative;
+      z-index: 1;
+      margin-top: 34px;
+      display: grid;
+      gap: 14px;
+      list-style: none;
+    }
+
+    .benefit-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 13px;
+      color: var(--text-light);
+      font-size: 0.9rem;
+    }
+
+    .benefit-icon {
+      width: 25px;
+      height: 25px;
+      flex: 0 0 25px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      color: #062015;
+      background: var(--success);
+      font-size: 0.72rem;
+      font-weight: 900;
+    }
+
+    .login-card {
+      overflow: hidden;
+    }
+
+    .card-top-line {
+      height: 3px;
+      background:
+        linear-gradient(
+          90deg,
+          transparent,
+          var(--gold-400),
+          transparent
+        );
+    }
+
+    .login-content {
+      padding: clamp(30px, 5vw, 52px);
+    }
+
+    .login-heading {
+      margin-bottom: 28px;
+    }
+
+    .login-heading h2 {
+      margin-bottom: 9px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 500;
+      line-height: 1.08;
+    }
+
+    .login-heading p {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    .google-button {
+      width: 100%;
+      min-height: 54px;
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 14px;
+      color: var(--white);
+      background: rgba(255, 255, 255, 0.055);
+      font-weight: 700;
+      transition:
+        transform 0.2s ease,
+        border-color 0.2s ease,
+        background 0.2s ease;
+    }
+
+    .google-button:hover {
+      transform: translateY(-2px);
+      border-color: var(--gold-400);
+      background: rgba(255, 255, 255, 0.075);
+    }
+
+    .google-icon {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+      display: block;
+    }
+
+    .divider {
+      margin: 24px 0;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      color: var(--text-muted);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .divider::before,
+    .divider::after {
+      flex: 1;
+      height: 1px;
+      content: "";
+      background: var(--line);
+    }
+
+    .field-group {
+      margin-bottom: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .field-group label {
+      color: var(--text-light);
+      font-size: 0.95rem;
+      font-weight: 750;
+    }
+
+    .input-wrap {
+      position: relative;
+    }
+
+    input {
+      width: 100%;
+      min-height: 51px;
+      padding: 0 15px;
+      border: 1px solid rgba(255, 255, 255, 0.13);
+      border-radius: 13px;
+      color: var(--white);
+      background: var(--navy-800);
+      outline: none;
+      transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+    }
+
+    input:focus {
+      border-color: var(--gold-400);
+      box-shadow: 0 0 0 3px rgba(201, 163, 90, 0.12);
+    }
+
+    .password-input {
+      padding-right: 52px;
+    }
+
+    .password-toggle {
+      position: absolute;
+      top: 50%;
+      right: 8px;
+      width: 40px;
+      height: 38px;
+      padding: 0;
+      display: grid;
+      place-items: center;
+      border: 0;
+      border-radius: 9px;
+      color: var(--gold-300);
+      background: transparent;
+      transform: translateY(-50%);
+    }
+
+    .password-toggle:hover {
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .password-toggle svg {
+      width: 20px;
+      height: 20px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .password-toggle .eye-closed {
+      display: none;
+    }
+
+    .password-toggle.password-visible .eye-open {
+      display: none;
+    }
+
+    .password-toggle.password-visible .eye-closed {
+      display: block;
+    }
+
+    .form-options {
+      margin-top: -2px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .remember-row {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      color: var(--text-muted);
+      font-size: 0.78rem;
+    }
+
+    .remember-row input {
+      width: 17px;
+      min-height: 17px;
+      accent-color: var(--gold-400);
+    }
+
+    .forgot-link {
+      border: 0;
+      color: var(--gold-300);
+      background: transparent;
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+
+    .form-message {
+      display: none;
+      margin-top: 20px;
+      padding: 14px 16px;
+      border-radius: 12px;
+      font-size: 0.82rem;
+      line-height: 1.5;
+    }
+
+    .form-message.visible {
+      display: block;
+    }
+
+    .form-message.error {
+      border: 1px solid rgba(255, 170, 163, 0.35);
+      color: var(--error);
+      background: rgba(255, 170, 163, 0.08);
+    }
+
+    .form-message.success {
+      border: 1px solid rgba(114, 213, 162, 0.35);
+      color: var(--success);
+      background: rgba(114, 213, 162, 0.08);
+    }
+
+    .submit-button {
+      width: 100%;
+      min-height: 54px;
+      margin-top: 24px;
+      padding: 0 25px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 11px;
+      border: 1px solid var(--gold-400);
+      border-radius: 999px;
+      color: var(--navy-950);
+      background:
+        linear-gradient(
+          135deg,
+          var(--gold-300),
+          var(--gold-500)
+        );
+      box-shadow: 0 13px 32px rgba(201, 163, 90, 0.2);
+      font-weight: 800;
+    }
+
+    .submit-button:disabled,
+    .google-button:disabled {
+      cursor: not-allowed;
+      opacity: 0.58;
+    }
+
+    .button-spinner {
+      display: none;
+      width: 17px;
+      height: 17px;
+      border: 2px solid rgba(6, 17, 31, 0.24);
+      border-top-color: var(--navy-950);
+      border-radius: 50%;
+      animation: spin 0.75s linear infinite;
+    }
+
+    .submit-button.loading .button-spinner {
+      display: inline-block;
+    }
+
+    .submit-button.loading .button-arrow {
+      display: none;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .signup-prompt {
+      margin-top: 24px;
+      color: var(--text-muted);
+      text-align: center;
+      font-size: 0.82rem;
+    }
+
+    .signup-prompt a {
+      color: var(--gold-300);
+      font-weight: 750;
+    }
+
+    .security-note {
+      margin-top: 22px;
+      padding-top: 20px;
+      border-top: 1px solid var(--line);
+      color: var(--text-muted);
+      text-align: center;
+      font-size: 0.7rem;
+      line-height: 1.5;
+    }
+
+    .site-footer {
+      padding: 28px 20px 36px;
+      border-top: 1px solid var(--line);
+      color: var(--text-muted);
+      text-align: center;
+      font-size: 0.74rem;
+      line-height: 1.65;
+    }
+
+    .site-footer strong {
+      color: var(--gold-300);
+    }
+
+    @media (max-width: 900px) {
+      .login-layout {
+        max-width: 720px;
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 620px) {
+      .header-inner,
+      .login-layout {
+        width: min(100% - 24px, 1180px);
+      }
+
+      .brand-subtitle,
+      .back-link {
+        display: none;
+      }
+
+      main {
+        padding-top: 30px;
+      }
+
+      .information-panel,
+      .login-card {
+        border-radius: 20px;
+      }
+
+      .information-panel,
+      .login-content {
+        padding: 28px 21px;
+      }
+
+      .form-options {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page-shell">
+
+    <header class="site-header">
+      <div class="header-inner">
+
+        <a
+          class="brand"
+          href="../finance.html"
+        >
+          <span class="brand-title">
+            Global Sport Finance
+          </span>
+
+          <span class="brand-subtitle">
+            Powered by Global Management Consultancy
+          </span>
+        </a>
+
+        <div class="header-actions">
+
+          <a
+            class="back-link"
+            href="../finance.html"
+            data-translate="backToFinance"
+          >
+            ← Back to Global Sport Finance
+          </a>
+
+          <div class="language-switcher">
+            <button
+              class="language-button active"
+              type="button"
+              data-language="en"
+            >
+              EN
+            </button>
+
+            <button
+              class="language-button"
+              type="button"
+              data-language="fr"
+            >
+              FR
+            </button>
+
+            <button
+              class="language-button"
+              type="button"
+              data-language="es"
+            >
+              ES
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <div class="login-layout">
+
+        <section class="information-panel">
+
+          <p
+            class="eyebrow"
+            data-translate="informationEyebrow"
+          >
+            Your Financial Journey
+          </p>
+
+          <h1 data-translate-html="informationTitle">
+            Welcome back.
+            <span>Continue your progress.</span>
+          </h1>
+
+          <p
+            class="information-intro"
+            data-translate="informationIntro"
+          >
+            Sign in to access your Financial Assessment, personalised
+            Financial Action Plan and ongoing financial progress.
+          </p>
+
+          <ul class="benefit-list">
+
+            <li class="benefit-item">
+              <span class="benefit-icon">✓</span>
+              <span data-translate="benefitOne">
+                Access your saved Financial Assessment
+              </span>
+            </li>
+
+            <li class="benefit-item">
+              <span class="benefit-icon">✓</span>
+              <span data-translate="benefitTwo">
+                Review your personalised Financial Action Plan
+              </span>
+            </li>
+
+            <li class="benefit-item">
+              <span class="benefit-icon">✓</span>
+              <span data-translate="benefitThree">
+                Track your financial progress year after year
+              </span>
+            </li>
+
+            <li class="benefit-item">
+              <span class="benefit-icon">✓</span>
+              <span data-translate="benefitFour">
+                Access Financial Insights and planning tools
+              </span>
+            </li>
+
+          </ul>
+
+        </section>
+
+        <section class="login-card">
+          <div class="card-top-line"></div>
+
+          <div class="login-content">
+
+            <div class="login-heading">
+
+              <p
+                class="eyebrow"
+                data-translate="loginEyebrow"
+              >
+                Secure Account Access
+              </p>
+
+              <h2 data-translate="loginTitle">
+                Sign In
+              </h2>
+
+              <p data-translate="loginIntro">
+                Continue with Google or use your email and password.
+              </p>
+
+            </div>
+
+            <button
+              class="google-button"
+              type="button"
+              id="googleLoginButton"
+            >
+              <svg
+                class="google-icon"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path
+                  fill="#4285F4"
+                  d="M21.6 12.23c0-.71-.06-1.4-.18-2.07H12v3.91h5.38a4.6 4.6 0 0 1-2 3.02v2.54h3.24c1.9-1.75 2.98-4.33 2.98-7.4Z"
+                />
+                <path
+                  fill="#34A853"
+                  d="M12 22c2.7 0 4.97-.9 6.63-2.43l-3.24-2.54c-.9.6-2.05.96-3.39.96-2.61 0-4.82-1.76-5.61-4.13H3.04v2.61A10 10 0 0 0 12 22Z"
+                />
+                <path
+                  fill="#FBBC05"
+                  d="M6.39 13.86A6.01 6.01 0 0 1 6.08 12c0-.65.11-1.28.31-1.86V7.53H3.04A10 10 0 0 0 2 12c0 1.61.38 3.14 1.04 4.47l3.35-2.61Z"
+                />
+                <path
+                  fill="#EA4335"
+                  d="M12 6.01c1.47 0 2.79.51 3.83 1.5l2.87-2.87C16.97 3.01 14.7 2 12 2a10 10 0 0 0-8.96 5.53l3.35 2.61C7.18 7.77 9.39 6.01 12 6.01Z"
+                />
+              </svg>
+
+              <span data-translate="googleButton">
+                Continue with Google
+              </span>
+            </button>
+
+            <div
+              class="divider"
+              data-translate="divider"
+            >
+              Or sign in with email
+            </div>
+
+            <form id="loginForm" novalidate>
+
+              <div class="field-group">
+                <label
+                  for="email"
+                  data-translate="emailLabel"
+                >
+                  Email address
+                </label>
+
+                <input
+                  type="email"
+                  id="email"
+                  autocomplete="email"
+                  required
+                >
+              </div>
+
+              <div class="field-group">
+                <label
+                  for="password"
+                  data-translate="passwordLabel"
+                >
+                  Password
+                </label>
+
+                <div class="input-wrap">
+
+                  <input
+                    class="password-input"
+                    type="password"
+                    id="password"
+                    autocomplete="current-password"
+                    required
+                  >
+
+                  <button
+                    class="password-toggle"
+                    type="button"
+                    aria-label="Show password"
+                  >
+                    <svg
+                      class="eye-open"
+                      viewBox="0 0 24 24"
+                      aria-hidden="true"
+                    >
+                      <path
+                        d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"
+                      />
+                      <circle cx="12" cy="12" r="2.7" />
+                    </svg>
+
+                    <svg
+                      class="eye-closed"
+                      viewBox="0 0 24 24"
+                      aria-hidden="true"
+                    >
+                      <path d="m3 3 18 18" />
+                      <path
+                        d="M10.6 6.2A10.3 10.3 0 0 1 12 6c6 0 9.5 6 9.5 6a17 17 0 0 1-2.2 2.9"
+                      />
+                      <path
+                        d="M6.2 6.2C3.8 8 2.5 12 2.5 12s3.5 6 9.5 6c1.8 0 3.4-.5 4.7-1.2"
+                      />
+                      <path
+                        d="M9.9 9.9a3 3 0 0 0 4.2 4.2"
+                      />
+                    </svg>
+                  </button>
+
+                </div>
+              </div>
+
+              <div class="form-options">
+
+                <label class="remember-row">
+                  <input
+                    type="checkbox"
+                    id="rememberMe"
+                  >
+
+                  <span data-translate="rememberMe">
+                    Remember me
+                  </span>
+                </label>
+
+                <button
+                  class="forgot-link"
+                  type="button"
+                  id="forgotPasswordButton"
+                  data-translate="forgotPassword"
+                >
+                  Forgot password?
+                </button>
+
+              </div>
+
+              <div
+                class="form-message"
+                id="formMessage"
+                role="alert"
+                aria-live="polite"
+              ></div>
+
+              <button
+                class="submit-button"
+                type="submit"
+                id="submitButton"
+              >
+                <span
+                  class="button-spinner"
+                  aria-hidden="true"
+                ></span>
+
+                <span data-translate="submitButton">
+                  Sign In to My Account
+                </span>
+
+                <span
+                  class="button-arrow"
+                  aria-hidden="true"
+                >
+                  →
+                </span>
+              </button>
+
+            </form>
+
+            <p class="signup-prompt">
+
+              <span data-translate="noAccount">
+                Do not have an account?
+              </span>
+
+              <a
+                href="signup.html"
+                data-translate="createAccount"
+              >
+                Create a free account
+              </a>
+
+            </p>
+
+            <p
+              class="security-note"
+              data-translate="securityNote"
+            >
+              Your account is protected using secure authentication
+              provided through Supabase.
+            </p>
+
+          </div>
+        </section>
+
+      </div>
+    </main>
+
+    <footer class="site-footer">
+
+      <p>
+        <strong>Global Sport Finance</strong>
+        · Global Management Consultancy Limited
+      </p>
+
+      <p data-translate="footerDisclaimer">
+        Signing in does not establish an advisory relationship and does
+        not constitute regulated financial, investment, tax or legal advice.
+      </p>
+
+    </footer>
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script>
+    const SUPABASE_URL =
+      "https://ysaxtuvuzqkyfmganven.supabase.co";
+
+    const SUPABASE_PUBLISHABLE_KEY =
+      "sb_publishable_esfhuUEIcUJEL6z9zryRAA_FGMmUHlw";
+
+    const supabaseClient =
+      window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_PUBLISHABLE_KEY,
+        {
+          auth: {
+            persistSession: true,
+            autoRefreshToken: true,
+            detectSessionInUrl: true
+          }
+        }
+      );
+
+    const translations = {
+      en: {
+        backToFinance: "← Back to Global Sport Finance",
+        informationEyebrow: "Your Financial Journey",
+
+        informationTitle:
+          'Welcome back. <span>Continue your progress.</span>',
+
+        informationIntro:
+          "Sign in to access your Financial Assessment, personalised " +
+          "Financial Action Plan and ongoing financial progress.",
+
+        benefitOne:
+          "Access your saved Financial Assessment",
+
+        benefitTwo:
+          "Review your personalised Financial Action Plan",
+
+        benefitThree:
+          "Track your financial progress year after year",
+
+        benefitFour:
+          "Access Financial Insights and planning tools",
+
+        loginEyebrow:
+          "Secure Account Access",
+
+        loginTitle:
+          "Sign In",
+
+        loginIntro:
+          "Continue with Google or use your email and password.",
+
+        googleButton:
+          "Continue with Google",
+
+        divider:
+          "Or sign in with email",
+
+        emailLabel:
+          "Email address",
+
+        passwordLabel:
+          "Password",
+
+        rememberMe:
+          "Remember me",
+
+        forgotPassword:
+          "Forgot password?",
+
+        submitButton:
+          "Sign In to My Account",
+
+        noAccount:
+          "Do not have an account?",
+
+        createAccount:
+          "Create a free account",
+
+        securityNote:
+          "Your account is protected using secure authentication " +
+          "provided through Supabase.",
+
+        footerDisclaimer:
+          "Signing in does not establish an advisory relationship and " +
+          "does not constitute regulated financial, investment, tax or legal advice.",
+
+        requiredFields:
+          "Please enter your email address and password.",
+
+        invalidEmail:
+          "Please enter a valid email address.",
+
+        loginError:
+          "We could not sign you in. Please check your email and password.",
+
+        loginSuccess:
+          "Sign-in successful. Redirecting to your dashboard...",
+
+        resetEmailRequired:
+          "Enter your email address first.",
+
+        resetEmailSent:
+          "Password reset instructions have been sent to your email.",
+
+        resetError:
+          "We could not send the password reset email. Please try again.",
+
+        showPassword:
+          "Show password",
+
+        hidePassword:
+          "Hide password"
+      },
+
+      fr: {
+        backToFinance: "← Retour à Global Sport Finance",
+        informationEyebrow: "Votre parcours financier",
+
+        informationTitle:
+          'Heureux de vous revoir. <span>Poursuivez votre progression.</span>',
+
+        informationIntro:
+          "Connectez-vous pour accéder à votre évaluation financière, " +
+          "à votre Plan d’Action Financière personnalisé et au suivi de votre progression.",
+
+        benefitOne:
+          "Accédez à votre évaluation financière enregistrée",
+
+        benefitTwo:
+          "Consultez votre Plan d’Action Financière personnalisé",
+
+        benefitThree:
+          "Suivez votre progression financière année après année",
+
+        benefitFour:
+          "Accédez aux Informations Financières et aux outils de planification",
+
+        loginEyebrow:
+          "Accès sécurisé au compte",
+
+        loginTitle:
+          "Se connecter",
+
+        loginIntro:
+          "Continuez avec Google ou utilisez votre adresse e-mail et votre mot de passe.",
+
+        googleButton:
+          "Continuer avec Google",
+
+        divider:
+          "Ou se connecter avec une adresse e-mail",
+
+        emailLabel:
+          "Adresse e-mail",
+
+        passwordLabel:
+          "Mot de passe",
+
+        rememberMe:
+          "Se souvenir de moi",
+
+        forgotPassword:
+          "Mot de passe oublié ?",
+
+        submitButton:
+          "Me connecter à mon compte",
+
+        noAccount:
+          "Vous n’avez pas encore de compte ?",
+
+        createAccount:
+          "Créer un compte gratuit",
+
+        securityNote:
+          "Votre compte est protégé grâce à l’authentification sécurisée " +
+          "fournie par Supabase.",
+
+        footerDisclaimer:
+          "La connexion n’établit pas une relation de conseil et ne constitue " +
+          "pas un conseil financier, d’investissement, fiscal ou juridique réglementé.",
+
+        requiredFields:
+          "Veuillez saisir votre adresse e-mail et votre mot de passe.",
+
+        invalidEmail:
+          "Veuillez saisir une adresse e-mail valide.",
+
+        loginError:
+          "Nous n’avons pas pu vous connecter. Vérifiez votre adresse e-mail et votre mot de passe.",
+
+        loginSuccess:
+          "Connexion réussie. Redirection vers votre tableau de bord...",
+
+        resetEmailRequired:
+          "Veuillez d’abord saisir votre adresse e-mail.",
+
+        resetEmailSent:
+          "Les instructions de réinitialisation du mot de passe ont été envoyées à votre adresse e-mail.",
+
+        resetError:
+          "Nous n’avons pas pu envoyer l’e-mail de réinitialisation. Veuillez réessayer.",
+
+        showPassword:
+          "Afficher le mot de passe",
+
+        hidePassword:
+          "Masquer le mot de passe"
+      },
+
+      es: {
+        backToFinance: "← Volver a Global Sport Finance",
+        informationEyebrow: "Su recorrido financiero",
+
+        informationTitle:
+          'Bienvenido de nuevo. <span>Continúe su progreso.</span>',
+
+        informationIntro:
+          "Inicie sesión para acceder a su Evaluación Financiera, " +
+          "su Plan de Acción Financiera personalizado y su progreso financiero.",
+
+        benefitOne:
+          "Acceda a su Evaluación Financiera guardada",
+
+        benefitTwo:
+          "Revise su Plan de Acción Financiera personalizado",
+
+        benefitThree:
+          "Siga su progreso financiero año tras año",
+
+        benefitFour:
+          "Acceda a Información Financiera y herramientas de planificación",
+
+        loginEyebrow:
+          "Acceso seguro a la cuenta",
+
+        loginTitle:
+          "Iniciar sesión",
+
+        loginIntro:
+          "Continúe con Google o utilice su correo electrónico y contraseña.",
+
+        googleButton:
+          "Continuar con Google",
+
+        divider:
+          "O inicie sesión con correo electrónico",
+
+        emailLabel:
+          "Correo electrónico",
+
+        passwordLabel:
+          "Contraseña",
+
+        rememberMe:
+          "Recordarme",
+
+        forgotPassword:
+          "¿Ha olvidado su contraseña?",
+
+        submitButton:
+          "Acceder a mi cuenta",
+
+        noAccount:
+          "¿Todavía no tiene una cuenta?",
+
+        createAccount:
+          "Crear una cuenta gratuita",
+
+        securityNote:
+          "Su cuenta está protegida mediante la autenticación segura " +
+          "proporcionada por Supabase.",
+
+        footerDisclaimer:
+          "El inicio de sesión no establece una relación de asesoramiento " +
+          "y no constituye asesoramiento financiero, de inversión, fiscal o jurídico regulado.",
+
+        requiredFields:
+          "Introduzca su correo electrónico y contraseña.",
+
+        invalidEmail:
+          "Introduzca una dirección de correo electrónico válida.",
+
+        loginError:
+          "No hemos podido iniciar su sesión. Compruebe su correo electrónico y contraseña.",
+
+        loginSuccess:
+          "Inicio de sesión correcto. Redirigiendo a su panel...",
+
+        resetEmailRequired:
+          "Introduzca primero su correo electrónico.",
+
+        resetEmailSent:
+          "Las instrucciones para restablecer la contraseña se han enviado a su correo electrónico.",
+
+        resetError:
+          "No hemos podido enviar el correo de restablecimiento. Inténtelo de nuevo.",
+
+        showPassword:
+          "Mostrar contraseña",
+
+        hidePassword:
+          "Ocultar contraseña"
+      }
+    };
+
+    const translatedElements =
+      document.querySelectorAll("[data-translate]");
+
+    const translatedHtmlElements =
+      document.querySelectorAll("[data-translate-html]");
+
+    const languageButtons =
+      document.querySelectorAll(".language-button");
+
+    const loginForm =
+      document.getElementById("loginForm");
+
+    const googleLoginButton =
+      document.getElementById("googleLoginButton");
+
+    const submitButton =
+      document.getElementById("submitButton");
+
+    const formMessage =
+      document.getElementById("formMessage");
+
+    const forgotPasswordButton =
+      document.getElementById("forgotPasswordButton");
+
+    const passwordToggle =
+      document.querySelector(".password-toggle");
+
+    let currentLanguage =
+      localStorage.getItem("gsfLanguage") ||
+      localStorage.getItem("gsfBlueprintLanguage") ||
+      "en";
+
+    function changeLanguage(language) {
+      const selectedTranslation =
+        translations[language];
+
+      if (!selectedTranslation) {
+        return;
+      }
+
+      currentLanguage = language;
+      document.documentElement.lang = language;
+
+      translatedElements.forEach((element) => {
+        const key =
+          element.dataset.translate;
+
+        if (selectedTranslation[key] !== undefined) {
+          element.textContent =
+            selectedTranslation[key];
+        }
+      });
+
+      translatedHtmlElements.forEach((element) => {
+        const key =
+          element.dataset.translateHtml;
+
+        if (selectedTranslation[key] !== undefined) {
+          element.innerHTML =
+            selectedTranslation[key];
+        }
+      });
+
+      languageButtons.forEach((button) => {
+        button.classList.toggle(
+          "active",
+          button.dataset.language === language
+        );
+      });
+
+      localStorage.setItem(
+        "gsfLanguage",
+        language
+      );
+
+      localStorage.setItem(
+        "gsfBlueprintLanguage",
+        language
+      );
+    }
+
+    function showMessage(type, message) {
+      formMessage.className =
+        "form-message visible " + type;
+
+      formMessage.textContent =
+        message;
+    }
+
+    function clearMessage() {
+      formMessage.className =
+        "form-message";
+
+      formMessage.textContent =
+        "";
+    }
+
+    function setLoading(loading) {
+      submitButton.disabled = loading;
+      googleLoginButton.disabled = loading;
+
+      submitButton.classList.toggle(
+        "loading",
+        loading
+      );
+    }
+
+    function isValidEmail(email) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+
+    async function redirectIfSignedIn() {
+      const {
+        data: { session }
+      } =
+        await supabaseClient.auth.getSession();
+
+      if (session?.user) {
+        window.location.replace("dashboard.html");
+      }
+    }
+
+    loginForm.addEventListener(
+      "submit",
+      async (event) => {
+        event.preventDefault();
+        clearMessage();
+
+        const translation =
+          translations[currentLanguage];
+
+        const email =
+          document.getElementById("email").value.trim();
+
+        const password =
+          document.getElementById("password").value;
+
+        if (!email || !password) {
+          showMessage(
+            "error",
+            translation.requiredFields
+          );
+          return;
+        }
+
+        if (!isValidEmail(email)) {
+          showMessage(
+            "error",
+            translation.invalidEmail
+          );
+          return;
+        }
+
+        setLoading(true);
+
+        const { data, error } =
+          await supabaseClient.auth.signInWithPassword({
+            email,
+            password
+          });
+
+        if (error || !data?.session) {
+          showMessage(
+            "error",
+            translation.loginError
+          );
+
+          setLoading(false);
+          return;
+        }
+
+        showMessage(
+          "success",
+          translation.loginSuccess
+        );
+
+        window.setTimeout(() => {
+          window.location.replace("dashboard.html");
+        }, 650);
+      }
+    );
+
+    googleLoginButton.addEventListener(
+      "click",
+      async () => {
+        clearMessage();
+
+        const { error } =
+          await supabaseClient.auth.signInWithOAuth({
+            provider: "google",
+            options: {
+              redirectTo:
+                window.location.origin +
+                "/finance/dashboard.html"
+            }
+          });
+
+        if (error) {
+          showMessage(
+            "error",
+            error.message
+          );
+        }
+      }
+    );
+
+    forgotPasswordButton.addEventListener(
+      "click",
+      async () => {
+        clearMessage();
+
+        const translation =
+          translations[currentLanguage];
+
+        const email =
+          document.getElementById("email").value.trim();
+
+        if (!email || !isValidEmail(email)) {
+          showMessage(
+            "error",
+            translation.resetEmailRequired
+          );
+          return;
+        }
+
+        const { error } =
+          await supabaseClient.auth.resetPasswordForEmail(
+            email,
+            {
+              redirectTo:
+                window.location.origin +
+                "/finance/login.html"
+            }
+          );
+
+        if (error) {
+          showMessage(
+            "error",
+            translation.resetError
+          );
+          return;
+        }
+
+        showMessage(
+          "success",
+          translation.resetEmailSent
+        );
+      }
+    );
+
+    passwordToggle.addEventListener(
+      "click",
+      () => {
+        const passwordInput =
+          document.getElementById("password");
+
+        const passwordIsVisible =
+          passwordInput.type === "text";
+
+        passwordInput.type =
+          passwordIsVisible
+            ? "password"
+            : "text";
+
+        passwordToggle.classList.toggle(
+          "password-visible",
+          !passwordIsVisible
+        );
+
+        passwordToggle.setAttribute(
+          "aria-label",
+          passwordIsVisible
+            ? translations[currentLanguage].showPassword
+            : translations[currentLanguage].hidePassword
+        );
+      }
+    );
+
+    languageButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        changeLanguage(
+          button.dataset.language
+        );
+      });
+    });
+
+    if (!translations[currentLanguage]) {
+      currentLanguage = "en";
+    }
+
+    changeLanguage(currentLanguage);
+    redirectIfSignedIn();
+  </script>
+</body>
+</html>
