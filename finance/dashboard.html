@@ -1095,6 +1095,7 @@ scoreAttention:
         "gsfBlueprintLanguage",
         language
       );
+    renderDashboardAssessment();
     }
 
 function readStoredObject(key) {
@@ -1430,6 +1431,7 @@ function displayUser(user) {
 
     document.getElementById("userEmail").textContent =
         user.email || "";
+renderDashboardAssessment();
 }
 
     function showDashboard(user) {
