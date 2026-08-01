@@ -3746,6 +3746,16 @@ accountNote:
       currentLanguage
     );
 
+if (
+  !localStorage.getItem(
+    "gsfBlueprintCompleted"
+  )
+) {
+  localStorage.setItem(
+    "gsfBlueprintCompleted",
+    new Date().toISOString()
+  );
+}
     renderResults();
   </script>
 </body>
