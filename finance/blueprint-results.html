@@ -3757,6 +3757,27 @@ if (
   );
 }
     renderResults();
+    const createAccountButton =
+  document.getElementById("createAccountButton");
+
+const signInButton =
+  document.getElementById("signInButton");
+
+if (createAccountButton) {
+  createAccountButton.addEventListener("click", (event) => {
+    event.preventDefault();
+
+    window.location.href = "signup.html";
+  });
+}
+
+if (signInButton) {
+  signInButton.addEventListener("click", (event) => {
+    event.preventDefault();
+
+    window.location.href = "login.html";
+  });
+}
   </script>
 </body>
 </html>
