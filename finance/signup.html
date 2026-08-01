@@ -1,0 +1,1457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <meta
+    name="description"
+    content="Create your free Global Sport Finance account and save your Financial Assessment."
+  >
+
+  <title>Create Your Account | Global Sport Finance</title>
+
+  <style>
+    :root {
+      --navy-950: #06111f;
+      --navy-900: #091827;
+      --navy-850: #0c1d30;
+      --navy-800: #10263d;
+
+      --gold-500: #c9a35a;
+      --gold-400: #d9b86e;
+      --gold-300: #ead39d;
+
+      --white: #ffffff;
+      --text-light: #d9e2ec;
+      --text-muted: #9fb0c1;
+
+      --border: rgba(201, 163, 90, 0.28);
+      --line: rgba(255, 255, 255, 0.1);
+      --card-bg: rgba(255, 255, 255, 0.045);
+
+      --success: #72d5a2;
+      --error: #ffaaa3;
+      --warning: #efc768;
+
+      --shadow: 0 28px 80px rgba(0, 0, 0, 0.38);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-height: 100vh;
+      overflow-x: hidden;
+      color: var(--white);
+      background:
+        radial-gradient(
+          circle at 86% 8%,
+          rgba(201, 163, 90, 0.14),
+          transparent 30%
+        ),
+        radial-gradient(
+          circle at 10% 88%,
+          rgba(23, 56, 84, 0.58),
+          transparent 38%
+        ),
+        linear-gradient(
+          135deg,
+          var(--navy-950),
+          var(--navy-900) 52%,
+          #0b1d30
+        );
+      font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Arial,
+        sans-serif;
+      line-height: 1.6;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .page-shell {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* HEADER */
+
+    .site-header {
+      border-bottom: 1px solid var(--line);
+      background: rgba(6, 17, 31, 0.86);
+      backdrop-filter: blur(16px);
+    }
+
+    .header-inner {
+      width: min(1180px, calc(100% - 40px));
+      min-height: 82px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .brand {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .brand-title {
+      color: var(--gold-400);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.4rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+
+    .brand-subtitle {
+      color: var(--text-muted);
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .back-link {
+      color: var(--text-light);
+      font-size: 0.86rem;
+      transition: color 0.2s ease;
+    }
+
+    .back-link:hover {
+      color: var(--gold-300);
+    }
+
+    .language-switcher {
+      display: flex;
+      padding: 4px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.035);
+    }
+
+    .language-button {
+      min-width: 38px;
+      padding: 7px 9px;
+      border: 0;
+      border-radius: 999px;
+      color: var(--text-muted);
+      background: transparent;
+      font-size: 0.72rem;
+      font-weight: 750;
+    }
+
+    .language-button.active {
+      color: var(--navy-950);
+      background: var(--gold-400);
+    }
+
+    /* MAIN */
+
+    main {
+      flex: 1;
+      padding: 54px 0 76px;
+    }
+
+    .signup-layout {
+      width: min(1120px, calc(100% - 40px));
+      margin: 0 auto;
+      display: grid;
+      align-items: stretch;
+      gap: 28px;
+      grid-template-columns: minmax(0, 0.9fr) minmax(440px, 1.1fr);
+    }
+
+    /* INFORMATION PANEL */
+
+    .information-panel,
+    .signup-card {
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      background:
+        linear-gradient(
+          145deg,
+          rgba(255, 255, 255, 0.075),
+          rgba(255, 255, 255, 0.025)
+        );
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(16px);
+    }
+
+    .information-panel {
+      position: relative;
+      overflow: hidden;
+      padding: clamp(34px, 5vw, 58px);
+    }
+
+    .information-panel::after {
+      position: absolute;
+      right: -90px;
+      bottom: -110px;
+      width: 300px;
+      height: 300px;
+      border: 1px solid rgba(201, 163, 90, 0.12);
+      border-radius: 50%;
+      content: "";
+      box-shadow:
+        0 0 0 36px rgba(201, 163, 90, 0.025),
+        0 0 0 72px rgba(201, 163, 90, 0.018);
+    }
+
+    .eyebrow {
+      margin-bottom: 15px;
+      color: var(--gold-300);
+      font-size: 0.76rem;
+      font-weight: 750;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+
+    .information-panel h1 {
+      position: relative;
+      z-index: 1;
+      margin-bottom: 20px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.5rem, 5vw, 4.6rem);
+      font-weight: 500;
+      letter-spacing: -0.04em;
+      line-height: 1;
+    }
+
+    .information-panel h1 span {
+      color: var(--gold-400);
+    }
+
+    .information-intro {
+      position: relative;
+      z-index: 1;
+      max-width: 590px;
+      color: var(--text-light);
+      font-size: 1rem;
+      line-height: 1.75;
+    }
+
+    .benefit-list {
+      position: relative;
+      z-index: 1;
+      margin-top: 34px;
+      display: grid;
+      gap: 14px;
+      list-style: none;
+    }
+
+    .benefit-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 13px;
+      color: var(--text-light);
+      font-size: 0.9rem;
+    }
+
+    .benefit-icon {
+      width: 25px;
+      height: 25px;
+      flex: 0 0 25px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      color: #062015;
+      background: var(--success);
+      font-size: 0.72rem;
+      font-weight: 900;
+    }
+
+    .assessment-status {
+      position: relative;
+      z-index: 1;
+      margin-top: 36px;
+      padding: 18px;
+      display: flex;
+      align-items: flex-start;
+      gap: 13px;
+      border: 1px solid rgba(201, 163, 90, 0.24);
+      border-radius: 15px;
+      background: rgba(201, 163, 90, 0.07);
+    }
+
+    .assessment-status-icon {
+      width: 32px;
+      height: 32px;
+      flex: 0 0 32px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--gold-300);
+      background: rgba(201, 163, 90, 0.07);
+      font-weight: 800;
+    }
+
+    .assessment-status strong {
+      display: block;
+      margin-bottom: 3px;
+      color: var(--gold-300);
+      font-size: 0.88rem;
+    }
+
+    .assessment-status span {
+      color: var(--text-muted);
+      font-size: 0.79rem;
+      line-height: 1.5;
+    }
+
+    /* SIGNUP CARD */
+
+    .signup-card {
+      overflow: hidden;
+    }
+
+    .card-top-line {
+      height: 3px;
+      background:
+        linear-gradient(
+          90deg,
+          transparent,
+          var(--gold-400),
+          transparent
+        );
+    }
+
+    .signup-content {
+      padding: clamp(30px, 5vw, 52px);
+    }
+
+    .signup-heading {
+      margin-bottom: 28px;
+    }
+
+    .signup-heading h2 {
+      margin-bottom: 9px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2rem, 4vw, 3.1rem);
+      font-weight: 500;
+      line-height: 1.08;
+    }
+
+    .signup-heading p {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    /* GOOGLE */
+
+    .google-button {
+      width: 100%;
+      min-height: 54px;
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 14px;
+      color: var(--white);
+      background: rgba(255, 255, 255, 0.055);
+      font-weight: 750;
+      transition:
+        transform 0.2s ease,
+        border-color 0.2s ease,
+        background 0.2s ease;
+    }
+
+    .google-button:hover {
+      transform: translateY(-2px);
+      border-color: var(--gold-400);
+      background: rgba(255, 255, 255, 0.075);
+    }
+
+    .google-icon {
+      width: 23px;
+      height: 23px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      color: #1f2937;
+      background: #ffffff;
+      font-family: Arial, sans-serif;
+      font-size: 0.9rem;
+      font-weight: 900;
+    }
+
+    .divider {
+      margin: 24px 0;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      color: var(--text-muted);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .divider::before,
+    .divider::after {
+      flex: 1;
+      height: 1px;
+      content: "";
+      background: var(--line);
+    }
+
+    /* FORM */
+
+    .form-grid {
+      display: grid;
+      gap: 18px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .field-group.full-width {
+      grid-column: 1 / -1;
+    }
+
+    .field-group label {
+      color: var(--text-light);
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+
+    .input-wrap {
+      position: relative;
+    }
+
+    input,
+    select {
+      width: 100%;
+      min-height: 51px;
+      padding: 0 15px;
+      border: 1px solid rgba(255, 255, 255, 0.13);
+      border-radius: 13px;
+      color: var(--white);
+      background: var(--navy-800);
+      outline: none;
+      transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+    }
+
+    input::placeholder {
+      color: #71869a;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: var(--gold-400);
+      box-shadow: 0 0 0 3px rgba(201, 163, 90, 0.12);
+    }
+
+    select option {
+      color: var(--white);
+      background: var(--navy-900);
+    }
+
+    .password-input {
+      padding-right: 52px;
+    }
+
+    .password-toggle {
+      position: absolute;
+      top: 50%;
+      right: 8px;
+      min-width: 38px;
+      min-height: 36px;
+      padding: 0 8px;
+      border: 0;
+      border-radius: 9px;
+      color: var(--text-muted);
+      background: transparent;
+      transform: translateY(-50%);
+      font-size: 0.7rem;
+      font-weight: 800;
+    }
+
+    .password-toggle:hover {
+      color: var(--gold-300);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .password-guidance {
+      color: var(--text-muted);
+      font-size: 0.72rem;
+      line-height: 1.45;
+    }
+
+    .checkbox-group {
+      margin-top: 21px;
+      display: grid;
+      gap: 13px;
+    }
+
+    .checkbox-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 11px;
+    }
+
+    .checkbox-row input {
+      width: 18px;
+      min-height: 18px;
+      margin-top: 2px;
+      flex: 0 0 18px;
+      accent-color: var(--gold-400);
+    }
+
+    .checkbox-row label {
+      color: var(--text-muted);
+      font-size: 0.78rem;
+      line-height: 1.5;
+    }
+
+    .checkbox-row a {
+      color: var(--gold-300);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    /* MESSAGES */
+
+    .form-message {
+      display: none;
+      margin-top: 20px;
+      padding: 14px 16px;
+      border-radius: 12px;
+      font-size: 0.82rem;
+      line-height: 1.5;
+    }
+
+    .form-message.visible {
+      display: block;
+    }
+
+    .form-message.error {
+      border: 1px solid rgba(255, 170, 163, 0.35);
+      color: var(--error);
+      background: rgba(255, 170, 163, 0.08);
+    }
+
+    .form-message.success {
+      border: 1px solid rgba(114, 213, 162, 0.35);
+      color: var(--success);
+      background: rgba(114, 213, 162, 0.08);
+    }
+
+    .form-message.warning {
+      border: 1px solid rgba(239, 199, 104, 0.35);
+      color: var(--warning);
+      background: rgba(239, 199, 104, 0.08);
+    }
+
+    /* SUBMIT */
+
+    .submit-button {
+      width: 100%;
+      min-height: 54px;
+      margin-top: 24px;
+      padding: 0 25px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 11px;
+      border: 1px solid var(--gold-400);
+      border-radius: 999px;
+      color: var(--navy-950);
+      background:
+        linear-gradient(
+          135deg,
+          var(--gold-300),
+          var(--gold-500)
+        );
+      box-shadow: 0 13px 32px rgba(201, 163, 90, 0.2);
+      font-weight: 800;
+      transition:
+        transform 0.2s ease,
+        filter 0.2s ease,
+        opacity 0.2s ease;
+    }
+
+    .submit-button:hover:not(:disabled) {
+      transform: translateY(-2px);
+      filter: brightness(1.04);
+    }
+
+    .submit-button:disabled,
+    .google-button:disabled {
+      cursor: not-allowed;
+      opacity: 0.58;
+    }
+
+    .button-spinner {
+      display: none;
+      width: 17px;
+      height: 17px;
+      border: 2px solid rgba(6, 17, 31, 0.24);
+      border-top-color: var(--navy-950);
+      border-radius: 50%;
+      animation: spin 0.75s linear infinite;
+    }
+
+    .submit-button.loading .button-spinner {
+      display: inline-block;
+    }
+
+    .submit-button.loading .button-arrow {
+      display: none;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .login-prompt {
+      margin-top: 24px;
+      color: var(--text-muted);
+      text-align: center;
+      font-size: 0.82rem;
+    }
+
+    .login-prompt a {
+      color: var(--gold-300);
+      font-weight: 750;
+    }
+
+    .security-note {
+      margin-top: 22px;
+      padding-top: 20px;
+      border-top: 1px solid var(--line);
+      color: var(--text-muted);
+      text-align: center;
+      font-size: 0.7rem;
+      line-height: 1.5;
+    }
+
+    /* FOOTER */
+
+    .site-footer {
+      padding: 28px 20px 36px;
+      border-top: 1px solid var(--line);
+      color: var(--text-muted);
+      text-align: center;
+      font-size: 0.74rem;
+      line-height: 1.65;
+    }
+
+    .site-footer strong {
+      color: var(--gold-300);
+    }
+
+    /* RESPONSIVE */
+
+    @media (max-width: 940px) {
+      .signup-layout {
+        max-width: 720px;
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 620px) {
+      .header-inner,
+      .signup-layout {
+        width: min(100% - 24px, 1180px);
+      }
+
+      .brand-subtitle,
+      .back-link {
+        display: none;
+      }
+
+      main {
+        padding-top: 30px;
+      }
+
+      .information-panel,
+      .signup-card {
+        border-radius: 20px;
+      }
+
+      .information-panel,
+      .signup-content {
+        padding: 28px 21px;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .field-group.full-width {
+        grid-column: auto;
+      }
+
+      .information-panel h1 {
+        font-size: clamp(2.3rem, 12vw, 3.4rem);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page-shell">
+
+    <header class="site-header">
+      <div class="header-inner">
+
+        <a
+          class="brand"
+          href="../finance.html"
+          aria-label="Return to Global Sport Finance"
+        >
+          <span class="brand-title">
+            Global Sport Finance
+          </span>
+
+          <span class="brand-subtitle">
+            Powered by Global Management Consultancy
+          </span>
+        </a>
+
+        <div class="header-actions">
+
+          <a
+            class="back-link"
+            href="blueprint-results.html"
+            data-translate="backToResults"
+          >
+            ← Back to My Results
+          </a>
+
+          <div
+            class="language-switcher"
+            aria-label="Select language"
+          >
+            <button
+              class="language-button active"
+              type="button"
+              data-language="en"
+            >
+              EN
+            </button>
+
+            <button
+              class="language-button"
+              type="button"
+              data-language="fr"
+            >
+              FR
+            </button>
+
+            <button
+              class="language-button"
+              type="button"
+              data-language="es"
+            >
+              ES
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <div class="signup-layout">
+
+        <section class="information-panel">
+
+          <p
+            class="eyebrow"
+            data-translate="informationEyebrow"
+          >
+            Your Financial Journey
+          </p>
+
+          <h1 data-translate-html="informationTitle">
+            Save your progress.
+            <span>Build your future.</span>
+          </h1>
+
+          <p
+            class="information-intro"
+            data-translate="informationIntro"
+          >
+            Create your free Global Sport Finance account to save your
+            Financial Assessment, access your results from any device
+            and monitor your financial progress over time.
+          </p>
+
+          <ul class="benefit-list">
+
+            <li class="benefit-item">
+              <span
+                class="benefit-icon"
+                aria-hidden="true"
+              >
+                ✓
+              </span>
+
+              <span data-translate="benefitOne">
+                Save your completed Financial Assessment
+              </span>
+            </li>
+
+            <li class="benefit-item">
+              <span
+                class="benefit-icon"
+                aria-hidden="true"
+              >
+                ✓
+              </span>
+
+              <span data-translate="benefitTwo">
+                View your Financial Health Score and recommendations
+              </span>
+            </li>
+
+            <li class="benefit-item">
+              <span
+                class="benefit-icon"
+                aria-hidden="true"
+              >
+                ✓
+              </span>
+
+              <span data-translate="benefitThree">
+                Track your progress across future assessments
+              </span>
+            </li>
+
+            <li class="benefit-item">
+              <span
+                class="benefit-icon"
+                aria-hidden="true"
+              >
+                ✓
+              </span>
+
+              <span data-translate="benefitFour">
+                Access Financial Insights and future planning tools
+              </span>
+            </li>
+
+            <li class="benefit-item">
+              <span
+                class="benefit-icon"
+                aria-hidden="true"
+              >
+                ✓
+              </span>
+
+              <span data-translate="benefitFive">
+                Build and monitor your Financial Action Plan
+              </span>
+            </li>
+
+          </ul>
+
+          <div class="assessment-status">
+
+            <span
+              class="assessment-status-icon"
+              aria-hidden="true"
+            >
+              ✓
+            </span>
+
+            <div>
+              <strong data-translate="assessmentStatusTitle">
+                Assessment preserved
+              </strong>
+
+              <span
+                id="assessmentStatusText"
+                data-translate="assessmentStatusText"
+              >
+                Your completed assessment remains securely stored in
+                this browser while you create your account.
+              </span>
+            </div>
+
+          </div>
+
+        </section>
+
+        <section class="signup-card">
+          <div class="card-top-line"></div>
+
+          <div class="signup-content">
+
+            <div class="signup-heading">
+
+              <p
+                class="eyebrow"
+                data-translate="signupEyebrow"
+              >
+                Free Account
+              </p>
+
+              <h2 data-translate="signupTitle">
+                Create Your Account
+              </h2>
+
+              <p data-translate="signupIntro">
+                Register with Google or use your email address.
+              </p>
+
+            </div>
+
+            <button
+              class="google-button"
+              type="button"
+              id="googleSignupButton"
+            >
+              <span
+                class="google-icon"
+                aria-hidden="true"
+              >
+                G
+              </span>
+
+              <span data-translate="googleButton">
+                Continue with Google
+              </span>
+            </button>
+
+            <div
+              class="divider"
+              data-translate="divider"
+            >
+              Or register with email
+            </div>
+
+            <form id="signupForm" novalidate>
+
+              <div class="form-grid">
+
+                <div class="field-group">
+                  <label
+                    for="firstName"
+                    data-translate="firstNameLabel"
+                  >
+                    First name
+                  </label>
+
+                  <input
+                    type="text"
+                    id="firstName"
+                    name="firstName"
+                    autocomplete="given-name"
+                    maxlength="80"
+                    required
+                  >
+                </div>
+
+                <div class="field-group">
+                  <label
+                    for="lastName"
+                    data-translate="lastNameLabel"
+                  >
+                    Last name
+                  </label>
+
+                  <input
+                    type="text"
+                    id="lastName"
+                    name="lastName"
+                    autocomplete="family-name"
+                    maxlength="80"
+                    required
+                  >
+                </div>
+
+                <div class="field-group full-width">
+                  <label
+                    for="email"
+                    data-translate="emailLabel"
+                  >
+                    Email address
+                  </label>
+
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    autocomplete="email"
+                    inputmode="email"
+                    required
+                  >
+                </div>
+
+                <div class="field-group">
+                  <label
+                    for="country"
+                    data-translate="countryLabel"
+                  >
+                    Country of residence
+                  </label>
+
+                  <select
+                    id="country"
+                    name="country"
+                    required
+                  >
+                    <option
+                      value=""
+                      data-translate="selectOption"
+                    >
+                      Select an option
+                    </option>
+
+                    <option value="Spain">Spain</option>
+                    <option value="United Kingdom">
+                      United Kingdom
+                    </option>
+                    <option value="France">France</option>
+                    <option value="Germany">Germany</option>
+                    <option value="Italy">Italy</option>
+                    <option value="Portugal">Portugal</option>
+                    <option value="Luxembourg">
+                      Luxembourg
+                    </option>
+                    <option value="Switzerland">
+                      Switzerland
+                    </option>
+                    <option value="United Arab Emirates">
+                      United Arab Emirates
+                    </option>
+                    <option value="Cameroon">Cameroon</option>
+                    <option value="Côte d’Ivoire">
+                      Côte d’Ivoire
+                    </option>
+                    <option value="Senegal">Senegal</option>
+                    <option value="Mali">Mali</option>
+                    <option value="Ghana">Ghana</option>
+                    <option value="Nigeria">Nigeria</option>
+                    <option value="United States">
+                      United States
+                    </option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+
+                <div class="field-group">
+                  <label
+                    for="currency"
+                    data-translate="currencyLabel"
+                  >
+                    Preferred currency
+                  </label>
+
+                  <select
+                    id="currency"
+                    name="currency"
+                    required
+                  >
+                    <option
+                      value=""
+                      data-translate="selectOption"
+                    >
+                      Select an option
+                    </option>
+
+                    <option value="EUR">
+                      EUR — Euro
+                    </option>
+
+                    <option value="GBP">
+                      GBP — British Pound
+                    </option>
+
+                    <option value="USD">
+                      USD — US Dollar
+                    </option>
+
+                    <option value="CHF">
+                      CHF — Swiss Franc
+                    </option>
+
+                    <option value="AED">
+                      AED — UAE Dirham
+                    </option>
+
+                    <option value="XOF">
+                      XOF — West African CFA Franc
+                    </option>
+
+                    <option value="XAF">
+                      XAF — Central African CFA Franc
+                    </option>
+                  </select>
+                </div>
+
+                <div class="field-group">
+                  <label
+                    for="password"
+                    data-translate="passwordLabel"
+                  >
+                    Password
+                  </label>
+
+                  <div class="input-wrap">
+                    <input
+                      class="password-input"
+                      type="password"
+                      id="password"
+                      name="password"
+                      autocomplete="new-password"
+                      minlength="8"
+                      required
+                    >
+
+                    <button
+                      class="password-toggle"
+                      type="button"
+                      data-password-target="password"
+                      data-translate="showPassword"
+                    >
+                      Show
+                    </button>
+                  </div>
+
+                  <span
+                    class="password-guidance"
+                    data-translate="passwordGuidance"
+                  >
+                    Use at least 8 characters, including a letter and a number.
+                  </span>
+                </div>
+
+                <div class="field-group">
+                  <label
+                    for="confirmPassword"
+                    data-translate="confirmPasswordLabel"
+                  >
+                    Confirm password
+                  </label>
+
+                  <div class="input-wrap">
+                    <input
+                      class="password-input"
+                      type="password"
+                      id="confirmPassword"
+                      name="confirmPassword"
+                      autocomplete="new-password"
+                      minlength="8"
+                      required
+                    >
+
+                    <button
+                      class="password-toggle"
+                      type="button"
+                      data-password-target="confirmPassword"
+                      data-translate="showPassword"
+                    >
+                      Show
+                    </button>
+                  </div>
+                </div>
+
+              </div>
+
+              <div class="checkbox-group">
+
+                <div class="checkbox-row">
+                  <input
+                    type="checkbox"
+                    id="acceptTerms"
+                    name="acceptTerms"
+                    required
+                  >
+
+                  <label
+                    for="acceptTerms"
+                    data-translate-html="termsLabel"
+                  >
+                    I accept the
+                    <a href="../terms.html" target="_blank">
+                      Terms of Use
+                    </a>
+                    and
+                    <a href="../privacy.html" target="_blank">
+                      Privacy Policy
+                    </a>.
+                  </label>
+                </div>
+
+                <div class="checkbox-row">
+                  <input
+                    type="checkbox"
+                    id="receiveInsights"
+                    name="receiveInsights"
+                  >
+
+                  <label
+                    for="receiveInsights"
+                    data-translate="insightsLabel"
+                  >
+                    I would like to receive Financial Insights, platform
+                    updates and educational information.
+                  </label>
+                </div>
+
+              </div>
+
+              <div
+                class="form-message"
+                id="formMessage"
+                role="alert"
+                aria-live="polite"
+              ></div>
+
+              <button
+                class="submit-button"
+                type="submit"
+                id="submitButton"
+              >
+                <span
+                  class="button-spinner"
+                  aria-hidden="true"
+                ></span>
+
+                <span data-translate="submitButton">
+                  Create My Free Account
+                </span>
+
+                <span
+                  class="button-arrow"
+                  aria-hidden="true"
+                >
+                  →
+                </span>
+              </button>
+
+            </form>
+
+            <p class="login-prompt">
+
+              <span data-translate="existingAccount">
+                Already have an account?
+              </span>
+
+              <a
+                href="login.html"
+                data-translate="signIn"
+              >
+                Sign in
+              </a>
+
+            </p>
+
+            <p
+              class="security-note"
+              data-translate="securityNote"
+            >
+              Your account is protected using secure authentication
+              provided through Supabase.
+            </p>
+
+          </div>
+        </section>
+
+      </div>
+    </main>
+
+    <footer class="site-footer">
+
+      <p>
+        <strong>Global Sport Finance</strong>
+        · Global Management Consultancy Limited
+      </p>
+
+      <p data-translate="footerDisclaimer">
+        Creating an account does not establish an advisory relationship
+        and does not constitute regulated financial, investment, tax or
+        legal advice.
+      </p>
+
+    </footer>
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script>
+    const SUPABASE_URL =
+      "https://ysaxtuvuzqkyfmganven.supabase.co";
+
+    const SUPABASE_PUBLISHABLE_KEY =
+      "sb_publishable_esfhuUEIcUJEL6z9zryRAA_FGMmUHlw";
+
+    const supabaseClient =
+      window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_PUBLISHABLE_KEY,
+        {
+          auth: {
+            persistSession: true,
+            autoRefreshToken: true,
+            detectSessionInUrl: true
+          }
+        }
+      );
+
+    const translations = {
+      en: {
+        backToResults: "← Back to My Results",
+        informationEyebrow: "Your Financial Journey",
+
+        informationTitle:
+          'Save your progress. <span>Build your future.</span>',
+
+        informationIntro:
+          "Create your free Global Sport Finance account to save your " +
+          "Financial Assessment, access your results from any device " +
+          "and monitor your financial progress over time.",
+
+        benefitOne:
+          "Save your completed Financial Assessment",
+
+        benefitTwo:
+          "View your Financial Health Score and recommendations",
+
+        benefitThree:
+          "Track your progress across future assessments",
+
+        benefitFour:
+          "Access Financial Insights and future planning tools",
+
+        benefitFive:
+          "Build and monitor your Financial Action Plan",
+
+        assessmentStatusTitle:
+          "Assessment preserved",
+
+        assessmentStatusText:
+          "Your completed assessment remains securely stored in this " +
+          "browser while you create your account.",
+
+        noAssessmentStatusTitle:
+          "No completed assessment detected",
+
+        noAssessmentStatusText:
+          "You can still create your free account and complete an " +
+          "assessment from your dashboard later.",
+
+        signupEyebrow: "Free Account",
+        signupTitle: "Create Your Account",
+
+        signupIntro:
+          "Register with Google or use your email address.",
+
+        googleButton: "Continue with Google",
+        divider: "Or register with email",
+        firstNameLabel: "First name",
+        lastNameLabel: "Last name",
+        emailLabel: "Email address",
+        countryLabel: "Country of residence",
+        currencyLabel: "Preferred currency",
+        selectOption: "Select an option",
+        passwordLabel: "Password",
+        confirmPasswordLabel: "Confirm password",
+        showPassword: "Show",
+        hidePassword: "Hide",
+
+        passwordGuidance:
+          "Use at least 8 characters, including a letter and a number.",
+
+        termsLabel:
+          'I accept the <a href="../terms.html" target="_blank">' +
+          'Terms of Use</a> and ' +
+          '<a href="../privacy.html" target="_blank">' +
+          'Privacy Policy</a>.',
+
+        insightsLabel:
+          "I would like to receive Financial Insights, platform " +
+          "updates and educational information.",
+
+        submitButton: "Create My Free Account",
+        existingAccount: "Already have an account?",
+        signIn: "Sign in",
+
+        securityNote:
+          "Your account is protected using secure authentication " +
+          "provided through Supabase.",
+
+        footerDisclaimer:
+          "Creating an account does not establish an advisory relationship " +
+          "and does not constitute regulated financial, investment, tax " +
+          "or legal advice.",
+
+        requiredFields:
+          "Please complete all required fields.",
+
+        invalidEmail:
+          "Please enter a valid email address.",
+
+        weakPassword:
+          "Your password must contain at least 8 characters, including " +
+          "at least one letter and one number.",
+
+        passwordMismatch:
+          "The two passwords do not match.",
+
+        termsRequired:
+          "Please accept the Terms of Use and Privacy Policy.",
+
+        accountCreated:
+          "Your account has been created successfully.",
+
+        confirmEmail:
+          "Your account has been created. Please check your email and " +
+          "confirm your address before signing in.",
+
+        existingUser:
+          "An account may already exist for this email address. Please " +
+          "try signing in instead
