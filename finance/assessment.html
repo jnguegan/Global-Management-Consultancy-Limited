@@ -973,7 +973,7 @@
 
             <a
               class="button button-secondary"
-              href="blueprint.html"
+             href="blueprint-results.html"
               data-translate="reviewAnswers"
             >
               Review Assessment Answers
@@ -1303,7 +1303,290 @@
         language
       );
     }
+function readStoredObject(key) {
+  const storedValue =
+    localStorage.getItem(key);
 
+  if (!storedValue) {
+    return null;
+  }
+
+  try {
+    return JSON.parse(storedValue);
+  } catch (error) {
+    console.error(
+      "Unable to read saved assessment:",
+      key,
+      error
+    );
+
+    return null;
+  }
+}
+
+function loadBlueprintData() {
+  const step1 =
+    readStoredObject("gsfBlueprintStep1");
+
+  const step2 =
+    readStoredObject("gsfBlueprintStep2");
+
+  const step3 =
+    readStoredObject("gsfBlueprintStep3");
+
+  const step4 =
+    readStoredObject("gsfBlueprintStep4");
+
+  const step5 =
+    readStoredObject("gsfBlueprintStep5");
+
+  if (
+    !step1 ||
+    !step2 ||
+    !step3 ||
+    !step4 ||
+    !step5
+  ) {
+    return null;
+  }
+
+  return {
+    step1,
+    step2,
+    step3,
+    step4,
+    step5
+  };
+}
+
+function numberValue(value) {
+  const number =
+    Number(value);
+
+  return Number.isFinite(number)
+    ? number
+    : 0;
+}
+
+function clamp(value, minimum, maximum) {
+  return Math.min(
+    Math.max(value, minimum),
+    maximum
+  );
+}
+
+function calculateScore(data) {
+  const income =
+    numberValue(data.step2.totalIncome);
+
+  const balance =
+    numberValue(data.step2.monthlyBalance);
+
+  const reserves =
+    numberValue(data.step3.liquidReserves);
+
+  const reserveMonths =
+    numberValue(data.step3.reserveMonths);
+
+  const totalAssets =
+    numberValue(data.step3.totalAssets);
+
+  const liabilities =
+    numberValue(data.step4.totalLiabilities);
+
+  const netWorth =
+    numberValue(data.step4.netWorth);
+
+  const debtRatio =
+    numberValue(data.step4.debtRatio);
+
+  const taxReserve =
+    numberValue(data.step2.taxReserve);
+
+  const taxSavings =
+    numberValue(data.step3.taxSavings);
+
+  const investments =
+    numberValue(data.step3.investments);
+
+  const pension =
+    numberValue(data.step3.pensionValue);
+
+  let score = 0;
+
+  if (income > 0) {
+    const surplusRatio =
+      balance / income;
+
+    if (surplusRatio >= 0.2) {
+      score += 25;
+    } else if (surplusRatio >= 0.1) {
+      score += 20;
+    } else if (surplusRatio > 0) {
+      score += 13;
+    } else if (surplusRatio === 0) {
+      score += 7;
+    }
+  }
+
+  if (reserveMonths >= 6) {
+    score += 20;
+  } else if (reserveMonths >= 3) {
+    score += 15;
+  } else if (reserveMonths >= 1) {
+    score += 8;
+  } else if (reserves > 0) {
+    score += 4;
+  }
+
+  if (
+    netWorth > 0 &&
+    totalAssets > 0
+  ) {
+    const netWorthRatio =
+      netWorth / totalAssets;
+
+    if (netWorthRatio >= 0.7) {
+      score += 20;
+    } else if (netWorthRatio >= 0.4) {
+      score += 15;
+    } else if (netWorthRatio > 0) {
+      score += 10;
+    }
+  } else if (
+    netWorth === 0 &&
+    totalAssets > 0
+  ) {
+    score += 5;
+  }
+
+  if (
+    liabilities === 0 &&
+    totalAssets > 0
+  ) {
+    score += 15;
+  } else if (debtRatio < 30) {
+    score += 13;
+  } else if (debtRatio <= 60) {
+    score += 8;
+  } else if (debtRatio <= 85) {
+    score += 3;
+  }
+
+  if (
+    taxReserve > 0 ||
+    taxSavings > 0
+  ) {
+    score += 6;
+
+    if (
+      taxSavings >= taxReserve * 3 ||
+      taxReserve >= income * 0.1
+    ) {
+      score += 4;
+    }
+  }
+
+  if (
+    investments > 0 ||
+    pension > 0
+  ) {
+    score += 5;
+  }
+
+  if (
+    investments + pension >=
+    Math.max(income * 6, 1)
+  ) {
+    score += 5;
+  }
+
+  return Math.round(
+    clamp(score, 0, 100)
+  );
+}
+
+function getScoreStatus(score) {
+  if (score >= 80) {
+    return {
+      en: "Excellent",
+      fr: "Excellent",
+      es: "Excelente"
+    };
+  }
+
+  if (score >= 65) {
+    return {
+      en: "Good",
+      fr: "Bon",
+      es: "Bueno"
+    };
+  }
+
+  if (score >= 45) {
+    return {
+      en: "Developing",
+      fr: "En développement",
+      es: "En desarrollo"
+    };
+  }
+
+  return {
+    en: "Needs attention",
+    fr: "Nécessite une attention",
+    es: "Necesita atención"
+  };
+}
+
+function renderSavedAssessment() {
+  const data =
+    loadBlueprintData();
+
+  if (!data) {
+    return;
+  }
+
+  const score =
+    calculateScore(data);
+
+  document.getElementById(
+    "overallScore"
+  ).textContent =
+    score;
+
+  const status =
+    getScoreStatus(score);
+
+  document.getElementById(
+    "scoreRating"
+  ).textContent =
+    status[currentLanguage] ||
+    status.en;
+
+  const completedValue =
+    localStorage.getItem(
+      "gsfBlueprintCompleted"
+    );
+
+  if (completedValue) {
+    const parsedDate =
+      new Date(completedValue);
+
+    if (!Number.isNaN(parsedDate.getTime())) {
+      document.getElementById(
+        "assessmentDateValue"
+      ).textContent =
+        parsedDate.toLocaleDateString(
+          currentLanguage === "fr"
+            ? "fr-FR"
+            : currentLanguage === "es"
+              ? "es-ES"
+              : "en-GB"
+        );
+    }
+  }
+}
+    
     function getFirstName(user) {
       const metadata =
         user.user_metadata || {};
@@ -1324,6 +1607,7 @@
         "memberName"
       ).textContent =
         getFirstName(user);
+      renderSavedAssessment();
 
       pageShell.hidden = false;
 
