@@ -1,0 +1,1370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <meta
+    name="description"
+    content="Review your Global Sport Finance Financial Assessment."
+  >
+
+  <title>My Financial Assessment | Global Sport Finance</title>
+
+  <style>
+    :root {
+      --navy-950: #06111f;
+      --navy-900: #091827;
+      --navy-850: #0c1d30;
+      --navy-800: #10263d;
+
+      --gold-500: #c9a35a;
+      --gold-400: #d9b86e;
+      --gold-300: #ead39d;
+
+      --white: #ffffff;
+      --text-light: #d9e2ec;
+      --text-muted: #9fb0c1;
+
+      --border: rgba(201, 163, 90, 0.28);
+      --line: rgba(255, 255, 255, 0.09);
+      --card-bg: rgba(255, 255, 255, 0.045);
+
+      --success: #72d5a2;
+      --warning: #efc768;
+      --attention: #ffaaa3;
+
+      --shadow: 0 24px 70px rgba(0, 0, 0, 0.34);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      color: var(--white);
+      background:
+        radial-gradient(
+          circle at 86% 8%,
+          rgba(201, 163, 90, 0.13),
+          transparent 30%
+        ),
+        radial-gradient(
+          circle at 8% 82%,
+          rgba(23, 56, 84, 0.55),
+          transparent 38%
+        ),
+        linear-gradient(
+          135deg,
+          var(--navy-950),
+          var(--navy-900) 52%,
+          #0b1d30
+        );
+      font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Arial,
+        sans-serif;
+      line-height: 1.6;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      font: inherit;
+      cursor: pointer;
+    }
+
+    .loading-screen {
+      position: fixed;
+      z-index: 9999;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      background: var(--navy-950);
+      transition:
+        opacity 0.3s ease,
+        visibility 0.3s ease;
+    }
+
+    .loading-screen.hidden {
+      visibility: hidden;
+      opacity: 0;
+    }
+
+    .loading-spinner {
+      width: 44px;
+      height: 44px;
+      margin: 0 auto 16px;
+      border: 3px solid rgba(255, 255, 255, 0.12);
+      border-top-color: var(--gold-400);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    .loading-screen p {
+      color: var(--text-muted);
+      font-size: 0.86rem;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .page-shell {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .site-header {
+      position: sticky;
+      z-index: 100;
+      top: 0;
+      border-bottom: 1px solid var(--line);
+      background: rgba(6, 17, 31, 0.9);
+      backdrop-filter: blur(16px);
+    }
+
+    .header-inner {
+      width: min(1200px, calc(100% - 40px));
+      min-height: 82px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .brand {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .brand-title {
+      color: var(--gold-400);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.35rem;
+      font-weight: 600;
+    }
+
+    .brand-subtitle {
+      color: var(--text-muted);
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .dashboard-link {
+      padding: 9px 14px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 999px;
+      color: var(--text-light);
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+
+    .dashboard-link:hover {
+      border-color: var(--gold-400);
+      color: var(--gold-300);
+    }
+
+    .language-switcher {
+      display: flex;
+      padding: 4px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.035);
+    }
+
+    .language-button {
+      min-width: 36px;
+      padding: 7px 8px;
+      border: 0;
+      border-radius: 999px;
+      color: var(--text-muted);
+      background: transparent;
+      font-size: 0.7rem;
+      font-weight: 750;
+    }
+
+    .language-button.active {
+      color: var(--navy-950);
+      background: var(--gold-400);
+    }
+
+    main {
+      flex: 1;
+      padding: 46px 0 80px;
+    }
+
+    .container {
+      width: min(1200px, calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    .panel {
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      background:
+        linear-gradient(
+          145deg,
+          rgba(255, 255, 255, 0.07),
+          rgba(255, 255, 255, 0.025)
+        );
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(15px);
+    }
+
+    .assessment-header {
+      margin-bottom: 24px;
+      padding: clamp(30px, 5vw, 50px);
+      display: grid;
+      align-items: center;
+      gap: 30px;
+      grid-template-columns: minmax(0, 1fr) auto;
+    }
+
+    .eyebrow {
+      margin-bottom: 12px;
+      color: var(--gold-300);
+      font-size: 0.74rem;
+      font-weight: 750;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .assessment-header h1 {
+      margin-bottom: 14px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.5rem, 5vw, 4.3rem);
+      font-weight: 500;
+      letter-spacing: -0.04em;
+      line-height: 1;
+    }
+
+    .assessment-header h1 span {
+      color: var(--gold-400);
+    }
+
+    .assessment-intro {
+      max-width: 720px;
+      color: var(--text-light);
+      line-height: 1.75;
+    }
+
+    .assessment-meta {
+      min-width: 250px;
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: 17px;
+      background: rgba(255, 255, 255, 0.035);
+    }
+
+    .meta-label {
+      display: block;
+      margin-bottom: 5px;
+      color: var(--text-muted);
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .meta-value {
+      display: block;
+      margin-bottom: 15px;
+      color: var(--gold-300);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.15rem;
+    }
+
+    .summary-grid {
+      margin-bottom: 24px;
+      display: grid;
+      gap: 20px;
+      grid-template-columns: 330px minmax(0, 1fr);
+    }
+
+    .score-panel,
+    .overview-panel {
+      padding: 30px;
+    }
+
+    .score-panel {
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .score-circle {
+      width: 190px;
+      height: 190px;
+      margin: 20px 0;
+      display: grid;
+      place-items: center;
+      border: 12px solid rgba(201, 163, 90, 0.15);
+      border-top-color: var(--gold-400);
+      border-right-color: var(--gold-400);
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.025);
+    }
+
+    .score-number {
+      color: var(--gold-300);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 3.5rem;
+      line-height: 1;
+    }
+
+    .score-total {
+      color: var(--text-muted);
+      font-size: 0.8rem;
+    }
+
+    .score-rating {
+      color: var(--success);
+      font-weight: 800;
+    }
+
+    .overview-panel h2,
+    .categories-section h2 {
+      margin-bottom: 10px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.8rem;
+      font-weight: 500;
+    }
+
+    .overview-panel > p {
+      margin-bottom: 22px;
+      color: var(--text-muted);
+    }
+
+    .overview-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .overview-item {
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.025);
+    }
+
+    .overview-item span:first-child {
+      color: var(--text-light);
+      font-weight: 650;
+    }
+
+    .status-good {
+      color: var(--success);
+    }
+
+    .status-review {
+      color: var(--warning);
+    }
+
+    .status-attention {
+      color: var(--attention);
+    }
+
+    .categories-section {
+      padding: 30px;
+    }
+
+    .section-intro {
+      margin-bottom: 24px;
+      color: var(--text-muted);
+    }
+
+    .categories-grid {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    .category-card {
+      min-height: 190px;
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid var(--line);
+      border-radius: 17px;
+      background: rgba(255, 255, 255, 0.025);
+    }
+
+    .category-number {
+      margin-bottom: 16px;
+      color: var(--gold-400);
+      font-size: 0.7rem;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+    }
+
+    .category-card h3 {
+      margin-bottom: 8px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.25rem;
+      font-weight: 500;
+    }
+
+    .category-card p {
+      margin-bottom: 18px;
+      color: var(--text-muted);
+      font-size: 0.78rem;
+      line-height: 1.55;
+    }
+
+    .category-status {
+      margin-top: auto;
+      font-size: 0.75rem;
+      font-weight: 750;
+    }
+
+    .page-actions {
+      margin-top: 24px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .button {
+      min-height: 48px;
+      padding: 0 22px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid transparent;
+      border-radius: 999px;
+      font-weight: 750;
+    }
+
+    .button-primary {
+      color: var(--navy-950);
+      background:
+        linear-gradient(
+          135deg,
+          var(--gold-300),
+          var(--gold-500)
+        );
+    }
+
+    .button-secondary {
+      border-color: rgba(255, 255, 255, 0.18);
+      color: var(--white);
+      background: rgba(255, 255, 255, 0.035);
+    }
+
+    .button-secondary:hover {
+      border-color: var(--gold-400);
+      color: var(--gold-300);
+    }
+
+    .site-footer {
+      padding: 28px 20px 36px;
+      border-top: 1px solid var(--line);
+      color: var(--text-muted);
+      text-align: center;
+      font-size: 0.74rem;
+      line-height: 1.65;
+    }
+
+    .site-footer strong {
+      color: var(--gold-300);
+    }
+
+    @media (max-width: 1000px) {
+      .assessment-header,
+      .summary-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .assessment-meta {
+        min-width: 0;
+      }
+
+      .categories-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 620px) {
+      .header-inner,
+      .container {
+        width: min(100% - 24px, 1200px);
+      }
+
+      .brand-subtitle,
+      .dashboard-link {
+        display: none;
+      }
+
+      main {
+        padding-top: 28px;
+      }
+
+      .assessment-header,
+      .score-panel,
+      .overview-panel,
+      .categories-section {
+        padding: 24px 20px;
+        border-radius: 20px;
+      }
+
+      .categories-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .page-actions {
+        flex-direction: column;
+      }
+
+      .button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div
+    class="loading-screen"
+    id="loadingScreen"
+  >
+    <div>
+      <div class="loading-spinner"></div>
+
+      <p data-translate="loading">
+        Loading your Financial Assessment...
+      </p>
+    </div>
+  </div>
+
+  <div
+    class="page-shell"
+    id="pageShell"
+    hidden
+  >
+
+    <header class="site-header">
+      <div class="header-inner">
+
+        <a
+          class="brand"
+          href="../finance.html"
+        >
+          <span class="brand-title">
+            Global Sport Finance
+          </span>
+
+          <span class="brand-subtitle">
+            Powered by Global Management Consultancy
+          </span>
+        </a>
+
+        <div class="header-actions">
+
+          <a
+            class="dashboard-link"
+            href="dashboard.html"
+            data-translate="backToDashboard"
+          >
+            ← Back to Dashboard
+          </a>
+
+          <div class="language-switcher">
+
+            <button
+              class="language-button active"
+              type="button"
+              data-language="en"
+            >
+              EN
+            </button>
+
+            <button
+              class="language-button"
+              type="button"
+              data-language="fr"
+            >
+              FR
+            </button>
+
+            <button
+              class="language-button"
+              type="button"
+              data-language="es"
+            >
+              ES
+            </button>
+
+          </div>
+
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <div class="container">
+
+        <section class="assessment-header panel">
+
+          <div>
+            <p
+              class="eyebrow"
+              data-translate="eyebrow"
+            >
+              Your Financial Journey
+            </p>
+
+            <h1>
+              <span data-translate="title">
+                My Financial Assessment
+              </span>
+            </h1>
+
+            <p
+              class="assessment-intro"
+              data-translate="intro"
+            >
+              Review your Financial Health Score, assessment summary
+              and the areas that will shape your personalised Financial
+              Action Plan.
+            </p>
+          </div>
+
+          <div class="assessment-meta">
+
+            <span
+              class="meta-label"
+              data-translate="preparedFor"
+            >
+              Prepared for
+            </span>
+
+            <strong
+              class="meta-value"
+              id="memberName"
+            >
+              Member
+            </strong>
+
+            <span
+              class="meta-label"
+              data-translate="assessmentDate"
+            >
+              Assessment date
+            </span>
+
+            <strong
+              class="meta-value"
+              id="assessmentDateValue"
+            >
+              —
+            </strong>
+
+          </div>
+
+        </section>
+
+        <section class="summary-grid">
+
+          <article class="score-panel panel">
+
+            <p
+              class="eyebrow"
+              data-translate="scoreTitle"
+            >
+              Financial Health Score
+            </p>
+
+            <div class="score-circle">
+              <div>
+                <div
+                  class="score-number"
+                  id="overallScore"
+                >
+                  —
+                </div>
+
+                <div class="score-total">
+                  / 100
+                </div>
+              </div>
+            </div>
+
+            <p
+              class="score-rating"
+              id="scoreRating"
+              data-translate="awaitingResults"
+            >
+              Awaiting saved results
+            </p>
+
+          </article>
+
+          <article class="overview-panel panel">
+
+            <h2 data-translate="summaryTitle">
+              Assessment Summary
+            </h2>
+
+            <p data-translate="summaryText">
+              Your results will highlight financial strengths,
+              priorities and areas requiring further review.
+            </p>
+
+            <div class="overview-list">
+
+              <div class="overview-item">
+                <span data-translate="overallOrganisation">
+                  Overall financial organisation
+                </span>
+
+                <strong
+                  class="status-review"
+                  data-translate="awaitingResults"
+                >
+                  Awaiting saved results
+                </strong>
+              </div>
+
+              <div class="overview-item">
+                <span data-translate="immediatePriority">
+                  Immediate priority
+                </span>
+
+                <strong
+                  class="status-review"
+                  data-translate="notAvailable"
+                >
+                  Not yet available
+                </strong>
+              </div>
+
+              <div class="overview-item">
+                <span data-translate="nextReview">
+                  Suggested next review
+                </span>
+
+                <strong
+                  class="status-review"
+                  data-translate="notAvailable"
+                >
+                  Not yet available
+                </strong>
+              </div>
+
+            </div>
+
+          </article>
+
+        </section>
+
+        <section class="categories-section panel">
+
+          <h2 data-translate="categoriesTitle">
+            Financial Assessment Areas
+          </h2>
+
+          <p
+            class="section-intro"
+            data-translate="categoriesText"
+          >
+            Each area will display its score, status and relevant
+            recommendation once the saved assessment is connected.
+          </p>
+
+          <div class="categories-grid">
+
+            <article class="category-card">
+              <span class="category-number">01</span>
+
+              <h3 data-translate="organisation">
+                Financial Organisation
+              </h3>
+
+              <p data-translate="organisationText">
+                Budgeting, financial records and control of regular commitments.
+              </p>
+
+              <span
+                class="category-status status-review"
+                data-translate="awaitingResults"
+              >
+                Awaiting saved results
+              </span>
+            </article>
+
+            <article class="category-card">
+              <span class="category-number">02</span>
+
+              <h3 data-translate="cashReserve">
+                Cash Reserve
+              </h3>
+
+              <p data-translate="cashReserveText">
+                Emergency savings and accessible financial reserves.
+              </p>
+
+              <span
+                class="category-status status-review"
+                data-translate="awaitingResults"
+              >
+                Awaiting saved results
+              </span>
+            </article>
+
+            <article class="category-card">
+              <span class="category-number">03</span>
+
+              <h3 data-translate="debt">
+                Debt Management
+              </h3>
+
+              <p data-translate="debtText">
+                Borrowing commitments, repayment capacity and debt exposure.
+              </p>
+
+              <span
+                class="category-status status-review"
+                data-translate="awaitingResults"
+              >
+                Awaiting saved results
+              </span>
+            </article>
+
+            <article class="category-card">
+              <span class="category-number">04</span>
+
+              <h3 data-translate="protection">
+                Financial Protection
+              </h3>
+
+              <p data-translate="protectionText">
+                Insurance, income protection and family safeguards.
+              </p>
+
+              <span
+                class="category-status status-review"
+                data-translate="awaitingResults"
+              >
+                Awaiting saved results
+              </span>
+            </article>
+
+            <article class="category-card">
+              <span class="category-number">05</span>
+
+              <h3 data-translate="retirement">
+                Retirement Planning
+              </h3>
+
+              <p data-translate="retirementText">
+                Long-term income planning and preparation for retirement.
+              </p>
+
+              <span
+                class="category-status status-review"
+                data-translate="awaitingResults"
+              >
+                Awaiting saved results
+              </span>
+            </article>
+
+            <article class="category-card">
+              <span class="category-number">06</span>
+
+              <h3 data-translate="investments">
+                Savings & Investments
+              </h3>
+
+              <p data-translate="investmentsText">
+                Wealth accumulation, investment structure and diversification.
+              </p>
+
+              <span
+                class="category-status status-review"
+                data-translate="awaitingResults"
+              >
+                Awaiting saved results
+              </span>
+            </article>
+
+            <article class="category-card">
+              <span class="category-number">07</span>
+
+              <h3 data-translate="tax">
+                Tax Planning
+              </h3>
+
+              <p data-translate="taxText">
+                Tax reserves, reporting obligations and financial efficiency.
+              </p>
+
+              <span
+                class="category-status status-review"
+                data-translate="awaitingResults"
+              >
+                Awaiting saved results
+              </span>
+            </article>
+
+            <article class="category-card">
+              <span class="category-number">08</span>
+
+              <h3 data-translate="estate">
+                Estate Planning
+              </h3>
+
+              <p data-translate="estateText">
+                Wills, succession planning and protection of family wealth.
+              </p>
+
+              <span
+                class="category-status status-review"
+                data-translate="awaitingResults"
+              >
+                Awaiting saved results
+              </span>
+            </article>
+
+          </div>
+
+          <div class="page-actions">
+
+            <a
+              class="button button-primary"
+              href="dashboard.html"
+              data-translate="returnDashboard"
+            >
+              Return to Dashboard
+            </a>
+
+            <a
+              class="button button-secondary"
+              href="blueprint.html"
+              data-translate="reviewAnswers"
+            >
+              Review Assessment Answers
+            </a>
+
+            <button
+              class="button button-secondary"
+              type="button"
+              disabled
+              data-translate="downloadReport"
+            >
+              Download Assessment Report
+            </button>
+
+          </div>
+
+        </section>
+
+      </div>
+    </main>
+
+    <footer class="site-footer">
+
+      <p>
+        <strong>Global Sport Finance</strong>
+        · Global Management Consultancy Limited
+      </p>
+
+      <p data-translate="footerDisclaimer">
+        This assessment provides general financial guidance and does not
+        constitute regulated financial, investment, tax or legal advice.
+      </p>
+
+    </footer>
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script>
+    const SUPABASE_URL =
+      "https://ysaxtuvuzqkyfmganven.supabase.co";
+
+    const SUPABASE_PUBLISHABLE_KEY =
+      "sb_publishable_esfhuUEIcUJEL6z9zryRAA_FGMmUHlw";
+
+    const supabaseClient =
+      window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_PUBLISHABLE_KEY,
+        {
+          auth: {
+            persistSession: true,
+            autoRefreshToken: true,
+            detectSessionInUrl: true
+          }
+        }
+      );
+
+    const translations = {
+      en: {
+        loading: "Loading your Financial Assessment...",
+        backToDashboard: "← Back to Dashboard",
+        eyebrow: "Your Financial Journey",
+        title: "My Financial Assessment",
+
+        intro:
+          "Review your Financial Health Score, assessment summary " +
+          "and the areas that will shape your personalised Financial Action Plan.",
+
+        preparedFor: "Prepared for",
+        assessmentDate: "Assessment date",
+        scoreTitle: "Financial Health Score",
+        awaitingResults: "Awaiting saved results",
+        notAvailable: "Not yet available",
+        summaryTitle: "Assessment Summary",
+
+        summaryText:
+          "Your results will highlight financial strengths, priorities " +
+          "and areas requiring further review.",
+
+        overallOrganisation: "Overall financial organisation",
+        immediatePriority: "Immediate priority",
+        nextReview: "Suggested next review",
+        categoriesTitle: "Financial Assessment Areas",
+
+        categoriesText:
+          "Each area will display its score, status and relevant " +
+          "recommendation once the saved assessment is connected.",
+
+        organisation: "Financial Organisation",
+        organisationText:
+          "Budgeting, financial records and control of regular commitments.",
+
+        cashReserve: "Cash Reserve",
+        cashReserveText:
+          "Emergency savings and accessible financial reserves.",
+
+        debt: "Debt Management",
+        debtText:
+          "Borrowing commitments, repayment capacity and debt exposure.",
+
+        protection: "Financial Protection",
+        protectionText:
+          "Insurance, income protection and family safeguards.",
+
+        retirement: "Retirement Planning",
+        retirementText:
+          "Long-term income planning and preparation for retirement.",
+
+        investments: "Savings & Investments",
+        investmentsText:
+          "Wealth accumulation, investment structure and diversification.",
+
+        tax: "Tax Planning",
+        taxText:
+          "Tax reserves, reporting obligations and financial efficiency.",
+
+        estate: "Estate Planning",
+        estateText:
+          "Wills, succession planning and protection of family wealth.",
+
+        returnDashboard: "Return to Dashboard",
+        reviewAnswers: "Review Assessment Answers",
+        downloadReport: "Download Assessment Report",
+
+        footerDisclaimer:
+          "This assessment provides general financial guidance and does " +
+          "not constitute regulated financial, investment, tax or legal advice."
+      },
+
+      fr: {
+        loading: "Chargement de votre évaluation financière...",
+        backToDashboard: "← Retour au tableau de bord",
+        eyebrow: "Votre parcours financier",
+        title: "Mon évaluation financière",
+
+        intro:
+          "Consultez votre Score de Santé Financière, le résumé de votre " +
+          "évaluation et les domaines qui structureront votre Plan d’Action Financière personnalisé.",
+
+        preparedFor: "Préparée pour",
+        assessmentDate: "Date de l’évaluation",
+        scoreTitle: "Score de Santé Financière",
+        awaitingResults: "Résultats enregistrés en attente",
+        notAvailable: "Pas encore disponible",
+        summaryTitle: "Résumé de l’évaluation",
+
+        summaryText:
+          "Vos résultats mettront en évidence vos points forts, vos " +
+          "priorités et les domaines nécessitant une analyse complémentaire.",
+
+        overallOrganisation: "Organisation financière générale",
+        immediatePriority: "Priorité immédiate",
+        nextReview: "Prochaine révision suggérée",
+        categoriesTitle: "Domaines de l’évaluation financière",
+
+        categoriesText:
+          "Chaque domaine affichera son score, son statut et la recommandation " +
+          "correspondante lorsque l’évaluation enregistrée sera connectée.",
+
+        organisation: "Organisation financière",
+        organisationText:
+          "Budget, documents financiers et contrôle des engagements réguliers.",
+
+        cashReserve: "Réserve de trésorerie",
+        cashReserveText:
+          "Épargne d’urgence et réserves financières accessibles.",
+
+        debt: "Gestion des dettes",
+        debtText:
+          "Engagements de crédit, capacité de remboursement et exposition à l’endettement.",
+
+        protection: "Protection financière",
+        protectionText:
+          "Assurances, protection des revenus et sécurité familiale.",
+
+        retirement: "Planification de la retraite",
+        retirementText:
+          "Planification des revenus à long terme et préparation de la retraite.",
+
+        investments: "Épargne et investissements",
+        investmentsText:
+          "Accumulation de patrimoine, structure des placements et diversification.",
+
+        tax: "Planification fiscale",
+        taxText:
+          "Réserves fiscales, obligations déclaratives et efficacité financière.",
+
+        estate: "Planification successorale",
+        estateText:
+          "Testaments, succession et protection du patrimoine familial.",
+
+        returnDashboard: "Retour au tableau de bord",
+        reviewAnswers: "Consulter les réponses de l’évaluation",
+        downloadReport: "Télécharger le rapport d’évaluation",
+
+        footerDisclaimer:
+          "Cette évaluation fournit des orientations financières générales " +
+          "et ne constitue pas un conseil financier, d’investissement, fiscal ou juridique réglementé."
+      },
+
+      es: {
+        loading: "Cargando su Evaluación Financiera...",
+        backToDashboard: "← Volver al panel",
+        eyebrow: "Su recorrido financiero",
+        title: "Mi Evaluación Financiera",
+
+        intro:
+          "Revise su Puntuación de Salud Financiera, el resumen de su " +
+          "evaluación y las áreas que formarán su Plan de Acción Financiera personalizado.",
+
+        preparedFor: "Preparada para",
+        assessmentDate: "Fecha de la evaluación",
+        scoreTitle: "Puntuación de Salud Financiera",
+        awaitingResults: "Esperando resultados guardados",
+        notAvailable: "Todavía no disponible",
+        summaryTitle: "Resumen de la evaluación",
+
+        summaryText:
+          "Sus resultados destacarán sus fortalezas financieras, prioridades " +
+          "y las áreas que requieren una revisión adicional.",
+
+        overallOrganisation: "Organización financiera general",
+        immediatePriority: "Prioridad inmediata",
+        nextReview: "Próxima revisión sugerida",
+        categoriesTitle: "Áreas de la Evaluación Financiera",
+
+        categoriesText:
+          "Cada área mostrará su puntuación, estado y recomendación " +
+          "cuando se conecte la evaluación guardada.",
+
+        organisation: "Organización financiera",
+        organisationText:
+          "Presupuesto, registros financieros y control de compromisos habituales.",
+
+        cashReserve: "Reserva de efectivo",
+        cashReserveText:
+          "Ahorros de emergencia y reservas financieras accesibles.",
+
+        debt: "Gestión de deudas",
+        debtText:
+          "Compromisos de crédito, capacidad de pago y exposición a la deuda.",
+
+        protection: "Protección financiera",
+        protectionText:
+          "Seguros, protección de ingresos y seguridad familiar.",
+
+        retirement: "Planificación de la jubilación",
+        retirementText:
+          "Planificación de ingresos a largo plazo y preparación para la jubilación.",
+
+        investments: "Ahorros e inversiones",
+        investmentsText:
+          "Acumulación patrimonial, estructura de inversión y diversificación.",
+
+        tax: "Planificación fiscal",
+        taxText:
+          "Reservas fiscales, obligaciones declarativas y eficiencia financiera.",
+
+        estate: "Planificación sucesoria",
+        estateText:
+          "Testamentos, sucesión y protección del patrimonio familiar.",
+
+        returnDashboard: "Volver al panel",
+        reviewAnswers: "Revisar las respuestas de la evaluación",
+        downloadReport: "Descargar el informe de evaluación",
+
+        footerDisclaimer:
+          "Esta evaluación proporciona orientación financiera general y " +
+          "no constituye asesoramiento financiero, de inversión, fiscal o jurídico regulado."
+      }
+    };
+
+    const loadingScreen =
+      document.getElementById("loadingScreen");
+
+    const pageShell =
+      document.getElementById("pageShell");
+
+    const languageButtons =
+      document.querySelectorAll(".language-button");
+
+    const translatedElements =
+      document.querySelectorAll("[data-translate]");
+
+    let currentLanguage =
+      localStorage.getItem("gsfLanguage") ||
+      localStorage.getItem("gsfBlueprintLanguage") ||
+      "en";
+
+    function changeLanguage(language) {
+      const selectedTranslation =
+        translations[language];
+
+      if (!selectedTranslation) {
+        return;
+      }
+
+      currentLanguage = language;
+      document.documentElement.lang = language;
+
+      translatedElements.forEach((element) => {
+        const key =
+          element.dataset.translate;
+
+        if (selectedTranslation[key] !== undefined) {
+          element.textContent =
+            selectedTranslation[key];
+        }
+      });
+
+      languageButtons.forEach((button) => {
+        button.classList.toggle(
+          "active",
+          button.dataset.language === language
+        );
+      });
+
+      localStorage.setItem(
+        "gsfLanguage",
+        language
+      );
+
+      localStorage.setItem(
+        "gsfBlueprintLanguage",
+        language
+      );
+    }
+
+    function getFirstName(user) {
+      const metadata =
+        user.user_metadata || {};
+
+      const fullName =
+        metadata.full_name ||
+        metadata.name ||
+        metadata.given_name ||
+        metadata.first_name ||
+        user.email?.split("@")[0] ||
+        "Member";
+
+      return fullName.split(" ")[0];
+    }
+
+    function showPage(user) {
+      document.getElementById(
+        "memberName"
+      ).textContent =
+        getFirstName(user);
+
+      pageShell.hidden = false;
+
+      requestAnimationFrame(() => {
+        loadingScreen.classList.add("hidden");
+      });
+    }
+
+    function redirectToLogin() {
+      window.location.replace("login.html");
+    }
+
+    async function initialisePage() {
+      const {
+        data: { session },
+        error
+      } =
+        await supabaseClient.auth.getSession();
+
+      if (error || !session?.user) {
+        redirectToLogin();
+        return;
+      }
+
+      showPage(session.user);
+    }
+
+    languageButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        changeLanguage(
+          button.dataset.language
+        );
+      });
+    });
+
+    if (!translations[currentLanguage]) {
+      currentLanguage = "en";
+    }
+
+    changeLanguage(currentLanguage);
+    initialisePage();
+  </script>
+</body>
+</html>
