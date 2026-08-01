@@ -1484,6 +1484,32 @@
   }
   };
 
+  document.querySelectorAll(".password-toggle").forEach((button) => {
+  button.addEventListener("click", () => {
+    const targetId = button.dataset.passwordTarget;
+    const passwordInput = document.getElementById(targetId);
+    const icon = button.querySelector("i");
+
+    if (!passwordInput || !icon) {
+      return;
+    }
+
+    const isHidden = passwordInput.type === "password";
+
+    passwordInput.type = isHidden ? "text" : "password";
+
+    icon.className = isHidden
+      ? "fa-regular fa-eye-slash"
+      : "fa-regular fa-eye";
+
+    button.setAttribute(
+      "aria-label",
+      isHidden ? "Hide password" : "Show password"
+    );
+  });
+});
+
+    
 </script>
 </body>
 </html>
