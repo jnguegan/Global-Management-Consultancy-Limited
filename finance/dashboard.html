@@ -602,33 +602,79 @@
 
         <section class="dashboard-grid">
 
-          <article class="dashboard-card panel">
+          <article class="dashboard-card assessment-card">
 
-            <div
-              class="card-icon"
-              aria-hidden="true"
-            >
-              01
-            </div>
+  <span class="card-number">
+    01
+  </span>
 
-            <h2 data-translate="assessmentTitle">
-              Financial Assessment
-            </h2>
+  <h2 data-translate="assessmentCardTitle">
+    Financial Assessment
+  </h2>
 
-            <p data-translate="assessmentText">
-              Your completed assessment and Financial Health results
-              will appear here after they are saved to your account.
-            </p>
+  <p data-translate="assessmentCardDescription">
+    View your latest Financial Health Score, assessment summary and personalised Financial Action Plan.
+  </p>
 
-            <div
-              class="card-status"
-              id="assessmentStatus"
-              data-translate="preparing"
-            >
-              Preparing your account
-            </div>
+  <div class="assessment-summary">
 
-          </article>
+    <span
+      class="assessment-summary-label"
+      data-translate="latestScoreLabel"
+    >
+      Your latest Financial Health Score
+    </span>
+
+    <div class="dashboard-score">
+      <strong id="dashboardScore">
+        —
+      </strong>
+
+      <span>
+        / 100
+      </span>
+    </div>
+
+    <div class="dashboard-status">
+
+      <span data-translate="statusLabel">
+        Status:
+      </span>
+
+      <strong id="dashboardStatus">
+        —
+      </strong>
+
+    </div>
+
+    <div class="dashboard-assessment-date">
+
+      <span data-translate="assessmentDateLabel">
+        Assessment date:
+      </span>
+
+      <strong id="dashboardAssessmentDate">
+        —
+      </strong>
+
+    </div>
+
+  </div>
+
+  <a
+    class="card-action"
+    href="assessment.html"
+  >
+    <span data-translate="viewAssessment">
+      View My Assessment
+    </span>
+
+    <span aria-hidden="true">
+      →
+    </span>
+  </a>
+
+</article>
 
           <article class="dashboard-card panel">
 
@@ -783,9 +829,39 @@
         footerDisclaimer:
           "The information displayed in this dashboard provides general " +
           "financial guidance and does not constitute regulated financial, " +
-          "investment, tax or legal advice."
+          "investment, tax or legal advice.",
+        assessmentCardTitle:
+  "Financial Assessment",
+
+assessmentCardDescription:
+  "View your latest Financial Health Score, assessment summary and personalised Financial Action Plan.",
+
+latestScoreLabel:
+  "Your latest Financial Health Score",
+
+statusLabel:
+  "Status:",
+
+assessmentDateLabel:
+  "Assessment date:",
+
+viewAssessment:
+  "View My Assessment",
+
+scoreExcellent:
+  "Excellent",
+
+scoreGood:
+  "Good",
+
+scoreDeveloping:
+  "Developing",
+
+scoreAttention:
+  "Needs attention"
       },
 
+      
       fr: {
         loading:
           "Chargement de votre tableau de bord financier...",
@@ -840,9 +916,41 @@
         footerDisclaimer:
           "Les informations affichées dans ce tableau de bord fournissent " +
           "des orientations financières générales et ne constituent pas " +
-          "un conseil financier, d’investissement, fiscal ou juridique réglementé."
+          "un conseil financier, d’investissement, fiscal ou juridique réglementé.",
+        assessmentCardTitle:
+  "Évaluation financière",
+
+assessmentCardDescription:
+  "Consultez votre dernier Score de Santé Financière, le résumé de votre évaluation et votre Plan d’Action Financière personnalisé.",
+
+latestScoreLabel:
+  "Votre dernier Score de Santé Financière",
+
+statusLabel:
+  "Statut :",
+
+assessmentDateLabel:
+  "Date de l’évaluation :",
+
+viewAssessment:
+  "Voir mon évaluation",
+
+scoreExcellent:
+  "Excellent",
+
+scoreGood:
+  "Bon",
+
+scoreDeveloping:
+  "En développement",
+
+scoreAttention:
+  "Nécessite une attention"
       },
 
+
+
+      
       es: {
         loading:
           "Cargando su panel financiero...",
@@ -897,7 +1005,36 @@
         footerDisclaimer:
           "La información mostrada en este panel proporciona orientación " +
           "financiera general y no constituye asesoramiento financiero, " +
-          "de inversión, fiscal o jurídico regulado."
+          "de inversión, fiscal o jurídico regulado.",
+        assessmentCardTitle:
+  "Evaluación Financiera",
+
+assessmentCardDescription:
+  "Consulte su última Puntuación de Salud Financiera, el resumen de su evaluación y su Plan de Acción Financiera personalizado.",
+
+latestScoreLabel:
+  "Su última Puntuación de Salud Financiera",
+
+statusLabel:
+  "Estado:",
+
+assessmentDateLabel:
+  "Fecha de la evaluación:",
+
+viewAssessment:
+  "Ver mi evaluación",
+
+scoreExcellent:
+  "Excelente",
+
+scoreGood:
+  "Bueno",
+
+scoreDeveloping:
+  "En desarrollo",
+
+scoreAttention:
+  "Necesita atención"
       }
     };
 
