@@ -1603,6 +1603,26 @@
   </div>
 
   <script>
+
+     const SUPABASE_URL =
+      "https://ysaxtuvuzqkyfmganven.supabase.co";
+
+    const SUPABASE_PUBLISHABLE_KEY =
+      "sb_publishable_esfhuUEIcUJEL6z9zryRAA_FGMmUHlw";
+
+    const supabaseClient =
+      window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_PUBLISHABLE_KEY,
+        {
+          auth: {
+            persistSession: true,
+            autoRefreshToken: true,
+            detectSessionInUrl: true
+          }
+        }
+      );
+
     const translations = {
       en: {
         editAssessment: "← Edit Assessment",
