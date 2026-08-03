@@ -3649,9 +3649,158 @@ accountNote:
       );
     }
 
+ async function saveAssessmentToSupabase() {
+  const {
+    data: { user },
+    error: userError
+  } =
+    await supabaseClient.auth.getUser();
+
+  if (userError) {
+    console.error(
+      "Unable to identify the signed-in user:",
+      userError
+    );
+
+    return {
+      saved: false,
+      reason: "user-error"
+    };
+  }
+
+  /*
+    Guests may complete the assessment without an account.
+    Their results remain in localStorage until they sign in.
+  */
+  if (!user) {
+    return {
+      saved: false,
+      reason: "not-signed-in"
+    };
+  }
+
+  const assessmentData =
+    loadBlueprintData();
+
+  if (!assessmentData) {
+    console.warn(
+      "No complete Financial Blueprint was found."
+    );
+
+    return {
+      saved: false,
+      reason: "missing-assessment"
+    };
+  }
+
+  const completedValue =
+    localStorage.getItem(
+      "gsfBlueprintCompleted"
+    );
+
+  const parsedCompletionDate =
+    completedValue
+      ? new Date(completedValue)
+      : null;
+
+  const completedAt =
+    parsedCompletionDate &&
+    !Number.isNaN(
+      parsedCompletionDate.getTime()
+    )
+      ? parsedCompletionDate.toISOString()
+      : new Date().toISOString();
+
+  const overallScore =
+    calculateScore(assessmentData);
+
+  const scoreCategory =
+    getScoreCategory(overallScore);
+
+  /*
+    Prevent this browser from uploading the same completed
+    assessment repeatedly whenever the results page reloads.
+  */
+  const saveMarker =
+    "gsfSupabaseSaved:" +
+    user.id +
+    ":" +
+    completedAt;
+
+  if (
+    localStorage.getItem(saveMarker) ===
+    "true"
+  ) {
+    return {
+      saved: true,
+      reason: "already-saved"
+    };
+  }
+
+  const assessmentRecord = {
+    user_id: user.id,
+
+    overall_score: overallScore,
+
+    status: scoreCategory.status,
+
+    completed_at: completedAt,
+
+    step1_data: assessmentData.step1,
+    step2_data: assessmentData.step2,
+    step3_data: assessmentData.step3,
+    step4_data: assessmentData.step4,
+    step5_data: assessmentData.step5,
+
+    updated_at: new Date().toISOString()
+  };
+
+  const { error: insertError } =
+    await supabaseClient
+      .from("gsf_assessments")
+      .insert(assessmentRecord);
+
+  if (insertError) {
+    console.error(
+      "Unable to save the Financial Assessment:",
+      insertError
+    );
+
+    return {
+      saved: false,
+      reason: "database-error",
+      error: insertError
+    };
+  }
+
+  localStorage.setItem(
+    saveMarker,
+    "true"
+  );
+
+  console.log(
+    "Financial Assessment saved to Supabase."
+  );
+
+  return {
+    saved: true,
+    reason: "saved"
+  };
+}
+ 
+ 
+ 
     function renderResults() {
       blueprintData =
         loadBlueprintData();
+
+        saveAssessmentToSupabase()
+  .then((result) => {
+    console.log("Supabase save:", result);
+  })
+  .catch((error) => {
+    console.error(error);
+  });
 
       if (!blueprintData) {
         resultsContent.style.display =
