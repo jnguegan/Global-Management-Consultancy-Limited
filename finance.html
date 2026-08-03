@@ -1473,245 +1473,240 @@
       transform: translateY(0);
     }
 
-    @media (max-width: 1050px) {
-      .desktop-nav {
-        display: none;
-      }
+   @media (max-width: 1050px) {
+  .desktop-nav { display: none; }
+  .mobile-menu-button { display: inline-flex; }
 
-      .mobile-menu-button {
-        display: inline-flex;
-      }
+  .container,
+  .nav-inner,
+  .hero-grid,
+  .feature-shell,
+  .advisory-shell,
+  .section-shell {
+    width: 100%;
+    max-width: 100%;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
 
-      .hero-grid,
-      .feature-shell,
-      .advisory-shell {
-        grid-template-columns: 1fr;
-      }
+  .hero-grid,
+  .feature-shell,
+  .advisory-shell {
+    grid-template-columns: 1fr;
+  }
 
-      .hero {
-        min-height: auto;
-      }
+  .hero {
+    min-height: auto;
+    padding: 70px 0 45px;
+  }
 
-      .hero-copy {
-        text-align: center;
-      }
+  .hero-grid {
+    display: grid;
+    gap: 36px;
+    text-align: center;
+  }
 
-      .hero-copy h1,
-      .hero-description {
-        margin-inline: auto;
-      }
+  .hero-copy {
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+    text-align: center;
+  }
 
-      .hero-actions {
-        justify-content: center;
-      }
+  .hero-copy h1,
+  .hero-description { margin-inline: auto; }
 
-      .hero-panel {
-        width: min(100%, 650px);
-        margin-inline: auto;
-      }
+  .hero-eyebrow {
+    justify-content: center;
+    font-size: 0.82rem;
+    line-height: 1.5;
+    letter-spacing: 0.16em;
+    margin-bottom: 24px;
+  }
 
-      .journey-grid,
-      .solutions-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
+  .hero h1,
+  .hero-copy h1 {
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: clamp(3rem, 10vw, 5rem);
+    line-height: 0.96;
+  }
 
-      .tools-grid,
-      .insights-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
+  .hero-description {
+    max-width: 680px;
+    margin: 26px auto 0;
+    font-size: 1.05rem;
+    line-height: 1.7;
+  }
 
-      .insights-grid .insight-card:last-child {
-        grid-column: 1 / -1;
-      }
-    }
+  .hero-actions,
+  .cta-group,
+  .account-actions,
+  .access-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+    width: 100%;
+    max-width: 520px;
+    margin-left: auto;
+    margin-right: auto;
+    justify-content: center;
+  }
 
-    @media (max-width: 760px) {
-      .container {
-        width: min(calc(100% - 28px), var(--max-width));
-      }
+  .hero-actions .button,
+  .cta-group .button,
+  .account-actions .button,
+  .access-actions .button,
+  .hero-actions a,
+  .cta-group a {
+    width: 100%;
+    min-height: 58px;
+    justify-content: center;
+    text-align: center;
+  }
 
-      .header-inner {
-        min-height: 76px;
-      }
+  .hero-panel {
+    width: min(100%, 650px);
+    margin-inline: auto;
+  }
 
-      .brand-logo {
-        width: 47px;
-        height: 47px;
-        flex-basis: 47px;
-      }
+  .hero-visual,
+  .hero-card,
+  .feature-card,
+  .advisory-card,
+  .insight-card,
+  .tool-card {
+    width: 100%;
+    max-width: 100%;
+  }
 
-      .brand-name {
-        font-size: 0.92rem;
-      }
+  .journey-grid,
+  .solutions-grid { grid-template-columns: repeat(2, 1fr); }
 
-      .brand-parent {
-        font-size: 0.57rem;
-      }
+  .tools-grid,
+  .insights-grid { grid-template-columns: repeat(2, 1fr); }
 
-      .hero {
-        padding-top: 120px;
-      }
+  .insights-grid .insight-card:last-child { grid-column: 1 / -1; }
 
-      .hero-grid {
-        gap: 42px;
-      }
+  .feature-grid,
+  .advisory-grid,
+  .stats-grid,
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: 22px;
+  }
 
-      .hero-copy h1 {
-        font-size: clamp(3rem, 15vw, 4.8rem);
-      }
+  section { overflow: hidden; }
 
-      .hero-actions {
-        display: grid;
-      }
+  img,
+  svg,
+  canvas,
+  iframe {
+    max-width: 100%;
+    height: auto;
+  }
+}
 
-      .hero-actions .button {
-        width: 100%;
-      }
+@media (max-width: 760px) {
+  .container { width: min(calc(100% - 28px), var(--max-width)); }
+  .header-inner { min-height: 76px; }
+  .brand-logo { width: 47px; height: 47px; flex-basis: 47px; }
+  .brand-name { font-size: 0.92rem; }
+  .brand-parent { font-size: 0.57rem; }
+  .hero { padding-top: 120px; }
+  .hero-grid { gap: 42px; }
+  .hero-copy h1 { font-size: clamp(3rem, 15vw, 4.8rem); }
+  .hero-actions { display: grid; }
+  .hero-actions .button { width: 100%; }
+  .hero-panel { padding: 16px; border-radius: 24px; }
+  .hero-logo-wrap { min-height: 290px; }
+  .hero-panel-footer { align-items: flex-start; flex-direction: column; }
+  .trust-strip { margin-top: 0; padding-top: 20px; }
+  .trust-grid { grid-template-columns: repeat(2, 1fr); }
+  .trust-item { border-bottom: 1px solid var(--line); }
+  .trust-item:nth-child(2) { border-right: 0; }
+  .trust-item:nth-child(3),
+  .trust-item:nth-child(4) { border-bottom: 0; }
+  .journey,
+  .blueprint,
+  .insights,
+  .tools,
+  .advisory,
+  .solutions { padding: 82px 0; }
+  .journey-grid,
+  .insights-grid,
+  .tools-grid,
+  .solutions-grid { grid-template-columns: 1fr; }
+  .insights-grid .insight-card:last-child { grid-column: auto; }
+  .feature-shell { padding: 12px; border-radius: 25px; }
+  .feature-content { padding: 28px 18px; }
+  .blueprint-preview { min-height: auto; padding: 14px; }
+  .preview-metrics,
+  .service-list { grid-template-columns: 1fr; }
+  .advisory-shell { padding: 26px 18px; }
+  .solution-cta { align-items: stretch; flex-direction: column; }
+  .solution-cta .button { width: 100%; }
+  .footer-main { grid-template-columns: 1fr; }
+  .footer-bottom { align-items: flex-start; flex-direction: column; }
+}
 
-      .hero-panel {
-        padding: 16px;
-        border-radius: 24px;
-      }
+@media (max-width: 640px) {
+  .site-header { min-height: 88px; }
+  .nav-inner { padding-left: 16px; padding-right: 16px; }
+  .brand-logo { width: 64px; height: 64px; }
+  .brand-name { font-size: 1.15rem; line-height: 1.2; }
+  .mobile-menu-button { width: 56px; height: 56px; flex: 0 0 56px; }
+  .hero { padding-top: 52px; padding-bottom: 36px; }
+  .hero-grid,
+  .feature-shell,
+  .advisory-shell,
+  .section-shell,
+  .container { padding-left: 16px; padding-right: 16px; }
+  .hero-eyebrow { font-size: 0.72rem; letter-spacing: 0.13em; }
+  .hero h1,
+  .hero-copy h1 { font-size: clamp(2.85rem, 14vw, 4.15rem); line-height: 0.93; }
+  .hero-description { font-size: 1rem; line-height: 1.65; }
+  .hero-actions,
+  .cta-group,
+  .account-actions,
+  .access-actions { max-width: none; }
+  .button,
+  .hero-actions a,
+  .cta-group a {
+    min-height: 56px;
+    padding: 16px 20px;
+    font-size: 1rem;
+    white-space: normal;
+  }
+  .section-heading { font-size: clamp(2rem, 9vw, 3rem); line-height: 1.05; }
+  .feature-card,
+  .advisory-card,
+  .insight-card,
+  .tool-card { padding: 24px 20px; }
+  body { overflow-x: hidden; }
+}
 
-      .hero-logo-wrap {
-        min-height: 290px;
-      }
+@media (max-width: 450px) {
+  .brand-parent { display: none; }
+  .trust-grid { grid-template-columns: 1fr; }
+  .trust-item { border-right: 0; border-bottom: 1px solid var(--line); }
+  .trust-item:nth-child(3) { border-bottom: 1px solid var(--line); }
+  .trust-item:last-child { border-bottom: 0; }
+  .score-card { align-items: flex-start; flex-direction: column; }
+}
 
-      .hero-panel-footer {
-        align-items: flex-start;
-        flex-direction: column;
-      }
-
-      .trust-strip {
-        margin-top: 0;
-        padding-top: 20px;
-      }
-
-      .trust-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .trust-item {
-        border-bottom: 1px solid var(--line);
-      }
-
-      .trust-item:nth-child(2) {
-        border-right: 0;
-      }
-
-      .trust-item:nth-child(3),
-      .trust-item:nth-child(4) {
-        border-bottom: 0;
-      }
-
-      .journey,
-      .blueprint,
-      .insights,
-      .tools,
-      .advisory,
-      .solutions {
-        padding: 82px 0;
-      }
-
-      .journey-grid,
-      .insights-grid,
-      .tools-grid,
-      .solutions-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .insights-grid .insight-card:last-child {
-        grid-column: auto;
-      }
-
-      .feature-shell {
-        padding: 12px;
-        border-radius: 25px;
-      }
-
-      .feature-content {
-        padding: 28px 18px;
-      }
-
-      .blueprint-preview {
-        min-height: auto;
-        padding: 14px;
-      }
-
-      .preview-metrics,
-      .service-list {
-        grid-template-columns: 1fr;
-      }
-
-      .advisory-shell {
-        padding: 26px 18px;
-      }
-
-      .solution-cta {
-        align-items: stretch;
-        flex-direction: column;
-      }
-
-      .solution-cta .button {
-        width: 100%;
-      }
-
-      .footer-main {
-        grid-template-columns: 1fr;
-      }
-
-      .footer-bottom {
-        align-items: flex-start;
-        flex-direction: column;
-      }
-    }
-
-    @media (max-width: 450px) {
-      .brand-parent {
-        display: none;
-      }
-
-      .trust-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .trust-item {
-        border-right: 0;
-        border-bottom: 1px solid var(--line);
-      }
-
-      .trust-item:nth-child(3) {
-        border-bottom: 1px solid var(--line);
-      }
-
-      .trust-item:last-child {
-        border-bottom: 0;
-      }
-
-      .score-card {
-        align-items: flex-start;
-        flex-direction: column;
-      }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      html {
-        scroll-behavior: auto;
-      }
-
-      *,
-      *::before,
-      *::after {
-        transition-duration: 0.01ms !important;
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-      }
-
-      .fade-up {
-        opacity: 1;
-        transform: none;
-      }
-    }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+  .fade-up { opacity: 1; transform: none; }
+}
   </style>
 </head>
 
