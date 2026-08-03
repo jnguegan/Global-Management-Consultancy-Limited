@@ -3652,29 +3652,35 @@ accountNote:
     }
 
  async function saveAssessmentToSupabase() {
-  const {
-    data: { user },
-    error: userError
-  } =
-    await supabaseClient.auth.getUser();
+ const {
+  data: { session },
+  error: sessionError
+} = await supabaseClient.auth.getSession();
 
-  if (userError) {
-    console.error(
-      "Unable to identify the signed-in user:",
-      userError
-    );
+if (sessionError) {
+  console.error(
+    "Unable to check the Supabase session:",
+    sessionError
+  );
 
-    return {
-      saved: false,
-      reason: "user-error"
-    };
-  }
+  return {
+    saved: false,
+    reason: "session-error"
+  };
+}
+
+const user = session?.user;
+
+
 
   /*
     Guests may complete the assessment without an account.
     Their results remain in localStorage until they sign in.
   */
   if (!user) {
+    console.log(
+    "Assessment remains in this browser until the user signs in."
+  );
     return {
       saved: false,
       reason: "not-signed-in"
