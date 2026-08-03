@@ -1541,9 +1541,9 @@
   }
 
   .hero-actions,
-  .cta-group,
-  .account-actions,
-  .access-actions {
+.cta-group,
+.account-actions,
+.access-actions {
     display: grid;
     grid-template-columns: 1fr;
     gap: 14px;
@@ -1554,12 +1554,14 @@
     justify-content: center;
   }
 
-  .hero-actions .button,
-  .cta-group .button,
-  .account-actions .button,
-  .access-actions .button,
-  .hero-actions a,
-  .cta-group a {
+ .hero-actions .button,
+.action-group .button,
+.cta-group .button,
+.account-actions .button,
+.access-actions .button,
+.hero-actions a,
+.action-group a,
+.cta-group a {
     width: 100%;
     min-height: 58px;
     justify-content: center;
@@ -1668,12 +1670,16 @@
   .hero-copy h1 { font-size: clamp(2.85rem, 14vw, 4.15rem); line-height: 0.93; }
   .hero-description { font-size: 1rem; line-height: 1.65; }
   .hero-actions,
-  .cta-group,
-  .account-actions,
-  .access-actions { max-width: none; }
-  .button,
-  .hero-actions a,
-  .cta-group a {
+.action-group,
+.cta-group,
+.account-actions,
+.access-actions {
+  max-width: none;
+}
+ .button,
+.hero-actions a,
+.action-group a,
+.cta-group a {
     min-height: 56px;
     padding: 16px 20px;
     font-size: 1rem;
