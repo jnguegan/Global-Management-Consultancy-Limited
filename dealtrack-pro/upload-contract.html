@@ -1315,9 +1315,10 @@
                     "warning"
                   );
                 } else {
-                  console.log(
-                    "Analysis response:",
-                    analysisResponse
+                  console.log("Analysis response");
+                  console.dir(analysisResponse);
+                  alert(
+                  JSON.stringify(analysisResponse, null, 2)
                   );
 
                   setProgress(
