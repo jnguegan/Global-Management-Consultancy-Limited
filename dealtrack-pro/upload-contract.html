@@ -647,67 +647,50 @@
           </div>
 
           <div class="field full">
-            <label data-i18n="fileLabel">
-              Signed Contract PDF
-            </label>
+  <label
+    for="contractFiles"
+    data-i18n="fileLabel"
+  >
+    Contract Package Documents
+  </label>
 
-            <div
-              id="uploadZone"
-              class="upload-zone"
-              tabindex="0"
-              role="button"
-            >
-              <input
-                id="contractFile"
-                class="file-input"
-                type="file"
-                accept="application/pdf,.pdf"
-              />
+  <div
+    id="uploadZone"
+    class="upload-zone"
+    tabindex="0"
+    role="button"
+  >
+    <input
+      id="contractFiles"
+      class="file-input"
+      type="file"
+      accept="application/pdf,.pdf"
+      multiple
+    />
 
-              <div class="upload-icon">📄</div>
+    <div class="upload-icon">📄</div>
 
-              <div
-                class="upload-title"
-                data-i18n="uploadTitle"
-              >
-                Drag and drop your signed contract here
-              </div>
+    <div
+      class="upload-title"
+      data-i18n="uploadTitle"
+    >
+      Select or drop all related PDFs here
+    </div>
 
-              <div
-                class="upload-help"
-                data-i18n="uploadHelp"
-              >
-                PDF only. Maximum file size: 20 MB.
-              </div>
-            </div>
+    <div
+      class="upload-help"
+      data-i18n="uploadHelp"
+    >
+      Upload the main contract, subcontracts, addenda,
+      amendments, schedules and appendices together.
+    </div>
+  </div>
 
-            <div
-              id="selectedFile"
-              class="selected-file"
-            >
-              <div>
-                <div
-                  id="selectedFileName"
-                  class="file-name"
-                ></div>
-
-                <div
-                  id="selectedFileSize"
-                  class="file-size"
-                ></div>
-              </div>
-
-              <button
-                id="removeFileBtn"
-                class="remove-file"
-                type="button"
-                data-i18n="removeFile"
-              >
-                Remove
-              </button>
-            </div>
-          </div>
-        </div>
+  <div
+    id="selectedFiles"
+    class="selected-files"
+  ></div>
+</div>        </div>
 
         <div class="actions">
           <button
@@ -779,15 +762,15 @@
       "businessEntityPlaceholder": "BS Group Entertainment Sports LLC",
       "notesLabel": "Internal Notes",
       "notesPlaceholder": "Optional notes about this contract",
-      "fileLabel": "Signed Contract PDF",
-      "uploadTitle": "Drag and drop your signed contract here",
-      "uploadHelp": "PDF only. Maximum file size: 20 MB.",
+      "fileLabel": "Contract Package Documents",
+      "uploadTitle": "Select or drop all related PDFs here",
+      "uploadHelp": "Upload the main contract, subcontracts, addenda, amendments, schedules and appendices together. Maximum file size: 20 MB per PDF.",
       "removeFile": "Remove",
       "analyseButton": "Upload Contract",
      "backPortfolioButton": "← Back to Portfolio",
       "invalidPdf": "Please select a valid PDF file.",
       "fileTooLarge": "The PDF must be smaller than 20 MB.",
-      "missingFile": "Please select the signed contract PDF.",
+      "missingFile": "Please select at least one contract document.",
       "supabaseMissing": "Supabase client not available.",
       "uploading": "Uploading contract securely...",
       "creatingRecord": "Creating the contract record...",
@@ -820,15 +803,15 @@
       "businessEntityPlaceholder": "BS Group Entertainment Sports LLC",
       "notesLabel": "Notes internes",
       "notesPlaceholder": "Notes facultatives concernant ce contrat",
-      "fileLabel": "PDF du contrat signé",
-      "uploadTitle": "Glissez-déposez votre contrat signé ici",
-      "uploadHelp": "PDF uniquement. Taille maximale : 20 Mo.",
+      "fileLabel": "Documents du dossier contractuel",
+      "uploadTitle": "Sélectionnez ou déposez ici tous les PDF associés",
+      "uploadHelp": "Importez ensemble le contrat principal, les sous-contrats, les avenants, les modifications, les échéanciers et les annexes. Taille maximale : 20 Mo par PDF.",
       "removeFile": "Retirer",
       "analyseButton": "Importer le contrat",
       "backPortfolioButton": "← Retour au portefeuille",
       "invalidPdf": "Veuillez sélectionner un fichier PDF valide.",
       "fileTooLarge": "Le PDF doit être inférieur à 20 Mo.",
-      "missingFile": "Veuillez sélectionner le PDF du contrat signé.",
+     "missingFile": "Veuillez sélectionner au moins un document contractuel.",
       "supabaseMissing": "Client Supabase indisponible.",
       "uploading": "Importation sécurisée du contrat...",
       "creatingRecord": "Création du dossier contractuel...",
@@ -861,15 +844,15 @@
       "businessEntityPlaceholder": "BS Group Entertainment Sports LLC",
       "notesLabel": "Notas internas",
       "notesPlaceholder": "Notas opcionales sobre este contrato",
-      "fileLabel": "PDF del contrato firmado",
-      "uploadTitle": "Arrastre y suelte aquí su contrato firmado",
-      "uploadHelp": "Solo PDF. Tamaño máximo: 20 MB.",
+     "fileLabel": "Documentos del paquete contractual",
+      "uploadTitle": "Seleccione o arrastre aquí todos los PDF relacionados",
+      "uploadHelp": "Suba juntos el contrato principal, los subcontratos, los anexos, las modificaciones, los calendarios y los apéndices. Tamaño máximo: 20 MB por PDF.",
       "removeFile": "Eliminar",
       "analyseButton": "Subir el contrato",
       "backPortfolioButton": "← Volver al portafolio",
       "invalidPdf": "Seleccione un archivo PDF válido.",
       "fileTooLarge": "El PDF debe tener menos de 20 MB.",
-      "missingFile": "Seleccione el PDF del contrato firmado.",
+      "missingFile": "Seleccione al menos un documento contractual.",
       "supabaseMissing": "Cliente Supabase no disponible.",
       "uploading": "Subiendo el contrato de forma segura...",
       "creatingRecord": "Creando el registro contractual...",
