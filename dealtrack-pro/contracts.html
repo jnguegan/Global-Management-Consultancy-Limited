@@ -2,7 +2,12 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>DealTrack Pro — Contracts</title>
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
+  <title>DealTrack Pro — Contract Portfolio</title>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="/agent-academy/js/supabase-client.js"></script>
@@ -10,114 +15,1434 @@
   <script src="/agent-academy/js/guard.js"></script>
 
   <style>
-    body {
-      font-family: Inter, sans-serif;
-      background: #0b0f1a;
-      color: white;
-      padding: 20px;
+    :root {
+      --bg: #020b1d;
+      --bg-2: #07152f;
+      --panel: rgba(10, 24, 52, 0.94);
+      --panel-soft: rgba(255, 255, 255, 0.035);
+      --border: rgba(255, 255, 255, 0.09);
+      --text: #f6f8fc;
+      --muted: #9fb0cf;
+      --blue: #2f8cff;
+      --blue-2: #58a6ff;
+      --gold: #d4af37;
+      --gold-2: #f0c85a;
+      --success: #22c55e;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --shadow: 0 18px 60px rgba(0, 0, 0, 0.34);
     }
 
-    h1 {
-      margin-bottom: 20px;
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      padding: 24px;
+      font-family: Inter, Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(
+          circle at top left,
+          rgba(47, 140, 255, 0.18),
+          transparent 28%
+        ),
+        radial-gradient(
+          circle at top right,
+          rgba(212, 175, 55, 0.12),
+          transparent 24%
+        ),
+        linear-gradient(
+          180deg,
+          #010814 0%,
+          #05122a 45%,
+          #020b1d 100%
+        );
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    .page {
+      width: 100%;
+      max-width: 1240px;
+      margin: 0 auto;
     }
 
     .topbar {
-  position: sticky;
-  top: 0;
-  z-index: 1000;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      flex-wrap: wrap;
+      padding: 14px 0 18px;
+      margin-bottom: 24px;
+      background: linear-gradient(
+        180deg,
+        rgba(2, 11, 29, 0.97),
+        rgba(2, 11, 29, 0.86)
+      );
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
 
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 16px;
-  flex-wrap: wrap;
+    .topbar-left,
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
 
-  padding: 12px 0;
-  margin-bottom: 20px;
+    .brand {
+      display: flex;
+      flex-direction: column;
+      margin-right: 8px;
+    }
 
-  background: var(--bg);
-  border-bottom: 1px solid var(--border);
-}
+    .brand-title {
+      font-size: 21px;
+      font-weight: 900;
+      letter-spacing: -0.03em;
+    }
 
-    .btn {
-      padding: 10px 14px;
-      background: #1e90ff;
-      border: none;
-      border-radius: 6px;
-      color: white;
-      cursor: pointer;
+    .brand-main {
+      color: #fff;
+    }
+
+    .brand-pro {
+      margin-left: 6px;
+      color: var(--gold);
+    }
+
+    .brand-tagline {
+      margin-top: 3px;
+      color: rgba(240, 200, 90, 0.82);
+      font-size: 11px;
+      letter-spacing: 0.04em;
+    }
+
+    .btn,
+    .lang-btn {
+      appearance: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 46px;
+      padding: 0 16px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.04);
       text-decoration: none;
-      display: inline-block;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.2s ease;
     }
 
-    .card {
-      background: #141a2a;
-      padding: 15px;
-      border-radius: 10px;
+    .btn:hover,
+    .lang-btn:hover {
+      transform: translateY(-1px);
+      border-color: rgba(255, 255, 255, 0.18);
+    }
+
+    .btn-primary {
+      color: white;
+      background: linear-gradient(
+        135deg,
+        var(--blue),
+        var(--blue-2)
+      );
+      border-color: rgba(88, 166, 255, 0.38);
+      box-shadow: 0 12px 28px rgba(47, 140, 255, 0.22);
+    }
+
+    .btn-gold {
+      color: #09111f;
+      background: linear-gradient(
+        135deg,
+        var(--gold),
+        var(--gold-2)
+      );
+      border-color: rgba(212, 175, 55, 0.52);
+      box-shadow: 0 12px 28px rgba(212, 175, 55, 0.16);
+    }
+
+    .lang-switcher {
+      display: flex;
+      gap: 7px;
+      flex-wrap: wrap;
+    }
+
+    .lang-btn {
+      min-width: 50px;
+      padding: 0 12px;
+    }
+
+    .lang-btn.is-active {
+      color: white;
+      background: linear-gradient(
+        135deg,
+        var(--blue),
+        var(--blue-2)
+      );
+      border-color: rgba(88, 166, 255, 0.38);
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: 30px;
+      margin-bottom: 22px;
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      background:
+        linear-gradient(
+          135deg,
+          rgba(47, 140, 255, 0.11),
+          transparent 44%
+        ),
+        linear-gradient(
+          160deg,
+          rgba(212, 175, 55, 0.08),
+          transparent 58%
+        ),
+        var(--panel);
+      box-shadow: var(--shadow);
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      top: -70px;
+      right: -70px;
+      width: 230px;
+      height: 230px;
+      border-radius: 50%;
+      background: rgba(212, 175, 55, 0.07);
+      filter: blur(8px);
+      pointer-events: none;
+    }
+
+    .eyebrow {
       margin-bottom: 12px;
+      color: var(--gold-2);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
     }
 
-    .muted {
-      opacity: 0.8;
+    h1 {
+      margin: 0 0 10px;
+      font-size: clamp(2rem, 4vw, 3.15rem);
+      line-height: 1.05;
+      letter-spacing: -0.035em;
+    }
+
+    .hero-description {
+      max-width: 780px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 1.02rem;
+      line-height: 1.65;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin-bottom: 22px;
+    }
+
+    .summary-card {
+      padding: 18px;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+
+    .summary-label {
+      display: block;
+      margin-bottom: 9px;
+      color: var(--muted);
+      font-size: 0.76rem;
+      font-weight: 800;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+
+    .summary-value {
+      font-size: 1.75rem;
+      font-weight: 900;
+      letter-spacing: -0.03em;
+    }
+
+    .summary-note {
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+
+    .controls {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 220px;
+      gap: 12px;
+      padding: 18px;
+      margin-bottom: 20px;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      background: var(--panel);
+    }
+
+    .search-box,
+    .filter-select {
+      width: 100%;
+      min-height: 48px;
+      padding: 0 15px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      outline: none;
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.035);
+    }
+
+    .search-box::placeholder {
+      color: #7586a7;
+    }
+
+    .filter-select option {
+      color: #111;
+    }
+
+    .section-heading {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 15px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .section-heading h2 {
+      margin: 0;
+      font-size: 1.3rem;
+      letter-spacing: -0.02em;
+    }
+
+    .result-count {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .contracts-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .contract-card {
+      position: relative;
+      overflow: hidden;
+      display: block;
+      padding: 21px;
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      color: inherit;
+      background:
+        linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.035),
+          rgba(255, 255, 255, 0.015)
+        ),
+        var(--panel);
+      box-shadow: var(--shadow);
+      text-decoration: none;
+      transition: 0.22s ease;
+    }
+
+    .contract-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(88, 166, 255, 0.3);
+      box-shadow: 0 24px 68px rgba(0, 0, 0, 0.42);
+    }
+
+    .contract-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 5px;
+      height: 100%;
+      background: var(--blue);
+    }
+
+    .contract-card.expiring::before {
+      background: var(--warning);
+    }
+
+    .contract-card.expired::before {
+      background: var(--danger);
+    }
+
+    .card-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .player-name {
+      margin: 0 0 6px;
+      font-size: 1.2rem;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+    }
+
+    .club-name {
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    .status-pill {
+      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      min-height: 32px;
+      padding: 0 10px;
+      border: 1px solid rgba(34, 197, 94, 0.22);
+      border-radius: 999px;
+      color: #c7f9d4;
+      background: rgba(34, 197, 94, 0.1);
+      font-size: 0.75rem;
+      font-weight: 800;
+    }
+
+    .status-pill.expiring {
+      color: #ffe0a3;
+      background: rgba(245, 158, 11, 0.1);
+      border-color: rgba(245, 158, 11, 0.24);
+    }
+
+    .status-pill.expired {
+      color: #ffd1d1;
+      background: rgba(239, 68, 68, 0.1);
+      border-color: rgba(239, 68, 68, 0.24);
+    }
+
+    .card-details {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .detail {
+      padding: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.055);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.022);
+    }
+
+    .detail-label {
+      display: block;
+      margin-bottom: 5px;
+      color: var(--muted);
+      font-size: 0.69rem;
+      font-weight: 800;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+    }
+
+    .detail-value {
+      color: var(--text);
+      font-size: 0.9rem;
+      font-weight: 700;
+      word-break: break-word;
+    }
+
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding-top: 15px;
+      border-top: 1px solid var(--border);
+    }
+
+    .analysis-label {
+      color: var(--muted);
+      font-size: 0.84rem;
+    }
+
+    .open-label {
+      color: var(--blue-2);
+      font-size: 0.87rem;
+      font-weight: 800;
+    }
+
+    .state-box {
+      padding: 34px 22px;
+      border: 1px dashed rgba(255, 255, 255, 0.15);
+      border-radius: 22px;
+      color: var(--muted);
+      background: rgba(255, 255, 255, 0.025);
+      text-align: center;
+    }
+
+    .state-box strong {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--text);
+      font-size: 1.05rem;
+    }
+
+    .error-box {
+      color: #ffd4d4;
+      border-color: rgba(239, 68, 68, 0.3);
+      background: rgba(239, 68, 68, 0.08);
+    }
+
+    @media (max-width: 1000px) {
+      .summary-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 780px) {
+      body {
+        padding: 16px;
+      }
+
+      .topbar-left,
+      .topbar-right {
+        width: 100%;
+      }
+
+      .topbar-right .btn {
+        flex: 1;
+      }
+
+      .hero {
+        padding: 22px 19px;
+      }
+
+      .controls {
+        grid-template-columns: 1fr;
+      }
+
+      .contracts-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .summary-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .card-details {
+        grid-template-columns: 1fr;
+      }
+
+      .btn {
+        width: 100%;
+      }
+
+      .lang-btn {
+        width: auto;
+      }
+
+      .topbar-right .lang-switcher {
+        width: 100%;
+      }
     }
   </style>
 </head>
+
 <body>
+  <div class="page">
+    <header class="topbar">
+      <div class="topbar-left">
+        <div class="brand">
+          <div class="brand-title">
+            <span class="brand-main">DealTrack</span>
+            <span class="brand-pro">Pro</span>
+          </div>
 
-  <h1>📄 Contracts</h1>
+          <div
+            class="brand-tagline"
+            data-i18n="brandTagline"
+          >
+            Contract Intelligence for Football Agents
+          </div>
+        </div>
 
-  <div class="topbar">
-    <a class="btn" href="/dealtrack/add-contract.html">➕ Add Contract</a>
+        <a
+          class="btn"
+          href="/agent-academy/dashboard.html"
+          data-i18n="backDashboard"
+        >
+          ← Back to Dashboard
+        </a>
+      </div>
+
+      <div class="topbar-right">
+        <a
+          class="btn btn-gold"
+          href="/dealtrack-pro/upload-contract.html"
+          data-i18n="uploadContract"
+        >
+          📤 Upload Contract
+        </a>
+
+        <a
+          class="btn btn-primary"
+          href="/dealtrack-pro/add-contract.html"
+          data-i18n="addManually"
+        >
+          ➕ Add Manually
+        </a>
+
+        <div class="lang-switcher">
+          <button
+            type="button"
+            class="lang-btn"
+            data-lang-btn="en"
+          >
+            EN
+          </button>
+
+          <button
+            type="button"
+            class="lang-btn"
+            data-lang-btn="fr"
+          >
+            FR
+          </button>
+
+          <button
+            type="button"
+            class="lang-btn"
+            data-lang-btn="es"
+          >
+            ES
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <section class="hero">
+      <div
+        class="eyebrow"
+        data-i18n="heroEyebrow"
+      >
+        Contract Portfolio
+      </div>
+
+      <h1 data-i18n="heroTitle">
+        Your contract control centre
+      </h1>
+
+      <p
+        class="hero-description"
+        data-i18n="heroDescription"
+      >
+        Review every active contract, monitor expiry dates and open each
+        contract record from one secure workspace.
+      </p>
+    </section>
+
+    <section
+      class="summary-grid"
+      aria-label="Portfolio summary"
+    >
+      <article class="summary-card">
+        <span
+          class="summary-label"
+          data-i18n="summaryTotal"
+        >
+          Total Contracts
+        </span>
+
+        <div
+          id="totalContracts"
+          class="summary-value"
+        >
+          —
+        </div>
+
+        <div
+          class="summary-note"
+          data-i18n="summaryTotalNote"
+        >
+          All recorded contracts
+        </div>
+      </article>
+
+      <article class="summary-card">
+        <span
+          class="summary-label"
+          data-i18n="summaryActive"
+        >
+          Active
+        </span>
+
+        <div
+          id="activeContracts"
+          class="summary-value"
+        >
+          —
+        </div>
+
+        <div
+          class="summary-note"
+          data-i18n="summaryActiveNote"
+        >
+          Currently in force
+        </div>
+      </article>
+
+      <article class="summary-card">
+        <span
+          class="summary-label"
+          data-i18n="summaryExpiring"
+        >
+          Expiring Soon
+        </span>
+
+        <div
+          id="expiringContracts"
+          class="summary-value"
+        >
+          —
+        </div>
+
+        <div
+          class="summary-note"
+          data-i18n="summaryExpiringNote"
+        >
+          Ending within 90 days
+        </div>
+      </article>
+
+      <article class="summary-card">
+        <span
+          class="summary-label"
+          data-i18n="summaryExpired"
+        >
+          Expired
+        </span>
+
+        <div
+          id="expiredContracts"
+          class="summary-value"
+        >
+          —
+        </div>
+
+        <div
+          class="summary-note"
+          data-i18n="summaryExpiredNote"
+        >
+          Past the recorded end date
+        </div>
+      </article>
+    </section>
+
+    <section class="controls">
+      <input
+        id="searchInput"
+        class="search-box"
+        type="search"
+        placeholder="Search by player, club, league or country"
+        data-i18n-placeholder="searchPlaceholder"
+        autocomplete="off"
+      />
+
+      <select
+        id="statusFilter"
+        class="filter-select"
+        aria-label="Filter contracts"
+      >
+        <option
+          value="all"
+          data-i18n="filterAll"
+        >
+          All Contracts
+        </option>
+
+        <option
+          value="active"
+          data-i18n="filterActive"
+        >
+          Active
+        </option>
+
+        <option
+          value="expiring"
+          data-i18n="filterExpiring"
+        >
+          Expiring Soon
+        </option>
+
+        <option
+          value="expired"
+          data-i18n="filterExpired"
+        >
+          Expired
+        </option>
+      </select>
+    </section>
+
+    <section>
+      <div class="section-heading">
+        <h2 data-i18n="contractsHeading">
+          Contracts
+        </h2>
+
+        <div
+          id="resultCount"
+          class="result-count"
+        ></div>
+      </div>
+
+      <div id="contractsList">
+        <div class="state-box">
+          <strong data-i18n="loadingTitle">
+            Loading contracts
+          </strong>
+
+          <span data-i18n="loadingText">
+            Preparing your contract portfolio...
+          </span>
+        </div>
+      </div>
+    </section>
   </div>
 
-  <div id="contractsList" class="muted">Loading contracts...</div>
+  <script
+    type="application/json"
+    id="dealtrack-portfolio-i18n"
+  >
+  {
+    "en": {
+      "brandTagline": "Contract Intelligence for Football Agents",
+      "backDashboard": "← Back to Dashboard",
+      "uploadContract": "📤 Upload Contract",
+      "addManually": "➕ Add Manually",
+      "heroEyebrow": "Contract Portfolio",
+      "heroTitle": "Your contract control centre",
+      "heroDescription": "Review every active contract, monitor expiry dates and open each contract record from one secure workspace.",
+      "summaryTotal": "Total Contracts",
+      "summaryTotalNote": "All recorded contracts",
+      "summaryActive": "Active",
+      "summaryActiveNote": "Currently in force",
+      "summaryExpiring": "Expiring Soon",
+      "summaryExpiringNote": "Ending within 90 days",
+      "summaryExpired": "Expired",
+      "summaryExpiredNote": "Past the recorded end date",
+      "searchPlaceholder": "Search by player, club, league or country",
+      "filterAll": "All Contracts",
+      "filterActive": "Active",
+      "filterExpiring": "Expiring Soon",
+      "filterExpired": "Expired",
+      "contractsHeading": "Contracts",
+      "loadingTitle": "Loading contracts",
+      "loadingText": "Preparing your contract portfolio...",
+      "emptyTitle": "No contracts found",
+      "emptyText": "Upload your first contract or add one manually.",
+      "errorTitle": "Unable to load contracts",
+      "errorText": "Please refresh the page and try again.",
+      "statusActive": "Active",
+      "statusExpiring": "Expiring Soon",
+      "statusExpired": "Expired",
+      "clubNotRecorded": "Club not recorded",
+      "leagueLabel": "League",
+      "countryLabel": "Country",
+      "startLabel": "Start",
+      "endLabel": "End",
+      "notRecorded": "Not recorded",
+      "analysisManual": "Manual record",
+      "analysisUploaded": "Contract uploaded",
+      "analysisAnalysing": "Analysis in progress",
+      "analysisReview": "Review required",
+      "analysisApproved": "Analysis approved",
+      "openContract": "Open Contract →",
+      "oneContract": "1 contract",
+      "manyContracts": "{count} contracts"
+    },
 
-  <script>
-    document.addEventListener("DOMContentLoaded", async () => {
-      const db = window.supabaseClient || window.sb || null;
+    "fr": {
+      "brandTagline": "Intelligence contractuelle pour agents de football",
+      "backDashboard": "← Retour au tableau de bord",
+      "uploadContract": "📤 Importer un contrat",
+      "addManually": "➕ Ajouter manuellement",
+      "heroEyebrow": "Portefeuille de contrats",
+      "heroTitle": "Votre centre de contrôle contractuel",
+      "heroDescription": "Consultez tous les contrats actifs, surveillez les dates d’expiration et ouvrez chaque dossier contractuel depuis un espace sécurisé.",
+      "summaryTotal": "Total des contrats",
+      "summaryTotalNote": "Tous les contrats enregistrés",
+      "summaryActive": "Actifs",
+      "summaryActiveNote": "Actuellement en vigueur",
+      "summaryExpiring": "Expiration prochaine",
+      "summaryExpiringNote": "Fin dans les 90 jours",
+      "summaryExpired": "Expirés",
+      "summaryExpiredNote": "Date de fin dépassée",
+      "searchPlaceholder": "Rechercher par joueur, club, ligue ou pays",
+      "filterAll": "Tous les contrats",
+      "filterActive": "Actifs",
+      "filterExpiring": "Expiration prochaine",
+      "filterExpired": "Expirés",
+      "contractsHeading": "Contrats",
+      "loadingTitle": "Chargement des contrats",
+      "loadingText": "Préparation de votre portefeuille contractuel...",
+      "emptyTitle": "Aucun contrat trouvé",
+      "emptyText": "Importez votre premier contrat ou ajoutez-le manuellement.",
+      "errorTitle": "Impossible de charger les contrats",
+      "errorText": "Actualisez la page et réessayez.",
+      "statusActive": "Actif",
+      "statusExpiring": "Expiration prochaine",
+      "statusExpired": "Expiré",
+      "clubNotRecorded": "Club non renseigné",
+      "leagueLabel": "Ligue",
+      "countryLabel": "Pays",
+      "startLabel": "Début",
+      "endLabel": "Fin",
+      "notRecorded": "Non renseigné",
+      "analysisManual": "Saisie manuelle",
+      "analysisUploaded": "Contrat importé",
+      "analysisAnalysing": "Analyse en cours",
+      "analysisReview": "Révision requise",
+      "analysisApproved": "Analyse approuvée",
+      "openContract": "Ouvrir le contrat →",
+      "oneContract": "1 contrat",
+      "manyContracts": "{count} contrats"
+    },
 
-      if (!db) {
-        document.getElementById("contractsList").textContent = "Supabase client not available.";
-        return;
-      }
-
-      const { data: { user }, error: userError } = await db.auth.getUser();
-
-      if (userError || !user) {
-        window.location.href = "/agent-academy/login.html";
-        return;
-      }
-
-      const { data, error } = await db
-        .from("contracts")
-        .select("*")
-        .eq("user_id", user.id)
-        .order("created_at", { ascending: false });
-
-      const container = document.getElementById("contractsList");
-
-      if (error) {
-        console.error("Load contracts error:", error);
-        container.textContent = "Error loading contracts.";
-        return;
-      }
-
-      if (!data || data.length === 0) {
-        container.textContent = "No contracts yet.";
-        return;
-      }
-
-      container.innerHTML = data.map(contract => `
-  <a href="/dealtrack-pro/contract.html?id=${contract.id}" style="text-decoration:none; color:inherit;">
-    <div class="card">
-      <strong>${contract.player_name}</strong><br>
-      <span>${contract.club_name || "No club"}</span><br>
-      <span class="muted">Status: ${contract.status || "active"}</span>
-    </div>
-  </a>
-`).join("");
-    });
+    "es": {
+      "brandTagline": "Inteligencia contractual para agentes de fútbol",
+      "backDashboard": "← Volver al panel",
+      "uploadContract": "📤 Subir contrato",
+      "addManually": "➕ Añadir manualmente",
+      "heroEyebrow": "Cartera de contratos",
+      "heroTitle": "Su centro de control contractual",
+      "heroDescription": "Revise todos los contratos activos, controle las fechas de vencimiento y abra cada registro contractual desde un espacio seguro.",
+      "summaryTotal": "Total de contratos",
+      "summaryTotalNote": "Todos los contratos registrados",
+      "summaryActive": "Activos",
+      "summaryActiveNote": "Actualmente vigentes",
+      "summaryExpiring": "Próximos a vencer",
+      "summaryExpiringNote": "Finalizan dentro de 90 días",
+      "summaryExpired": "Vencidos",
+      "summaryExpiredNote": "Fecha de finalización superada",
+      "searchPlaceholder": "Buscar por jugador, club, liga o país",
+      "filterAll": "Todos los contratos",
+      "filterActive": "Activos",
+      "filterExpiring": "Próximos a vencer",
+      "filterExpired": "Vencidos",
+      "contractsHeading": "Contratos",
+      "loadingTitle": "Cargando contratos",
+      "loadingText": "Preparando su cartera contractual...",
+      "emptyTitle": "No se encontraron contratos",
+      "emptyText": "Suba su primer contrato o añádalo manualmente.",
+      "errorTitle": "No se pueden cargar los contratos",
+      "errorText": "Actualice la página e inténtelo de nuevo.",
+      "statusActive": "Activo",
+      "statusExpiring": "Próximo a vencer",
+      "statusExpired": "Vencido",
+      "clubNotRecorded": "Club no registrado",
+      "leagueLabel": "Liga",
+      "countryLabel": "País",
+      "startLabel": "Inicio",
+      "endLabel": "Final",
+      "notRecorded": "No registrado",
+      "analysisManual": "Registro manual",
+      "analysisUploaded": "Contrato subido",
+      "analysisAnalysing": "Análisis en curso",
+      "analysisReview": "Revisión necesaria",
+      "analysisApproved": "Análisis aprobado",
+      "openContract": "Abrir contrato →",
+      "oneContract": "1 contrato",
+      "manyContracts": "{count} contratos"
+    }
+  }
   </script>
 
+  <script>
+    const I18N = JSON.parse(
+      document.getElementById("dealtrack-portfolio-i18n").textContent
+    );
+
+    let currentLang = localStorage.getItem("lang") || "en";
+    let allContracts = [];
+
+    function t(key) {
+      return (
+        I18N[currentLang]?.[key] ||
+        I18N.en?.[key] ||
+        key
+      );
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function applyTranslations() {
+      document.documentElement.lang = currentLang;
+
+      document.querySelectorAll("[data-i18n]").forEach((el) => {
+        const key = el.getAttribute("data-i18n");
+        el.textContent = t(key);
+      });
+
+      document
+        .querySelectorAll("[data-i18n-placeholder]")
+        .forEach((el) => {
+          const key = el.getAttribute(
+            "data-i18n-placeholder"
+          );
+
+          el.setAttribute("placeholder", t(key));
+        });
+
+      document
+        .querySelectorAll("[data-lang-btn]")
+        .forEach((btn) => {
+          btn.classList.toggle(
+            "is-active",
+            btn.getAttribute("data-lang-btn") === currentLang
+          );
+        });
+
+      document.title =
+        "DealTrack Pro — " + t("heroEyebrow");
+
+      updateSummary();
+      renderFilteredContracts();
+    }
+
+    function parseDate(dateValue) {
+      if (!dateValue) return null;
+
+      const date = new Date(`${dateValue}T00:00:00`);
+
+      return Number.isNaN(date.getTime())
+        ? null
+        : date;
+    }
+
+    function formatDate(dateValue) {
+      const date = parseDate(dateValue);
+
+      if (!date) return t("notRecorded");
+
+      const localeMap = {
+        en: "en-GB",
+        fr: "fr-FR",
+        es: "es-ES"
+      };
+
+      return new Intl.DateTimeFormat(
+        localeMap[currentLang] || "en-GB",
+        {
+          day: "2-digit",
+          month: "short",
+          year: "numeric"
+        }
+      ).format(date);
+    }
+
+    function getContractState(contract) {
+      const endDate = parseDate(contract.end_date);
+
+      if (!endDate) {
+        return {
+          key: "active",
+          label: t("statusActive")
+        };
+      }
+
+      const now = new Date();
+      now.setHours(0, 0, 0, 0);
+
+      const millisecondsPerDay =
+        1000 * 60 * 60 * 24;
+
+      const daysRemaining = Math.ceil(
+        (endDate.getTime() - now.getTime()) /
+        millisecondsPerDay
+      );
+
+      if (daysRemaining < 0) {
+        return {
+          key: "expired",
+          label: t("statusExpired")
+        };
+      }
+
+      if (daysRemaining <= 90) {
+        return {
+          key: "expiring",
+          label: t("statusExpiring")
+        };
+      }
+
+      return {
+        key: "active",
+        label: t("statusActive")
+      };
+    }
+
+    function getAnalysisLabel(contract) {
+      const status =
+        contract.analysis_status ||
+        contract.document_status ||
+        "manual";
+
+      const statusMap = {
+        manual: "analysisManual",
+        uploaded: "analysisUploaded",
+        analysing: "analysisAnalysing",
+        analyzing: "analysisAnalysing",
+        processing: "analysisAnalysing",
+        review_required: "analysisReview",
+        needs_review: "analysisReview",
+        approved: "analysisApproved"
+      };
+
+      return t(statusMap[status] || "analysisManual");
+    }
+
+    function updateSummary() {
+      const total = allContracts.length;
+
+      const counts = allContracts.reduce(
+        (result, contract) => {
+          const state = getContractState(contract).key;
+
+          result[state] =
+            (result[state] || 0) + 1;
+
+          return result;
+        },
+        {
+          active: 0,
+          expiring: 0,
+          expired: 0
+        }
+      );
+
+      document.getElementById(
+        "totalContracts"
+      ).textContent = total;
+
+      document.getElementById(
+        "activeContracts"
+      ).textContent = counts.active;
+
+      document.getElementById(
+        "expiringContracts"
+      ).textContent = counts.expiring;
+
+      document.getElementById(
+        "expiredContracts"
+      ).textContent = counts.expired;
+    }
+
+    function renderContracts(contracts) {
+      const container =
+        document.getElementById("contractsList");
+
+      const countBox =
+        document.getElementById("resultCount");
+
+      countBox.textContent =
+        contracts.length === 1
+          ? t("oneContract")
+          : t("manyContracts").replace(
+              "{count}",
+              contracts.length
+            );
+
+      if (!contracts.length) {
+        container.innerHTML = `
+          <div class="state-box">
+            <strong>${escapeHtml(t("emptyTitle"))}</strong>
+            <span>${escapeHtml(t("emptyText"))}</span>
+          </div>
+        `;
+
+        return;
+      }
+
+      container.innerHTML = `
+        <div class="contracts-grid">
+          ${contracts
+            .map((contract) => {
+              const state =
+                getContractState(contract);
+
+              const playerName =
+                contract.player_name ||
+                t("notRecorded");
+
+              const clubName =
+                contract.club_name ||
+                t("clubNotRecorded");
+
+              return `
+                <a
+                  class="contract-card ${escapeHtml(state.key)}"
+                  href="/dealtrack-pro/contract.html?id=${encodeURIComponent(contract.id)}"
+                >
+                  <div class="card-top">
+                    <div>
+                      <h3 class="player-name">
+                        ${escapeHtml(playerName)}
+                      </h3>
+
+                      <div class="club-name">
+                        ${escapeHtml(clubName)}
+                      </div>
+                    </div>
+
+                    <span class="status-pill ${escapeHtml(state.key)}">
+                      ${escapeHtml(state.label)}
+                    </span>
+                  </div>
+
+                  <div class="card-details">
+                    <div class="detail">
+                      <span class="detail-label">
+                        ${escapeHtml(t("leagueLabel"))}
+                      </span>
+
+                      <span class="detail-value">
+                        ${escapeHtml(
+                          contract.club_league ||
+                          t("notRecorded")
+                        )}
+                      </span>
+                    </div>
+
+                    <div class="detail">
+                      <span class="detail-label">
+                        ${escapeHtml(t("countryLabel"))}
+                      </span>
+
+                      <span class="detail-value">
+                        ${escapeHtml(
+                          contract.club_country ||
+                          t("notRecorded")
+                        )}
+                      </span>
+                    </div>
+
+                    <div class="detail">
+                      <span class="detail-label">
+                        ${escapeHtml(t("startLabel"))}
+                      </span>
+
+                      <span class="detail-value">
+                        ${escapeHtml(
+                          formatDate(contract.start_date)
+                        )}
+                      </span>
+                    </div>
+
+                    <div class="detail">
+                      <span class="detail-label">
+                        ${escapeHtml(t("endLabel"))}
+                      </span>
+
+                      <span class="detail-value">
+                        ${escapeHtml(
+                          formatDate(contract.end_date)
+                        )}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div class="card-footer">
+                    <span class="analysis-label">
+                      ${escapeHtml(
+                        getAnalysisLabel(contract)
+                      )}
+                    </span>
+
+                    <span class="open-label">
+                      ${escapeHtml(t("openContract"))}
+                    </span>
+                  </div>
+                </a>
+              `;
+            })
+            .join("")}
+        </div>
+      `;
+    }
+
+    function renderFilteredContracts() {
+      if (!Array.isArray(allContracts)) return;
+
+      const searchValue =
+        document
+          .getElementById("searchInput")
+          ?.value
+          ?.trim()
+          ?.toLowerCase() || "";
+
+      const selectedStatus =
+        document.getElementById("statusFilter")
+          ?.value || "all";
+
+      const filtered = allContracts.filter(
+        (contract) => {
+          const state =
+            getContractState(contract).key;
+
+          const matchesStatus =
+            selectedStatus === "all" ||
+            state === selectedStatus;
+
+          const searchableText = [
+            contract.player_name,
+            contract.club_name,
+            contract.club_league,
+            contract.club_country,
+            contract.agent_name,
+            contract.agency_name
+          ]
+            .filter(Boolean)
+            .join(" ")
+            .toLowerCase();
+
+          const matchesSearch =
+            !searchValue ||
+            searchableText.includes(searchValue);
+
+          return matchesStatus && matchesSearch;
+        }
+      );
+
+      renderContracts(filtered);
+    }
+
+    function showLoadError() {
+      document.getElementById(
+        "contractsList"
+      ).innerHTML = `
+        <div class="state-box error-box">
+          <strong>${escapeHtml(t("errorTitle"))}</strong>
+          <span>${escapeHtml(t("errorText"))}</span>
+        </div>
+      `;
+    }
+
+    document.addEventListener(
+      "DOMContentLoaded",
+      async () => {
+        document
+          .querySelectorAll("[data-lang-btn]")
+          .forEach((btn) => {
+            btn.addEventListener("click", () => {
+              currentLang =
+                btn.getAttribute("data-lang-btn");
+
+              localStorage.setItem(
+                "lang",
+                currentLang
+              );
+
+              applyTranslations();
+            });
+          });
+
+        document
+          .getElementById("searchInput")
+          .addEventListener(
+            "input",
+            renderFilteredContracts
+          );
+
+        document
+          .getElementById("statusFilter")
+          .addEventListener(
+            "change",
+            renderFilteredContracts
+          );
+
+        applyTranslations();
+
+        const db =
+          window.supabaseClient ||
+          window.sb ||
+          null;
+
+        if (!db) {
+          showLoadError();
+          return;
+        }
+
+        const {
+          data: { user },
+          error: userError
+        } = await db.auth.getUser();
+
+        if (userError || !user) {
+          window.location.href =
+            "/agent-academy/login.html";
+          return;
+        }
+
+        const { data, error } = await db
+          .from("contracts")
+          .select("*")
+          .eq("user_id", user.id)
+          .order("created_at", {
+            ascending: false
+          });
+
+        if (error) {
+          console.error(
+            "Load contracts error:",
+            error
+          );
+
+          showLoadError();
+          return;
+        }
+
+        allContracts = Array.isArray(data)
+          ? data
+          : [];
+
+        updateSummary();
+        renderFilteredContracts();
+      }
+    );
+  </script>
 </body>
 </html>
