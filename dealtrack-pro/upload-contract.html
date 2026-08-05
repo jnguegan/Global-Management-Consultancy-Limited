@@ -1351,9 +1351,20 @@
                   error: uploadError
                 } = await db.storage
                   .from(STORAGE_BUCKET)
-                  .upload(
-                    storagePath,
-                    selectedFiles[0],
+                 [
+  {
+    storage_path: "...addendum.pdf",
+    original_file_name: "...addendum.pdf"
+  },
+  {
+    storage_path: "...club-services.pdf",
+    original_file_name: "...club-services.pdf"
+  },
+  {
+    storage_path: "...player-services.pdf",
+    original_file_name: "...player-services.pdf"
+  }
+]
                     {
                       cacheControl: "3600",
                       upsert: false,
@@ -1411,15 +1422,13 @@
                   "analyse-contract",
                   {
                     body: {
-                      contract_id:
-                        createdContractId,
-                      storage_bucket:
-                        STORAGE_BUCKET,
-                      storage_path:
-                        storagePath,
-                      language:
-                        currentLang
-                    }
+                    contract_id:
+                      createdContractId,
+                    documents:
+                      uploadedDocuments,
+                    language:
+                      currentLang
+                  }
                   }
                 );
 
