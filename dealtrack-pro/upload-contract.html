@@ -1313,7 +1313,7 @@
                     user_id: currentUser.id,
                     player_name:
                       internalReference ||
-                      selectedPdf.name.replace(
+                      selectedFiles[0].name.replace(
                         /\.pdf$/i,
                         ""
                       ),
@@ -1325,8 +1325,8 @@
                       businessEntity,
                     internal_notes:
                       notes,
-                    original_file_name:
-                      selectedPdf.name,
+                   original_file_name:
+                   selectedFiles[0].name,
                     document_status:
                       "uploading",
                     analysis_status:
@@ -1353,7 +1353,7 @@
                   .from(STORAGE_BUCKET)
                   .upload(
                     storagePath,
-                    selectedPdf,
+                    selectedFiles[0],
                     {
                       cacheControl: "3600",
                       upsert: false,
