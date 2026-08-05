@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-
   <meta
     name="viewport"
     content="width=device-width, initial-scale=1.0"
@@ -44,22 +43,9 @@
       font-family: Inter, Arial, sans-serif;
       color: var(--text);
       background:
-        radial-gradient(
-          circle at top left,
-          rgba(47, 140, 255, 0.18),
-          transparent 28%
-        ),
-        radial-gradient(
-          circle at top right,
-          rgba(212, 175, 55, 0.12),
-          transparent 24%
-        ),
-        linear-gradient(
-          180deg,
-          #010814 0%,
-          #05122a 45%,
-          #020b1d 100%
-        );
+        radial-gradient(circle at top left, rgba(47, 140, 255, 0.18), transparent 28%),
+        radial-gradient(circle at top right, rgba(212, 175, 55, 0.12), transparent 24%),
+        linear-gradient(180deg, #010814 0%, #05122a 45%, #020b1d 100%);
     }
 
     button,
@@ -155,11 +141,7 @@
 
     .lang-btn.is-active {
       color: white;
-      background: linear-gradient(
-        135deg,
-        var(--blue),
-        var(--blue-2)
-      );
+      background: linear-gradient(135deg, var(--blue), var(--blue-2));
       border-color: rgba(88, 166, 255, 0.38);
     }
 
@@ -168,11 +150,7 @@
       border: 1px solid var(--border);
       border-radius: 28px;
       background:
-        linear-gradient(
-          135deg,
-          rgba(47, 140, 255, 0.09),
-          transparent 44%
-        ),
+        linear-gradient(135deg, rgba(47, 140, 255, 0.09), transparent 44%),
         var(--panel);
       box-shadow: var(--shadow);
     }
@@ -289,34 +267,41 @@
       pointer-events: none;
     }
 
-    .selected-file {
-      display: none;
+    .selected-files {
+      display: grid;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .selected-file-item {
+      display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 14px;
-      margin-top: 14px;
-      padding: 15px;
+      padding: 14px 15px;
       border: 1px solid rgba(34, 197, 94, 0.24);
       border-radius: 16px;
       background: rgba(34, 197, 94, 0.08);
     }
 
-    .selected-file.is-visible {
-      display: flex;
+    .selected-file-details {
+      min-width: 0;
     }
 
-    .file-name {
+    .selected-file-name {
+      color: var(--text);
       font-weight: 800;
       word-break: break-word;
     }
 
-    .file-size {
+    .selected-file-size {
       margin-top: 4px;
       color: var(--muted);
       font-size: 0.84rem;
     }
 
-    .remove-file {
+    .remove-selected-file {
+      flex-shrink: 0;
       border: 0;
       color: #ffd2d2;
       background: transparent;
@@ -332,25 +317,16 @@
     }
 
     .btn-primary {
-    color: #08111f;
-    background: linear-gradient(
-        135deg,
-        var(--gold),
-        var(--gold-2)
-    );
-    border: 1px solid rgba(212, 175, 55, 0.45);
-    box-shadow: 0 12px 28px rgba(212, 175, 55, 0.22);
-}
+      color: #08111f;
+      background: linear-gradient(135deg, var(--gold), var(--gold-2));
+      border: 1px solid rgba(212, 175, 55, 0.45);
+      box-shadow: 0 12px 28px rgba(212, 175, 55, 0.22);
+    }
 
-.btn-primary:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 16px 36px rgba(212, 175, 55, 0.30);
-}
-
-.btn-primary:disabled {
-    opacity: 0.55;
-    cursor: not-allowed;
-}
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 16px 36px rgba(212, 175, 55, 0.30);
+    }
 
     .btn-primary:disabled {
       opacity: 0.55;
@@ -414,11 +390,7 @@
       width: 0%;
       height: 100%;
       border-radius: inherit;
-      background: linear-gradient(
-        90deg,
-        var(--blue),
-        var(--gold)
-      );
+      background: linear-gradient(90deg, var(--blue), var(--gold));
       transition: width 0.3s ease;
     }
 
@@ -457,7 +429,7 @@
         width: 100%;
       }
 
-      .selected-file {
+      .selected-file-item {
         align-items: flex-start;
       }
     }
@@ -473,10 +445,7 @@
           <span class="brand-pro">Pro</span>
         </div>
 
-        <div
-          class="brand-tagline"
-          data-i18n="brandTagline"
-        >
+        <div class="brand-tagline" data-i18n="brandTagline">
           Contract Intelligence for Football Agents
         </div>
       </div>
@@ -491,38 +460,15 @@
         </a>
 
         <div class="lang-switcher">
-          <button
-            type="button"
-            class="lang-btn"
-            data-lang-btn="en"
-          >
-            EN
-          </button>
-
-          <button
-            type="button"
-            class="lang-btn"
-            data-lang-btn="fr"
-          >
-            FR
-          </button>
-
-          <button
-            type="button"
-            class="lang-btn"
-            data-lang-btn="es"
-          >
-            ES
-          </button>
+          <button type="button" class="lang-btn" data-lang-btn="en">EN</button>
+          <button type="button" class="lang-btn" data-lang-btn="fr">FR</button>
+          <button type="button" class="lang-btn" data-lang-btn="es">ES</button>
         </div>
       </div>
     </header>
 
     <main class="panel">
-      <div
-        class="eyebrow"
-        data-i18n="eyebrow"
-      >
+      <div class="eyebrow" data-i18n="eyebrow">
         Contract Upload
       </div>
 
@@ -530,80 +476,44 @@
         Add a New Contract
       </h1>
 
-      <p
-        class="subtitle"
-        data-i18n="pageSubtitle"
-      >
+      <p class="subtitle" data-i18n="pageSubtitle">
         Upload your signed agreement and DealTrack Pro will automatically extract key information, payment schedules and contractual deadlines.
       </p>
 
       <form id="uploadForm">
         <div class="form-grid">
           <div class="field">
-            <label
-              for="contractType"
-              data-i18n="contractTypeLabel"
-            >
+            <label for="contractType" data-i18n="contractTypeLabel">
               Contract Type
             </label>
 
             <select id="contractType">
-              <option
-                value="representation_agreement"
-                data-i18n="typeRepresentation"
-              >
+              <option value="representation_agreement" data-i18n="typeRepresentation">
                 Representation Agreement
               </option>
-
-              <option
-                value="club_agent_agreement"
-                data-i18n="typeClubAgent"
-              >
+              <option value="club_agent_agreement" data-i18n="typeClubAgent">
                 Club / Agent Commission Agreement
               </option>
-
-              <option
-                value="transfer_agreement"
-                data-i18n="typeTransfer"
-              >
+              <option value="transfer_agreement" data-i18n="typeTransfer">
                 Transfer Agreement
               </option>
-
-              <option
-                value="loan_agreement"
-                data-i18n="typeLoan"
-              >
+              <option value="loan_agreement" data-i18n="typeLoan">
                 Loan Agreement
               </option>
-
-              <option
-                value="collaboration_agreement"
-                data-i18n="typeCollaboration"
-              >
+              <option value="collaboration_agreement" data-i18n="typeCollaboration">
                 Collaboration Agreement
               </option>
-
-              <option
-                value="employment_contract"
-                data-i18n="typeEmployment"
-              >
+              <option value="employment_contract" data-i18n="typeEmployment">
                 Employment Contract
               </option>
-
-              <option
-                value="other"
-                data-i18n="typeOther"
-              >
+              <option value="other" data-i18n="typeOther">
                 Other
               </option>
             </select>
           </div>
 
           <div class="field">
-            <label
-              for="internalReference"
-              data-i18n="referenceLabel"
-            >
+            <label for="internalReference" data-i18n="referenceLabel">
               Internal Reference
             </label>
 
@@ -616,10 +526,7 @@
           </div>
 
           <div class="field full">
-            <label
-              for="businessEntity"
-              data-i18n="businessEntityLabel"
-            >
+            <label for="businessEntity" data-i18n="businessEntityLabel">
               Business / Group Entity
             </label>
 
@@ -632,10 +539,7 @@
           </div>
 
           <div class="field full">
-            <label
-              for="notes"
-              data-i18n="notesLabel"
-            >
+            <label for="notes" data-i18n="notesLabel">
               Internal Notes
             </label>
 
@@ -647,50 +551,38 @@
           </div>
 
           <div class="field full">
-  <label
-    for="contractFiles"
-    data-i18n="fileLabel"
-  >
-    Contract Package Documents
-  </label>
+            <label for="contractFiles" data-i18n="fileLabel">
+              Contract Package Documents
+            </label>
 
-  <div
-    id="uploadZone"
-    class="upload-zone"
-    tabindex="0"
-    role="button"
-  >
-    <input
-      id="contractFiles"
-      class="file-input"
-      type="file"
-      accept="application/pdf,.pdf"
-      multiple
-    />
+            <div
+              id="uploadZone"
+              class="upload-zone"
+              tabindex="0"
+              role="button"
+            >
+              <input
+                id="contractFiles"
+                class="file-input"
+                type="file"
+                accept="application/pdf,.pdf"
+                multiple
+              />
 
-    <div class="upload-icon">📄</div>
+              <div class="upload-icon">📄</div>
 
-    <div
-      class="upload-title"
-      data-i18n="uploadTitle"
-    >
-      Select or drop all related PDFs here
-    </div>
+              <div class="upload-title" data-i18n="uploadTitle">
+                Select or drop all related PDFs here
+              </div>
 
-    <div
-      class="upload-help"
-      data-i18n="uploadHelp"
-    >
-      Upload the main contract, subcontracts, addenda,
-      amendments, schedules and appendices together.
-    </div>
-  </div>
+              <div class="upload-help" data-i18n="uploadHelp">
+                Upload the main contract, subcontracts, addenda, amendments, schedules and appendices together.
+              </div>
+            </div>
 
-  <div
-    id="selectedFiles"
-    class="selected-files"
-  ></div>
-</div>        </div>
+            <div id="selectedFiles" class="selected-files"></div>
+          </div>
+        </div>
 
         <div class="actions">
           <button
@@ -708,39 +600,24 @@
             href="/dealtrack-pro/contracts.html"
             data-i18n="backPortfolioButton"
           >
-           ← Back to Portfolio
+            ← Back to Portfolio
           </a>
         </div>
 
-        <div
-          id="progress"
-          class="progress"
-        >
+        <div id="progress" class="progress">
           <div class="progress-track">
-            <div
-              id="progressBar"
-              class="progress-bar"
-            ></div>
+            <div id="progressBar" class="progress-bar"></div>
           </div>
 
-          <div
-            id="progressLabel"
-            class="progress-label"
-          ></div>
+          <div id="progressLabel" class="progress-label"></div>
         </div>
 
-        <div
-          id="statusBox"
-          class="status-box"
-        ></div>
+        <div id="statusBox" class="status-box"></div>
       </form>
     </main>
   </div>
 
-  <script
-    type="application/json"
-    id="upload-i18n"
-  >
+  <script type="application/json" id="upload-i18n">
   {
     "en": {
       "brandTagline": "Contract Intelligence for Football Agents",
@@ -767,20 +644,19 @@
       "uploadHelp": "Upload the main contract, subcontracts, addenda, amendments, schedules and appendices together. Maximum file size: 20 MB per PDF.",
       "removeFile": "Remove",
       "analyseButton": "Upload Contract",
-     "backPortfolioButton": "← Back to Portfolio",
+      "backPortfolioButton": "← Back to Portfolio",
       "invalidPdf": "Please select a valid PDF file.",
       "fileTooLarge": "The PDF must be smaller than 20 MB.",
       "missingFile": "Please select at least one contract document.",
       "supabaseMissing": "Supabase client not available.",
-      "uploading": "Uploading contract securely...",
-      "creatingRecord": "Creating the contract record...",
-      "startingAnalysis": "Starting contract analysis...",
-      "uploadComplete": "The contract was uploaded successfully.",
-      "analysisStarted": "The contract was uploaded and analysis has started.",
-      "analysisPending": "The contract was uploaded successfully. The analysis service will be connected next.",
-      "uploadError": "The contract could not be uploaded.",
-      "redirecting": "Opening the contract record...",
-      "selected": "Selected file"
+      "uploading": "Uploading contract package securely...",
+      "creatingRecord": "Creating the contract package record...",
+      "startingAnalysis": "Starting contract package analysis...",
+      "uploadComplete": "The contract package was uploaded successfully.",
+      "analysisStarted": "The contract package was uploaded and analysis has started.",
+      "analysisPending": "The contract package was uploaded successfully, but analysis could not be completed.",
+      "uploadError": "The contract package could not be uploaded.",
+      "redirecting": "Opening the contract record..."
     },
 
     "fr": {
@@ -811,17 +687,16 @@
       "backPortfolioButton": "← Retour au portefeuille",
       "invalidPdf": "Veuillez sélectionner un fichier PDF valide.",
       "fileTooLarge": "Le PDF doit être inférieur à 20 Mo.",
-     "missingFile": "Veuillez sélectionner au moins un document contractuel.",
+      "missingFile": "Veuillez sélectionner au moins un document contractuel.",
       "supabaseMissing": "Client Supabase indisponible.",
-      "uploading": "Importation sécurisée du contrat...",
+      "uploading": "Importation sécurisée du dossier contractuel...",
       "creatingRecord": "Création du dossier contractuel...",
-      "startingAnalysis": "Démarrage de l’analyse contractuelle...",
-      "uploadComplete": "Le contrat a été importé avec succès.",
-      "analysisStarted": "Le contrat a été importé et l’analyse a commencé.",
-      "analysisPending": "Le contrat a été importé avec succès. Le service d’analyse sera connecté ensuite.",
-      "uploadError": "Le contrat n’a pas pu être importé.",
-      "redirecting": "Ouverture du dossier contractuel...",
-      "selected": "Fichier sélectionné"
+      "startingAnalysis": "Démarrage de l’analyse du dossier contractuel...",
+      "uploadComplete": "Le dossier contractuel a été importé avec succès.",
+      "analysisStarted": "Le dossier contractuel a été importé et l’analyse a commencé.",
+      "analysisPending": "Le dossier contractuel a été importé, mais l’analyse n’a pas pu être terminée.",
+      "uploadError": "Le dossier contractuel n’a pas pu être importé.",
+      "redirecting": "Ouverture du dossier contractuel..."
     },
 
     "es": {
@@ -844,7 +719,7 @@
       "businessEntityPlaceholder": "BS Group Entertainment Sports LLC",
       "notesLabel": "Notas internas",
       "notesPlaceholder": "Notas opcionales sobre este contrato",
-     "fileLabel": "Documentos del paquete contractual",
+      "fileLabel": "Documentos del paquete contractual",
       "uploadTitle": "Seleccione o arrastre aquí todos los PDF relacionados",
       "uploadHelp": "Suba juntos el contrato principal, los subcontratos, los anexos, las modificaciones, los calendarios y los apéndices. Tamaño máximo: 20 MB por PDF.",
       "removeFile": "Eliminar",
@@ -854,15 +729,14 @@
       "fileTooLarge": "El PDF debe tener menos de 20 MB.",
       "missingFile": "Seleccione al menos un documento contractual.",
       "supabaseMissing": "Cliente Supabase no disponible.",
-      "uploading": "Subiendo el contrato de forma segura...",
-      "creatingRecord": "Creando el registro contractual...",
-      "startingAnalysis": "Iniciando el análisis contractual...",
-      "uploadComplete": "El contrato se ha subido correctamente.",
-      "analysisStarted": "El contrato se ha subido y el análisis ha comenzado.",
-      "analysisPending": "El contrato se ha subido correctamente. El servicio de análisis se conectará a continuación.",
-      "uploadError": "No se ha podido subir el contrato.",
-      "redirecting": "Abriendo el registro contractual...",
-      "selected": "Archivo seleccionado"
+      "uploading": "Subiendo el paquete contractual de forma segura...",
+      "creatingRecord": "Creando el registro del paquete contractual...",
+      "startingAnalysis": "Iniciando el análisis del paquete contractual...",
+      "uploadComplete": "El paquete contractual se ha subido correctamente.",
+      "analysisStarted": "El paquete contractual se ha subido y el análisis ha comenzado.",
+      "analysisPending": "El paquete contractual se ha subido, pero no se pudo completar el análisis.",
+      "uploadError": "No se ha podido subir el paquete contractual.",
+      "redirecting": "Abriendo el registro contractual..."
     }
   }
   </script>
@@ -878,7 +752,7 @@
     let currentLang =
       localStorage.getItem("lang") || "en";
 
-  let selectedFiles = [];
+    let selectedFiles = [];
     let currentUser = null;
 
     function t(key) {
@@ -905,9 +779,7 @@
         .querySelectorAll("[data-i18n-placeholder]")
         .forEach((element) => {
           const key =
-            element.getAttribute(
-              "data-i18n-placeholder"
-            );
+            element.getAttribute("data-i18n-placeholder");
 
           element.setAttribute(
             "placeholder",
@@ -920,9 +792,7 @@
         .forEach((button) => {
           button.classList.toggle(
             "is-active",
-            button.getAttribute(
-              "data-lang-btn"
-            ) === currentLang
+            button.getAttribute("data-lang-btn") === currentLang
           );
         });
 
@@ -991,64 +861,73 @@
         .toLowerCase();
     }
 
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
     function renderSelectedFiles() {
-  const container =
-    document.getElementById("selectedFiles");
+      const container =
+        document.getElementById("selectedFiles");
 
-  const analyseButton =
-    document.getElementById("analyseBtn");
+      const analyseButton =
+        document.getElementById("analyseBtn");
 
-  container.innerHTML = "";
+      container.innerHTML = "";
 
-  if (selectedFiles.length === 0) {
-    analyseButton.disabled = true;
-    return;
-  }
+      if (selectedFiles.length === 0) {
+        analyseButton.disabled = true;
+        return;
+      }
 
-  selectedFiles.forEach((file, index) => {
-    const item = document.createElement("div");
+      selectedFiles.forEach((file, index) => {
+        const item = document.createElement("div");
 
-    item.className = "selected-file-item";
+        item.className = "selected-file-item";
 
-    item.innerHTML = `
-      <div class="selected-file-details">
-        <div class="selected-file-name">
-          ${file.name}
-        </div>
+        item.innerHTML = `
+          <div class="selected-file-details">
+            <div class="selected-file-name">
+              ${escapeHtml(file.name)}
+            </div>
 
-        <div class="selected-file-size">
-          ${formatFileSize(file.size)}
-        </div>
-      </div>
+            <div class="selected-file-size">
+              ${escapeHtml(formatFileSize(file.size))}
+            </div>
+          </div>
 
-      <button
-        type="button"
-        class="remove-selected-file"
-        data-file-index="${index}"
-      >
-        ${t("removeFile")}
-      </button>
-    `;
+          <button
+            type="button"
+            class="remove-selected-file"
+            data-file-index="${index}"
+          >
+            ${escapeHtml(t("removeFile"))}
+          </button>
+        `;
 
-    container.appendChild(item);
-  });
-
-  analyseButton.disabled = false;
-
-  container
-    .querySelectorAll(".remove-selected-file")
-    .forEach((button) => {
-      button.addEventListener("click", () => {
-        const index = Number(
-          button.getAttribute("data-file-index")
-        );
-
-        selectedFiles.splice(index, 1);
-        renderSelectedFiles();
+        container.appendChild(item);
       });
-    });
-}
-  
+
+      analyseButton.disabled = false;
+
+      container
+        .querySelectorAll(".remove-selected-file")
+        .forEach((button) => {
+          button.addEventListener("click", () => {
+            const index = Number(
+              button.getAttribute("data-file-index")
+            );
+
+            selectedFiles.splice(index, 1);
+            renderSelectedFiles();
+          });
+        });
+    }
+
     function validateFile(file) {
       if (!file) {
         setStatus(t("missingFile"), "error");
@@ -1060,44 +939,53 @@
         file.name.toLowerCase().endsWith(".pdf");
 
       if (!validPdf) {
-        setStatus(t("invalidPdf"), "error");
+        setStatus(
+          `${file.name}: ${t("invalidPdf")}`,
+          "error"
+        );
+
         return false;
       }
 
       if (file.size > MAX_FILE_SIZE) {
-        setStatus(t("fileTooLarge"), "error");
+        setStatus(
+          `${file.name}: ${t("fileTooLarge")}`,
+          "error"
+        );
+
         return false;
       }
 
       return true;
     }
 
-   function addSelectedFiles(files) {
-  if (!files || files.length === 0) {
-    return;
-  }
+    function addSelectedFiles(files) {
+      if (!files || files.length === 0) {
+        return;
+      }
 
-  for (const file of files) {
-    if (!validateFile(file)) {
-      continue;
+      for (const file of files) {
+        if (!validateFile(file)) {
+          continue;
+        }
+
+        const alreadyExists = selectedFiles.some(
+          (existingFile) =>
+            existingFile.name === file.name &&
+            existingFile.size === file.size
+        );
+
+        if (!alreadyExists) {
+          selectedFiles.push(file);
+        }
+      }
+
+      renderSelectedFiles();
+      clearStatus();
+
+      document.getElementById("contractFiles").value = "";
     }
 
-    const alreadyExists = selectedFiles.some(
-      (existingFile) =>
-        existingFile.name === file.name &&
-        existingFile.size === file.size
-    );
-
-    if (!alreadyExists) {
-      selectedFiles.push(file);
-    }
-  }
-
-  renderSelectedFiles();
-  clearStatus();
-
-  document.getElementById("contractFiles").value = "";
-}
     document.addEventListener(
       "DOMContentLoaded",
       async () => {
@@ -1110,9 +998,7 @@
               "click",
               () => {
                 currentLang =
-                  button.getAttribute(
-                    "data-lang-btn"
-                  );
+                  button.getAttribute("data-lang-btn");
 
                 localStorage.setItem(
                   "lang",
@@ -1120,6 +1006,7 @@
                 );
 
                 applyTranslations();
+
                 if (selectedFiles.length > 0) {
                   renderSelectedFiles();
                 }
@@ -1137,6 +1024,7 @@
             t("supabaseMissing"),
             "error"
           );
+
           return;
         }
 
@@ -1148,6 +1036,7 @@
         if (userError || !user) {
           window.location.href =
             "/agent-academy/login.html";
+
           return;
         }
 
@@ -1177,12 +1066,12 @@
           }
         );
 
-       fileInput.addEventListener(
-  "change",
-  () => {
-    addSelectedFiles(fileInput.files);
-  }
-);
+        fileInput.addEventListener(
+          "change",
+          () => {
+            addSelectedFiles(fileInput.files);
+          }
+        );
 
         ["dragenter", "dragover"].forEach(
           (eventName) => {
@@ -1190,9 +1079,7 @@
               eventName,
               (event) => {
                 event.preventDefault();
-                uploadZone.classList.add(
-                  "is-dragging"
-                );
+                uploadZone.classList.add("is-dragging");
               }
             );
           }
@@ -1204,9 +1091,7 @@
               eventName,
               (event) => {
                 event.preventDefault();
-                uploadZone.classList.remove(
-                  "is-dragging"
-                );
+                uploadZone.classList.remove("is-dragging");
               }
             );
           }
@@ -1215,14 +1100,12 @@
         uploadZone.addEventListener(
           "drop",
           (event) => {
-            
             addSelectedFiles(
               event.dataTransfer?.files
             );
           }
         );
 
-       
         document
           .getElementById("uploadForm")
           .addEventListener(
@@ -1230,66 +1113,47 @@
             async (event) => {
               event.preventDefault();
 
-                  if (!currentUser) {
+              if (!currentUser) {
                 return;
               }
-              
+
               if (selectedFiles.length === 0) {
                 setStatus(
                   t("missingFile"),
                   "error"
                 );
-              
+
                 return;
               }
-              
+
               const invalidFile =
                 selectedFiles.find(
                   (file) => !validateFile(file)
                 );
-              
+
               if (invalidFile) {
                 return;
               }
 
               const analyseButton =
-                document.getElementById(
-                  "analyseBtn"
-                );
+                document.getElementById("analyseBtn");
 
               analyseButton.disabled = true;
               clearStatus();
 
               const contractType =
-                document.getElementById(
-                  "contractType"
-                ).value;
+                document.getElementById("contractType").value;
 
               const internalReference =
-                document.getElementById(
-                  "internalReference"
-                ).value.trim() || null;
+                document.getElementById("internalReference").value.trim() || null;
 
               const businessEntity =
-                document.getElementById(
-                  "businessEntity"
-                ).value.trim() || null;
+                document.getElementById("businessEntity").value.trim() || null;
 
               const notes =
-                document.getElementById(
-                  "notes"
-                ).value.trim() || null;
+                document.getElementById("notes").value.trim() || null;
 
               const timestamp = Date.now();
-
-             const safeFileName =
-              sanitiseFileName(
-                selectedFiles[0].name
-              );
-
-              const storagePath =
-                `${currentUser.id}/${timestamp}-${safeFileName}`;
-
               let createdContractId = null;
 
               try {
@@ -1297,12 +1161,6 @@
                   20,
                   t("creatingRecord")
                 );
-
-                /*
-                  This initial record allows the uploaded
-                  document to appear in the portfolio even
-                  before analysis is complete.
-                */
 
                 const {
                   data: contractRecord,
@@ -1313,24 +1171,14 @@
                     user_id: currentUser.id,
                     player_name:
                       internalReference ||
-                      selectedFiles[0].name.replace(
-                        /\.pdf$/i,
-                        ""
-                      ),
-                    contract_type:
-                      contractType,
-                    internal_reference:
-                      internalReference,
-                    business_entity:
-                      businessEntity,
-                    internal_notes:
-                      notes,
-                   original_file_name:
-                   selectedFiles[0].name,
-                    document_status:
-                      "uploading",
-                    analysis_status:
-                      "uploaded"
+                      selectedFiles[0].name.replace(/\.pdf$/i, ""),
+                    contract_type: contractType,
+                    internal_reference: internalReference,
+                    business_entity: businessEntity,
+                    internal_notes: notes,
+                    original_file_name: selectedFiles[0].name,
+                    document_status: "uploading",
+                    analysis_status: "uploaded"
                   })
                   .select("id")
                   .single();
@@ -1343,62 +1191,82 @@
                   contractRecord.id;
 
                 setProgress(
-                  45,
+                  40,
                   t("uploading")
                 );
 
-                const {
-                  error: uploadError
-                } = await db.storage
-                  .from(STORAGE_BUCKET)
-                 [
-  {
-    storage_path: "...addendum.pdf",
-    original_file_name: "...addendum.pdf"
-  },
-  {
-    storage_path: "...club-services.pdf",
-    original_file_name: "...club-services.pdf"
-  },
-  {
-    storage_path: "...player-services.pdf",
-    original_file_name: "...player-services.pdf"
-  }
-]
-                    {
-                      cacheControl: "3600",
-                      upsert: false,
-                      contentType:
-                        "application/pdf"
-                    }
+                const uploadedDocuments = [];
+                let firstStoragePath = null;
+
+                for (
+                  let index = 0;
+                  index < selectedFiles.length;
+                  index++
+                ) {
+                  const file =
+                    selectedFiles[index];
+
+                  const safeFileName =
+                    sanitiseFileName(file.name);
+
+                  const storagePath =
+                    `${currentUser.id}/${createdContractId}/${timestamp}-${index + 1}-${safeFileName}`;
+
+                  const {
+                    error: uploadError
+                  } = await db.storage
+                    .from(STORAGE_BUCKET)
+                    .upload(
+                      storagePath,
+                      file,
+                      {
+                        cacheControl: "3600",
+                        upsert: false,
+                        contentType:
+                          file.type || "application/pdf"
+                      }
+                    );
+
+                  if (uploadError) {
+                    throw uploadError;
+                  }
+
+                  if (!firstStoragePath) {
+                    firstStoragePath = storagePath;
+                  }
+
+                  uploadedDocuments.push({
+                    storage_bucket: STORAGE_BUCKET,
+                    storage_path: storagePath,
+                    original_file_name: file.name,
+                    mime_type: file.type || "application/pdf",
+                    file_size: file.size
+                  });
+
+                  const uploadProgress =
+                    40 +
+                    Math.round(
+                      ((index + 1) /
+                        selectedFiles.length) * 30
+                    );
+
+                  setProgress(
+                    uploadProgress,
+                    `${t("uploading")} ${index + 1}/${selectedFiles.length}`
                   );
-
-                if (uploadError) {
-                  throw uploadError;
                 }
-
-                setProgress(
-                  65,
-                  t("creatingRecord")
-                );
 
                 const {
                   error: updateError
                 } = await db
                   .from("contracts")
                   .update({
-                    document_path:
-                      storagePath,
-                    document_status:
-                      "uploaded",
-                    analysis_status:
-                      "uploaded"
+                    document_path: firstStoragePath,
+                    document_status: "uploaded",
+                    analysis_status: "uploaded"
                   })
                   .eq("id", createdContractId)
-                  .eq(
-                    "user_id",
-                    currentUser.id
-                  );
+                  .eq("user_id", currentUser.id);
 
                 if (updateError) {
                   throw updateError;
@@ -1409,12 +1277,6 @@
                   t("startingAnalysis")
                 );
 
-                /*
-                  This calls the Edge Function when it exists.
-                  If it has not been deployed yet, the upload
-                  still remains safely stored.
-                */
-
                 const {
                   data: analysisResponse,
                   error: analysisError
@@ -1422,36 +1284,26 @@
                   "analyse-contract",
                   {
                     body: {
-                    contract_id:
-                      createdContractId,
-                    documents:
-                      uploadedDocuments,
-                    language:
-                      currentLang
-                  }
+                      contract_id: createdContractId,
+                      documents: uploadedDocuments,
+                      language: currentLang
+                    }
                   }
                 );
 
                 if (analysisError) {
-                  console.warn(
-                    "Analysis function not available yet:",
+                  console.error(
+                    "Contract package analysis error:",
                     analysisError
                   );
 
                   await db
                     .from("contracts")
                     .update({
-                      analysis_status:
-                        "uploaded"
+                      analysis_status: "analysis_failed"
                     })
-                    .eq(
-                      "id",
-                      createdContractId
-                    )
-                    .eq(
-                      "user_id",
-                      currentUser.id
-                    );
+                    .eq("id", createdContractId)
+                    .eq("user_id", currentUser.id);
 
                   setProgress(
                     100,
@@ -1459,7 +1311,7 @@
                   );
 
                   setStatus(
-                    t("analysisPending"),
+                    `${t("analysisPending")} ${analysisError.message || ""}`.trim(),
                     "warning"
                   );
                 } else {
@@ -1492,7 +1344,7 @@
                 }, 1300);
               } catch (error) {
                 console.error(
-                  "Contract upload error:",
+                  "Contract package upload error:",
                   error
                 );
 
@@ -1500,19 +1352,11 @@
                   await db
                     .from("contracts")
                     .update({
-                      document_status:
-                        "upload_failed",
-                      analysis_status:
-                        "upload_failed"
+                      document_status: "upload_failed",
+                      analysis_status: "upload_failed"
                     })
-                    .eq(
-                      "id",
-                      createdContractId
-                    )
-                    .eq(
-                      "user_id",
-                      currentUser.id
-                    );
+                    .eq("id", createdContractId)
+                    .eq("user_id", currentUser.id);
                 }
 
                 clearProgress();
