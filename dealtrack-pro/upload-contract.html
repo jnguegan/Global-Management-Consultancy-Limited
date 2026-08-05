@@ -1282,10 +1282,10 @@
 
               const timestamp = Date.now();
 
-              const safeFileName =
-                sanitiseFileName(
-                  selectedPdf.name
-                );
+             const safeFileName =
+              sanitiseFileName(
+                selectedFiles[0].name
+              );
 
               const storagePath =
                 `${currentUser.id}/${timestamp}-${safeFileName}`;
