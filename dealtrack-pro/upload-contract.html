@@ -878,7 +878,7 @@
     let currentLang =
       localStorage.getItem("lang") || "en";
 
-    let selectedPdf = null;
+  let selectedFiles = [];
     let currentUser = null;
 
     function t(key) {
@@ -991,57 +991,64 @@
         .toLowerCase();
     }
 
-    function displaySelectedFile(file) {
-      selectedPdf = file;
+    function renderSelectedFiles() {
+  const container =
+    document.getElementById("selectedFiles");
 
-      document.getElementById(
-        "selectedFileName"
-      ).textContent = file.name;
+  const analyseButton =
+    document.getElementById("analyseBtn");
 
-      document.getElementById(
-        "selectedFileSize"
-      ).textContent =
-        `${t("selected")}: ${formatFileSize(file.size)}`;
+  container.innerHTML = "";
 
-      document.getElementById(
-        "selectedFile"
-      ).classList.add("is-visible");
+  if (selectedFiles.length === 0) {
+    analyseButton.disabled = true;
+    return;
+  }
 
-      document.getElementById(
-        "analyseBtn"
-      ).disabled = false;
+  selectedFiles.forEach((file, index) => {
+    const item = document.createElement("div");
 
-      clearStatus();
-    }
+    item.className = "selected-file-item";
 
-    function removeSelectedFile() {
-      selectedPdf = null;
+    item.innerHTML = `
+      <div class="selected-file-details">
+        <div class="selected-file-name">
+          ${file.name}
+        </div>
 
-      const fileInput =
-        document.getElementById("contractFiles");
+        <div class="selected-file-size">
+          ${formatFileSize(file.size)}
+        </div>
+      </div>
 
-      fileInput.value = "";
+      <button
+        type="button"
+        class="remove-selected-file"
+        data-file-index="${index}"
+      >
+        ${t("removeFile")}
+      </button>
+    `;
 
-      document.getElementById(
-        "selectedFile"
-      ).classList.remove("is-visible");
+    container.appendChild(item);
+  });
 
-      document.getElementById(
-        "selectedFileName"
-      ).textContent = "";
+  analyseButton.disabled = false;
 
-      document.getElementById(
-        "selectedFileSize"
-      ).textContent = "";
+  container
+    .querySelectorAll(".remove-selected-file")
+    .forEach((button) => {
+      button.addEventListener("click", () => {
+        const index = Number(
+          button.getAttribute("data-file-index")
+        );
 
-      document.getElementById(
-        "analyseBtn"
-      ).disabled = true;
-
-      clearStatus();
-      clearProgress();
-    }
-
+        selectedFiles.splice(index, 1);
+        renderSelectedFiles();
+      });
+    });
+}
+  
     function validateFile(file) {
       if (!file) {
         setStatus(t("missingFile"), "error");
@@ -1065,15 +1072,32 @@
       return true;
     }
 
-    function handleFile(file) {
-      if (!validateFile(file)) {
-        removeSelectedFile();
-        return;
-      }
+   function addSelectedFiles(files) {
+  if (!files || files.length === 0) {
+    return;
+  }
 
-      displaySelectedFile(file);
+  for (const file of files) {
+    if (!validateFile(file)) {
+      continue;
     }
 
+    const alreadyExists = selectedFiles.some(
+      (existingFile) =>
+        existingFile.name === file.name &&
+        existingFile.size === file.size
+    );
+
+    if (!alreadyExists) {
+      selectedFiles.push(file);
+    }
+  }
+
+  renderSelectedFiles();
+  clearStatus();
+
+  document.getElementById("contractFiles").value = "";
+}
     document.addEventListener(
       "DOMContentLoaded",
       async () => {
@@ -1096,9 +1120,8 @@
                 );
 
                 applyTranslations();
-
-                if (selectedPdf) {
-                  displaySelectedFile(selectedPdf);
+                if (selectedFiles.length > 0) {
+                  renderSelectedFiles();
                 }
               }
             );
@@ -1154,14 +1177,12 @@
           }
         );
 
-        fileInput.addEventListener(
-          "change",
-          () => {
-            handleFile(
-              fileInput.files?.[0] || null
-            );
-          }
-        );
+       fileInput.addEventListener(
+  "change",
+  () => {
+    addSelectedFiles(fileInput.files);
+  }
+);
 
         ["dragenter", "dragover"].forEach(
           (eventName) => {
@@ -1194,20 +1215,14 @@
         uploadZone.addEventListener(
           "drop",
           (event) => {
-            const file =
-              event.dataTransfer?.files?.[0];
-
-            handleFile(file || null);
+            
+            addSelectedFiles(
+              event.dataTransfer?.files
+            );
           }
         );
 
-        document
-          .getElementById("removeFileBtn")
-          .addEventListener(
-            "click",
-            removeSelectedFile
-          );
-
+       
         document
           .getElementById("uploadForm")
           .addEventListener(
@@ -1215,10 +1230,25 @@
             async (event) => {
               event.preventDefault();
 
-              if (
-                !currentUser ||
-                !validateFile(selectedPdf)
-              ) {
+                  if (!currentUser) {
+                return;
+              }
+              
+              if (selectedFiles.length === 0) {
+                setStatus(
+                  t("missingFile"),
+                  "error"
+                );
+              
+                return;
+              }
+              
+              const invalidFile =
+                selectedFiles.find(
+                  (file) => !validateFile(file)
+                );
+              
+              if (invalidFile) {
                 return;
               }
 
