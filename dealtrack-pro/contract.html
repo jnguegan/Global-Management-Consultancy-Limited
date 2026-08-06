@@ -1276,6 +1276,7 @@
     const I18N = JSON.parse(document.getElementById("dealtrack-contract-i18n").textContent);
     let currentLang = localStorage.getItem("lang") || "en";
     let currentContract = null;
+    let currentContractInstalments = [];
     let currentUser = null;
     let currentAgency = null;
 
@@ -1485,8 +1486,9 @@ function calculateContractYears(
 
 function getCurrencyCode(data) {
   return (
-    data.salary_currency ||
     data.commission_currency ||
+    data.salary_currency ||
+    currentContractInstalments[0]?.currency ||
     "GBP"
   );
 }
@@ -1565,37 +1567,357 @@ function renderCommissionSideBox({
   `;
 }
 
+function normaliseCommissionMethod(data) {
+  const explicit = String(
+    data.commission_method ||
+    data.commission_type ||
+    ""
+  ).trim().toLowerCase();
+
+  if (
+    explicit === "percentage" ||
+    explicit.includes("percentage") ||
+    explicit.includes("%")
+  ) return "percentage";
+
+  if (
+    explicit === "fixed" ||
+    explicit.includes("fixed")
+  ) return "fixed";
+
+  if (
+    explicit === "mixed" ||
+    explicit.includes("mixed")
+  ) return "mixed";
+
+  if (
+    toNumber(data.commission_percentage) !== null &&
+    toNumber(data.fixed_commission_amount) !== null
+  ) return "mixed";
+
+  if (toNumber(data.fixed_commission_amount) !== null) return "fixed";
+  if (toNumber(data.commission_percentage) !== null) return "percentage";
+
+  return "unknown";
+}
+
+function getCommissionBasis(data, annualSalary) {
+  const basis = String(
+    data.commission_basis || "basic_salary"
+  ).trim().toLowerCase();
+
+  const signingBonus =
+    toNumber(data.signing_bonus) || 0;
+  const guaranteedBonus =
+    toNumber(data.guaranteed_bonus) || 0;
+  const otherIncome =
+    toNumber(data.other_commissionable_income) || 0;
+  const customBasis =
+    toNumber(data.custom_commission_basis_amount);
+
+  if (basis === "custom" && customBasis !== null) {
+    return {
+      recurring: customBasis,
+      oneOff: 0,
+      total: customBasis
+    };
+  }
+
+  const recurring = annualSalary || 0;
+  let oneOff = 0;
+
+  if (
+    basis === "salary_plus_signing_bonus" ||
+    basis === "guaranteed_remuneration" ||
+    basis === "total_gross_remuneration" ||
+    Boolean(data.signing_bonus_commissionable)
+  ) oneOff += signingBonus;
+
+  if (
+    basis === "guaranteed_remuneration" ||
+    basis === "total_gross_remuneration" ||
+    Boolean(data.guaranteed_bonus_commissionable)
+  ) oneOff += guaranteedBonus;
+
+  if (
+    basis === "total_gross_remuneration" ||
+    Boolean(data.other_income_commissionable)
+  ) oneOff += otherIncome;
+
+  return {
+    recurring,
+    oneOff,
+    total: recurring + oneOff
+  };
+}
+
+function getInstalmentMetrics(data) {
+  const items = currentContractInstalments.filter((item) => {
+    const status = String(item.invoice_status || "").toLowerCase();
+    return status !== "cancelled";
+  });
+
+  if (!items.length) return null;
+
+  const reportingYear = new Date().getFullYear();
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const currency =
+    items.find((item) => item.currency)?.currency ||
+    getCurrencyCode(data);
+
+  const lifetimeRevenue = items.reduce(
+    (sum, item) => sum + (toNumber(item.amount) || 0),
+    0
+  );
+
+  const annualRevenue = items.reduce((sum, item) => {
+    if (!item.due_date) return sum;
+
+    const dueDate = new Date(`${item.due_date}T00:00:00`);
+    if (Number.isNaN(dueDate.getTime())) return sum;
+
+    return dueDate.getFullYear() === reportingYear
+      ? sum + (toNumber(item.amount) || 0)
+      : sum;
+  }, 0);
+
+  const futureItems = items
+    .filter((item) => {
+      if (!item.due_date) return false;
+
+      const status = String(item.invoice_status || "").toLowerCase();
+      if (status === "paid") return false;
+
+      const dueDate = new Date(`${item.due_date}T00:00:00`);
+      return !Number.isNaN(dueDate.getTime()) && dueDate >= today;
+    })
+    .sort((a, b) => String(a.due_date).localeCompare(String(b.due_date)));
+
+  const nextDueDate = futureItems[0]?.due_date || null;
+
+  const nextInvoiceAmount = nextDueDate
+    ? futureItems
+        .filter((item) => item.due_date === nextDueDate)
+        .reduce(
+          (sum, item) => sum + (toNumber(item.amount) || 0),
+          0
+        )
+    : 0;
+
+  return {
+    currency,
+    annualRevenue,
+    lifetimeRevenue,
+    nextInvoiceAmount,
+    nextDueDate,
+    items
+  };
+}
+
 function renderCommercialValue(data) {
+  const instalmentMetrics = getInstalmentMetrics(data);
+
+  if (instalmentMetrics) {
+    const termText = data.playing_contract_end_date
+      ? `${data.playing_contract_start_date || data.start_date || t("na")} — ${data.playing_contract_end_date}`
+      : `${currentContractInstalments.length} ${t("invoiceInstalments")}`;
+
+    return `
+      <section class="premium-card commercial-value-card">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">06</div>
+            <h2 class="section-title">
+              ${t("sectionCommercialValue")}
+            </h2>
+          </div>
+        </div>
+
+        <p class="muted">
+          ${t("commercialValueSubtitle")}
+        </p>
+
+        <div class="commercial-value-headline">
+          <span class="commercial-value-label">
+            ${t("expectedAnnualRevenue")}
+          </span>
+
+          <div class="commercial-value-annual">
+            ${formatMoneyValue(
+              instalmentMetrics.annualRevenue,
+              instalmentMetrics.currency
+            )}
+          </div>
+
+          <div class="commercial-value-period">
+            ${new Date().getFullYear()}
+          </div>
+        </div>
+
+        <div class="commercial-total-box">
+          <span class="commercial-value-label">
+            ${t("expectedContractRevenue")}
+          </span>
+
+          <div class="commercial-total-value">
+            ${formatMoneyValue(
+              instalmentMetrics.lifetimeRevenue,
+              instalmentMetrics.currency
+            )}
+          </div>
+
+          <div class="commercial-value-period">
+            ${termText}
+          </div>
+        </div>
+
+        <div class="commercial-calculation">
+          <h4>${t("commercialCalculation")}</h4>
+
+          <div class="commercial-calculation-grid">
+            <div>
+              <span>${t("representationType")}</span>
+              <strong>
+                ${data.is_dual_representation
+                  ? t("dualRepresentationValue")
+                  : t("singleRepresentationValue")}
+              </strong>
+            </div>
+
+            <div>
+              <span>${t("labelCommissionType")}</span>
+              <strong>${safeValue(data.commission_method || data.commission_type)}</strong>
+            </div>
+
+            <div>
+              <span>${t("expectedAnnualRevenue")}</span>
+              <strong>
+                ${formatMoneyValue(
+                  instalmentMetrics.annualRevenue,
+                  instalmentMetrics.currency
+                )}
+              </strong>
+            </div>
+
+            <div>
+              <span>${t("expectedContractRevenue")}</span>
+              <strong>
+                ${formatMoneyValue(
+                  instalmentMetrics.lifetimeRevenue,
+                  instalmentMetrics.currency
+                )}
+              </strong>
+            </div>
+          </div>
+
+          <p class="commercial-note">
+            Revenue is calculated from the recorded commission instalment schedule.
+          </p>
+        </div>
+      </section>
+    `;
+  }
+
   const annualSalary =
     calculateAnnualSalary(
       data.salary,
       data.salary_frequency
     );
 
-  const commissionRate =
-    toNumber(
-      data.commission_percentage ??
-      data.commission_value
-    );
+  const method = normaliseCommissionMethod(data);
+  const commissionRate = toNumber(
+    data.commission_percentage ??
+    (method === "percentage" ? data.commission_value : null)
+  );
+  const fixedAmount = toNumber(
+    data.fixed_commission_amount ??
+    (method === "fixed" ? data.commission_value : null)
+  );
 
   const contractYears =
     calculateContractYears(
-      data.start_date,
-      data.end_date
+      data.playing_contract_start_date || data.start_date,
+      data.playing_contract_end_date || data.end_date
     );
 
-  const isDual =
-    Boolean(
-      data.is_dual_representation
-    );
+  const isDual = Boolean(data.is_dual_representation);
+  const currency = getCurrencyCode(data);
+  const basis = getCommissionBasis(data, annualSalary);
 
-  const currency =
-    getCurrencyCode(data);
+  const percentageMultiplier =
+    isDual && data.dual_representation_multiplier == null
+      ? 2
+      : Math.max(
+          1,
+          toNumber(data.dual_representation_multiplier) || 1
+        );
+
+  const fixedMultiplier =
+    isDual && Boolean(data.fixed_commission_per_side)
+      ? 2
+      : 1;
+
+  const recurringPercentage =
+    commissionRate !== null
+      ? basis.recurring *
+        (commissionRate / 100) *
+        percentageMultiplier
+      : 0;
+
+  const oneOffPercentage =
+    commissionRate !== null
+      ? basis.oneOff *
+        (commissionRate / 100) *
+        percentageMultiplier
+      : 0;
+
+  const fixedCommission =
+    fixedAmount !== null
+      ? fixedAmount * fixedMultiplier
+      : 0;
+
+  let totalAnnualRevenue = null;
+  let totalContractRevenue = null;
 
   if (
-    annualSalary === null ||
-    commissionRate === null ||
-    contractYears === null
+    method === "percentage" &&
+    commissionRate !== null &&
+    contractYears !== null
+  ) {
+    totalAnnualRevenue =
+      recurringPercentage + oneOffPercentage;
+
+    totalContractRevenue =
+      recurringPercentage * contractYears +
+      oneOffPercentage;
+  } else if (
+    method === "fixed" &&
+    fixedAmount !== null
+  ) {
+    totalAnnualRevenue = fixedCommission;
+    totalContractRevenue = fixedCommission;
+  } else if (
+    method === "mixed" &&
+    commissionRate !== null &&
+    fixedAmount !== null &&
+    contractYears !== null
+  ) {
+    totalAnnualRevenue =
+      recurringPercentage +
+      oneOffPercentage +
+      fixedCommission;
+
+    totalContractRevenue =
+      recurringPercentage * contractYears +
+      oneOffPercentage +
+      fixedCommission;
+  }
+
+  if (
+    totalAnnualRevenue === null ||
+    totalContractRevenue === null
   ) {
     return `
       <section class="premium-card commercial-value-card">
@@ -1615,47 +1937,10 @@ function renderCommercialValue(data) {
     `;
   }
 
-  const playerSideAnnual =
-    annualSalary *
-    (commissionRate / 100);
-
-  const clubSideAnnual =
-    isDual
-      ? annualSalary *
-        (commissionRate / 100)
-      : 0;
-
-  const totalAnnualRevenue =
-    playerSideAnnual +
-    clubSideAnnual;
-
-  const playerContractRevenue =
-    playerSideAnnual *
-    contractYears;
-
-  const clubContractRevenue =
-    clubSideAnnual *
-    contractYears;
-
-  const totalContractRevenue =
-    totalAnnualRevenue *
-    contractYears;
-
-  const totalCommissionRate =
-    isDual
-      ? commissionRate * 2
-      : commissionRate;
-
-  const representationText =
-    isDual
-      ? t("dualRepresentationValue")
-      : t("singleRepresentationValue");
-
   const termText =
-    t("overContractTerm").replace(
-      "{years}",
-      contractYears
-    );
+    contractYears !== null
+      ? t("overContractTerm").replace("{years}", contractYears)
+      : t("na");
 
   return `
     <section class="premium-card commercial-value-card">
@@ -1672,120 +1957,87 @@ function renderCommercialValue(data) {
         ${t("commercialValueSubtitle")}
       </p>
 
-   <div class="commercial-value-headline">
-  <span class="commercial-value-label">
-    ${t("expectedAnnualRevenue")}
-  </span>
+      <div class="commercial-value-headline">
+        <span class="commercial-value-label">
+          ${t("expectedAnnualRevenue")}
+        </span>
 
-  <div class="commercial-value-annual">
-    ${formatMoneyValue(
-      totalAnnualRevenue,
-      currency
-    )}
-  </div>
+        <div class="commercial-value-annual">
+          ${formatMoneyValue(
+            totalAnnualRevenue,
+            currency
+          )}
+        </div>
 
-  <div class="commercial-value-period">
-    ${t("perYear")}
-  </div>
-</div>
-
-<div class="commercial-total-box">
-  <span class="commercial-value-label">
-    ${t("expectedContractRevenue")}
-  </span>
-
-  <div class="commercial-total-value">
-    ${formatMoneyValue(
-      totalContractRevenue,
-      currency
-    )}
-  </div>
-
-  <div class="commercial-value-period">
-    ${termText}
-  </div>
-</div>
-
-      <div class="commercial-breakdown">
-        ${renderCommissionSideBox({
-          title: t("playerSide"),
-          rate: commissionRate,
-          annualRevenue: playerSideAnnual,
-          contractRevenue:
-            playerContractRevenue,
-          currency
-        })}
-
-        ${
-          isDual
-            ? renderCommissionSideBox({
-                title: t("clubSide"),
-                rate: commissionRate,
-                annualRevenue:
-                  clubSideAnnual,
-                contractRevenue:
-                  clubContractRevenue,
-                currency
-              })
-            : ""
-        }
+        <div class="commercial-value-period">
+          ${t("perYear")}
+        </div>
       </div>
 
-     <div class="commercial-calculation">
-  <h4>${t("commercialCalculation")}</h4>
+      <div class="commercial-total-box">
+        <span class="commercial-value-label">
+          ${t("expectedContractRevenue")}
+        </span>
 
-  <div class="commercial-calculation-grid">
+        <div class="commercial-total-value">
+          ${formatMoneyValue(
+            totalContractRevenue,
+            currency
+          )}
+        </div>
 
-    <div>
-      <span>${t("annualSalaryBasis")}</span>
-      <strong>
-        ${formatMoneyValue(
-          annualSalary,
-          currency
-        )}
-      </strong>
-    </div>
+        <div class="commercial-value-period">
+          ${termText}
+        </div>
+      </div>
 
-    <div>
-      <span>${t("totalCommissionRate")}</span>
-      <strong>${totalCommissionRate}%</strong>
-    </div>
+      <div class="commercial-calculation">
+        <h4>${t("commercialCalculation")}</h4>
 
-    <div>
-      <span>${t("representationType")}</span>
-      <strong>${representationText}</strong>
-    </div>
+        <div class="commercial-calculation-grid">
+          <div>
+            <span>${t("annualSalaryBasis")}</span>
+            <strong>
+              ${formatMoneyValue(
+                basis.total,
+                currency
+              )}
+            </strong>
+          </div>
 
-    <div>
-      <span>${t("expectedAnnualRevenue")}</span>
-      <strong>
-        ${formatMoneyValue(
-          totalAnnualRevenue,
-          currency
-        )}
-      </strong>
-    </div>
+          <div>
+            <span>${t("labelCommissionType")}</span>
+            <strong>${method}</strong>
+          </div>
 
-    <div>
-      <span>${t("expectedContractRevenue")}</span>
-      <strong>
-        ${formatMoneyValue(
-          totalContractRevenue,
-          currency
-        )}
-      </strong>
-    </div>
+          <div>
+            <span>${t("expectedAnnualRevenue")}</span>
+            <strong>
+              ${formatMoneyValue(
+                totalAnnualRevenue,
+                currency
+              )}
+            </strong>
+          </div>
 
-  </div>
+          <div>
+            <span>${t("expectedContractRevenue")}</span>
+            <strong>
+              ${formatMoneyValue(
+                totalContractRevenue,
+                currency
+              )}
+            </strong>
+          </div>
+        </div>
 
-  <p class="commercial-note">
-    ${t("commercialEstimateNote")}
-  </p>
-</div>
-</section>
+        <p class="commercial-note">
+          ${t("commercialEstimateNote")}
+        </p>
+      </div>
+    </section>
   `;
 }
-    
 
 function renderInvoiceOpportunity({
   title,
@@ -1858,17 +2110,202 @@ function renderInvoiceOpportunity({
   `;
 }
 
+function formatDateValue(dateValue) {
+  if (!dateValue) return t("invoiceDatePending");
+
+  const localeMap = {
+    en: "en-GB",
+    fr: "fr-FR",
+    es: "es-ES"
+  };
+
+  return new Intl.DateTimeFormat(
+    localeMap[currentLang] || "en-GB",
+    {
+      day: "2-digit",
+      month: "short",
+      year: "numeric"
+    }
+  ).format(new Date(`${dateValue}T00:00:00`));
+}
+
 function renderInvoiceForecast(data) {
+  const instalmentMetrics = getInstalmentMetrics(data);
+
+  if (instalmentMetrics) {
+    const futureGroups = new Map();
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    instalmentMetrics.items.forEach((item) => {
+      if (!item.due_date) return;
+
+      const status = String(item.invoice_status || "").toLowerCase();
+      if (["paid", "cancelled"].includes(status)) return;
+
+      const dueDate = new Date(`${item.due_date}T00:00:00`);
+      if (Number.isNaN(dueDate.getTime()) || dueDate < today) return;
+
+      const key = item.due_date;
+
+      if (!futureGroups.has(key)) {
+        futureGroups.set(key, {
+          dueDate: item.due_date,
+          amount: 0,
+          currency:
+            item.currency ||
+            instalmentMetrics.currency,
+          items: []
+        });
+      }
+
+      const group = futureGroups.get(key);
+      group.amount += toNumber(item.amount) || 0;
+      group.items.push(item);
+    });
+
+    const groups = [...futureGroups.values()]
+      .sort((a, b) => a.dueDate.localeCompare(b.dueDate));
+
+    if (!groups.length) {
+      return `
+        <section class="premium-card invoice-forecast-card">
+          <div class="section-head">
+            <div>
+              <div class="section-kicker">07</div>
+              <h2 class="section-title">
+                ${t("sectionInvoiceForecast")}
+              </h2>
+            </div>
+          </div>
+
+          <div class="commercial-warning">
+            ${t("no")} ${t("invoiceStatusForecast")}
+          </div>
+        </section>
+      `;
+    }
+
+    return `
+      <section class="premium-card invoice-forecast-card">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">07</div>
+            <h2 class="section-title">
+              ${t("sectionInvoiceForecast")}
+            </h2>
+          </div>
+        </div>
+
+        <p class="muted">
+          ${t("invoiceForecastSubtitle")}
+        </p>
+
+        <div class="invoice-opportunities">
+          ${groups.map((group, index) => {
+            const sideNames = group.items
+              .map((item) => item.fee_side)
+              .filter(Boolean)
+              .join(" + ");
+
+            const payers = [
+              ...new Set(
+                group.items
+                  .map((item) => item.payer)
+                  .filter(Boolean)
+              )
+            ].join(" / ");
+
+            return `
+              <div class="invoice-opportunity">
+                <div class="invoice-opportunity-head">
+                  <div class="invoice-opportunity-title">
+                    ${index === 0
+                      ? t("sectionInvoiceForecast")
+                      : t("forecast")}
+                  </div>
+
+                  <div class="invoice-status">
+                    ${group.items
+                      .map((item) => item.invoice_status)
+                      .filter(Boolean)
+                      .join(" / ") || t("invoiceStatusForecast")}
+                  </div>
+                </div>
+
+                <div class="invoice-amount-box">
+                  <span class="invoice-amount-label">
+                    ${t("invoiceAmount")}
+                  </span>
+
+                  <div class="invoice-amount-value">
+                    ${formatMoneyValue(
+                      group.amount,
+                      group.currency
+                    )}
+                  </div>
+                </div>
+
+                <div class="invoice-details-grid">
+                  <div class="invoice-detail">
+                    <span>${t("invoiceClient")}</span>
+                    <strong>${safeValue(data.player_name)}</strong>
+                  </div>
+
+                  <div class="invoice-detail">
+                    <span>${t("invoicePayer")}</span>
+                    <strong>${payers || t("na")}</strong>
+                  </div>
+
+                  <div class="invoice-detail">
+                    <span>${t("invoiceType")}</span>
+                    <strong>${sideNames || t("annualCommissionInvoice")}</strong>
+                  </div>
+
+                  <div class="invoice-detail">
+                    <span>${t("paymentDueDate")}</span>
+                    <strong>${formatDateValue(group.dueDate)}</strong>
+                  </div>
+
+                  <div class="invoice-detail">
+                    <span>${t("invoiceInstalments")}</span>
+                    <strong>${group.items.length}</strong>
+                  </div>
+
+                  <div class="invoice-detail">
+                    <span>${t("invoiceStatus")}</span>
+                    <strong>
+                      ${group.items.some((item) => item.conditional)
+                        ? t("invoiceReviewRequired")
+                        : t("invoiceStatusForecast")}
+                    </strong>
+                  </div>
+                </div>
+              </div>
+            `;
+          }).join("")}
+        </div>
+
+        <p class="invoice-forecast-note">
+          ${t("invoiceForecastNote")}
+        </p>
+      </section>
+    `;
+  }
+
   const annualSalary =
     calculateAnnualSalary(
       data.salary,
       data.salary_frequency
     );
 
+  const method = normaliseCommissionMethod(data);
   const commissionRate =
     toNumber(
       data.commission_percentage ??
-      data.commission_value
+      (method === "percentage"
+        ? data.commission_value
+        : null)
     );
 
   if (
@@ -1894,9 +2331,10 @@ function renderInvoiceForecast(data) {
   }
 
   const currency = getCurrencyCode(data);
+  const basis = getCommissionBasis(data, annualSalary);
 
   const annualSideAmount =
-    annualSalary *
+    basis.total *
     (commissionRate / 100);
 
   const isDual =
@@ -1922,31 +2360,32 @@ function renderInvoiceForecast(data) {
         ${t("invoiceForecastSubtitle")}
       </p>
 
-     <div class="invoice-opportunities">
-  ${renderInvoiceOpportunity({
-    title: t("invoicePlayerSide"),
-    amount: annualSideAmount,
-    currency,
-    client: data.player_name,
-    payer,
-    frequency: data.commission_frequency,
-    instalments: data.commission_instalments
-  })}
-
-  ${
-    isDual
-      ? renderInvoiceOpportunity({
-          title: t("invoiceClubSide"),
+      <div class="invoice-opportunities">
+        ${renderInvoiceOpportunity({
+          title: t("invoicePlayerSide"),
           amount: annualSideAmount,
           currency,
-          client: data.club_name,
-          payer: data.club_name || payer,
+          client: data.player_name,
+          payer,
           frequency: data.commission_frequency,
           instalments: data.commission_instalments
-        })
-      : ""
-  }
-</div>
+        })}
+
+        ${
+          isDual
+            ? renderInvoiceOpportunity({
+                title: t("invoiceClubSide"),
+                amount: annualSideAmount,
+                currency,
+                client: data.club_name,
+                payer: data.club_name || payer,
+                frequency: data.commission_frequency,
+                instalments: data.commission_instalments
+              })
+            : ""
+        }
+      </div>
+
       <p class="invoice-forecast-note">
         ${t("invoiceForecastNote")}
       </p>
@@ -2021,8 +2460,14 @@ function renderInvoiceForecast(data) {
                 </div>
               </div>
               <div class="grid">
-                ${renderTile("labelStartDate", safeValue(data.start_date))}
-                ${renderTile("labelEndDate", safeValue(data.end_date))}
+                ${renderTile(
+                  "labelStartDate",
+                  safeValue(data.playing_contract_start_date || data.start_date)
+                )}
+                ${renderTile(
+                  "labelEndDate",
+                  safeValue(data.playing_contract_end_date || data.end_date)
+                )}
               </div>
             </section>
           </div>
@@ -2169,6 +2614,43 @@ function renderInvoiceForecast(data) {
       }
 
       currentContract = data;
+      currentContractInstalments = [];
+
+      const directInstalments = await db
+        .from("commission_instalments")
+        .select("*")
+        .eq("contract_id", id)
+        .order("due_date", { ascending: true })
+        .order("instalment_number", { ascending: true });
+
+      if (
+        !directInstalments.error &&
+        Array.isArray(directInstalments.data)
+      ) {
+        currentContractInstalments =
+          directInstalments.data;
+      }
+
+      if (
+        directInstalments.error ||
+        currentContractInstalments.length === 0
+      ) {
+        const rpcResult = await db.rpc(
+          "get_my_commission_instalments"
+        );
+
+        if (
+          !rpcResult.error &&
+          Array.isArray(rpcResult.data)
+        ) {
+          currentContractInstalments =
+            rpcResult.data.filter(
+              (item) =>
+                String(item.contract_id) === String(id)
+            );
+        }
+      }
+
       applyStaticTranslations();
       renderContract(data);
     });
