@@ -249,6 +249,38 @@
 
     .kpi-card.primary .kpi-value { color: var(--gold-2); }
 
+    .currency-summary {
+      display: grid;
+      gap: 9px;
+      margin-top: 2px;
+    }
+
+    .currency-summary-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 8px 10px;
+      border: 1px solid rgba(255,255,255,0.055);
+      border-radius: 12px;
+      background: rgba(255,255,255,0.025);
+    }
+
+    .currency-summary-code {
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+    }
+
+    .currency-summary-amount {
+      color: var(--gold-2);
+      font-size: 1.05rem;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      text-align: right;
+    }
+
     .kpi-note {
       margin-top: 7px;
       color: var(--muted);
@@ -602,19 +634,19 @@
 
       <article class="kpi-card primary">
         <span class="kpi-label" data-i18n="kpiAnnual">Total Annual Revenue</span>
-        <div id="kpiAnnual" class="kpi-value">—</div>
+        <div id="kpiAnnual" class="currency-summary">—</div>
         <div class="kpi-note" data-i18n="kpiAnnualNote">Projected commission per year</div>
       </article>
 
       <article class="kpi-card primary">
         <span class="kpi-label" data-i18n="kpiLifetime">Total Lifetime Revenue</span>
-        <div id="kpiLifetime" class="kpi-value">—</div>
+        <div id="kpiLifetime" class="currency-summary">—</div>
         <div class="kpi-note" data-i18n="kpiLifetimeNote">Projected across recorded contract terms</div>
       </article>
 
       <article class="kpi-card primary">
         <span class="kpi-label" data-i18n="kpiInvoices">Forecast Invoices</span>
-        <div id="kpiInvoices" class="kpi-value">—</div>
+        <div id="kpiInvoices" class="currency-summary">—</div>
         <div class="kpi-note" data-i18n="kpiInvoicesNote">Current annual invoice opportunity</div>
       </article>
     </section>
@@ -767,6 +799,9 @@
       "forecast": "Forecast",
       "notRecorded": "Not recorded",
       "mixedCurrencies": "Mixed currencies",
+      "currencyEUR": "EUR",
+      "currencyGBP": "GBP",
+      "currencyUSD": "USD",
       "missingFinancialData": "Missing financial data",
       "missingFinancialDataText": "{count} contract(s) cannot yet be fully calculated.",
       "expiringContracts": "Contracts expiring within 12 months",
@@ -828,6 +863,9 @@
       "forecast": "Prévision",
       "notRecorded": "Non renseigné",
       "mixedCurrencies": "Devises multiples",
+      "currencyEUR": "EUR",
+      "currencyGBP": "GBP",
+      "currencyUSD": "USD",
       "missingFinancialData": "Données financières manquantes",
       "missingFinancialDataText": "{count} contrat(s) ne peuvent pas encore être entièrement calculés.",
       "expiringContracts": "Contrats expirant dans les 12 mois",
@@ -889,6 +927,9 @@
       "forecast": "Previsión",
       "notRecorded": "No registrado",
       "mixedCurrencies": "Varias monedas",
+      "currencyEUR": "EUR",
+      "currencyGBP": "GBP",
+      "currencyUSD": "USD",
       "missingFinancialData": "Faltan datos financieros",
       "missingFinancialDataText": "{count} contrato(s) todavía no pueden calcularse completamente.",
       "expiringContracts": "Contratos que vencen en 12 meses",
@@ -940,6 +981,39 @@
 
     function normaliseFrequency(value) {
       return String(value || "").trim().toLowerCase();
+    }
+
+    function normaliseBoolean(value) {
+      if (value === true || value === 1) return true;
+      if (value === false || value === 0 || value === null || value === undefined) {
+        return false;
+      }
+
+      const normalised = String(value)
+        .trim()
+        .toLowerCase();
+
+      return [
+        "true",
+        "1",
+        "yes",
+        "oui",
+        "sí",
+        "si",
+        "dual",
+        "dual representation",
+        "double représentation",
+        "representación dual"
+      ].includes(normalised);
+    }
+
+    function hasDualRepresentation(contract) {
+      return normaliseBoolean(
+        contract.is_dual_representation ??
+        contract.dual_representation ??
+        contract.is_dual ??
+        contract.representation_type
+      );
     }
 
     function calculateAnnualSalary(amount, frequency) {
@@ -1056,8 +1130,8 @@
         contract.end_date
       );
 
-      const isDual = Boolean(contract.is_dual_representation);
-      const currency = getCurrency(contract);
+      const isDual = hasDualRepresentation(contract);
+      const currency = normaliseCurrencyCode(getCurrency(contract));
 
       const valid =
         annualSalary !== null &&
@@ -1095,32 +1169,58 @@
       };
     }
 
-    function summariseCurrency(rows, field) {
-      const validRows = rows.filter(
-        (row) => row.valid && Number.isFinite(row[field])
-      );
+    const DASHBOARD_CURRENCIES = ["EUR", "GBP", "USD"];
 
-      if (!validRows.length) {
-        return { amount: null, currency: null, mixed: false };
-      }
+    function normaliseCurrencyCode(value) {
+      const code = String(value || "").trim().toUpperCase();
 
-      const currencies = [...new Set(validRows.map((row) => row.currency))];
-
-      if (currencies.length > 1) {
-        return { amount: null, currency: null, mixed: true };
-      }
-
-      return {
-        amount: validRows.reduce((sum, row) => sum + row[field], 0),
-        currency: currencies[0],
-        mixed: false
+      const aliases = {
+        "€": "EUR",
+        EURO: "EUR",
+        EUROS: "EUR",
+        "£": "GBP",
+        STERLING: "GBP",
+        POUND: "GBP",
+        POUNDS: "GBP",
+        "$": "USD",
+        DOLLAR: "USD",
+        DOLLARS: "USD",
+        "US DOLLAR": "USD",
+        "US DOLLARS": "USD"
       };
+
+      return aliases[code] || code;
     }
 
-    function formatSummary(summary) {
-      if (summary.mixed) return t("mixedCurrencies");
-      if (summary.amount === null) return t("notRecorded");
-      return formatMoney(summary.amount, summary.currency);
+    function groupTotalsByCurrency(rows, field) {
+      const totals = {
+        EUR: 0,
+        GBP: 0,
+        USD: 0
+      };
+
+      rows.forEach((row) => {
+        if (!row.valid || !Number.isFinite(row[field])) return;
+
+        const currency = normaliseCurrencyCode(row.currency);
+
+        if (Object.prototype.hasOwnProperty.call(totals, currency)) {
+          totals[currency] += row[field];
+        }
+      });
+
+      return totals;
+    }
+
+    function renderCurrencySummary(totals) {
+      return DASHBOARD_CURRENCIES.map((currency) => `
+        <div class="currency-summary-row">
+          <span class="currency-summary-code">${escapeHtml(currency)}</span>
+          <span class="currency-summary-amount">
+            ${escapeHtml(formatMoney(totals[currency] || 0, currency))}
+          </span>
+        </div>
+      `).join("");
     }
 
     function applyTranslations() {
@@ -1149,13 +1249,28 @@
         (row) => row.state.key !== "expired"
       ).length;
 
+      const annualTotals = groupTotalsByCurrency(
+        dashboardRows,
+        "annualRevenue"
+      );
+
+      const lifetimeTotals = groupTotalsByCurrency(
+        dashboardRows,
+        "lifetimeRevenue"
+      );
+
+      const invoiceTotals = groupTotalsByCurrency(
+        dashboardRows,
+        "invoiceForecast"
+      );
+
       document.getElementById("kpiActive").textContent = activeCount;
-      document.getElementById("kpiAnnual").textContent =
-        formatSummary(summariseCurrency(dashboardRows, "annualRevenue"));
-      document.getElementById("kpiLifetime").textContent =
-        formatSummary(summariseCurrency(dashboardRows, "lifetimeRevenue"));
-      document.getElementById("kpiInvoices").textContent =
-        formatSummary(summariseCurrency(dashboardRows, "invoiceForecast"));
+      document.getElementById("kpiAnnual").innerHTML =
+        renderCurrencySummary(annualTotals);
+      document.getElementById("kpiLifetime").innerHTML =
+        renderCurrencySummary(lifetimeTotals);
+      document.getElementById("kpiInvoices").innerHTML =
+        renderCurrencySummary(invoiceTotals);
     }
 
     function renderRevenueBars() {
