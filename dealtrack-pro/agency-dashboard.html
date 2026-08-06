@@ -141,6 +141,55 @@
       box-shadow: 0 12px 28px rgba(212, 175, 55, 0.16);
     }
 
+    .user-session {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 10px 8px 12px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: rgba(255,255,255,0.035);
+    }
+
+    .user-session-copy { min-width: 0; line-height: 1.25; }
+
+    .user-session-label {
+      display: block;
+      color: var(--muted);
+      font-size: 0.68rem;
+      font-weight: 800;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+    }
+
+    .user-session-agency,
+    .user-session-email {
+      display: block;
+      max-width: 235px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .user-session-agency {
+      color: var(--text);
+      font-size: 0.82rem;
+      font-weight: 850;
+    }
+
+    .user-session-email {
+      color: var(--gold-2);
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+
+    .logout-btn {
+      min-height: 36px;
+      padding: 0 11px;
+      border-radius: 10px;
+      font-size: 0.76rem;
+    }
+
     .lang-switcher {
       display: flex;
       gap: 7px;
@@ -729,6 +778,15 @@
           🖨 Print Dashboard
         </button>
 
+        <div class="user-session" aria-live="polite">
+          <div class="user-session-copy">
+            <span class="user-session-label" data-i18n="loggedInAs">Logged in as</span>
+            <strong id="sessionAgencyName" class="user-session-agency">—</strong>
+            <span id="sessionUserEmail" class="user-session-email">—</span>
+          </div>
+          <button id="logoutBtn" type="button" class="btn logout-btn" data-i18n="logOut">Log out</button>
+        </div>
+
         <div class="lang-switcher">
           <button type="button" class="lang-btn" data-lang-btn="en">EN</button>
           <button type="button" class="lang-btn" data-lang-btn="fr">FR</button>
@@ -960,6 +1018,9 @@
       "uploadContract": "📤 Upload Contract",
       "printDashboard": "🖨 Print Dashboard",
       "downloadReport": "⬇ Download Partner Report",
+      "loggedInAs": "Logged in as",
+      "logOut": "Log out",
+      "personalWorkspace": "Personal workspace",
       "healthKicker": "Portfolio Health",
       "healthTitle": "Agency portfolio status",
       "healthSubtitle": "A concise operational view of contracts, renewals and recorded invoice risks.",
@@ -1050,6 +1111,9 @@
       "uploadContract": "📤 Importer un contrat",
       "printDashboard": "🖨 Imprimer le tableau de bord",
       "downloadReport": "⬇ Télécharger le rapport partenaire",
+      "loggedInAs": "Connecté en tant que",
+      "logOut": "Se déconnecter",
+      "personalWorkspace": "Espace personnel",
       "healthKicker": "Santé du portefeuille",
       "healthTitle": "Situation du portefeuille de l’agence",
       "healthSubtitle": "Vue opérationnelle synthétique des contrats, renouvellements et risques de facturation enregistrés.",
@@ -1140,6 +1204,9 @@
       "uploadContract": "📤 Subir contrato",
       "printDashboard": "🖨 Imprimir panel",
       "downloadReport": "⬇ Descargar informe para socios",
+      "loggedInAs": "Sesión iniciada como",
+      "logOut": "Cerrar sesión",
+      "personalWorkspace": "Espacio personal",
       "healthKicker": "Salud de la cartera",
       "healthTitle": "Situación de la cartera de la agencia",
       "healthSubtitle": "Vista operativa resumida de contratos, renovaciones y riesgos de facturación registrados.",
@@ -1234,6 +1301,8 @@
     let currentLang = localStorage.getItem("lang") || "en";
     let allContracts = [];
     let dashboardRows = [];
+    let currentUser = null;
+    let currentAgency = null;
 
     function t(key) {
       return I18N[currentLang]?.[key] || I18N.en?.[key] || key;
@@ -1515,6 +1584,48 @@
       `).join("");
     }
 
+    function renderSessionIdentity() {
+      const agencyEl = document.getElementById("sessionAgencyName");
+      const emailEl = document.getElementById("sessionUserEmail");
+      if (!agencyEl || !emailEl) return;
+
+      agencyEl.textContent =
+        currentAgency?.legal_name ||
+        currentAgency?.name ||
+        currentUser?.user_metadata?.full_name ||
+        currentUser?.user_metadata?.name ||
+        t("personalWorkspace");
+
+      emailEl.textContent = currentUser?.email || "—";
+    }
+
+    async function loadCurrentAgency(db, user) {
+      try {
+        const { data: membership, error: membershipError } = await db
+          .from("agency_users")
+          .select("agency_id, role, is_owner, is_active")
+          .eq("user_id", user.id)
+          .eq("is_active", true)
+          .limit(1)
+          .maybeSingle();
+
+        if (membershipError || !membership?.agency_id) return null;
+
+        const { data: agency, error: agencyError } = await db
+          .from("agencies")
+          .select("id, name, legal_name, base_currency, status")
+          .eq("id", membership.agency_id)
+          .maybeSingle();
+
+        if (agencyError || !agency) return null;
+
+        return { ...agency, membership_role: membership.role, is_owner: membership.is_owner };
+      } catch (error) {
+        console.warn("Unable to load current agency:", error);
+        return null;
+      }
+    }
+
     function applyTranslations() {
       document.documentElement.lang = currentLang;
 
@@ -1530,6 +1641,7 @@
       });
 
       document.title = "DealTrack Pro — " + t("heroEyebrow");
+      renderSessionIdentity();
 
       if (dashboardRows.length || allContracts.length === 0) {
         renderDashboard();
@@ -2169,6 +2281,18 @@
         () => window.print()
       );
 
+      document.getElementById("logoutBtn").addEventListener(
+        "click",
+        async () => {
+          const db = window.supabaseClient || window.sb || null;
+          try {
+            if (db) await db.auth.signOut();
+          } finally {
+            window.location.href = "/agent-academy/login.html";
+          }
+        }
+      );
+
       applyTranslations();
 
       const db = window.supabaseClient || window.sb || null;
@@ -2187,6 +2311,10 @@
         window.location.href = "/agent-academy/login.html";
         return;
       }
+
+      currentUser = user;
+      currentAgency = await loadCurrentAgency(db, user);
+      renderSessionIdentity();
 
       const { data, error } = await db
         .from("contracts")
