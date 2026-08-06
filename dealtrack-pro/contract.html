@@ -658,11 +658,13 @@
       "sectionContract": "Contract Timeline",
       "sectionSalary": "Salary Baseline",
       "sectionCommission": "Commission Structure",
-    "sectionCommercialValue": "Commercial Value",
-"commercialValueSubtitle": "Expected commission revenue based on the currently recorded salary, commission rate and representation structure.",
-"expectedAnnualRevenue": "Expected Annual Commission Revenue",
-"expectedContractRevenue": "Expected Total Commission Revenue",
-"perYear": "per year",
+    "sectionCommercialValue": "Revenue Forecast",
+"commercialValueSubtitle": "Track the projected financial value of this mandate throughout its lifetime. Revenue estimates are calculated from the recorded salary, commission structure and contract duration.",
+"expectedAnnualRevenue": "Expected Annual Revenue",
+"expectedContractRevenue": "Expected Lifetime Revenue",
+"contractRevenue": "Lifetime Revenue",
+"commercialEstimateNote": "This forecast is generated from the contractual information currently recorded in DealTrack Pro. Bonuses, conditional payments, performance incentives, amendments, extensions and future contract variations are excluded until they are recorded and verified.",
+    "perYear": "per year",
 "overContractTerm": "over {years} years",
 "playerSide": "Player-Side Representation",
 "clubSide": "Club-Side Representation",
@@ -731,10 +733,12 @@
       "sectionContract": "Calendrier du contrat",
       "sectionSalary": "Base salariale",
       "sectionCommission": "Structure de commission",
-    "sectionCommercialValue": "Valeur commerciale",
-"commercialValueSubtitle": "Revenus de commission estimés sur la base du salaire, du taux de commission et de la structure de représentation actuellement enregistrés.",
-"expectedAnnualRevenue": "Revenus annuels de commission estimés",
-"expectedContractRevenue": "Revenus totaux de commission estimés",
+   "sectionCommercialValue": "Prévision des revenus",
+"commercialValueSubtitle": "Suivez la valeur financière prévisionnelle de ce mandat pendant toute sa durée. Les estimations sont calculées à partir du salaire, de la structure de commission et de la durée du contrat enregistrés.",
+"expectedAnnualRevenue": "Revenus annuels prévisionnels",
+"expectedContractRevenue": "Revenus prévisionnels sur toute la durée",
+"contractRevenue": "Revenus sur toute la durée",
+"commercialEstimateNote": "Cette prévision est générée à partir des informations contractuelles actuellement enregistrées dans DealTrack Pro. Les primes, paiements conditionnels, incitations liées aux performances, avenants, prolongations et futures modifications contractuelles sont exclus jusqu’à leur enregistrement et leur vérification.",
 "perYear": "par an",
 "overContractTerm": "sur {years} ans",
 "playerSide": "Représentation côté joueur",
@@ -804,10 +808,12 @@
       "sectionContract": "Calendario contractual",
       "sectionSalary": "Base salarial",
       "sectionCommission": "Estructura de comisión",
-    "sectionCommercialValue": "Valor comercial",
-"commercialValueSubtitle": "Ingresos de comisión estimados según el salario, el porcentaje de comisión y la estructura de representación actualmente registrados.",
-"expectedAnnualRevenue": "Ingresos anuales de comisión estimados",
-"expectedContractRevenue": "Ingresos totales de comisión estimados",
+   "sectionCommercialValue": "Previsión de ingresos",
+"commercialValueSubtitle": "Realice un seguimiento del valor financiero previsto de este mandato durante toda su vigencia. Las estimaciones se calculan a partir del salario, la estructura de comisión y la duración contractual registrados.",
+"expectedAnnualRevenue": "Ingresos anuales previstos",
+"expectedContractRevenue": "Ingresos previstos durante toda la vigencia",
+"contractRevenue": "Ingresos durante toda la vigencia",
+"commercialEstimateNote": "Esta previsión se genera a partir de la información contractual actualmente registrada en DealTrack Pro. Las primas, pagos condicionales, incentivos por rendimiento, modificaciones, prórrogas y futuras variaciones contractuales quedan excluidos hasta que sean registrados y verificados.",
 "perYear": "por año",
 "overContractTerm": "durante {years} años",
 "playerSide": "Representación del jugador",
@@ -1211,38 +1217,38 @@ function renderCommercialValue(data) {
       </p>
 
       <div class="commercial-value-headline">
-        <span class="commercial-value-label">
-          ${t("expectedAnnualRevenue")}
-        </span>
+  <span class="commercial-value-label">
+    ${t("expectedContractRevenue")}
+  </span>
 
-        <div class="commercial-value-annual">
-          ${formatMoneyValue(
-            totalAnnualRevenue,
-            currency
-          )}
-        </div>
+  <div class="commercial-value-annual">
+    ${formatMoneyValue(
+      totalContractRevenue,
+      currency
+    )}
+  </div>
 
-        <div class="commercial-value-period">
-          ${t("perYear")}
-        </div>
-      </div>
+  <div class="commercial-value-period">
+    ${termText}
+  </div>
+</div>
 
-      <div class="commercial-total-box">
-        <span class="commercial-value-label">
-          ${t("expectedContractRevenue")}
-        </span>
+<div class="commercial-total-box">
+  <span class="commercial-value-label">
+    ${t("expectedAnnualRevenue")}
+  </span>
 
-        <div class="commercial-total-value">
-          ${formatMoneyValue(
-            totalContractRevenue,
-            currency
-          )}
-        </div>
+  <div class="commercial-total-value">
+    ${formatMoneyValue(
+      totalAnnualRevenue,
+      currency
+    )}
+  </div>
 
-        <div class="commercial-value-period">
-          ${termText}
-        </div>
-      </div>
+  <div class="commercial-value-period">
+    ${t("perYear")}
+  </div>
+</div>
 
       <div class="commercial-breakdown">
         ${renderCommissionSideBox({
