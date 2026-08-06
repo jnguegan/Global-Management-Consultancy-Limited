@@ -577,6 +577,140 @@
     grid-template-columns: 1fr;
   }
 }
+
+.invoice-forecast-card {
+  position: relative;
+  overflow: hidden;
+  border-color: rgba(88, 166, 255, 0.24);
+  background:
+    radial-gradient(
+      circle at top right,
+      rgba(47, 140, 255, 0.12),
+      transparent 34%
+    ),
+    linear-gradient(
+      145deg,
+      rgba(47, 140, 255, 0.06),
+      rgba(8, 22, 48, 0.98) 52%
+    );
+}
+
+.invoice-opportunities {
+  display: grid;
+  gap: 14px;
+  margin-top: 18px;
+}
+
+.invoice-opportunity {
+  padding: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.075);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.invoice-opportunity-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.invoice-opportunity-title {
+  color: var(--gold-2);
+  font-size: 0.88rem;
+  font-weight: 900;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.invoice-status {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  padding: 0 10px;
+  border: 1px solid rgba(245, 158, 11, 0.26);
+  border-radius: 999px;
+  color: #ffe0a3;
+  background: rgba(245, 158, 11, 0.09);
+  font-size: 0.75rem;
+  font-weight: 800;
+}
+
+.invoice-amount-box {
+  padding: 18px;
+  margin-bottom: 14px;
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  border-radius: 16px;
+  background: rgba(212, 175, 55, 0.055);
+}
+
+.invoice-amount-label {
+  display: block;
+  margin-bottom: 7px;
+  color: var(--muted);
+  font-size: 0.77rem;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.invoice-amount-value {
+  color: var(--gold-2);
+  font-size: clamp(1.65rem, 4vw, 2.35rem);
+  font-weight: 900;
+  letter-spacing: -0.035em;
+}
+
+.invoice-details-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.invoice-detail {
+  padding: 13px;
+  border: 1px solid rgba(255, 255, 255, 0.055);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.invoice-detail span {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--muted);
+  font-size: 0.73rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.invoice-detail strong {
+  color: var(--text);
+  font-size: 0.94rem;
+  line-height: 1.45;
+}
+
+.invoice-forecast-note {
+  margin: 16px 0 0;
+  padding: 14px;
+  border-radius: 14px;
+  color: var(--muted);
+  background: rgba(255, 255, 255, 0.02);
+  font-size: 0.84rem;
+  line-height: 1.6;
+}
+
+@media (max-width: 620px) {
+  .invoice-details-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .invoice-opportunity-head {
+    flex-direction: column;
+  }
+}
+
 .commercial-warning {
   padding: 17px;
   border: 1px solid rgba(245, 158, 11, 0.25);
@@ -726,7 +860,23 @@
 "singleRepresentationValue": "Single Representation",
 "commercialCalculation": "Revenue Calculation Summary",
 "commercialValueUnavailable": "The commercial value cannot yet be calculated because the salary amount, salary frequency or commission rate is missing.",
-"commercialEstimateNote": "Estimate based on the current recorded terms. Bonuses, amendments, taxes and conditional payments are not included.",
+"sectionInvoiceForecast": "Invoice Forecast",
+"invoiceForecastSubtitle": "Potential invoices identified from the recorded commission structure. Confirm contractual triggers and dates before issuing an invoice.",
+"invoicePlayerSide": "Player-Side Invoice",
+"invoiceClubSide": "Club-Side Invoice",
+"invoiceAmount": "Estimated Invoice Amount",
+"invoiceClient": "Client / Payer",
+"invoiceType": "Invoice Type",
+"invoiceStatus": "Status",
+"invoiceDate": "Invoice Date",
+"paymentDueDate": "Payment Due Date",
+"invoiceFrequency": "Payment Frequency",
+"invoiceInstalments": "Instalments",
+"invoiceReviewRequired": "Review required",
+"invoiceReady": "Ready to invoice",
+"invoiceDatePending": "To be confirmed",
+"invoiceBasisAnnual": "Annual commission entitlement",
+"invoiceForecastNote": "This is a forecast based on the recorded contract terms. Confirm the contractual invoice trigger, billing entity, taxes and payment deadline before issuing the invoice.",
       "sectionSnapshot": "Commercial Snapshot",
       "sectionSnapshotText": "A premium summary of the commercial foundations currently recorded for this mandate.",
       "labelClubName": "Club Name",
@@ -798,9 +948,25 @@
 "representationType": "Représentation",
 "dualRepresentationValue": "Double représentation",
 "singleRepresentationValue": "Représentation simple",
-"commercialCalculation": "Résumé du calcul",
+"commercialCalculation": "Résumé du calcul des revenus",
 "commercialValueUnavailable": "La valeur commerciale ne peut pas encore être calculée, car le salaire, la fréquence salariale ou le taux de commission est manquant.",
-"commercialEstimateNote": "Estimation basée sur les conditions actuellement enregistrées. Les primes, modifications, taxes et paiements conditionnels ne sont pas inclus.",
+"sectionInvoiceForecast": "Prévision de facturation",
+"invoiceForecastSubtitle": "Factures potentielles identifiées à partir de la structure de commission enregistrée. Confirmez les déclencheurs et les dates contractuels avant d’émettre une facture.",
+"invoicePlayerSide": "Facture côté joueur",
+"invoiceClubSide": "Facture côté club",
+"invoiceAmount": "Montant estimé de la facture",
+"invoiceClient": "Client / Payeur",
+"invoiceType": "Type de facture",
+"invoiceStatus": "Statut",
+"invoiceDate": "Date de facturation",
+"paymentDueDate": "Date limite de paiement",
+"invoiceFrequency": "Fréquence de paiement",
+"invoiceInstalments": "Échéances",
+"invoiceReviewRequired": "Vérification requise",
+"invoiceReady": "Prête à facturer",
+"invoiceDatePending": "À confirmer",
+"invoiceBasisAnnual": "Droit annuel à commission",
+"invoiceForecastNote": "Cette prévision est basée sur les conditions contractuelles enregistrées. Confirmez le déclencheur de facturation, l’entité facturante, les taxes et la date limite de paiement avant d’émettre la facture.",
       "sectionSnapshot": "Synthèse commerciale",
       "sectionSnapshotText": "Une synthèse premium des fondements commerciaux actuellement enregistrés pour ce mandat.",
       "labelClubName": "Nom du club",
@@ -874,7 +1040,23 @@
 "singleRepresentationValue": "Representación única",
 "commercialCalculation": "Resumen del cálculo de ingresos",
 "commercialValueUnavailable": "El valor comercial todavía no puede calcularse porque falta el salario, la frecuencia salarial o el porcentaje de comisión.",
-"commercialEstimateNote": "Estimación basada en las condiciones actualmente registradas. No incluye primas, modificaciones, impuestos ni pagos condicionales.",
+"sectionInvoiceForecast": "Previsión de facturación",
+"invoiceForecastSubtitle": "Facturas potenciales identificadas a partir de la estructura de comisión registrada. Confirme los desencadenantes y las fechas contractuales antes de emitir una factura.",
+"invoicePlayerSide": "Factura de representación del jugador",
+"invoiceClubSide": "Factura de representación del club",
+"invoiceAmount": "Importe estimado de la factura",
+"invoiceClient": "Cliente / Pagador",
+"invoiceType": "Tipo de factura",
+"invoiceStatus": "Estado",
+"invoiceDate": "Fecha de factura",
+"paymentDueDate": "Fecha límite de pago",
+"invoiceFrequency": "Frecuencia de pago",
+"invoiceInstalments": "Cuotas",
+"invoiceReviewRequired": "Revisión necesaria",
+"invoiceReady": "Lista para facturar",
+"invoiceDatePending": "Pendiente de confirmar",
+"invoiceBasisAnnual": "Derecho anual a comisión",
+"invoiceForecastNote": "Esta previsión se basa en las condiciones contractuales registradas. Confirme el desencadenante de facturación, la entidad facturante, los impuestos y la fecha límite de pago antes de emitir una factura.",
       "sectionSnapshot": "Resumen comercial",
       "sectionSnapshotText": "Un resumen premium de las bases comerciales actualmente registradas para este mandato.",
       "labelClubName": "Nombre del club",
@@ -1376,6 +1558,167 @@ function renderCommercialValue(data) {
   `;
 }
     
+
+function renderInvoiceOpportunity({
+  title,
+  amount,
+  currency,
+  payer,
+  frequency,
+  instalments
+}) {
+  return `
+    <div class="invoice-opportunity">
+      <div class="invoice-opportunity-head">
+        <div class="invoice-opportunity-title">
+          ${title}
+        </div>
+
+        <div class="invoice-status">
+          ${t("invoiceReviewRequired")}
+        </div>
+      </div>
+
+      <div class="invoice-amount-box">
+        <span class="invoice-amount-label">
+          ${t("invoiceAmount")}
+        </span>
+
+        <div class="invoice-amount-value">
+          ${formatMoneyValue(amount, currency)}
+        </div>
+      </div>
+
+      <div class="invoice-details-grid">
+        <div class="invoice-detail">
+          <span>${t("invoiceClient")}</span>
+          <strong>${payer || t("na")}</strong>
+        </div>
+
+        <div class="invoice-detail">
+          <span>${t("invoiceType")}</span>
+          <strong>${t("invoiceBasisAnnual")}</strong>
+        </div>
+
+        <div class="invoice-detail">
+          <span>${t("invoiceDate")}</span>
+          <strong>${t("invoiceDatePending")}</strong>
+        </div>
+
+        <div class="invoice-detail">
+          <span>${t("paymentDueDate")}</span>
+          <strong>${t("invoiceDatePending")}</strong>
+        </div>
+
+        <div class="invoice-detail">
+          <span>${t("invoiceFrequency")}</span>
+          <strong>${frequency || t("na")}</strong>
+        </div>
+
+        <div class="invoice-detail">
+          <span>${t("invoiceInstalments")}</span>
+          <strong>${instalments || t("na")}</strong>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderInvoiceForecast(data) {
+  const annualSalary =
+    calculateAnnualSalary(
+      data.salary,
+      data.salary_frequency
+    );
+
+  const commissionRate =
+    toNumber(
+      data.commission_percentage ??
+      data.commission_value
+    );
+
+  if (
+    annualSalary === null ||
+    commissionRate === null
+  ) {
+    return `
+      <section class="premium-card invoice-forecast-card">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">07</div>
+            <h2 class="section-title">
+              ${t("sectionInvoiceForecast")}
+            </h2>
+          </div>
+        </div>
+
+        <div class="commercial-warning">
+          ${t("commercialValueUnavailable")}
+        </div>
+      </section>
+    `;
+  }
+
+  const currency = getCurrencyCode(data);
+
+  const annualSideAmount =
+    annualSalary *
+    (commissionRate / 100);
+
+  const isDual =
+    Boolean(data.is_dual_representation);
+
+  const payer =
+    data.commission_payer ||
+    data.club_name ||
+    null;
+
+  return `
+    <section class="premium-card invoice-forecast-card">
+      <div class="section-head">
+        <div>
+          <div class="section-kicker">07</div>
+          <h2 class="section-title">
+            ${t("sectionInvoiceForecast")}
+          </h2>
+        </div>
+      </div>
+
+      <p class="muted">
+        ${t("invoiceForecastSubtitle")}
+      </p>
+
+      <div class="invoice-opportunities">
+        ${renderInvoiceOpportunity({
+          title: t("invoicePlayerSide"),
+          amount: annualSideAmount,
+          currency,
+          payer,
+          frequency: data.commission_frequency,
+          instalments: data.commission_instalments
+        })}
+
+        ${
+          isDual
+            ? renderInvoiceOpportunity({
+                title: t("invoiceClubSide"),
+                amount: annualSideAmount,
+                currency,
+                payer: data.club_name || payer,
+                frequency: data.commission_frequency,
+                instalments: data.commission_instalments
+              })
+            : ""
+        }
+      </div>
+
+      <p class="invoice-forecast-note">
+        ${t("invoiceForecastNote")}
+      </p>
+    </section>
+  `;
+}
+
     function renderTile(labelKey, valueHtml) {
       return `
         <div class="data-tile">
@@ -1484,7 +1827,9 @@ function renderCommercialValue(data) {
 
             ${renderCommercialValue(data)}
 
-            <section class="premium-card summary-card">
+            ${renderInvoiceForecast(data)}
+            
+             <section class="premium-card summary-card">
               <div class="summary-top">
                 <h2>${t("sectionSnapshot")}</h2>
                 <p>${t("sectionSnapshotText")}</p>
