@@ -1807,9 +1807,26 @@
       }
     }
 
+    function getEffectiveStartDateValue(contract) {
+      return contract.playing_contract_start_date || contract.start_date || null;
+    }
+
+    function getEffectiveEndDateValue(contract) {
+      return contract.playing_contract_end_date || contract.end_date || null;
+    }
+
+    function hasManualCorrection(contract) {
+      return Boolean(
+        contract.manual_updated_at ||
+        contract.manual_correction_source ||
+        contract.manual_correction_reason
+      );
+    }
+
     function getContractState(contract) {
-      const endDate = contract.end_date
-        ? new Date(`${contract.end_date}T00:00:00`)
+      const effectiveEndDate = getEffectiveEndDateValue(contract);
+      const endDate = effectiveEndDate
+        ? new Date(`${effectiveEndDate}T00:00:00`)
         : null;
 
       if (!endDate || Number.isNaN(endDate.getTime())) {
@@ -1942,7 +1959,10 @@
 
     function buildDashboardRow(contract) {
       const annualSalary = calculateAnnualSalary(contract.salary, contract.salary_frequency);
-      const years = calculateContractYears(contract.start_date, contract.end_date);
+      const years = calculateContractYears(
+        getEffectiveStartDateValue(contract),
+        getEffectiveEndDateValue(contract)
+      );
       const commission = calculateCommissionRevenue(contract, annualSalary, years);
       const currency = normaliseCurrencyCode(getCurrency(contract));
 
@@ -1954,6 +1974,9 @@
         fixedCommissionAmount: commission.fixedAmount,
         commissionBasis: commission.commissionBasis,
         years,
+        effectiveStartDate: getEffectiveStartDateValue(contract),
+        effectiveEndDate: getEffectiveEndDateValue(contract),
+        hasManualCorrection: hasManualCorrection(contract),
         isDual: hasDualRepresentation(contract),
         currency,
         annualRevenue: commission.annualRevenue,
@@ -2241,9 +2264,10 @@
     }
 
     function getDaysRemaining(contract) {
-      if (!contract.end_date) return null;
+      const effectiveEndDate = getEffectiveEndDateValue(contract);
+      if (!effectiveEndDate) return null;
 
-      const end = new Date(`${contract.end_date}T00:00:00`);
+      const end = new Date(`${effectiveEndDate}T00:00:00`);
       if (Number.isNaN(end.getTime())) return null;
 
       const now = new Date();
@@ -2669,82 +2693,110 @@
           Club: row.contract.club_name || "",
           League: row.contract.club_league || "",
           Country: row.contract.club_country || "",
-          "Start Date": row.contract.start_date || "",
-          "End Date": row.contract.end_date || "",
+          "Agency Agreement Start": row.contract.start_date || "",
+          "Agency Agreement End": row.contract.end_date || "",
+          "Playing Contract Start": row.contract.playing_contract_start_date || "",
+          "Playing Contract End": row.contract.playing_contract_end_date || "",
+          "Effective Calculation Start": row.effectiveStartDate || "",
+          "Effective Calculation End": row.effectiveEndDate || "",
           Currency: row.currency,
           "Annual Salary": row.annualSalary ?? "",
+          "Commission Method": row.commissionMethod || "",
+          "Commission Basis": row.contract.commission_basis || "",
           "Commission Rate (%)": row.commissionRate ?? "",
+          "Fixed Commission Total": row.fixedCommissionAmount ?? "",
+          "Signing Bonus": row.contract.signing_bonus ?? "",
+          "Guaranteed Bonuses": row.contract.guaranteed_bonus ?? "",
+          "Other Commissionable Income": row.contract.other_commissionable_income ?? "",
           Representation: row.isDual ? "Dual" : "Single",
           "Annual Revenue": row.annualRevenue ?? "",
           "Lifetime Revenue": row.lifetimeRevenue ?? "",
+          "Invoice Forecast": row.invoiceForecast ?? "",
+          "Uses Instalment Schedule": row.usesInstalmentSchedule ? "Yes" : "No",
+          "Manual Correction": row.hasManualCorrection ? "Yes" : "No",
+          "Correction Source": row.contract.manual_correction_source || "",
+          "Correction Reason": row.contract.manual_correction_reason || "",
+          "Updated By": row.contract.manual_updated_by_name || "",
+          "Updated By Email": row.contract.manual_updated_by_email || "",
+          "Updated At": row.contract.manual_updated_at || "",
           Status: row.state.label
         }));
 
         const contractsSheet = XLSX.utils.json_to_sheet(contractRows);
-        contractsSheet["!cols"] = [
-          { wch: 22 }, { wch: 28 }, { wch: 18 }, { wch: 16 },
-          { wch: 13 }, { wch: 13 }, { wch: 10 }, { wch: 16 },
-          { wch: 18 }, { wch: 16 }, { wch: 17 }, { wch: 18 },
-          { wch: 16 }
-        ];
+        contractsSheet["!cols"] = Object.keys(contractRows[0] || {}).map(
+          (key) => ({
+            wch: Math.min(
+              34,
+              Math.max(
+                14,
+                key.length + 2,
+                ...contractRows.map((row) => String(row[key] ?? "").length + 2)
+              )
+            )
+          })
+        );
         XLSX.utils.book_append_sheet(
           workbook,
           contractsSheet,
           "Contract Register"
         );
 
+        const instalmentsByContract = new Map();
+
+        commissionInstalments.forEach((item) => {
+          const key = String(item.contract_id);
+          if (!instalmentsByContract.has(key)) {
+            instalmentsByContract.set(key, []);
+          }
+          instalmentsByContract.get(key).push(item);
+        });
+
         const invoiceRows = dashboardRows.flatMap((row) => {
+          const scheduledItems =
+            instalmentsByContract.get(String(row.contract.id)) || [];
+
+          if (scheduledItems.length) {
+            return scheduledItems.map((item) => ({
+              Player: row.contract.player_name || "",
+              Club: row.contract.club_name || "",
+              Currency: item.currency || row.currency,
+              Side: item.fee_side || "",
+              Payer: item.payer || "",
+              Amount: item.amount ?? "",
+              "Due Date": item.due_date || "",
+              "Invoice Status": item.invoice_status || "",
+              Conditional: item.conditional ? "Yes" : "No",
+              "Condition Notes": item.condition_notes || "",
+              "Invoice Number": item.invoice_number || "",
+              "Invoice Date": item.invoice_date || "",
+              "Amount Invoiced": item.amount_invoiced ?? "",
+              "Amount Paid": item.amount_paid ?? "",
+              "Payment Date": item.payment_date || ""
+            }));
+          }
+
           if (!row.valid) return [];
 
-          const common = {
+          return [{
             Player: row.contract.player_name || "",
             Club: row.contract.club_name || "",
             Currency: row.currency,
-            "Invoice Date":
-              row.contract.invoice_date ||
-              row.contract.next_invoice_date ||
-              "To be confirmed",
-            "Payment Due Date":
+            Side: row.isDual ? "Combined forecast" : "Single-side forecast",
+            Payer: row.contract.commission_payer || "",
+            Amount: row.invoiceForecast ?? "",
+            "Due Date":
+              row.contract.commission_due_date ||
               row.contract.payment_due_date ||
               row.contract.invoice_due_date ||
-              "To be confirmed",
-            Status:
-              row.contract.invoice_status ||
-              "Forecast"
-          };
-
-          if (row.isDual) {
-            const sideAmount = row.annualRevenue / 2;
-            return [
-              {
-                ...common,
-                Side: "Player-side",
-                Payer:
-                  row.contract.commission_payer ||
-                  row.contract.player_name ||
-                  "",
-                Amount: sideAmount
-              },
-              {
-                ...common,
-                Side: "Club-side",
-                Payer:
-                  row.contract.club_name ||
-                  row.contract.commission_payer ||
-                  "",
-                Amount: sideAmount
-              }
-            ];
-          }
-
-          return [{
-            ...common,
-            Side: "Single representation",
-            Payer:
-              row.contract.commission_payer ||
-              row.contract.club_name ||
               "",
-            Amount: row.invoiceForecast
+            "Invoice Status": row.contract.invoice_status || "Forecast",
+            Conditional: "",
+            "Condition Notes": "",
+            "Invoice Number": "",
+            "Invoice Date": row.contract.invoice_date || "",
+            "Amount Invoiced": "",
+            "Amount Paid": "",
+            "Payment Date": ""
           }];
         });
 
@@ -2764,7 +2816,7 @@
           .map((row) => ({
             Player: row.contract.player_name || "",
             Club: row.contract.club_name || "",
-            "End Date": row.contract.end_date || "",
+            "End Date": row.effectiveEndDate || "",
             "Days Remaining": getDaysRemaining(row.contract),
             Status: row.state.label
           }))
@@ -2884,12 +2936,24 @@
           (row) => row.usesInstalmentSchedule
         ).length;
 
+        const manuallyReviewedCount = dashboardRows.filter(
+          (row) => row.hasManualCorrection
+        ).length;
+
         doc.setTextColor(20, 28, 45);
         doc.setFont("helvetica", "bold");
         doc.setFontSize(12);
         doc.text(`${labels.active}: ${dashboardRows.filter(
           (row) => row.state.key !== "expired"
         ).length}`, 15, y);
+
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(8.5);
+        doc.text(
+          `Manual corrections: ${manuallyReviewedCount} · Instalment schedules: ${scheduledContractCount}`,
+          92,
+          y
+        );
 
         const currencyLines = DASHBOARD_CURRENCIES.map((currency) => [
           currency,
@@ -3474,8 +3538,19 @@
         (row) => row.state.key === "expiring"
       ).length;
       const forecastReview = dashboardRows.filter((row) => row.valid).length;
+      const manuallyReviewed = dashboardRows.filter(
+        (row) => row.hasManualCorrection
+      ).length;
 
       const items = [];
+
+      if (manuallyReviewed > 0) {
+        items.push({
+          title: "Manually reviewed contract data",
+          text: `${manuallyReviewed} contract(s) contain authorised manual corrections used in calculations.`,
+          value: manuallyReviewed
+        });
+      }
 
       if (missing > 0) {
         items.push({
