@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DealTrack Pro — Agency Settings</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/agent-academy/js/supabase-client.js"></script>
+  <script src="/agent-academy/js/auth.js"></script>
+  <script src="/agent-academy/js/guard.js"></script>
+
+  <style>
+    :root {
+      --bg: #020b1d;
+      --panel: rgba(10, 24, 52, 0.95);
+      --panel-soft: rgba(255,255,255,0.035);
+      --border: rgba(255,255,255,0.09);
+      --text: #f7f9fc;
+      --muted: #9fb0cf;
+      --blue: #2f8cff;
+      --blue-2: #58a6ff;
+      --gold: #d4af37;
+      --gold-2: #f0c85a;
+      --success: #22c55e;
+      --danger: #ef4444;
+      --shadow: 0 18px 60px rgba(0,0,0,0.34);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      padding: 24px;
+      font-family: Inter, Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(47,140,255,0.18), transparent 28%),
+        radial-gradient(circle at top right, rgba(212,175,55,0.12), transparent 24%),
+        linear-gradient(180deg, #010814 0%, #05122a 45%, #020b1d 100%);
+    }
+
+    button, input, select, textarea { font: inherit; }
+
+    .page {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      padding: 14px 0 18px;
+      margin-bottom: 22px;
+      background: linear-gradient(180deg, rgba(2,11,29,0.97), rgba(2,11,29,0.86));
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .topbar-left,
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      font-size: 21px;
+      font-weight: 900;
+      letter-spacing: -0.03em;
+    }
+
+    .brand span:last-child {
+      margin-left: 6px;
+      color: var(--gold);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      padding: 0 15px;
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      color: var(--text);
+      background: rgba(255,255,255,0.04);
+      text-decoration: none;
+      font-weight: 750;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      border-color: rgba(255,255,255,0.18);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--blue), var(--blue-2));
+      border-color: rgba(88,166,255,0.38);
+    }
+
+    .btn-gold {
+      color: #09111f;
+      background: linear-gradient(135deg, var(--gold), var(--gold-2));
+      border-color: rgba(212,175,55,0.5);
+    }
+
+    .identity-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 10px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: rgba(255,255,255,0.035);
+    }
+
+    .identity-copy {
+      min-width: 0;
+      line-height: 1.25;
+    }
+
+    .identity-name,
+    .identity-agency,
+    .identity-email {
+      display: block;
+      max-width: 245px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .identity-name {
+      color: var(--text);
+      font-size: 0.82rem;
+      font-weight: 900;
+    }
+
+    .identity-agency {
+      color: var(--gold-2);
+      font-size: 0.74rem;
+      font-weight: 800;
+    }
+
+    .identity-email {
+      color: var(--muted);
+      font-size: 0.7rem;
+      font-weight: 650;
+    }
+
+    .hero {
+      padding: 30px;
+      margin-bottom: 22px;
+      border: 1px solid var(--border);
+      border-radius: 26px;
+      background:
+        linear-gradient(135deg, rgba(47,140,255,0.12), transparent 44%),
+        linear-gradient(160deg, rgba(212,175,55,0.08), transparent 58%),
+        var(--panel);
+      box-shadow: var(--shadow);
+    }
+
+    .eyebrow {
+      margin-bottom: 10px;
+      color: var(--gold-2);
+      font-size: 12px;
+      font-weight: 850;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      font-size: clamp(2rem, 4vw, 3rem);
+      line-height: 1.05;
+      letter-spacing: -0.035em;
+    }
+
+    .hero p {
+      max-width: 800px;
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) minmax(300px, 0.65fr);
+      gap: 20px;
+      align-items: start;
+    }
+
+    .panel {
+      padding: 22px;
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+
+    .panel + .panel { margin-top: 20px; }
+
+    .panel-title {
+      margin: 0;
+      font-size: 1.2rem;
+    }
+
+    .panel-subtitle {
+      margin: 7px 0 20px;
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .field {
+      display: grid;
+      gap: 7px;
+    }
+
+    .field.full { grid-column: 1 / -1; }
+
+    label {
+      color: var(--muted);
+      font-size: 0.76rem;
+      font-weight: 800;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      min-height: 46px;
+      padding: 11px 13px;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 13px;
+      outline: none;
+      color: var(--text);
+      background: rgba(255,255,255,0.035);
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: rgba(88,166,255,0.55);
+      box-shadow: 0 0 0 3px rgba(47,140,255,0.12);
+    }
+
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+
+    .summary-list {
+      display: grid;
+      gap: 11px;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 13px;
+      border: 1px solid rgba(255,255,255,0.055);
+      border-radius: 14px;
+      background: var(--panel-soft);
+    }
+
+    .summary-row span {
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    .summary-row strong {
+      text-align: right;
+      font-size: 0.84rem;
+    }
+
+    .notice {
+      display: none;
+      margin-bottom: 18px;
+      padding: 13px 15px;
+      border-radius: 13px;
+      font-size: 0.88rem;
+      font-weight: 700;
+    }
+
+    .notice.show { display: block; }
+    .notice.success {
+      color: #c9f8d5;
+      background: rgba(34,197,94,0.1);
+      border: 1px solid rgba(34,197,94,0.25);
+    }
+    .notice.error {
+      color: #ffd2d2;
+      background: rgba(239,68,68,0.1);
+      border: 1px solid rgba(239,68,68,0.25);
+    }
+
+    .state {
+      padding: 28px 20px;
+      border: 1px dashed rgba(255,255,255,0.15);
+      border-radius: 18px;
+      color: var(--muted);
+      text-align: center;
+      background: rgba(255,255,255,0.025);
+    }
+
+    .readonly-note {
+      margin-top: 15px;
+      color: #ffd99b;
+      font-size: 0.82rem;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 900px) {
+      .layout { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 650px) {
+      body { padding: 16px; }
+      .form-grid { grid-template-columns: 1fr; }
+      .field.full { grid-column: auto; }
+      .topbar-left,
+      .topbar-right { width: 100%; }
+      .identity-bar { width: 100%; justify-content: space-between; }
+      .identity-name,
+      .identity-agency,
+      .identity-email { max-width: 220px; }
+      .actions .btn { width: 100%; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+    <header class="topbar">
+      <div class="topbar-left">
+        <div class="brand">DealTrack <span>Pro</span></div>
+        <a class="btn" href="/dealtrack-pro/agency-dashboard.html">← Agency Dashboard</a>
+        <a class="btn" href="/dealtrack-pro/contracts.html">Contract Portfolio</a>
+      </div>
+
+      <div class="topbar-right">
+        <div class="identity-bar">
+          <div class="identity-copy">
+            <strong id="identityName" class="identity-name">—</strong>
+            <span id="identityAgency" class="identity-agency">—</span>
+            <span id="identityEmail" class="identity-email">—</span>
+          </div>
+          <button id="logoutBtn" class="btn" type="button">Log out</button>
+        </div>
+      </div>
+    </header>
+
+    <section class="hero">
+      <div class="eyebrow">Agency Settings</div>
+      <h1>Agency profile and report details</h1>
+      <p>
+        Maintain the legal, contact and reporting information used across DealTrack Pro.
+        These details will later populate management reports, invoices and agency communications automatically.
+      </p>
+    </section>
+
+    <div id="notice" class="notice"></div>
+
+    <div class="layout">
+      <main>
+        <section class="panel">
+          <h2 class="panel-title">Agency profile</h2>
+          <p class="panel-subtitle">
+            Core agency identity and contact information.
+          </p>
+
+          <form id="agencyForm">
+            <div class="form-grid">
+              <div class="field">
+                <label for="name">Trading name</label>
+                <input id="name" name="name" type="text" required />
+              </div>
+
+              <div class="field">
+                <label for="legal_name">Legal company name</label>
+                <input id="legal_name" name="legal_name" type="text" />
+              </div>
+
+              <div class="field">
+                <label for="email">Agency email</label>
+                <input id="email" name="email" type="email" />
+              </div>
+
+              <div class="field">
+                <label for="telephone">Telephone</label>
+                <input id="telephone" name="telephone" type="text" />
+              </div>
+
+              <div class="field">
+                <label for="website">Website</label>
+                <input id="website" name="website" type="url" placeholder="https://" />
+              </div>
+
+              <div class="field">
+                <label for="country">Country</label>
+                <input id="country" name="country" type="text" />
+              </div>
+
+              <div class="field">
+                <label for="base_currency">Base currency</label>
+                <select id="base_currency" name="base_currency">
+                  <option value="EUR">EUR — Euro</option>
+                  <option value="GBP">GBP — Pound Sterling</option>
+                  <option value="USD">USD — US Dollar</option>
+                  <option value="AED">AED — UAE Dirham</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label for="status">Agency status</label>
+                <select id="status" name="status">
+                  <option value="active">Active</option>
+                  <option value="suspended">Suspended</option>
+                  <option value="inactive">Inactive</option>
+                </select>
+              </div>
+
+              <div class="field full">
+                <label for="logo_url">Logo URL</label>
+                <input id="logo_url" name="logo_url" type="url" placeholder="https://" />
+              </div>
+            </div>
+
+            <div class="actions">
+              <button id="resetBtn" type="button" class="btn">Reset</button>
+              <button id="saveBtn" type="submit" class="btn btn-gold">Save Agency Settings</button>
+            </div>
+
+            <div id="readonlyNote" class="readonly-note"></div>
+          </form>
+        </section>
+      </main>
+
+      <aside>
+        <section class="panel">
+          <h2 class="panel-title">Current workspace</h2>
+          <p class="panel-subtitle">
+            The agency and access role connected to the current login.
+          </p>
+
+          <div id="workspaceSummary" class="summary-list">
+            <div class="state">Loading agency details...</div>
+          </div>
+        </section>
+
+        <section class="panel">
+          <h2 class="panel-title">Coming next</h2>
+          <p class="panel-subtitle">
+            Additional settings planned for the next development stages.
+          </p>
+
+          <div class="summary-list">
+            <div class="summary-row">
+              <span>Team members</span>
+              <strong>Permissions and invitations</strong>
+            </div>
+            <div class="summary-row">
+              <span>Report branding</span>
+              <strong>Logo and document presentation</strong>
+            </div>
+            <div class="summary-row">
+              <span>Invoice settings</span>
+              <strong>Numbering and legal details</strong>
+            </div>
+            <div class="summary-row">
+              <span>Notifications</span>
+              <strong>Email reminders and alerts</strong>
+            </div>
+          </div>
+        </section>
+      </aside>
+    </div>
+  </div>
+
+  <script>
+    let db = null;
+    let currentUser = null;
+    let membership = null;
+    let agency = null;
+    let canEdit = false;
+
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function showNotice(message, type) {
+      const el = document.getElementById("notice");
+      el.textContent = message;
+      el.className = `notice show ${type}`;
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function getUserDisplayName(user) {
+      return (
+        user?.user_metadata?.full_name ||
+        user?.user_metadata?.name ||
+        user?.email?.split("@")[0] ||
+        "User"
+      );
+    }
+
+    function renderIdentity() {
+      document.getElementById("identityName").textContent =
+        getUserDisplayName(currentUser);
+
+      document.getElementById("identityAgency").textContent =
+        agency?.legal_name || agency?.name || "No agency assigned";
+
+      document.getElementById("identityEmail").textContent =
+        currentUser?.email || "—";
+    }
+
+    function renderWorkspaceSummary() {
+      const container = document.getElementById("workspaceSummary");
+
+      container.innerHTML = `
+        <div class="summary-row">
+          <span>User</span>
+          <strong>${escapeHtml(getUserDisplayName(currentUser))}</strong>
+        </div>
+
+        <div class="summary-row">
+          <span>Email</span>
+          <strong>${escapeHtml(currentUser?.email || "—")}</strong>
+        </div>
+
+        <div class="summary-row">
+          <span>Agency</span>
+          <strong>${escapeHtml(agency?.legal_name || agency?.name || "—")}</strong>
+        </div>
+
+        <div class="summary-row">
+          <span>Role</span>
+          <strong>${escapeHtml(membership?.role || "—")}</strong>
+        </div>
+
+        <div class="summary-row">
+          <span>Owner</span>
+          <strong>${membership?.is_owner ? "Yes" : "No"}</strong>
+        </div>
+      `;
+    }
+
+    function populateForm() {
+      const fields = [
+        "name",
+        "legal_name",
+        "email",
+        "telephone",
+        "website",
+        "country",
+        "base_currency",
+        "status",
+        "logo_url"
+      ];
+
+      fields.forEach((field) => {
+        const input = document.getElementById(field);
+        if (input) input.value = agency?.[field] || "";
+      });
+    }
+
+    function setEditPermissions() {
+      canEdit =
+        membership?.is_active === true &&
+        ["owner", "admin"].includes(membership?.role);
+
+      document.querySelectorAll(
+        "#agencyForm input, #agencyForm select, #agencyForm textarea"
+      ).forEach((el) => {
+        el.disabled = !canEdit;
+      });
+
+      document.getElementById("saveBtn").disabled = !canEdit;
+      document.getElementById("resetBtn").disabled = !canEdit;
+
+      document.getElementById("readonlyNote").textContent = canEdit
+        ? ""
+        : "You have view-only access. An agency owner or administrator must update these settings.";
+    }
+
+    async function loadAgencyContext() {
+      const {
+        data: { user },
+        error: userError
+      } = await db.auth.getUser();
+
+      if (userError || !user) {
+        window.location.href = "/agent-academy/login.html";
+        return;
+      }
+
+      currentUser = user;
+
+      const { data: membershipData, error: membershipError } = await db
+        .from("agency_users")
+        .select("agency_id, role, is_owner, is_active")
+        .eq("user_id", user.id)
+        .eq("is_active", true)
+        .limit(1)
+        .maybeSingle();
+
+      if (membershipError || !membershipData?.agency_id) {
+        throw new Error("No active DealTrack Pro agency membership was found for this account.");
+      }
+
+      membership = membershipData;
+
+      const { data: agencyData, error: agencyError } = await db
+        .from("agencies")
+        .select("*")
+        .eq("id", membership.agency_id)
+        .maybeSingle();
+
+      if (agencyError || !agencyData) {
+        throw new Error("The agency record could not be loaded.");
+      }
+
+      agency = agencyData;
+
+      renderIdentity();
+      renderWorkspaceSummary();
+      populateForm();
+      setEditPermissions();
+    }
+
+    async function saveAgency(event) {
+      event.preventDefault();
+
+      if (!canEdit || !agency?.id) return;
+
+      const payload = {
+        name: document.getElementById("name").value.trim(),
+        legal_name: document.getElementById("legal_name").value.trim() || null,
+        email: document.getElementById("email").value.trim() || null,
+        telephone: document.getElementById("telephone").value.trim() || null,
+        website: document.getElementById("website").value.trim() || null,
+        country: document.getElementById("country").value.trim() || null,
+        base_currency: document.getElementById("base_currency").value,
+        status: document.getElementById("status").value,
+        logo_url: document.getElementById("logo_url").value.trim() || null
+      };
+
+      if (!payload.name) {
+        showNotice("Trading name is required.", "error");
+        return;
+      }
+
+      document.getElementById("saveBtn").disabled = true;
+
+      const { data, error } = await db
+        .from("agencies")
+        .update(payload)
+        .eq("id", agency.id)
+        .select("*")
+        .maybeSingle();
+
+      document.getElementById("saveBtn").disabled = false;
+
+      if (error || !data) {
+        console.error("Agency settings save error:", error);
+        showNotice(
+          error?.message || "The agency settings could not be saved.",
+          "error"
+        );
+        return;
+      }
+
+      agency = data;
+      renderIdentity();
+      renderWorkspaceSummary();
+      populateForm();
+      showNotice("Agency settings saved successfully.", "success");
+    }
+
+    document.addEventListener("DOMContentLoaded", async () => {
+      db = window.supabaseClient || window.sb || null;
+
+      if (!db) {
+        showNotice("Supabase connection is unavailable.", "error");
+        return;
+      }
+
+      document.getElementById("agencyForm").addEventListener(
+        "submit",
+        saveAgency
+      );
+
+      document.getElementById("resetBtn").addEventListener(
+        "click",
+        populateForm
+      );
+
+      document.getElementById("logoutBtn").addEventListener(
+        "click",
+        async () => {
+          try {
+            await db.auth.signOut();
+          } finally {
+            window.location.href = "/agent-academy/login.html";
+          }
+        }
+      );
+
+      try {
+        await loadAgencyContext();
+      } catch (error) {
+        console.error(error);
+        showNotice(
+          error?.message || "Unable to load agency settings.",
+          "error"
+        );
+      }
+    });
+  </script>
+</body>
+</html>
