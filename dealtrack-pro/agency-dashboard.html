@@ -2454,18 +2454,37 @@
           : sum;
       }, 0);
 
-      // Forecast invoices means all future unpaid instalments.
-      const futureForecast = usableItems.reduce((sum, item) => {
-        if (!item.due_date) return sum;
+      /*
+       * The snapshot must show the NEXT invoice date only,
+       * not the total of every future unpaid instalment.
+       *
+       * Club-side and player-side instalments that share the
+       * same next due date are grouped together.
+       */
+      const futureItems = usableItems
+        .filter((item) => {
+          if (!item.due_date) return false;
 
-        const status = String(item.invoice_status || "").toLowerCase();
-        if (["paid", "cancelled"].includes(status)) return sum;
+          const status = String(item.invoice_status || "").toLowerCase();
+          if (["paid", "cancelled"].includes(status)) return false;
 
-        const dueDate = new Date(`${item.due_date}T00:00:00`);
-        if (Number.isNaN(dueDate.getTime()) || dueDate < today) return sum;
+          const dueDate = new Date(`${item.due_date}T00:00:00`);
+          return !Number.isNaN(dueDate.getTime()) && dueDate >= today;
+        })
+        .sort((a, b) =>
+          String(a.due_date).localeCompare(String(b.due_date))
+        );
 
-        return sum + (toNumber(item.amount) || 0);
-      }, 0);
+      const nextDueDate = futureItems[0]?.due_date || null;
+
+      const futureForecast = nextDueDate
+        ? futureItems
+            .filter((item) => item.due_date === nextDueDate)
+            .reduce(
+              (sum, item) => sum + (toNumber(item.amount) || 0),
+              0
+            )
+        : 0;
 
       return {
         ...row,
