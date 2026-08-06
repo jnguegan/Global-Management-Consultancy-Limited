@@ -11,6 +11,8 @@
   <script src="/agent-academy/js/guard.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
 
   <style>
     :root {
@@ -139,55 +141,6 @@
       background: linear-gradient(135deg, var(--gold), var(--gold-2));
       border-color: rgba(212, 175, 55, 0.52);
       box-shadow: 0 12px 28px rgba(212, 175, 55, 0.16);
-    }
-
-    .user-session {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 8px 10px 8px 12px;
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      background: rgba(255,255,255,0.035);
-    }
-
-    .user-session-copy { min-width: 0; line-height: 1.25; }
-
-    .user-session-label {
-      display: block;
-      color: var(--muted);
-      font-size: 0.68rem;
-      font-weight: 800;
-      letter-spacing: 0.07em;
-      text-transform: uppercase;
-    }
-
-    .user-session-agency,
-    .user-session-email {
-      display: block;
-      max-width: 235px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .user-session-agency {
-      color: var(--text);
-      font-size: 0.82rem;
-      font-weight: 850;
-    }
-
-    .user-session-email {
-      color: var(--gold-2);
-      font-size: 0.72rem;
-      font-weight: 700;
-    }
-
-    .logout-btn {
-      min-height: 36px;
-      padding: 0 11px;
-      border-radius: 10px;
-      font-size: 0.76rem;
     }
 
     .lang-switcher {
@@ -338,6 +291,81 @@
       font-size: 0.8rem;
       line-height: 1.45;
     }
+
+    .charts-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 20px;
+      margin-bottom: 22px;
+    }
+
+    .chart-panel {
+      min-height: 365px;
+    }
+
+    .chart-wrap {
+      position: relative;
+      width: 100%;
+      height: 270px;
+    }
+
+    .chart-empty {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 270px;
+      padding: 24px;
+      border: 1px dashed rgba(255,255,255,0.14);
+      border-radius: 16px;
+      color: var(--muted);
+      background: rgba(255,255,255,0.02);
+      text-align: center;
+      line-height: 1.5;
+    }
+
+    .health-score-layout {
+      display: grid;
+      grid-template-columns: minmax(190px, 0.8fr) minmax(0, 1.2fr);
+      gap: 18px;
+      align-items: center;
+    }
+
+    .health-score-copy {
+      display: grid;
+      gap: 10px;
+    }
+
+    .health-score-main {
+      color: var(--gold-2);
+      font-size: 2.35rem;
+      font-weight: 950;
+      letter-spacing: -0.05em;
+    }
+
+    .health-score-label {
+      color: var(--muted);
+      font-size: 0.84rem;
+      line-height: 1.5;
+    }
+
+    .health-score-breakdown {
+      display: grid;
+      gap: 8px;
+    }
+
+    .health-score-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 9px 11px;
+      border: 1px solid rgba(255,255,255,0.055);
+      border-radius: 12px;
+      background: rgba(255,255,255,0.025);
+      font-size: 0.8rem;
+    }
+
+    .health-score-row span { color: var(--muted); }
+    .health-score-row strong { color: var(--text); }
 
     .dashboard-layout {
       display: grid;
@@ -725,6 +753,7 @@
     @media (max-width: 1050px) {
       .kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .health-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .charts-grid { grid-template-columns: 1fr; }
       .dashboard-layout { grid-template-columns: 1fr; }
     }
 
@@ -739,6 +768,7 @@
     @media (max-width: 560px) {
       .kpi-grid { grid-template-columns: 1fr; }
       .health-grid { grid-template-columns: 1fr; }
+      .health-score-layout { grid-template-columns: 1fr; }
       .btn { width: 100%; }
       .lang-btn { width: auto; }
       .topbar-right .lang-switcher { width: 100%; }
@@ -770,22 +800,17 @@
           📤 Upload Contract
         </a>
 
+        <button id="downloadExcelBtn" type="button" class="btn btn-gold" data-i18n="downloadExcel">
+          📊 Download Excel Report
+        </button>
+
         <button id="downloadReportBtn" type="button" class="btn btn-primary" data-i18n="downloadReport">
-          ⬇ Download Partner Report
+          ⬇ Download Management Report
         </button>
 
         <button id="printDashboardBtn" type="button" class="btn" data-i18n="printDashboard">
           🖨 Print Dashboard
         </button>
-
-        <div class="user-session" aria-live="polite">
-          <div class="user-session-copy">
-            <span class="user-session-label" data-i18n="loggedInAs">Logged in as</span>
-            <strong id="sessionAgencyName" class="user-session-agency">—</strong>
-            <span id="sessionUserEmail" class="user-session-email">—</span>
-          </div>
-          <button id="logoutBtn" type="button" class="btn logout-btn" data-i18n="logOut">Log out</button>
-        </div>
 
         <div class="lang-switcher">
           <button type="button" class="lang-btn" data-lang-btn="en">EN</button>
@@ -861,6 +886,95 @@
           <div id="healthOverdue" class="health-card-value danger">—</div>
         </article>
       </div>
+    </section>
+
+    <section class="charts-grid">
+      <article class="panel chart-panel">
+        <div class="panel-head">
+          <div>
+            <div class="panel-kicker" data-i18n="chartCurrencyKicker">Revenue Analysis</div>
+            <h2 class="panel-title" data-i18n="chartCurrencyTitle">Annual revenue by currency</h2>
+            <p class="panel-subtitle" data-i18n="chartCurrencySubtitle">
+              Original contract currencies are shown separately without exchange-rate conversion.
+            </p>
+          </div>
+        </div>
+        <div id="currencyChartContainer" class="chart-wrap">
+          <canvas id="currencyRevenueChart"></canvas>
+        </div>
+      </article>
+
+      <article class="panel chart-panel">
+        <div class="panel-head">
+          <div>
+            <div class="panel-kicker" data-i18n="chartStatusKicker">Portfolio Composition</div>
+            <h2 class="panel-title" data-i18n="chartStatusTitle">Contract status</h2>
+            <p class="panel-subtitle" data-i18n="chartStatusSubtitle">
+              Active, approaching expiry and expired contracts across the portfolio.
+            </p>
+          </div>
+        </div>
+        <div id="statusChartContainer" class="chart-wrap">
+          <canvas id="contractStatusChart"></canvas>
+        </div>
+      </article>
+
+      <article class="panel chart-panel">
+        <div class="panel-head">
+          <div>
+            <div class="panel-kicker" data-i18n="chartInvoiceKicker">Cash-flow Planning</div>
+            <h2 class="panel-title" data-i18n="chartInvoiceTitle">Invoice forecast by month</h2>
+            <p class="panel-subtitle" data-i18n="chartInvoiceSubtitle">
+              Forecast amounts are plotted only where an invoice or payment date has been recorded.
+            </p>
+          </div>
+        </div>
+        <div id="invoiceChartContainer" class="chart-wrap">
+          <canvas id="invoiceForecastChart"></canvas>
+        </div>
+      </article>
+
+      <article class="panel chart-panel">
+        <div class="panel-head">
+          <div>
+            <div class="panel-kicker" data-i18n="chartHealthKicker">Agency Health</div>
+            <h2 class="panel-title" data-i18n="chartHealthTitle">Operational readiness score</h2>
+            <p class="panel-subtitle" data-i18n="chartHealthSubtitle">
+              A practical score based on contract completeness, expiry exposure and invoice readiness.
+            </p>
+          </div>
+        </div>
+
+        <div class="health-score-layout">
+          <div class="chart-wrap">
+            <canvas id="agencyHealthChart"></canvas>
+          </div>
+
+          <div class="health-score-copy">
+            <div id="agencyHealthValue" class="health-score-main">—</div>
+            <div id="agencyHealthLabel" class="health-score-label">—</div>
+
+            <div class="health-score-breakdown">
+              <div class="health-score-row">
+                <span data-i18n="healthDataComplete">Financial data complete</span>
+                <strong id="healthCompleteValue">—</strong>
+              </div>
+              <div class="health-score-row">
+                <span data-i18n="healthExpiryExposure">Expiry exposure</span>
+                <strong id="healthExpiryValue">—</strong>
+              </div>
+              <div class="health-score-row">
+                <span data-i18n="healthInvoiceReady">Invoice dates confirmed</span>
+                <strong id="healthInvoiceValue">—</strong>
+              </div>
+              <div class="health-score-row">
+                <span data-i18n="healthOverdueRisk">Overdue invoice risk</span>
+                <strong id="healthOverdueValue">—</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
     </section>
 
     <div class="dashboard-layout">
@@ -1017,17 +1131,41 @@
       "openPortfolio": "← Contract Portfolio",
       "uploadContract": "📤 Upload Contract",
       "printDashboard": "🖨 Print Dashboard",
-      "downloadReport": "⬇ Download Partner Report",
-      "loggedInAs": "Logged in as",
-      "logOut": "Log out",
-      "personalWorkspace": "Personal workspace",
+      "downloadReport": "⬇ Download Management Report",
+      "downloadExcel": "📊 Download Excel Report",
       "healthKicker": "Portfolio Health",
       "healthTitle": "Agency portfolio status",
       "healthSubtitle": "A concise operational view of contracts, renewals and recorded invoice risks.",
       "healthActive": "Active Contracts",
       "healthExpiring": "Expiring within 180 days",
       "healthRenewals": "Renewal Opportunities",
-      "healthOverdue": "Recorded Overdue Invoices",
+       "healthOverdue": "Recorded Overdue Invoices",
+      "chartCurrencyKicker": "Revenue Analysis",
+      "chartCurrencyTitle": "Annual revenue by currency",
+      "chartCurrencySubtitle": "Original contract currencies are shown separately without exchange-rate conversion.",
+      "chartStatusKicker": "Portfolio Composition",
+      "chartStatusTitle": "Contract status",
+      "chartStatusSubtitle": "Active, approaching expiry and expired contracts across the portfolio.",
+      "chartInvoiceKicker": "Cash-flow Planning",
+      "chartInvoiceTitle": "Invoice forecast by month",
+      "chartInvoiceSubtitle": "Forecast amounts are plotted only where an invoice or payment date has been recorded.",
+      "chartHealthKicker": "Agency Health",
+      "chartHealthTitle": "Operational readiness score",
+      "chartHealthSubtitle": "A practical score based on contract completeness, expiry exposure and invoice readiness.",
+      "healthDataComplete": "Financial data complete",
+      "healthExpiryExposure": "Expiry exposure",
+      "healthInvoiceReady": "Invoice dates confirmed",
+      "healthOverdueRisk": "Overdue invoice risk",
+      "chartNoCurrencyData": "No calculable revenue is available yet.",
+      "chartNoInvoiceDates": "No confirmed invoice dates are available yet. Forecasts remain listed in the Invoice Calendar.",
+      "healthExcellent": "Excellent operational readiness.",
+      "healthGood": "Good position, with a few items to confirm.",
+      "healthAttention": "Attention is required before the portfolio is fully report-ready.",
+      "healthCritical": "Important contract or invoice information is missing.",
+      "percentComplete": "{value}% complete",
+      "contractsAtRisk": "{value} contract(s)",
+      "datesConfirmed": "{value}% confirmed",
+      "overdueCount": "{value} overdue",
       "mixKicker": "Revenue Mix",
       "mixTitle": "Contract currency distribution",
       "mixSubtitle": "Annual revenue and contract count grouped by original contract currency.",
@@ -1041,10 +1179,10 @@
       "daysRemaining": "{days} days remaining",
       "datePending": "Date to be confirmed",
       "contractCount": "{count} contract(s)",
-      "reportTitle": "DealTrack Pro Agency Partner Report",
+      "reportTitle": "DealTrack Pro Agency Management Report",
       "reportPrepared": "Prepared",
-      "reportConfidential": "Confidential — prepared for agency partners",
-      "reportGenerated": "Partner report downloaded successfully.",
+      "reportConfidential": "Strictly Confidential — Internal Management Report",
+      "reportGenerated": "Management report downloaded successfully.",
       "reportUnavailable": "The report could not be created. Please refresh and try again.",
       "heroEyebrow": "Agency Dashboard",
       "heroTitle": "Your agency financial control centre",
@@ -1110,17 +1248,41 @@
       "openPortfolio": "← Portefeuille de contrats",
       "uploadContract": "📤 Importer un contrat",
       "printDashboard": "🖨 Imprimer le tableau de bord",
-      "downloadReport": "⬇ Télécharger le rapport partenaire",
-      "loggedInAs": "Connecté en tant que",
-      "logOut": "Se déconnecter",
-      "personalWorkspace": "Espace personnel",
+      "downloadReport": "⬇ Télécharger le rapport de gestion",
+      "downloadExcel": "📊 Télécharger le rapport Excel",
       "healthKicker": "Santé du portefeuille",
       "healthTitle": "Situation du portefeuille de l’agence",
       "healthSubtitle": "Vue opérationnelle synthétique des contrats, renouvellements et risques de facturation enregistrés.",
       "healthActive": "Contrats actifs",
       "healthExpiring": "Expiration dans les 180 jours",
       "healthRenewals": "Opportunités de renouvellement",
-      "healthOverdue": "Factures en retard enregistrées",
+       "healthOverdue": "Factures en retard enregistrées",
+      "chartCurrencyKicker": "Analyse des revenus",
+      "chartCurrencyTitle": "Revenus annuels par devise",
+      "chartCurrencySubtitle": "Les devises contractuelles d’origine sont présentées séparément, sans conversion.",
+      "chartStatusKicker": "Composition du portefeuille",
+      "chartStatusTitle": "Statut des contrats",
+      "chartStatusSubtitle": "Contrats actifs, proches de l’expiration et expirés dans le portefeuille.",
+      "chartInvoiceKicker": "Planification de trésorerie",
+      "chartInvoiceTitle": "Prévision de facturation par mois",
+      "chartInvoiceSubtitle": "Les montants sont tracés uniquement lorsqu’une date de facture ou de paiement est enregistrée.",
+      "chartHealthKicker": "Santé de l’agence",
+      "chartHealthTitle": "Score de préparation opérationnelle",
+      "chartHealthSubtitle": "Score pratique fondé sur la complétude des contrats, les échéances et la préparation des factures.",
+      "healthDataComplete": "Données financières complètes",
+      "healthExpiryExposure": "Exposition aux échéances",
+      "healthInvoiceReady": "Dates de facture confirmées",
+      "healthOverdueRisk": "Risque de factures en retard",
+      "chartNoCurrencyData": "Aucun revenu calculable n’est encore disponible.",
+      "chartNoInvoiceDates": "Aucune date de facture confirmée n’est encore disponible. Les prévisions restent visibles dans le calendrier.",
+      "healthExcellent": "Excellente préparation opérationnelle.",
+      "healthGood": "Bonne situation, avec quelques éléments à confirmer.",
+      "healthAttention": "Une attention est nécessaire avant que le portefeuille soit entièrement prêt.",
+      "healthCritical": "Des informations contractuelles ou de facturation importantes sont manquantes.",
+      "percentComplete": "{value}% complet",
+      "contractsAtRisk": "{value} contrat(s)",
+      "datesConfirmed": "{value}% confirmées",
+      "overdueCount": "{value} en retard",
       "mixKicker": "Répartition des revenus",
       "mixTitle": "Répartition par devise contractuelle",
       "mixSubtitle": "Revenus annuels et nombre de contrats regroupés selon leur devise d’origine.",
@@ -1134,10 +1296,10 @@
       "daysRemaining": "{days} jours restants",
       "datePending": "Date à confirmer",
       "contractCount": "{count} contrat(s)",
-      "reportTitle": "Rapport partenaire de l’agence DealTrack Pro",
+      "reportTitle": "Rapport de gestion de l’agence DealTrack Pro",
       "reportPrepared": "Préparé le",
-      "reportConfidential": "Confidentiel — préparé pour les partenaires de l’agence",
-      "reportGenerated": "Le rapport partenaire a été téléchargé.",
+      "reportConfidential": "Strictement confidentiel — Rapport de gestion interne",
+      "reportGenerated": "Le rapport de gestion a été téléchargé.",
       "reportUnavailable": "Le rapport n’a pas pu être créé. Actualisez la page et réessayez.",
       "heroEyebrow": "Tableau de bord de l’agence",
       "heroTitle": "Votre centre de contrôle financier",
@@ -1203,17 +1365,41 @@
       "openPortfolio": "← Cartera de contratos",
       "uploadContract": "📤 Subir contrato",
       "printDashboard": "🖨 Imprimir panel",
-      "downloadReport": "⬇ Descargar informe para socios",
-      "loggedInAs": "Sesión iniciada como",
-      "logOut": "Cerrar sesión",
-      "personalWorkspace": "Espacio personal",
+      "downloadReport": "⬇ Descargar informe de gestión",
+      "downloadExcel": "📊 Descargar informe Excel",
       "healthKicker": "Salud de la cartera",
       "healthTitle": "Situación de la cartera de la agencia",
       "healthSubtitle": "Vista operativa resumida de contratos, renovaciones y riesgos de facturación registrados.",
       "healthActive": "Contratos activos",
       "healthExpiring": "Vencen en 180 días",
       "healthRenewals": "Oportunidades de renovación",
-      "healthOverdue": "Facturas vencidas registradas",
+       "healthOverdue": "Facturas vencidas registradas",
+      "chartCurrencyKicker": "Análisis de ingresos",
+      "chartCurrencyTitle": "Ingresos anuales por moneda",
+      "chartCurrencySubtitle": "Las monedas contractuales originales se muestran por separado, sin conversión.",
+      "chartStatusKicker": "Composición de la cartera",
+      "chartStatusTitle": "Estado de los contratos",
+      "chartStatusSubtitle": "Contratos activos, próximos a vencer y vencidos en la cartera.",
+      "chartInvoiceKicker": "Planificación de caja",
+      "chartInvoiceTitle": "Previsión de facturación por mes",
+      "chartInvoiceSubtitle": "Los importes se representan únicamente cuando existe una fecha de factura o pago registrada.",
+      "chartHealthKicker": "Salud de la agencia",
+      "chartHealthTitle": "Puntuación de preparación operativa",
+      "chartHealthSubtitle": "Puntuación práctica basada en la integridad contractual, los vencimientos y la preparación de facturas.",
+      "healthDataComplete": "Datos financieros completos",
+      "healthExpiryExposure": "Exposición a vencimientos",
+      "healthInvoiceReady": "Fechas de factura confirmadas",
+      "healthOverdueRisk": "Riesgo de facturas vencidas",
+      "chartNoCurrencyData": "Todavía no hay ingresos calculables disponibles.",
+      "chartNoInvoiceDates": "Todavía no hay fechas de factura confirmadas. Las previsiones siguen visibles en el calendario.",
+      "healthExcellent": "Excelente preparación operativa.",
+      "healthGood": "Buena situación, con algunos elementos por confirmar.",
+      "healthAttention": "Se requiere atención antes de que la cartera esté totalmente preparada.",
+      "healthCritical": "Falta información contractual o de facturación importante.",
+      "percentComplete": "{value}% completo",
+      "contractsAtRisk": "{value} contrato(s)",
+      "datesConfirmed": "{value}% confirmadas",
+      "overdueCount": "{value} vencidas",
       "mixKicker": "Composición de ingresos",
       "mixTitle": "Distribución por moneda contractual",
       "mixSubtitle": "Ingresos anuales y número de contratos agrupados por su moneda original.",
@@ -1227,10 +1413,10 @@
       "daysRemaining": "Quedan {days} días",
       "datePending": "Fecha por confirmar",
       "contractCount": "{count} contrato(s)",
-      "reportTitle": "Informe para socios de la agencia DealTrack Pro",
+      "reportTitle": "Informe de gestión de la agencia DealTrack Pro",
       "reportPrepared": "Preparado",
-      "reportConfidential": "Confidencial — preparado para los socios de la agencia",
-      "reportGenerated": "El informe para socios se ha descargado.",
+      "reportConfidential": "Estrictamente confidencial — Informe de gestión interno",
+      "reportGenerated": "El informe de gestión se ha descargado.",
       "reportUnavailable": "No se pudo crear el informe. Actualice la página e inténtelo de nuevo.",
       "heroEyebrow": "Panel de la agencia",
       "heroTitle": "Su centro de control financiero",
@@ -1301,8 +1487,12 @@
     let currentLang = localStorage.getItem("lang") || "en";
     let allContracts = [];
     let dashboardRows = [];
-    let currentUser = null;
     let currentAgency = null;
+    let currentUser = null;
+    let currencyRevenueChart = null;
+    let contractStatusChart = null;
+    let invoiceForecastChart = null;
+    let agencyHealthChart = null;
 
     function t(key) {
       return I18N[currentLang]?.[key] || I18N.en?.[key] || key;
@@ -1584,46 +1774,16 @@
       `).join("");
     }
 
-    function renderSessionIdentity() {
-      const agencyEl = document.getElementById("sessionAgencyName");
-      const emailEl = document.getElementById("sessionUserEmail");
-      if (!agencyEl || !emailEl) return;
+    async function loadAgencyContext(db, user) {
+      const { data, error } = await db.rpc("get_my_agency_context");
 
-      agencyEl.textContent =
-        currentAgency?.legal_name ||
-        currentAgency?.name ||
-        currentUser?.user_metadata?.full_name ||
-        currentUser?.user_metadata?.name ||
-        t("personalWorkspace");
-
-      emailEl.textContent = currentUser?.email || "—";
-    }
-
-    async function loadCurrentAgency(db, user) {
-      try {
-        const { data: membership, error: membershipError } = await db
-          .from("agency_users")
-          .select("agency_id, role, is_owner, is_active")
-          .eq("user_id", user.id)
-          .eq("is_active", true)
-          .limit(1)
-          .maybeSingle();
-
-        if (membershipError || !membership?.agency_id) return null;
-
-        const { data: agency, error: agencyError } = await db
-          .from("agencies")
-          .select("id, name, legal_name, base_currency, status")
-          .eq("id", membership.agency_id)
-          .maybeSingle();
-
-        if (agencyError || !agency) return null;
-
-        return { ...agency, membership_role: membership.role, is_owner: membership.is_owner };
-      } catch (error) {
-        console.warn("Unable to load current agency:", error);
+      if (error) {
+        console.warn("Agency context could not be loaded:", error);
         return null;
       }
+
+      const context = Array.isArray(data) ? data[0] : data;
+      return context?.agency_id ? context : null;
     }
 
     function applyTranslations() {
@@ -1641,7 +1801,6 @@
       });
 
       document.title = "DealTrack Pro — " + t("heroEyebrow");
-      renderSessionIdentity();
 
       if (dashboardRows.length || allContracts.length === 0) {
         renderDashboard();
@@ -2024,6 +2183,216 @@
       };
     }
 
+    function downloadExcelReport() {
+      try {
+        if (!window.XLSX) {
+          throw new Error("Excel library is unavailable");
+        }
+
+        const workbook = XLSX.utils.book_new();
+        const agencyName =
+          currentAgency?.legal_name ||
+          currentAgency?.name ||
+          "DealTrack Pro Agency";
+
+        const preparedFor =
+          currentAgency?.report_recipient_name ||
+          "Agency Management";
+
+        const generatedAt = new Date().toLocaleString(
+          currentLang === "fr"
+            ? "fr-FR"
+            : currentLang === "es"
+              ? "es-ES"
+              : "en-GB"
+        );
+
+        const activeCount = dashboardRows.filter(
+          (row) => row.state.key !== "expired"
+        ).length;
+
+        const annualTotals = groupTotalsByCurrency(
+          dashboardRows,
+          "annualRevenue"
+        );
+        const lifetimeTotals = groupTotalsByCurrency(
+          dashboardRows,
+          "lifetimeRevenue"
+        );
+        const invoiceTotals = groupTotalsByCurrency(
+          dashboardRows,
+          "invoiceForecast"
+        );
+
+        const summaryRows = [
+          ["DealTrack Pro Agency Management Report"],
+          ["Agency", agencyName],
+          ["Prepared for", preparedFor],
+          ["Generated", generatedAt],
+          ["Classification",
+            currentAgency?.report_confidentiality_text ||
+            "Strictly Confidential — Internal Management Report"
+          ],
+          [],
+          ["Active Contracts", activeCount],
+          [],
+          ["Currency", "Annual Revenue", "Lifetime Revenue", "Invoice Forecast"],
+          ...DASHBOARD_CURRENCIES.map((currency) => [
+            currency,
+            annualTotals[currency] || 0,
+            lifetimeTotals[currency] || 0,
+            invoiceTotals[currency] || 0
+          ])
+        ];
+
+        const summarySheet = XLSX.utils.aoa_to_sheet(summaryRows);
+        summarySheet["!cols"] = [
+          { wch: 24 },
+          { wch: 22 },
+          { wch: 22 },
+          { wch: 22 }
+        ];
+        XLSX.utils.book_append_sheet(
+          workbook,
+          summarySheet,
+          "Dashboard Summary"
+        );
+
+        const contractRows = dashboardRows.map((row) => ({
+          Player: row.contract.player_name || "",
+          Club: row.contract.club_name || "",
+          League: row.contract.club_league || "",
+          Country: row.contract.club_country || "",
+          "Start Date": row.contract.start_date || "",
+          "End Date": row.contract.end_date || "",
+          Currency: row.currency,
+          "Annual Salary": row.annualSalary ?? "",
+          "Commission Rate (%)": row.commissionRate ?? "",
+          Representation: row.isDual ? "Dual" : "Single",
+          "Annual Revenue": row.annualRevenue ?? "",
+          "Lifetime Revenue": row.lifetimeRevenue ?? "",
+          Status: row.state.label
+        }));
+
+        const contractsSheet = XLSX.utils.json_to_sheet(contractRows);
+        contractsSheet["!cols"] = [
+          { wch: 22 }, { wch: 28 }, { wch: 18 }, { wch: 16 },
+          { wch: 13 }, { wch: 13 }, { wch: 10 }, { wch: 16 },
+          { wch: 18 }, { wch: 16 }, { wch: 17 }, { wch: 18 },
+          { wch: 16 }
+        ];
+        XLSX.utils.book_append_sheet(
+          workbook,
+          contractsSheet,
+          "Contract Register"
+        );
+
+        const invoiceRows = dashboardRows.flatMap((row) => {
+          if (!row.valid) return [];
+
+          const common = {
+            Player: row.contract.player_name || "",
+            Club: row.contract.club_name || "",
+            Currency: row.currency,
+            "Invoice Date":
+              row.contract.invoice_date ||
+              row.contract.next_invoice_date ||
+              "To be confirmed",
+            "Payment Due Date":
+              row.contract.payment_due_date ||
+              row.contract.invoice_due_date ||
+              "To be confirmed",
+            Status:
+              row.contract.invoice_status ||
+              "Forecast"
+          };
+
+          if (row.isDual) {
+            const sideAmount = row.annualRevenue / 2;
+            return [
+              {
+                ...common,
+                Side: "Player-side",
+                Payer:
+                  row.contract.commission_payer ||
+                  row.contract.player_name ||
+                  "",
+                Amount: sideAmount
+              },
+              {
+                ...common,
+                Side: "Club-side",
+                Payer:
+                  row.contract.club_name ||
+                  row.contract.commission_payer ||
+                  "",
+                Amount: sideAmount
+              }
+            ];
+          }
+
+          return [{
+            ...common,
+            Side: "Single representation",
+            Payer:
+              row.contract.commission_payer ||
+              row.contract.club_name ||
+              "",
+            Amount: row.invoiceForecast
+          }];
+        });
+
+        const invoicesSheet = XLSX.utils.json_to_sheet(invoiceRows);
+        invoicesSheet["!cols"] = [
+          { wch: 22 }, { wch: 28 }, { wch: 20 }, { wch: 32 },
+          { wch: 12 }, { wch: 16 }, { wch: 18 }, { wch: 18 },
+          { wch: 14 }
+        ];
+        XLSX.utils.book_append_sheet(
+          workbook,
+          invoicesSheet,
+          "Invoice Forecast"
+        );
+
+        const renewalRows = dashboardRows
+          .map((row) => ({
+            Player: row.contract.player_name || "",
+            Club: row.contract.club_name || "",
+            "End Date": row.contract.end_date || "",
+            "Days Remaining": getDaysRemaining(row.contract),
+            Status: row.state.label
+          }))
+          .filter((row) => row["Days Remaining"] !== null)
+          .sort((a, b) => a["Days Remaining"] - b["Days Remaining"]);
+
+        const renewalsSheet = XLSX.utils.json_to_sheet(renewalRows);
+        renewalsSheet["!cols"] = [
+          { wch: 22 }, { wch: 28 }, { wch: 14 },
+          { wch: 16 }, { wch: 18 }
+        ];
+        XLSX.utils.book_append_sheet(
+          workbook,
+          renewalsSheet,
+          "Renewals"
+        );
+
+        const isoDate = new Date().toISOString().slice(0, 10);
+        XLSX.writeFile(
+          workbook,
+          `DealTrack-Pro-Agency-Management-Report-${isoDate}.xlsx`
+        );
+      } catch (error) {
+        console.error("Excel report generation error:", error);
+        alert(
+          currentLang === "fr"
+            ? "Le rapport Excel n’a pas pu être créé."
+            : currentLang === "es"
+              ? "No se pudo crear el informe Excel."
+              : "The Excel report could not be created."
+        );
+      }
+    }
+
     function downloadPartnerReport() {
       try {
         if (!window.jspdf?.jsPDF) {
@@ -2039,6 +2408,19 @@
 
         const labels = getPdfLanguageLabels();
         const now = new Date();
+
+        const preparedFor =
+          currentAgency?.report_recipient_name ||
+          "Agency Management";
+
+        const agencyName =
+          currentAgency?.legal_name ||
+          currentAgency?.name ||
+          "DealTrack Pro Agency";
+
+        const confidentiality =
+          currentAgency?.report_confidentiality_text ||
+          labels.confidential;
         const dateText = new Intl.DateTimeFormat(
           currentLang === "fr"
             ? "fr-FR"
@@ -2079,8 +2461,10 @@
 
         doc.setFont("helvetica", "normal");
         doc.setFontSize(9);
-        doc.text(`${labels.prepared}: ${dateText}`, 220, 14);
-        doc.text(labels.confidential, 220, 21);
+        doc.text(`${labels.prepared}: ${dateText}`, 202, 11);
+        doc.text(`Agency: ${agencyName}`, 202, 17);
+        doc.text(`Prepared for: ${preparedFor}`, 202, 23);
+        doc.text(confidentiality, 202, 29);
 
         let y = 44;
 
@@ -2167,18 +2551,500 @@
           doc.setFontSize(8);
           doc.setTextColor(100, 110, 125);
           doc.text(
-            `${labels.confidential} — ${page}/${pageCount}`,
+            `${confidentiality} — ${agencyName} — ${page}/${pageCount}`,
             15,
             202
           );
         }
 
         const isoDate = now.toISOString().slice(0, 10);
-        doc.save(`DealTrack-Pro-Agency-Partner-Report-${isoDate}.pdf`);
+        doc.save(`DealTrack-Pro-Agency-Management-Report-${isoDate}.pdf`);
       } catch (error) {
         console.error("Partner report generation error:", error);
         alert(t("reportUnavailable"));
       }
+    }
+
+
+    function destroyChart(chart) {
+      if (chart && typeof chart.destroy === "function") {
+        chart.destroy();
+      }
+    }
+
+    function getChartTextColor() {
+      return "rgba(230, 237, 248, 0.88)";
+    }
+
+    function getChartGridColor() {
+      return "rgba(255, 255, 255, 0.075)";
+    }
+
+    function renderChartEmpty(containerId, message) {
+      const container = document.getElementById(containerId);
+      container.innerHTML = `<div class="chart-empty">${escapeHtml(message)}</div>`;
+    }
+
+    function restoreChartCanvas(containerId, canvasId) {
+      const container = document.getElementById(containerId);
+      if (!container.querySelector("canvas")) {
+        container.innerHTML = `<canvas id="${canvasId}"></canvas>`;
+      }
+      return document.getElementById(canvasId);
+    }
+
+    function renderCurrencyRevenueChart() {
+      destroyChart(currencyRevenueChart);
+      currencyRevenueChart = null;
+
+      const totals = groupTotalsByCurrency(
+        dashboardRows,
+        "annualRevenue"
+      );
+
+      const data = DASHBOARD_CURRENCIES
+        .map((currency) => ({
+          currency,
+          value: totals[currency] || 0
+        }))
+        .filter((item) => item.value > 0);
+
+      if (!data.length || !window.Chart) {
+        renderChartEmpty(
+          "currencyChartContainer",
+          t("chartNoCurrencyData")
+        );
+        return;
+      }
+
+      const canvas = restoreChartCanvas(
+        "currencyChartContainer",
+        "currencyRevenueChart"
+      );
+
+      currencyRevenueChart = new Chart(canvas, {
+        type: "bar",
+        data: {
+          labels: data.map((item) => item.currency),
+          datasets: [{
+            label: t("annualRevenue"),
+            data: data.map((item) => item.value),
+            borderWidth: 0,
+            borderRadius: 9,
+            backgroundColor: [
+              "rgba(88, 166, 255, 0.82)",
+              "rgba(240, 200, 90, 0.84)",
+              "rgba(87, 213, 154, 0.82)"
+            ]
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: (context) =>
+                  formatMoney(
+                    context.raw,
+                    data[context.dataIndex].currency
+                  )
+              }
+            }
+          },
+          scales: {
+            x: {
+              ticks: { color: getChartTextColor() },
+              grid: { display: false }
+            },
+            y: {
+              beginAtZero: true,
+              ticks: {
+                color: getChartTextColor(),
+                callback: (value) =>
+                  new Intl.NumberFormat("en", {
+                    notation: "compact",
+                    maximumFractionDigits: 1
+                  }).format(value)
+              },
+              grid: { color: getChartGridColor() }
+            }
+          }
+        }
+      });
+    }
+
+    function renderContractStatusChart() {
+      destroyChart(contractStatusChart);
+      contractStatusChart = null;
+
+      const counts = {
+        active: dashboardRows.filter(
+          (row) => row.state.key === "active"
+        ).length,
+        expiring: dashboardRows.filter(
+          (row) => row.state.key === "expiring"
+        ).length,
+        expired: dashboardRows.filter(
+          (row) => row.state.key === "expired"
+        ).length
+      };
+
+      const total = counts.active + counts.expiring + counts.expired;
+
+      if (!total || !window.Chart) {
+        renderChartEmpty(
+          "statusChartContainer",
+          t("emptyText")
+        );
+        return;
+      }
+
+      const canvas = restoreChartCanvas(
+        "statusChartContainer",
+        "contractStatusChart"
+      );
+
+      contractStatusChart = new Chart(canvas, {
+        type: "doughnut",
+        data: {
+          labels: [
+            t("active"),
+            t("expiring"),
+            t("expired")
+          ],
+          datasets: [{
+            data: [
+              counts.active,
+              counts.expiring,
+              counts.expired
+            ],
+            backgroundColor: [
+              "rgba(34, 197, 94, 0.85)",
+              "rgba(245, 158, 11, 0.88)",
+              "rgba(239, 68, 68, 0.82)"
+            ],
+            borderColor: "rgba(2, 11, 29, 0.9)",
+            borderWidth: 3
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          cutout: "64%",
+          plugins: {
+            legend: {
+              position: "bottom",
+              labels: {
+                color: getChartTextColor(),
+                usePointStyle: true,
+                padding: 18
+              }
+            }
+          }
+        }
+      });
+    }
+
+    function getInvoiceDate(contract) {
+      return (
+        contract.invoice_date ||
+        contract.next_invoice_date ||
+        contract.payment_due_date ||
+        contract.invoice_due_date ||
+        null
+      );
+    }
+
+    function renderInvoiceForecastChart() {
+      destroyChart(invoiceForecastChart);
+      invoiceForecastChart = null;
+
+      const monthly = new Map();
+
+      dashboardRows.forEach((row) => {
+        if (!row.valid || !row.invoiceForecast) return;
+
+        const dateValue = getInvoiceDate(row.contract);
+        if (!dateValue) return;
+
+        const date = new Date(`${dateValue}T00:00:00`);
+        if (Number.isNaN(date.getTime())) return;
+
+        const key = `${date.getFullYear()}-${String(
+          date.getMonth() + 1
+        ).padStart(2, "0")}`;
+
+        const currency = normaliseCurrencyCode(row.currency);
+
+        if (!monthly.has(key)) {
+          monthly.set(key, {
+            date,
+            EUR: 0,
+            GBP: 0,
+            USD: 0
+          });
+        }
+
+        if (DASHBOARD_CURRENCIES.includes(currency)) {
+          monthly.get(key)[currency] += row.invoiceForecast;
+        }
+      });
+
+      const rows = [...monthly.entries()]
+        .sort((a, b) => a[0].localeCompare(b[0]))
+        .slice(0, 12);
+
+      if (!rows.length || !window.Chart) {
+        renderChartEmpty(
+          "invoiceChartContainer",
+          t("chartNoInvoiceDates")
+        );
+        return;
+      }
+
+      const locale =
+        currentLang === "fr"
+          ? "fr-FR"
+          : currentLang === "es"
+            ? "es-ES"
+            : "en-GB";
+
+      const canvas = restoreChartCanvas(
+        "invoiceChartContainer",
+        "invoiceForecastChart"
+      );
+
+      const datasets = DASHBOARD_CURRENCIES
+        .map((currency, index) => ({
+          label: currency,
+          data: rows.map(([, item]) => item[currency]),
+          borderColor: [
+            "rgba(88, 166, 255, 1)",
+            "rgba(240, 200, 90, 1)",
+            "rgba(87, 213, 154, 1)"
+          ][index],
+          backgroundColor: [
+            "rgba(88, 166, 255, 0.15)",
+            "rgba(240, 200, 90, 0.15)",
+            "rgba(87, 213, 154, 0.15)"
+          ][index],
+          tension: 0.3,
+          fill: false,
+          pointRadius: 4,
+          pointHoverRadius: 6
+        }))
+        .filter((dataset) =>
+          dataset.data.some((value) => value > 0)
+        );
+
+      invoiceForecastChart = new Chart(canvas, {
+        type: "line",
+        data: {
+          labels: rows.map(([, item]) =>
+            new Intl.DateTimeFormat(locale, {
+              month: "short",
+              year: "numeric"
+            }).format(item.date)
+          ),
+          datasets
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: {
+            mode: "index",
+            intersect: false
+          },
+          plugins: {
+            legend: {
+              position: "bottom",
+              labels: {
+                color: getChartTextColor(),
+                usePointStyle: true
+              }
+            },
+            tooltip: {
+              callbacks: {
+                label: (context) =>
+                  `${context.dataset.label}: ${formatMoney(
+                    context.raw,
+                    context.dataset.label
+                  )}`
+              }
+            }
+          },
+          scales: {
+            x: {
+              ticks: { color: getChartTextColor() },
+              grid: { display: false }
+            },
+            y: {
+              beginAtZero: true,
+              ticks: {
+                color: getChartTextColor(),
+                callback: (value) =>
+                  new Intl.NumberFormat(locale, {
+                    notation: "compact",
+                    maximumFractionDigits: 1
+                  }).format(value)
+              },
+              grid: { color: getChartGridColor() }
+            }
+          }
+        }
+      });
+    }
+
+    function calculateAgencyHealth() {
+      const total = dashboardRows.length;
+
+      if (!total) {
+        return {
+          score: 0,
+          completeness: 0,
+          expiryRisk: 0,
+          invoiceReadiness: 0,
+          overdue: 0
+        };
+      }
+
+      const complete = dashboardRows.filter(
+        (row) => row.valid
+      ).length;
+
+      const expiryRisk = dashboardRows.filter((row) => {
+        const days = getDaysRemaining(row.contract);
+        return days !== null && days >= 0 && days <= 180;
+      }).length;
+
+      const invoiceReady = dashboardRows.filter(
+        (row) => row.valid && Boolean(getInvoiceDate(row.contract))
+      ).length;
+
+      const overdue = dashboardRows.filter(
+        (row) => isRecordedOverdue(row.contract)
+      ).length;
+
+      const completenessScore = (complete / total) * 45;
+      const expiryScore = Math.max(
+        0,
+        20 - (expiryRisk / total) * 20
+      );
+      const invoiceScore = (invoiceReady / total) * 25;
+      const overdueScore = Math.max(
+        0,
+        10 - (overdue / total) * 10
+      );
+
+      return {
+        score: Math.round(
+          completenessScore +
+          expiryScore +
+          invoiceScore +
+          overdueScore
+        ),
+        completeness: Math.round((complete / total) * 100),
+        expiryRisk,
+        invoiceReadiness: Math.round(
+          (invoiceReady / total) * 100
+        ),
+        overdue
+      };
+    }
+
+    function renderAgencyHealthChart() {
+      destroyChart(agencyHealthChart);
+      agencyHealthChart = null;
+
+      const health = calculateAgencyHealth();
+      const score = Math.max(0, Math.min(100, health.score));
+
+      document.getElementById(
+        "agencyHealthValue"
+      ).textContent = `${score}/100`;
+
+      document.getElementById(
+        "agencyHealthLabel"
+      ).textContent =
+        score >= 85
+          ? t("healthExcellent")
+          : score >= 70
+            ? t("healthGood")
+            : score >= 50
+              ? t("healthAttention")
+              : t("healthCritical");
+
+      document.getElementById(
+        "healthCompleteValue"
+      ).textContent = t("percentComplete").replace(
+        "{value}",
+        health.completeness
+      );
+
+      document.getElementById(
+        "healthExpiryValue"
+      ).textContent = t("contractsAtRisk").replace(
+        "{value}",
+        health.expiryRisk
+      );
+
+      document.getElementById(
+        "healthInvoiceValue"
+      ).textContent = t("datesConfirmed").replace(
+        "{value}",
+        health.invoiceReadiness
+      );
+
+      document.getElementById(
+        "healthOverdueValue"
+      ).textContent = t("overdueCount").replace(
+        "{value}",
+        health.overdue
+      );
+
+      if (!window.Chart) return;
+
+      const canvas = document.getElementById("agencyHealthChart");
+
+      agencyHealthChart = new Chart(canvas, {
+        type: "doughnut",
+        data: {
+          datasets: [{
+            data: [score, 100 - score],
+            backgroundColor: [
+              score >= 85
+                ? "rgba(34, 197, 94, 0.88)"
+                : score >= 70
+                  ? "rgba(88, 166, 255, 0.88)"
+                  : score >= 50
+                    ? "rgba(245, 158, 11, 0.88)"
+                    : "rgba(239, 68, 68, 0.88)",
+              "rgba(255,255,255,0.065)"
+            ],
+            borderWidth: 0,
+            circumference: 270,
+            rotation: 225,
+            cutout: "72%"
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: { enabled: false }
+          }
+        }
+      });
+    }
+
+    function renderCharts() {
+      renderCurrencyRevenueChart();
+      renderContractStatusChart();
+      renderInvoiceForecastChart();
+      renderAgencyHealthChart();
     }
 
     function renderAttentionList() {
@@ -2244,6 +3110,7 @@
       renderAttentionList();
       renderRenewals();
       renderInvoiceCalendar();
+      renderCharts();
     }
 
     function showError() {
@@ -2260,6 +3127,9 @@
       document.getElementById("attentionList").innerHTML = message;
       document.getElementById("renewalList").innerHTML = message;
       document.getElementById("invoiceCalendar").innerHTML = message;
+      renderChartEmpty("currencyChartContainer", t("errorText"));
+      renderChartEmpty("statusChartContainer", t("errorText"));
+      renderChartEmpty("invoiceChartContainer", t("errorText"));
     }
 
     document.addEventListener("DOMContentLoaded", async () => {
@@ -2271,6 +3141,11 @@
         });
       });
 
+      document.getElementById("downloadExcelBtn").addEventListener(
+        "click",
+        downloadExcelReport
+      );
+
       document.getElementById("downloadReportBtn").addEventListener(
         "click",
         downloadPartnerReport
@@ -2279,18 +3154,6 @@
       document.getElementById("printDashboardBtn").addEventListener(
         "click",
         () => window.print()
-      );
-
-      document.getElementById("logoutBtn").addEventListener(
-        "click",
-        async () => {
-          const db = window.supabaseClient || window.sb || null;
-          try {
-            if (db) await db.auth.signOut();
-          } finally {
-            window.location.href = "/agent-academy/login.html";
-          }
-        }
       );
 
       applyTranslations();
@@ -2313,8 +3176,7 @@
       }
 
       currentUser = user;
-      currentAgency = await loadCurrentAgency(db, user);
-      renderSessionIdentity();
+      currentAgency = await loadAgencyContext(db, user);
 
       const { data, error } = await db
         .from("contracts")
