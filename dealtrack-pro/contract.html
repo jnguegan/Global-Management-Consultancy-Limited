@@ -724,7 +724,7 @@
 "representationType": "Representation",
 "dualRepresentationValue": "Dual Representation",
 "singleRepresentationValue": "Single Representation",
-"commercialCalculation": "Calculation",
+"commercialCalculation": "Revenue Calculation Summary",
 "commercialValueUnavailable": "The commercial value cannot yet be calculated because the salary amount, salary frequency or commission rate is missing.",
 "commercialEstimateNote": "Estimate based on the current recorded terms. Bonuses, amendments, taxes and conditional payments are not included.",
       "sectionSnapshot": "Commercial Snapshot",
@@ -798,7 +798,7 @@
 "representationType": "Représentation",
 "dualRepresentationValue": "Double représentation",
 "singleRepresentationValue": "Représentation simple",
-"commercialCalculation": "Calcul",
+"commercialCalculation": "Résumé du calcul",
 "commercialValueUnavailable": "La valeur commerciale ne peut pas encore être calculée, car le salaire, la fréquence salariale ou le taux de commission est manquant.",
 "commercialEstimateNote": "Estimation basée sur les conditions actuellement enregistrées. Les primes, modifications, taxes et paiements conditionnels ne sont pas inclus.",
       "sectionSnapshot": "Synthèse commerciale",
@@ -872,7 +872,7 @@
 "representationType": "Representación",
 "dualRepresentationValue": "Representación dual",
 "singleRepresentationValue": "Representación única",
-"commercialCalculation": "Cálculo",
+"commercialCalculation": "Resumen del cálculo de ingresos",
 "commercialValueUnavailable": "El valor comercial todavía no puede calcularse porque falta el salario, la frecuencia salarial o el porcentaje de comisión.",
 "commercialEstimateNote": "Estimación basada en las condiciones actualmente registradas. No incluye primas, modificaciones, impuestos ni pagos condicionales.",
       "sectionSnapshot": "Resumen comercial",
@@ -1262,29 +1262,12 @@ function renderCommercialValue(data) {
         ${t("commercialValueSubtitle")}
       </p>
 
-      <div class="commercial-value-headline">
-  <span class="commercial-value-label">
-    ${t("expectedContractRevenue")}
-  </span>
-
-  <div class="commercial-value-annual">
-    ${formatMoneyValue(
-      totalContractRevenue,
-      currency
-    )}
-  </div>
-
-  <div class="commercial-value-period">
-    ${termText}
-  </div>
-</div>
-
-<div class="commercial-total-box">
+   <div class="commercial-value-headline">
   <span class="commercial-value-label">
     ${t("expectedAnnualRevenue")}
   </span>
 
-  <div class="commercial-total-value">
+  <div class="commercial-value-annual">
     ${formatMoneyValue(
       totalAnnualRevenue,
       currency
@@ -1293,6 +1276,23 @@ function renderCommercialValue(data) {
 
   <div class="commercial-value-period">
     ${t("perYear")}
+  </div>
+</div>
+
+<div class="commercial-total-box">
+  <span class="commercial-value-label">
+    ${t("expectedContractRevenue")}
+  </span>
+
+  <div class="commercial-total-value">
+    ${formatMoneyValue(
+      totalContractRevenue,
+      currency
+    )}
+  </div>
+
+  <div class="commercial-value-period">
+    ${termText}
   </div>
 </div>
 
