@@ -528,6 +528,55 @@
   line-height: 1.65;
 }
 
+    .commercial-calculation h4 {
+  margin: 0 0 16px;
+  color: var(--gold-2);
+  font-size: 0.9rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.commercial-calculation-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.commercial-calculation-grid > div {
+  padding: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.065);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.commercial-calculation-grid span {
+  display: block;
+  margin-bottom: 7px;
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.commercial-calculation-grid strong {
+  color: var(--text);
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+.commercial-note {
+  margin: 16px 0 0;
+  color: var(--muted);
+  font-size: 0.84rem;
+  line-height: 1.6;
+}
+
+@media (max-width: 620px) {
+  .commercial-calculation-grid {
+    grid-template-columns: 1fr;
+  }
+}
 .commercial-warning {
   padding: 17px;
   border: 1px solid rgba(245, 158, 11, 0.25);
@@ -670,7 +719,6 @@
 "clubSide": "Club-Side Representation",
 "commissionRate": "Commission Rate",
 "annualRevenue": "Annual Revenue",
-"contractRevenue": "Contract Revenue",
 "annualSalaryBasis": "Annual Salary Basis",
 "totalCommissionRate": "Total Commission Rate",
 "representationType": "Representation",
@@ -745,7 +793,6 @@
 "clubSide": "Représentation côté club",
 "commissionRate": "Taux de commission",
 "annualRevenue": "Revenus annuels",
-"contractRevenue": "Revenus sur la durée du contrat",
 "annualSalaryBasis": "Base salariale annuelle",
 "totalCommissionRate": "Taux total de commission",
 "representationType": "Représentation",
@@ -820,7 +867,6 @@
 "clubSide": "Representación del club",
 "commissionRate": "Porcentaje de comisión",
 "annualRevenue": "Ingresos anuales",
-"contractRevenue": "Ingresos durante el contrato",
 "annualSalaryBasis": "Base salarial anual",
 "totalCommissionRate": "Porcentaje total de comisión",
 "representationType": "Representación",
@@ -1275,34 +1321,58 @@ function renderCommercialValue(data) {
         }
       </div>
 
-      <div class="commercial-calculation">
-        <strong>
-          ${t("commercialCalculation")}:
-        </strong>
+     <div class="commercial-calculation">
+  <h4>${t("commercialCalculation")}</h4>
 
-        ${t("annualSalaryBasis")}
+  <div class="commercial-calculation-grid">
+
+    <div>
+      <span>${t("annualSalaryBasis")}</span>
+      <strong>
         ${formatMoneyValue(
           annualSalary,
           currency
         )}
+      </strong>
+    </div>
 
-        × ${t("totalCommissionRate")}
-        ${totalCommissionRate}%
+    <div>
+      <span>${t("totalCommissionRate")}</span>
+      <strong>${totalCommissionRate}%</strong>
+    </div>
 
-        = ${formatMoneyValue(
+    <div>
+      <span>${t("representationType")}</span>
+      <strong>${representationText}</strong>
+    </div>
+
+    <div>
+      <span>${t("expectedAnnualRevenue")}</span>
+      <strong>
+        ${formatMoneyValue(
           totalAnnualRevenue,
           currency
         )}
-        ${t("perYear")}.
+      </strong>
+    </div>
 
-        ${t("representationType")}:
-        ${representationText}.
+    <div>
+      <span>${t("expectedContractRevenue")}</span>
+      <strong>
+        ${formatMoneyValue(
+          totalContractRevenue,
+          currency
+        )}
+      </strong>
+    </div>
 
-        <br />
+  </div>
 
-        ${t("commercialEstimateNote")}
-      </div>
-    </section>
+  <p class="commercial-note">
+    ${t("commercialEstimateNote")}
+  </p>
+</div>
+</section>
   `;
 }
     
