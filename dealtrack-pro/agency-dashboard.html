@@ -1343,6 +1343,8 @@
       "contractCount": "{count} contract(s)",
       "reportTitle": "DealTrack Pro Agency Management Report",
       "reportPrepared": "Prepared",
+      "reportPreparedBy": "Prepared by",
+      "reportUserEmail": "User email",
       "reportConfidential": "Strictly Confidential — Internal Management Report",
       "reportGenerated": "Management report downloaded successfully.",
       "reportUnavailable": "The report could not be created. Please refresh and try again.",
@@ -1585,6 +1587,8 @@
       "contractCount": "{count} contrato(s)",
       "reportTitle": "Informe de gestión de la agencia DealTrack Pro",
       "reportPrepared": "Preparado",
+      "reportPreparedBy": "Preparado por",
+      "reportUserEmail": "Correo del usuario",
       "reportConfidential": "Estrictamente confidencial — Informe de gestión interno",
       "reportGenerated": "El informe de gestión se ha descargado.",
       "reportUnavailable": "No se pudo crear el informe. Actualice la página e inténtelo de nuevo.",
@@ -2392,6 +2396,57 @@
       `).join("");
     }
 
+    function applyInstalmentMetrics(row) {
+      const items = commissionInstalments.filter(
+        (item) => String(item.contract_id) === String(row.contract.id)
+      );
+
+      if (!items.length) return row;
+
+      const currentYear = new Date().getFullYear();
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      const usableItems = items.filter((item) => {
+        const status = String(item.invoice_status || "").toLowerCase();
+        return status !== "cancelled";
+      });
+
+      const lifetimeRevenue = usableItems.reduce(
+        (sum, item) => sum + (toNumber(item.amount) || 0),
+        0
+      );
+
+      const annualRevenue = usableItems.reduce((sum, item) => {
+        if (!item.due_date) return sum;
+        const dueDate = new Date(`${item.due_date}T00:00:00`);
+        if (Number.isNaN(dueDate.getTime())) return sum;
+        return dueDate.getFullYear() === currentYear
+          ? sum + (toNumber(item.amount) || 0)
+          : sum;
+      }, 0);
+
+      const futureForecast = usableItems.reduce((sum, item) => {
+        if (!item.due_date) return sum;
+        const status = String(item.invoice_status || "").toLowerCase();
+        if (status === "paid") return sum;
+
+        const dueDate = new Date(`${item.due_date}T00:00:00`);
+        if (Number.isNaN(dueDate.getTime()) || dueDate < today) return sum;
+
+        return sum + (toNumber(item.amount) || 0);
+      }, 0);
+
+      return {
+        ...row,
+        annualRevenue,
+        lifetimeRevenue,
+        invoiceForecast: futureForecast,
+        valid: true,
+        usesInstalmentSchedule: true
+      };
+    }
+
     function getUpcomingInstalmentGroups() {
       const today = new Date();
       today.setHours(0, 0, 0, 0);
@@ -2570,9 +2625,14 @@
           "invoiceForecast"
         );
 
+        const preparedBy = getUserDisplayName(currentUser);
+        const preparedByEmail = currentUser?.email || "";
+
         const summaryRows = [
           ["DealTrack Pro Agency Management Report"],
           ["Agency", agencyName],
+          ["Prepared by", preparedBy],
+          ["User email", preparedByEmail],
           ["Prepared for", preparedFor],
           ["Generated", generatedAt],
           ["Classification",
@@ -2807,12 +2867,22 @@
 
         doc.setFont("helvetica", "normal");
         doc.setFontSize(9);
-        doc.text(`${labels.prepared}: ${dateText}`, 202, 11);
-        doc.text(`Agency: ${agencyName}`, 202, 17);
-        doc.text(`Prepared for: ${preparedFor}`, 202, 23);
-        doc.text(confidentiality, 202, 29);
+        const preparedBy = getUserDisplayName(currentUser);
+        const preparedByEmail = currentUser?.email || "";
+
+        doc.setFontSize(8.4);
+        doc.text(`${labels.prepared}: ${dateText}`, 190, 8);
+        doc.text(`Agency: ${agencyName}`, 190, 13);
+        doc.text(`Prepared by: ${preparedBy}`, 190, 18);
+        doc.text(`User email: ${preparedByEmail}`, 190, 23);
+        doc.text(`Prepared for: ${preparedFor}`, 190, 28);
+        doc.text(confidentiality, 190, 33);
 
         let y = 44;
+
+        const scheduledContractCount = dashboardRows.filter(
+          (row) => row.usesInstalmentSchedule
+        ).length;
 
         doc.setTextColor(20, 28, 45);
         doc.setFont("helvetica", "bold");
@@ -3572,7 +3642,10 @@
         }
       }
 
-      dashboardRows = allContracts.map(buildDashboardRow);
+      dashboardRows = allContracts
+        .map(buildDashboardRow)
+        .map(applyInstalmentMetrics);
+
       renderDashboard();
     });
   </script>
