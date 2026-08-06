@@ -496,6 +496,127 @@
       font-weight: 800;
     }
 
+    .financial-summary {
+      border-color: rgba(212, 175, 55, 0.2);
+      background:
+        linear-gradient(145deg, rgba(212, 175, 55, 0.07), transparent 55%),
+        var(--panel);
+    }
+
+    .invoice-summary {
+      border-color: rgba(88, 166, 255, 0.2);
+      background:
+        linear-gradient(145deg, rgba(47, 140, 255, 0.08), transparent 55%),
+        var(--panel);
+    }
+
+    .money-value {
+      color: var(--gold-2);
+      font-size: clamp(1.45rem, 2.5vw, 2rem);
+    }
+
+    .commercial-strip {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .commercial-metric {
+      padding: 13px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.022);
+    }
+
+    .commercial-metric.highlight {
+      border-color: rgba(212, 175, 55, 0.18);
+      background: rgba(212, 175, 55, 0.05);
+    }
+
+    .commercial-metric.invoice {
+      border-color: rgba(88, 166, 255, 0.17);
+      background: rgba(47, 140, 255, 0.045);
+    }
+
+    .commercial-metric .detail-value {
+      color: var(--gold-2);
+      font-size: 1rem;
+    }
+
+    .representation-pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      padding: 0 9px;
+      border: 1px solid rgba(212, 175, 55, 0.18);
+      border-radius: 999px;
+      color: var(--gold-2);
+      background: rgba(212, 175, 55, 0.06);
+      font-size: 0.72rem;
+      font-weight: 800;
+    }
+
+    .invoice-forecast-pill {
+      color: #ffe0a3;
+      background: rgba(245, 158, 11, 0.09);
+      border: 1px solid rgba(245, 158, 11, 0.24);
+      border-radius: 999px;
+      padding: 5px 9px;
+      font-size: 0.72rem;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    @media print {
+      body {
+        padding: 0;
+        color: #111;
+        background: #fff;
+      }
+
+      .topbar,
+      .controls,
+      .open-label,
+      .result-count {
+        display: none !important;
+      }
+
+      .page {
+        max-width: none;
+      }
+
+      .hero,
+      .summary-card,
+      .contract-card {
+        color: #111;
+        background: #fff;
+        border: 1px solid #d8d8d8;
+        box-shadow: none;
+        break-inside: avoid;
+      }
+
+      .hero-description,
+      .summary-label,
+      .summary-note,
+      .club-name,
+      .detail-label,
+      .analysis-label {
+        color: #555;
+      }
+
+      .contracts-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .money-value,
+      .commercial-metric .detail-value,
+      .brand-pro,
+      .eyebrow {
+        color: #8a6a00;
+      }
+    }
+
     .state-box {
       padding: 34px 22px;
       border: 1px dashed rgba(255, 255, 255, 0.15);
@@ -556,7 +677,8 @@
         grid-template-columns: 1fr;
       }
 
-      .card-details {
+      .card-details,
+      .commercial-strip {
         grid-template-columns: 1fr;
       }
 
@@ -619,6 +741,15 @@
           ➕ Add Manually
         </a>
 
+        <button
+          id="printReportBtn"
+          type="button"
+          class="btn"
+          data-i18n="printReport"
+        >
+          🖨️ Print Partner Report
+        </button>
+
         <div class="lang-switcher">
           <button
             type="button"
@@ -656,111 +787,58 @@
       </div>
 
       <h1 data-i18n="heroTitle">
-        Your contract control centre
+        Your contract and revenue portfolio
       </h1>
 
       <p
         class="hero-description"
         data-i18n="heroDescription"
       >
-        Review every active contract, monitor expiry dates and open each
-        contract record from one secure workspace.
+        Monitor contract values, projected commission revenue and invoice forecasts across your entire player portfolio.
       </p>
     </section>
 
     <section
       class="summary-grid"
-      aria-label="Portfolio summary"
+      aria-label="Portfolio financial summary"
     >
       <article class="summary-card">
-        <span
-          class="summary-label"
-          data-i18n="summaryTotal"
-        >
-          Total Contracts
+        <span class="summary-label" data-i18n="summaryActive">
+          Active Contracts
         </span>
-
-        <div
-          id="totalContracts"
-          class="summary-value"
-        >
-          —
-        </div>
-
-        <div
-          class="summary-note"
-          data-i18n="summaryTotalNote"
-        >
-          All recorded contracts
-        </div>
-      </article>
-
-      <article class="summary-card">
-        <span
-          class="summary-label"
-          data-i18n="summaryActive"
-        >
-          Active
-        </span>
-
-        <div
-          id="activeContracts"
-          class="summary-value"
-        >
-          —
-        </div>
-
-        <div
-          class="summary-note"
-          data-i18n="summaryActiveNote"
-        >
+        <div id="activeContracts" class="summary-value">—</div>
+        <div class="summary-note" data-i18n="summaryActiveNote">
           Currently in force
         </div>
       </article>
 
-      <article class="summary-card">
-        <span
-          class="summary-label"
-          data-i18n="summaryExpiring"
-        >
-          Expiring Soon
+      <article class="summary-card financial-summary">
+        <span class="summary-label" data-i18n="summaryAnnualRevenue">
+          Total Annual Revenue
         </span>
-
-        <div
-          id="expiringContracts"
-          class="summary-value"
-        >
-          —
-        </div>
-
-        <div
-          class="summary-note"
-          data-i18n="summaryExpiringNote"
-        >
-          Ending within 90 days
+        <div id="totalAnnualRevenue" class="summary-value money-value">—</div>
+        <div class="summary-note" data-i18n="summaryAnnualRevenueNote">
+          Projected commission per year
         </div>
       </article>
 
-      <article class="summary-card">
-        <span
-          class="summary-label"
-          data-i18n="summaryExpired"
-        >
-          Expired
+      <article class="summary-card financial-summary">
+        <span class="summary-label" data-i18n="summaryLifetimeRevenue">
+          Total Lifetime Revenue
         </span>
-
-        <div
-          id="expiredContracts"
-          class="summary-value"
-        >
-          —
+        <div id="totalLifetimeRevenue" class="summary-value money-value">—</div>
+        <div class="summary-note" data-i18n="summaryLifetimeRevenueNote">
+          Projected across all contract terms
         </div>
+      </article>
 
-        <div
-          class="summary-note"
-          data-i18n="summaryExpiredNote"
-        >
-          Past the recorded end date
+      <article class="summary-card invoice-summary">
+        <span class="summary-label" data-i18n="summaryInvoiceForecast">
+          Total Forecast Invoices
+        </span>
+        <div id="totalInvoiceForecast" class="summary-value money-value">—</div>
+        <div class="summary-note" data-i18n="summaryInvoiceForecastNote">
+          Current annual invoice opportunity
         </div>
       </article>
     </section>
@@ -841,147 +919,205 @@
     id="dealtrack-portfolio-i18n"
   >
   {
-    "en": {
-      "brandTagline": "Contract Intelligence for Football Agents",
-      "backDashboard": "← Back to Dashboard",
-      "uploadContract": "📤 Upload Contract",
-      "addManually": "➕ Add Manually",
-      "heroEyebrow": "Contract Portfolio",
-      "heroTitle": "Your contract control centre",
-      "heroDescription": "Review every active contract, monitor expiry dates and open each contract record from one secure workspace.",
-      "summaryTotal": "Total Contracts",
-      "summaryTotalNote": "All recorded contracts",
-      "summaryActive": "Active",
-      "summaryActiveNote": "Currently in force",
-      "summaryExpiring": "Expiring Soon",
-      "summaryExpiringNote": "Ending within 90 days",
-      "summaryExpired": "Expired",
-      "summaryExpiredNote": "Past the recorded end date",
-      "searchPlaceholder": "Search by player, club, league or country",
-      "filterAll": "All Contracts",
-      "filterActive": "Active",
-      "filterExpiring": "Expiring Soon",
-      "filterExpired": "Expired",
-      "contractsHeading": "Contracts",
-      "loadingTitle": "Loading contracts",
-      "loadingText": "Preparing your contract portfolio...",
-      "emptyTitle": "No contracts found",
-      "emptyText": "Upload your first contract or add one manually.",
-      "errorTitle": "Unable to load contracts",
-      "errorText": "Please refresh the page and try again.",
-      "statusActive": "Active",
-      "statusExpiring": "Expiring Soon",
-      "statusExpired": "Expired",
-      "clubNotRecorded": "Club not recorded",
-      "leagueLabel": "League",
-      "countryLabel": "Country",
-      "startLabel": "Start",
-      "endLabel": "End",
-      "notRecorded": "Not recorded",
-      "analysisManual": "Manual record",
-      "analysisUploaded": "Contract uploaded",
-      "analysisAnalysing": "Analysis in progress",
-      "analysisReview": "Review required",
-      "analysisApproved": "Analysis approved",
-      "openContract": "Open Contract →",
-      "oneContract": "1 contract",
-      "manyContracts": "{count} contracts"
-    },
-
-    "fr": {
-      "brandTagline": "Intelligence contractuelle pour agents de football",
-      "backDashboard": "← Retour au tableau de bord",
-      "uploadContract": "📤 Importer un contrat",
-      "addManually": "➕ Ajouter manuellement",
-      "heroEyebrow": "Portefeuille de contrats",
-      "heroTitle": "Votre centre de contrôle contractuel",
-      "heroDescription": "Consultez tous les contrats actifs, surveillez les dates d’expiration et ouvrez chaque dossier contractuel depuis un espace sécurisé.",
-      "summaryTotal": "Total des contrats",
-      "summaryTotalNote": "Tous les contrats enregistrés",
-      "summaryActive": "Actifs",
-      "summaryActiveNote": "Actuellement en vigueur",
-      "summaryExpiring": "Expiration prochaine",
-      "summaryExpiringNote": "Fin dans les 90 jours",
-      "summaryExpired": "Expirés",
-      "summaryExpiredNote": "Date de fin dépassée",
-      "searchPlaceholder": "Rechercher par joueur, club, ligue ou pays",
-      "filterAll": "Tous les contrats",
-      "filterActive": "Actifs",
-      "filterExpiring": "Expiration prochaine",
-      "filterExpired": "Expirés",
-      "contractsHeading": "Contrats",
-      "loadingTitle": "Chargement des contrats",
-      "loadingText": "Préparation de votre portefeuille contractuel...",
-      "emptyTitle": "Aucun contrat trouvé",
-      "emptyText": "Importez votre premier contrat ou ajoutez-le manuellement.",
-      "errorTitle": "Impossible de charger les contrats",
-      "errorText": "Actualisez la page et réessayez.",
-      "statusActive": "Actif",
-      "statusExpiring": "Expiration prochaine",
-      "statusExpired": "Expiré",
-      "clubNotRecorded": "Club non renseigné",
-      "leagueLabel": "Ligue",
-      "countryLabel": "Pays",
-      "startLabel": "Début",
-      "endLabel": "Fin",
-      "notRecorded": "Non renseigné",
-      "analysisManual": "Saisie manuelle",
-      "analysisUploaded": "Contrat importé",
-      "analysisAnalysing": "Analyse en cours",
-      "analysisReview": "Révision requise",
-      "analysisApproved": "Analyse approuvée",
-      "openContract": "Ouvrir le contrat →",
-      "oneContract": "1 contrat",
-      "manyContracts": "{count} contrats"
-    },
-
-    "es": {
-      "brandTagline": "Inteligencia contractual para agentes de fútbol",
-      "backDashboard": "← Volver al panel",
-      "uploadContract": "📤 Subir contrato",
-      "addManually": "➕ Añadir manualmente",
-      "heroEyebrow": "Cartera de contratos",
-      "heroTitle": "Su centro de control contractual",
-      "heroDescription": "Revise todos los contratos activos, controle las fechas de vencimiento y abra cada registro contractual desde un espacio seguro.",
-      "summaryTotal": "Total de contratos",
-      "summaryTotalNote": "Todos los contratos registrados",
-      "summaryActive": "Activos",
-      "summaryActiveNote": "Actualmente vigentes",
-      "summaryExpiring": "Próximos a vencer",
-      "summaryExpiringNote": "Finalizan dentro de 90 días",
-      "summaryExpired": "Vencidos",
-      "summaryExpiredNote": "Fecha de finalización superada",
-      "searchPlaceholder": "Buscar por jugador, club, liga o país",
-      "filterAll": "Todos los contratos",
-      "filterActive": "Activos",
-      "filterExpiring": "Próximos a vencer",
-      "filterExpired": "Vencidos",
-      "contractsHeading": "Contratos",
-      "loadingTitle": "Cargando contratos",
-      "loadingText": "Preparando su cartera contractual...",
-      "emptyTitle": "No se encontraron contratos",
-      "emptyText": "Suba su primer contrato o añádalo manualmente.",
-      "errorTitle": "No se pueden cargar los contratos",
-      "errorText": "Actualice la página e inténtelo de nuevo.",
-      "statusActive": "Activo",
-      "statusExpiring": "Próximo a vencer",
-      "statusExpired": "Vencido",
-      "clubNotRecorded": "Club no registrado",
-      "leagueLabel": "Liga",
-      "countryLabel": "País",
-      "startLabel": "Inicio",
-      "endLabel": "Final",
-      "notRecorded": "No registrado",
-      "analysisManual": "Registro manual",
-      "analysisUploaded": "Contrato subido",
-      "analysisAnalysing": "Análisis en curso",
-      "analysisReview": "Revisión necesaria",
-      "analysisApproved": "Análisis aprobado",
-      "openContract": "Abrir contrato →",
-      "oneContract": "1 contrato",
-      "manyContracts": "{count} contratos"
-    }
+  "en": {
+    "brandTagline": "Contract Intelligence for Football Agents",
+    "backDashboard": "← Back to Dashboard",
+    "uploadContract": "📤 Upload Contract",
+    "addManually": "➕ Add Manually",
+    "heroEyebrow": "Contract Portfolio",
+    "heroTitle": "Your contract and revenue portfolio",
+    "heroDescription": "Monitor contract values, projected commission revenue and invoice forecasts across your entire player portfolio.",
+    "summaryTotal": "Total Contracts",
+    "summaryTotalNote": "All recorded contracts",
+    "summaryActive": "Active",
+    "summaryActiveNote": "Currently in force",
+    "summaryExpiring": "Expiring Soon",
+    "summaryExpiringNote": "Ending within 90 days",
+    "summaryExpired": "Expired",
+    "summaryExpiredNote": "Past the recorded end date",
+    "searchPlaceholder": "Search by player, club, league or country",
+    "filterAll": "All Contracts",
+    "filterActive": "Active",
+    "filterExpiring": "Expiring Soon",
+    "filterExpired": "Expired",
+    "contractsHeading": "Contracts",
+    "loadingTitle": "Loading contracts",
+    "loadingText": "Preparing your contract portfolio...",
+    "emptyTitle": "No contracts found",
+    "emptyText": "Upload your first contract or add one manually.",
+    "errorTitle": "Unable to load contracts",
+    "errorText": "Please refresh the page and try again.",
+    "statusActive": "Active",
+    "statusExpiring": "Expiring Soon",
+    "statusExpired": "Expired",
+    "clubNotRecorded": "Club not recorded",
+    "leagueLabel": "League",
+    "countryLabel": "Country",
+    "startLabel": "Start",
+    "endLabel": "End",
+    "notRecorded": "Not recorded",
+    "analysisManual": "Manual record",
+    "analysisUploaded": "Contract uploaded",
+    "analysisAnalysing": "Analysis in progress",
+    "analysisReview": "Review required",
+    "analysisApproved": "Analysis approved",
+    "openContract": "Open Contract →",
+    "oneContract": "1 contract",
+    "manyContracts": "{count} contracts",
+    "printReport": "🖨️ Print Partner Report",
+    "summaryAnnualRevenue": "Total Annual Revenue",
+    "summaryAnnualRevenueNote": "Projected commission per year",
+    "summaryLifetimeRevenue": "Total Lifetime Revenue",
+    "summaryLifetimeRevenueNote": "Projected across all contract terms",
+    "summaryInvoiceForecast": "Total Forecast Invoices",
+    "summaryInvoiceForecastNote": "Current annual invoice opportunity",
+    "annualSalaryLabel": "Annual Salary",
+    "representationLabel": "Representation",
+    "dualRepresentation": "Dual Representation",
+    "singleRepresentation": "Single Representation",
+    "commissionRateLabel": "Commission Rate",
+    "annualRevenueLabel": "Annual Revenue",
+    "lifetimeRevenueLabel": "Lifetime Revenue",
+    "invoiceForecastLabel": "Invoice Forecast",
+    "playerInvoiceLabel": "Player Invoice",
+    "clubInvoiceLabel": "Club Invoice",
+    "forecastStatus": "Forecast",
+    "calculationUnavailable": "Calculation unavailable",
+    "mixedCurrencies": "Mixed currencies"
+  },
+  "fr": {
+    "brandTagline": "Intelligence contractuelle pour agents de football",
+    "backDashboard": "← Retour au tableau de bord",
+    "uploadContract": "📤 Importer un contrat",
+    "addManually": "➕ Ajouter manuellement",
+    "heroEyebrow": "Portefeuille de contrats",
+    "heroTitle": "Votre portefeuille de contrats et de revenus",
+    "heroDescription": "Suivez la valeur des contrats, les commissions prévisionnelles et les factures estimées de l’ensemble de votre portefeuille de joueurs.",
+    "summaryTotal": "Total des contrats",
+    "summaryTotalNote": "Tous les contrats enregistrés",
+    "summaryActive": "Actifs",
+    "summaryActiveNote": "Actuellement en vigueur",
+    "summaryExpiring": "Expiration prochaine",
+    "summaryExpiringNote": "Fin dans les 90 jours",
+    "summaryExpired": "Expirés",
+    "summaryExpiredNote": "Date de fin dépassée",
+    "searchPlaceholder": "Rechercher par joueur, club, ligue ou pays",
+    "filterAll": "Tous les contrats",
+    "filterActive": "Actifs",
+    "filterExpiring": "Expiration prochaine",
+    "filterExpired": "Expirés",
+    "contractsHeading": "Contrats",
+    "loadingTitle": "Chargement des contrats",
+    "loadingText": "Préparation de votre portefeuille contractuel...",
+    "emptyTitle": "Aucun contrat trouvé",
+    "emptyText": "Importez votre premier contrat ou ajoutez-le manuellement.",
+    "errorTitle": "Impossible de charger les contrats",
+    "errorText": "Actualisez la page et réessayez.",
+    "statusActive": "Actif",
+    "statusExpiring": "Expiration prochaine",
+    "statusExpired": "Expiré",
+    "clubNotRecorded": "Club non renseigné",
+    "leagueLabel": "Ligue",
+    "countryLabel": "Pays",
+    "startLabel": "Début",
+    "endLabel": "Fin",
+    "notRecorded": "Non renseigné",
+    "analysisManual": "Saisie manuelle",
+    "analysisUploaded": "Contrat importé",
+    "analysisAnalysing": "Analyse en cours",
+    "analysisReview": "Révision requise",
+    "analysisApproved": "Analyse approuvée",
+    "openContract": "Ouvrir le contrat →",
+    "oneContract": "1 contrat",
+    "manyContracts": "{count} contrats",
+    "printReport": "🖨️ Imprimer le rapport partenaires",
+    "summaryAnnualRevenue": "Revenus annuels totaux",
+    "summaryAnnualRevenueNote": "Commissions prévisionnelles par an",
+    "summaryLifetimeRevenue": "Revenus totaux sur la durée",
+    "summaryLifetimeRevenueNote": "Projection sur toutes les durées contractuelles",
+    "summaryInvoiceForecast": "Factures prévisionnelles totales",
+    "summaryInvoiceForecastNote": "Opportunité annuelle de facturation",
+    "annualSalaryLabel": "Salaire annuel",
+    "representationLabel": "Représentation",
+    "dualRepresentation": "Double représentation",
+    "singleRepresentation": "Représentation simple",
+    "commissionRateLabel": "Taux de commission",
+    "annualRevenueLabel": "Revenus annuels",
+    "lifetimeRevenueLabel": "Revenus sur la durée",
+    "invoiceForecastLabel": "Prévision de facturation",
+    "playerInvoiceLabel": "Facture joueur",
+    "clubInvoiceLabel": "Facture club",
+    "forecastStatus": "Prévision",
+    "calculationUnavailable": "Calcul indisponible",
+    "mixedCurrencies": "Devises multiples"
+  },
+  "es": {
+    "brandTagline": "Inteligencia contractual para agentes de fútbol",
+    "backDashboard": "← Volver al panel",
+    "uploadContract": "📤 Subir contrato",
+    "addManually": "➕ Añadir manualmente",
+    "heroEyebrow": "Cartera de contratos",
+    "heroTitle": "Su cartera de contratos e ingresos",
+    "heroDescription": "Controle el valor de los contratos, las comisiones previstas y las facturas estimadas de toda su cartera de jugadores.",
+    "summaryTotal": "Total de contratos",
+    "summaryTotalNote": "Todos los contratos registrados",
+    "summaryActive": "Activos",
+    "summaryActiveNote": "Actualmente vigentes",
+    "summaryExpiring": "Próximos a vencer",
+    "summaryExpiringNote": "Finalizan dentro de 90 días",
+    "summaryExpired": "Vencidos",
+    "summaryExpiredNote": "Fecha de finalización superada",
+    "searchPlaceholder": "Buscar por jugador, club, liga o país",
+    "filterAll": "Todos los contratos",
+    "filterActive": "Activos",
+    "filterExpiring": "Próximos a vencer",
+    "filterExpired": "Vencidos",
+    "contractsHeading": "Contratos",
+    "loadingTitle": "Cargando contratos",
+    "loadingText": "Preparando su cartera contractual...",
+    "emptyTitle": "No se encontraron contratos",
+    "emptyText": "Suba su primer contrato o añádalo manualmente.",
+    "errorTitle": "No se pueden cargar los contratos",
+    "errorText": "Actualice la página e inténtelo de nuevo.",
+    "statusActive": "Activo",
+    "statusExpiring": "Próximo a vencer",
+    "statusExpired": "Vencido",
+    "clubNotRecorded": "Club no registrado",
+    "leagueLabel": "Liga",
+    "countryLabel": "País",
+    "startLabel": "Inicio",
+    "endLabel": "Final",
+    "notRecorded": "No registrado",
+    "analysisManual": "Registro manual",
+    "analysisUploaded": "Contrato subido",
+    "analysisAnalysing": "Análisis en curso",
+    "analysisReview": "Revisión necesaria",
+    "analysisApproved": "Análisis aprobado",
+    "openContract": "Abrir contrato →",
+    "oneContract": "1 contrato",
+    "manyContracts": "{count} contratos",
+    "printReport": "🖨️ Imprimir informe para socios",
+    "summaryAnnualRevenue": "Ingresos anuales totales",
+    "summaryAnnualRevenueNote": "Comisiones previstas por año",
+    "summaryLifetimeRevenue": "Ingresos totales de vigencia",
+    "summaryLifetimeRevenueNote": "Proyección de todas las vigencias contractuales",
+    "summaryInvoiceForecast": "Facturas previstas totales",
+    "summaryInvoiceForecastNote": "Oportunidad anual de facturación",
+    "annualSalaryLabel": "Salario anual",
+    "representationLabel": "Representación",
+    "dualRepresentation": "Representación dual",
+    "singleRepresentation": "Representación única",
+    "commissionRateLabel": "Porcentaje de comisión",
+    "annualRevenueLabel": "Ingresos anuales",
+    "lifetimeRevenueLabel": "Ingresos de vigencia",
+    "invoiceForecastLabel": "Previsión de facturación",
+    "playerInvoiceLabel": "Factura del jugador",
+    "clubInvoiceLabel": "Factura del club",
+    "forecastStatus": "Previsión",
+    "calculationUnavailable": "Cálculo no disponible",
+    "mixedCurrencies": "Varias monedas"
   }
+}
   </script>
 
   <script>
@@ -1074,6 +1210,177 @@
       ).format(date);
     }
 
+    function toNumber(value) {
+      if (value === null || value === undefined || value === "") {
+        return null;
+      }
+
+      if (typeof value === "number") {
+        return Number.isFinite(value) ? value : null;
+      }
+
+      const cleaned = String(value)
+        .replace(/\s/g, "")
+        .replace(/,/g, "")
+        .replace(/[^\d.-]/g, "");
+
+      if (!cleaned) return null;
+
+      const number = Number(cleaned);
+      return Number.isFinite(number) ? number : null;
+    }
+
+    function normaliseFrequency(value) {
+      return String(value || "").trim().toLowerCase();
+    }
+
+    function calculateAnnualSalary(amount, frequency) {
+      const salary = toNumber(amount);
+      if (salary === null) return null;
+
+      const multipliers = {
+        weekly: 52,
+        week: 52,
+        hebdomadaire: 52,
+        semanal: 52,
+        monthly: 12,
+        month: 12,
+        mensuel: 12,
+        mensuelle: 12,
+        mensual: 12,
+        fortnightly: 26,
+        biweekly: 26,
+        quinzaine: 26,
+        quincenal: 26,
+        yearly: 1,
+        annual: 1,
+        annually: 1,
+        year: 1,
+        annuel: 1,
+        annuelle: 1,
+        anual: 1
+      };
+
+      const multiplier = multipliers[normaliseFrequency(frequency)];
+      return multiplier ? salary * multiplier : null;
+    }
+
+    function calculateContractYears(startValue, endValue) {
+      const start = parseDate(startValue);
+      const end = parseDate(endValue);
+      if (!start || !end || end <= start) return null;
+
+      const years = (end - start) / (365.2425 * 24 * 60 * 60 * 1000);
+      return Math.max(1, Math.round(years));
+    }
+
+    function getCommercialMetrics(contract) {
+      const annualSalary = calculateAnnualSalary(
+        contract.salary,
+        contract.salary_frequency
+      );
+
+      const commissionRate = toNumber(
+        contract.commission_percentage ?? contract.commission_value
+      );
+
+      const contractYears = calculateContractYears(
+        contract.start_date,
+        contract.end_date
+      );
+
+      const isDual = Boolean(contract.is_dual_representation);
+      const currency = contract.salary_currency || contract.commission_currency || "GBP";
+
+      if (annualSalary === null || commissionRate === null) {
+        return {
+          available: false,
+          currency,
+          annualSalary,
+          commissionRate,
+          contractYears,
+          isDual
+        };
+      }
+
+      const oneSideAnnual = annualSalary * (commissionRate / 100);
+      const annualRevenue = oneSideAnnual * (isDual ? 2 : 1);
+      const lifetimeRevenue = contractYears
+        ? annualRevenue * contractYears
+        : null;
+
+      return {
+        available: true,
+        currency,
+        annualSalary,
+        commissionRate,
+        contractYears,
+        isDual,
+        oneSideAnnual,
+        annualRevenue,
+        lifetimeRevenue,
+        invoiceForecast: annualRevenue,
+        playerInvoice: oneSideAnnual,
+        clubInvoice: isDual ? oneSideAnnual : 0
+      };
+    }
+
+    function formatMoney(amount, currency) {
+      const value = toNumber(amount);
+      if (value === null) return t("notRecorded");
+
+      const localeMap = {
+        en: "en-GB",
+        fr: "fr-FR",
+        es: "es-ES"
+      };
+
+      try {
+        return new Intl.NumberFormat(
+          localeMap[currentLang] || "en-GB",
+          {
+            style: "currency",
+            currency: currency || "GBP",
+            maximumFractionDigits: 0
+          }
+        ).format(value);
+      } catch {
+        return `${value.toLocaleString()} ${currency || ""}`.trim();
+      }
+    }
+
+    function getPortfolioTotals() {
+      const activeContracts = allContracts.filter(
+        (contract) => getContractState(contract).key !== "expired"
+      );
+
+      const currencies = new Set();
+      let annualRevenue = 0;
+      let lifetimeRevenue = 0;
+      let invoiceForecast = 0;
+      let calculatedCount = 0;
+
+      activeContracts.forEach((contract) => {
+        const metrics = getCommercialMetrics(contract);
+        if (!metrics.available) return;
+
+        currencies.add(metrics.currency);
+        annualRevenue += metrics.annualRevenue || 0;
+        lifetimeRevenue += metrics.lifetimeRevenue || 0;
+        invoiceForecast += metrics.invoiceForecast || 0;
+        calculatedCount += 1;
+      });
+
+      return {
+        annualRevenue,
+        lifetimeRevenue,
+        invoiceForecast,
+        calculatedCount,
+        currency: currencies.size === 1 ? [...currencies][0] : null,
+        mixedCurrencies: currencies.size > 1
+      };
+    }
+
     function getContractState(contract) {
       const endDate = parseDate(contract.end_date);
 
@@ -1136,39 +1443,34 @@
     }
 
     function updateSummary() {
-      const total = allContracts.length;
+      const activeCount = allContracts.filter(
+        (contract) => getContractState(contract).key !== "expired"
+      ).length;
 
-      const counts = allContracts.reduce(
-        (result, contract) => {
-          const state = getContractState(contract).key;
+      const totals = getPortfolioTotals();
 
-          result[state] =
-            (result[state] || 0) + 1;
+      document.getElementById("activeContracts").textContent = activeCount;
 
-          return result;
-        },
-        {
-          active: 0,
-          expiring: 0,
-          expired: 0
+      const displayTotal = (elementId, amount) => {
+        const element = document.getElementById(elementId);
+        if (!element) return;
+
+        if (!totals.calculatedCount) {
+          element.textContent = t("calculationUnavailable");
+          return;
         }
-      );
 
-      document.getElementById(
-        "totalContracts"
-      ).textContent = total;
+        if (totals.mixedCurrencies) {
+          element.textContent = t("mixedCurrencies");
+          return;
+        }
 
-      document.getElementById(
-        "activeContracts"
-      ).textContent = counts.active;
+        element.textContent = formatMoney(amount, totals.currency);
+      };
 
-      document.getElementById(
-        "expiringContracts"
-      ).textContent = counts.expiring;
-
-      document.getElementById(
-        "expiredContracts"
-      ).textContent = counts.expired;
+      displayTotal("totalAnnualRevenue", totals.annualRevenue);
+      displayTotal("totalLifetimeRevenue", totals.lifetimeRevenue);
+      displayTotal("totalInvoiceForecast", totals.invoiceForecast);
     }
 
     function renderContracts(contracts) {
@@ -1212,6 +1514,31 @@
                 contract.club_name ||
                 t("clubNotRecorded");
 
+              const metrics = getCommercialMetrics(contract);
+              const representation = metrics.isDual
+                ? t("dualRepresentation")
+                : t("singleRepresentation");
+
+              const annualSalaryDisplay = metrics.annualSalary !== null
+                ? formatMoney(metrics.annualSalary, metrics.currency)
+                : t("notRecorded");
+
+              const commissionRateDisplay = metrics.commissionRate !== null
+                ? `${metrics.commissionRate}%`
+                : t("notRecorded");
+
+              const annualRevenueDisplay = metrics.available
+                ? formatMoney(metrics.annualRevenue, metrics.currency)
+                : t("calculationUnavailable");
+
+              const lifetimeRevenueDisplay = metrics.available && metrics.lifetimeRevenue !== null
+                ? formatMoney(metrics.lifetimeRevenue, metrics.currency)
+                : t("calculationUnavailable");
+
+              const invoiceForecastDisplay = metrics.available
+                ? formatMoney(metrics.invoiceForecast, metrics.currency)
+                : t("calculationUnavailable");
+
               return `
                 <a
                   class="contract-card ${escapeHtml(state.key)}"
@@ -1226,6 +1553,12 @@
                       <div class="club-name">
                         ${escapeHtml(clubName)}
                       </div>
+
+                      <div style="margin-top: 9px;">
+                        <span class="representation-pill">
+                          ${escapeHtml(representation)}
+                        </span>
+                      </div>
                     </div>
 
                     <span class="status-pill ${escapeHtml(state.key)}">
@@ -1235,61 +1568,50 @@
 
                   <div class="card-details">
                     <div class="detail">
-                      <span class="detail-label">
-                        ${escapeHtml(t("leagueLabel"))}
-                      </span>
-
-                      <span class="detail-value">
-                        ${escapeHtml(
-                          contract.club_league ||
-                          t("notRecorded")
-                        )}
-                      </span>
+                      <span class="detail-label">${escapeHtml(t("annualSalaryLabel"))}</span>
+                      <span class="detail-value">${escapeHtml(annualSalaryDisplay)}</span>
                     </div>
 
                     <div class="detail">
-                      <span class="detail-label">
-                        ${escapeHtml(t("countryLabel"))}
-                      </span>
-
-                      <span class="detail-value">
-                        ${escapeHtml(
-                          contract.club_country ||
-                          t("notRecorded")
-                        )}
-                      </span>
+                      <span class="detail-label">${escapeHtml(t("commissionRateLabel"))}</span>
+                      <span class="detail-value">${escapeHtml(commissionRateDisplay)}</span>
                     </div>
 
                     <div class="detail">
-                      <span class="detail-label">
-                        ${escapeHtml(t("startLabel"))}
-                      </span>
-
-                      <span class="detail-value">
-                        ${escapeHtml(
-                          formatDate(contract.start_date)
-                        )}
-                      </span>
+                      <span class="detail-label">${escapeHtml(t("startLabel"))}</span>
+                      <span class="detail-value">${escapeHtml(formatDate(contract.start_date))}</span>
                     </div>
 
                     <div class="detail">
-                      <span class="detail-label">
-                        ${escapeHtml(t("endLabel"))}
-                      </span>
+                      <span class="detail-label">${escapeHtml(t("endLabel"))}</span>
+                      <span class="detail-value">${escapeHtml(formatDate(contract.end_date))}</span>
+                    </div>
+                  </div>
 
-                      <span class="detail-value">
-                        ${escapeHtml(
-                          formatDate(contract.end_date)
-                        )}
-                      </span>
+                  <div class="commercial-strip">
+                    <div class="commercial-metric highlight">
+                      <span class="detail-label">${escapeHtml(t("annualRevenueLabel"))}</span>
+                      <span class="detail-value">${escapeHtml(annualRevenueDisplay)}</span>
+                    </div>
+
+                    <div class="commercial-metric highlight">
+                      <span class="detail-label">${escapeHtml(t("lifetimeRevenueLabel"))}</span>
+                      <span class="detail-value">${escapeHtml(lifetimeRevenueDisplay)}</span>
+                    </div>
+
+                    <div class="commercial-metric invoice">
+                      <span class="detail-label">${escapeHtml(t("invoiceForecastLabel"))}</span>
+                      <span class="detail-value">${escapeHtml(invoiceForecastDisplay)}</span>
                     </div>
                   </div>
 
                   <div class="card-footer">
                     <span class="analysis-label">
-                      ${escapeHtml(
-                        getAnalysisLabel(contract)
-                      )}
+                      ${escapeHtml(getAnalysisLabel(contract))}
+                    </span>
+
+                    <span class="invoice-forecast-pill">
+                      ${escapeHtml(t("forecastStatus"))}
                     </span>
 
                     <span class="open-label">
@@ -1393,6 +1715,10 @@
             "change",
             renderFilteredContracts
           );
+
+        document
+          .getElementById("printReportBtn")
+          ?.addEventListener("click", () => window.print());
 
         applyTranslations();
 
