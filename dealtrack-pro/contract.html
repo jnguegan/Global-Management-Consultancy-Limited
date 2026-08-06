@@ -657,9 +657,10 @@
 
 .invoice-amount-value {
   color: var(--gold-2);
-  font-size: clamp(1.65rem, 4vw, 2.35rem);
+  font-size: clamp(2.4rem, 6vw, 3.8rem);
   font-weight: 900;
-  letter-spacing: -0.035em;
+  line-height: 1;
+  letter-spacing: -0.04em;
 }
 
 .invoice-details-grid {
@@ -869,13 +870,17 @@
 "invoiceType": "Invoice Type",
 "invoiceStatus": "Status",
 "invoiceDate": "Invoice Date",
+    "invoicePayer": "Payer",
+    "annual": "Annual",
 "paymentDueDate": "Payment Due Date",
 "invoiceFrequency": "Payment Frequency",
 "invoiceInstalments": "Instalments",
 "invoiceReviewRequired": "Review required",
+    "invoiceStatusForecast": "Forecast",
 "invoiceReady": "Ready to invoice",
 "invoiceDatePending": "To be confirmed",
 "invoiceBasisAnnual": "Annual commission entitlement",
+    "annualCommissionInvoice": "Annual Commission Invoice",
 "invoiceForecastNote": "This is a forecast based on the recorded contract terms. Confirm the contractual invoice trigger, billing entity, taxes and payment deadline before issuing the invoice.",
       "sectionSnapshot": "Commercial Snapshot",
       "sectionSnapshotText": "A premium summary of the commercial foundations currently recorded for this mandate.",
@@ -959,13 +964,17 @@
 "invoiceType": "Type de facture",
 "invoiceStatus": "Statut",
 "invoiceDate": "Date de facturation",
+    "invoicePayer": "Payeur",
+    "annual": "Annuelle",
 "paymentDueDate": "Date limite de paiement",
 "invoiceFrequency": "Fréquence de paiement",
 "invoiceInstalments": "Échéances",
 "invoiceReviewRequired": "Vérification requise",
+    "invoiceStatusForecast": "Prévision",
 "invoiceReady": "Prête à facturer",
 "invoiceDatePending": "À confirmer",
 "invoiceBasisAnnual": "Droit annuel à commission",
+    "annualCommissionInvoice": "Facture annuelle de commission",
 "invoiceForecastNote": "Cette prévision est basée sur les conditions contractuelles enregistrées. Confirmez le déclencheur de facturation, l’entité facturante, les taxes et la date limite de paiement avant d’émettre la facture.",
       "sectionSnapshot": "Synthèse commerciale",
       "sectionSnapshotText": "Une synthèse premium des fondements commerciaux actuellement enregistrés pour ce mandat.",
@@ -1049,13 +1058,17 @@
 "invoiceType": "Tipo de factura",
 "invoiceStatus": "Estado",
 "invoiceDate": "Fecha de factura",
+ "invoicePayer": "Pagador", 
+    "annual": "Anual",
 "paymentDueDate": "Fecha límite de pago",
 "invoiceFrequency": "Frecuencia de pago",
 "invoiceInstalments": "Cuotas",
 "invoiceReviewRequired": "Revisión necesaria",
+    "invoiceStatusForecast": "Previsión",
 "invoiceReady": "Lista para facturar",
 "invoiceDatePending": "Pendiente de confirmar",
 "invoiceBasisAnnual": "Derecho anual a comisión",
+    "invoiceBasisAnnual": "Derecho anual a comisión",
 "invoiceForecastNote": "Esta previsión se basa en las condiciones contractuales registradas. Confirme el desencadenante de facturación, la entidad facturante, los impuestos y la fecha límite de pago antes de emitir una factura.",
       "sectionSnapshot": "Resumen comercial",
       "sectionSnapshotText": "Un resumen premium de las bases comerciales actualmente registradas para este mandato.",
@@ -1575,8 +1588,8 @@ function renderInvoiceOpportunity({
         </div>
 
         <div class="invoice-status">
-          ${t("invoiceReviewRequired")}
-        </div>
+  ${t("invoiceStatusForecast")}
+</div>
       </div>
 
       <div class="invoice-amount-box">
@@ -1591,13 +1604,18 @@ function renderInvoiceOpportunity({
 
       <div class="invoice-details-grid">
         <div class="invoice-detail">
-          <span>${t("invoiceClient")}</span>
-          <strong>${payer || t("na")}</strong>
-        </div>
+  <span>${t("invoiceClient")}</span>
+  <strong>${client || t("na")}</strong>
+</div>
+
+<div class="invoice-detail">
+  <span>${t("invoicePayer")}</span>
+  <strong>${payer || t("na")}</strong>
+</div>
 
         <div class="invoice-detail">
           <span>${t("invoiceType")}</span>
-          <strong>${t("invoiceBasisAnnual")}</strong>
+        <strong>${t("annualCommissionInvoice")}</strong>
         </div>
 
         <div class="invoice-detail">
@@ -1610,10 +1628,10 @@ function renderInvoiceOpportunity({
           <strong>${t("invoiceDatePending")}</strong>
         </div>
 
-        <div class="invoice-detail">
-          <span>${t("invoiceFrequency")}</span>
-          <strong>${frequency || t("na")}</strong>
-        </div>
+       <div class="invoice-detail">
+  <span>${t("invoiceFrequency")}</span>
+  <strong>${frequency || t("annual")}</strong>
+</div>
 
         <div class="invoice-detail">
           <span>${t("invoiceInstalments")}</span>
@@ -1688,30 +1706,31 @@ function renderInvoiceForecast(data) {
         ${t("invoiceForecastSubtitle")}
       </p>
 
-      <div class="invoice-opportunities">
-        ${renderInvoiceOpportunity({
-          title: t("invoicePlayerSide"),
+     <div class="invoice-opportunities">
+  ${renderInvoiceOpportunity({
+    title: t("invoicePlayerSide"),
+    amount: annualSideAmount,
+    currency,
+    client: data.player_name,
+    payer,
+    frequency: data.commission_frequency,
+    instalments: data.commission_instalments
+  })}
+
+  ${
+    isDual
+      ? renderInvoiceOpportunity({
+          title: t("invoiceClubSide"),
           amount: annualSideAmount,
           currency,
-          payer,
+          client: data.club_name,
+          payer: data.club_name || payer,
           frequency: data.commission_frequency,
           instalments: data.commission_instalments
-        })}
-
-        ${
-          isDual
-            ? renderInvoiceOpportunity({
-                title: t("invoiceClubSide"),
-                amount: annualSideAmount,
-                currency,
-                payer: data.club_name || payer,
-                frequency: data.commission_frequency,
-                instalments: data.commission_instalments
-              })
-            : ""
-        }
-      </div>
-
+        })
+      : ""
+  }
+</div>
       <p class="invoice-forecast-note">
         ${t("invoiceForecastNote")}
       </p>
