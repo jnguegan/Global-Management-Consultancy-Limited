@@ -59,24 +59,127 @@
       position: sticky;
       top: 0;
       z-index: 1000;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 18px;
-      flex-wrap: wrap;
-      padding: 14px 0 18px;
-      margin-bottom: 22px;
-      background: linear-gradient(180deg, rgba(2,11,29,0.95) 0%, rgba(2,11,29,0.82) 100%);
-      backdrop-filter: blur(12px);
+      display: grid;
+      gap: 12px;
+      padding: 14px 0 16px;
+      margin-bottom: 24px;
+      background: linear-gradient(
+        180deg,
+        rgba(2, 11, 29, 0.985),
+        rgba(2, 11, 29, 0.93)
+      );
+      backdrop-filter: blur(16px);
       border-bottom: 1px solid var(--border);
+      box-shadow: 0 12px 28px rgba(0,0,0,0.16);
     }
 
-    .topbar-left,
-    .topbar-right {
+    .topbar-primary,
+    .topbar-secondary,
+    .topbar-brand-nav,
+    .topbar-tools,
+    .topbar-session-actions {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .topbar-primary,
+    .topbar-secondary {
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .topbar-tools {
       flex-wrap: wrap;
+    }
+
+    .topbar-session-actions {
+      justify-content: flex-end;
+      margin-left: auto;
+    }
+
+    .identity-bar {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      min-width: 285px;
+      max-width: 390px;
+      padding: 8px 10px 8px 12px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: rgba(255,255,255,0.04);
+    }
+
+    .identity-avatar {
+      display: grid;
+      place-items: center;
+      flex: 0 0 38px;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      color: #08111f;
+      background: linear-gradient(135deg, var(--gold), var(--gold-2));
+      font-size: 0.78rem;
+      font-weight: 950;
+      letter-spacing: 0.02em;
+    }
+
+    .identity-copy {
+      min-width: 0;
+      line-height: 1.22;
+    }
+
+    .identity-label,
+    .identity-name,
+    .identity-agency,
+    .identity-email {
+      display: block;
+      max-width: 240px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .identity-label {
+      color: var(--muted);
+      font-size: 0.64rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .identity-name {
+      color: var(--text);
+      font-size: 0.82rem;
+      font-weight: 900;
+    }
+
+    .identity-agency {
+      color: var(--gold-2);
+      font-size: 0.72rem;
+      font-weight: 800;
+    }
+
+    .identity-email {
+      color: var(--muted);
+      font-size: 0.69rem;
+      font-weight: 650;
+    }
+
+    .topbar-logout {
+      min-height: 38px;
+      padding: 0 12px;
+      white-space: nowrap;
+    }
+
+    .topbar .lang-switcher {
+      flex-wrap: nowrap;
+    }
+
+    .topbar .lang-btn {
+      min-width: 44px;
+      min-height: 38px;
     }
 
     .brand {
@@ -773,43 +876,93 @@
         width: 100%;
       }
 
-      .topbar-left,
-      .topbar-right,
+      .topbar-primary,
+      .topbar-secondary {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .topbar-brand-nav,
+      .topbar-session-actions,
+      .topbar-tools,
       .actions {
         width: 100%;
+      }
+
+      .topbar-brand-nav,
+      .topbar-session-actions {
+        justify-content: space-between;
+      }
+
+      .topbar-tools {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .identity-bar {
+        width: 100%;
+        max-width: none;
       }
     }
   </style>
 </head>
 <body>
   <div class="page">
-    <div class="topbar">
-      
-      <div class="topbar-left">
-  <div class="brand">
-  <div class="brand-title">
-    <span class="brand-main">DealTrack</span>
-    <span class="brand-pro">Pro</span>
-  </div>
-  <div class="brand-tagline" data-i18n="brand.tagline">
-  Contract Intelligence for Football Agents
-</div>
-</div>
+    <header class="topbar">
+      <div class="topbar-primary">
+        <div class="topbar-brand-nav">
+          <div class="brand">
+            <div class="brand-title">
+              <span class="brand-main">DealTrack</span>
+              <span class="brand-pro">Pro</span>
+            </div>
+            <div class="brand-tagline" data-i18n="brand.tagline">
+              Contract Intelligence for Football Agents
+            </div>
+          </div>
 
-  <a class="back-link" href="/dealtrack-pro/contracts.html" data-i18n="backToContracts">← Back to Contracts</a>
-</div>
+          <a class="back-link" href="/dealtrack-pro/contracts.html" data-i18n="backToContracts">
+            ← Back to Contracts
+          </a>
+        </div>
 
-      <div class="topbar-right">
-        <a id="editContractBtn" class="btn btn-gold" href="#" data-i18n="editContractBtn">✏️ Edit Contract</a>
-        <a id="addClauseBtn" class="btn btn-primary" href="#" data-i18n="addClauseBtn">➕ Add Clause</a>
+        <div class="topbar-session-actions">
+          <div class="identity-bar" aria-live="polite">
+            <div id="identityInitials" class="identity-avatar">—</div>
+            <div class="identity-copy">
+              <span class="identity-label" data-i18n="loggedInAs">Logged in as</span>
+              <strong id="identityName" class="identity-name">—</strong>
+              <span id="identityAgency" class="identity-agency">—</span>
+              <span id="identityEmail" class="identity-email">—</span>
+            </div>
+          </div>
 
-        <div class="lang-switcher">
-          <button type="button" class="lang-btn" data-lang-btn="en">EN</button>
-          <button type="button" class="lang-btn" data-lang-btn="fr">FR</button>
-          <button type="button" class="lang-btn" data-lang-btn="es">ES</button>
+          <button id="logoutBtn" type="button" class="btn topbar-logout" data-i18n="logOut">
+            Log out
+          </button>
+
+          <div class="lang-switcher">
+            <button type="button" class="lang-btn" data-lang-btn="en">EN</button>
+            <button type="button" class="lang-btn" data-lang-btn="fr">FR</button>
+            <button type="button" class="lang-btn" data-lang-btn="es">ES</button>
+          </div>
         </div>
       </div>
-    </div>
+
+      <div class="topbar-secondary">
+        <div class="topbar-tools">
+          <a id="editContractBtn" class="btn btn-gold" href="#" data-i18n="editContractBtn">
+            ✏️ Edit Contract
+          </a>
+          <a id="addClauseBtn" class="btn btn-primary" href="#" data-i18n="addClauseBtn">
+            ➕ Add Clause
+          </a>
+          <a class="btn" href="/dealtrack-pro/agency-dashboard.html" data-i18n="agencyDashboard">
+            📊 Agency Dashboard
+          </a>
+        </div>
+      </div>
+    </header>
 
     <div id="contractView">
       <div class="hero">
@@ -824,6 +977,10 @@
   {
     "en": {
       "backToContracts": "← Back to Contracts",
+      "agencyDashboard": "📊 Agency Dashboard",
+      "loggedInAs": "Logged in as",
+      "logOut": "Log out",
+      "noAgencyAssigned": "No agency assigned",
       "editContractBtn": "✏️ Edit Contract",
       "addClauseBtn": "➕ Add Clause",
       "loadingEyebrow": "DealTrack Pro",
@@ -918,6 +1075,10 @@
     },
     "fr": {
       "backToContracts": "← Retour aux contrats",
+      "agencyDashboard": "📊 Tableau de bord de l’agence",
+      "loggedInAs": "Connecté en tant que",
+      "logOut": "Se déconnecter",
+      "noAgencyAssigned": "Aucune agence attribuée",
       "editContractBtn": "✏️ Modifier le contrat",
       "addClauseBtn": "➕ Ajouter une clause",
       "loadingEyebrow": "DealTrack Pro",
@@ -1012,6 +1173,10 @@
     },
     "es": {
       "backToContracts": "← Volver a contratos",
+      "agencyDashboard": "📊 Panel de la agencia",
+      "loggedInAs": "Sesión iniciada como",
+      "logOut": "Cerrar sesión",
+      "noAgencyAssigned": "Ninguna agencia asignada",
       "editContractBtn": "✏️ Editar contrato",
       "addClauseBtn": "➕ Añadir cláusula",
       "loadingEyebrow": "DealTrack Pro",
@@ -1111,9 +1276,59 @@
     const I18N = JSON.parse(document.getElementById("dealtrack-contract-i18n").textContent);
     let currentLang = localStorage.getItem("lang") || "en";
     let currentContract = null;
+    let currentUser = null;
+    let currentAgency = null;
 
     function t(key) {
       return I18N[currentLang]?.[key] || I18N.en?.[key] || key;
+    }
+
+    function getUserDisplayName(user) {
+      const metadata = user?.user_metadata || {};
+      const fullName =
+        metadata.full_name ||
+        metadata.name ||
+        [metadata.first_name, metadata.last_name].filter(Boolean).join(" ");
+
+      return String(fullName || user?.email?.split("@")[0] || "User")
+        .trim()
+        .replace(/[._-]+/g, " ")
+        .replace(/\b\w/g, (letter) => letter.toUpperCase());
+    }
+
+    async function loadAgencyContext(db) {
+      const { data, error } = await db.rpc("get_my_agency_context");
+
+      if (error) {
+        console.warn("Agency context could not be loaded:", error);
+        return null;
+      }
+
+      const context = Array.isArray(data) ? data[0] : data;
+      return context?.agency_id ? context : null;
+    }
+
+    function renderIdentityBar() {
+      const name = getUserDisplayName(currentUser);
+      const agencyName =
+        currentAgency?.legal_name ||
+        currentAgency?.name ||
+        t("noAgencyAssigned");
+
+      document.getElementById("identityName").textContent = name;
+      document.getElementById("identityAgency").textContent = agencyName;
+      document.getElementById("identityEmail").textContent =
+        currentUser?.email || "—";
+
+      const initials = name
+        .split(/\s+/)
+        .filter(Boolean)
+        .slice(0, 2)
+        .map((part) => part.charAt(0).toUpperCase())
+        .join("");
+
+      document.getElementById("identityInitials").textContent =
+        initials || "U";
     }
 
     function applyStaticTranslations() {
@@ -1890,6 +2105,7 @@ function renderInvoiceForecast(data) {
           currentLang = btn.getAttribute("data-lang-btn");
           localStorage.setItem("lang", currentLang);
           applyStaticTranslations();
+          renderIdentityBar();
           if (currentContract) renderContract(currentContract);
         });
       });
@@ -1907,6 +2123,18 @@ function renderInvoiceForecast(data) {
       if (userError || !user) {
         window.location.href = "/agent-academy/login.html";
         return;
+      }
+
+      currentUser = user;
+      currentAgency = await loadAgencyContext(db);
+      renderIdentityBar();
+
+      const logoutBtn = document.getElementById("logoutBtn");
+      if (logoutBtn) {
+        logoutBtn.addEventListener("click", async () => {
+          await db.auth.signOut();
+          window.location.href = "/agent-academy/login.html";
+        });
       }
 
       const params = new URLSearchParams(window.location.search);
