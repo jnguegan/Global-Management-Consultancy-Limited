@@ -1,0 +1,1401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DealTrack Pro — Agency Dashboard</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/agent-academy/js/supabase-client.js"></script>
+  <script src="/agent-academy/js/auth.js"></script>
+  <script src="/agent-academy/js/guard.js"></script>
+
+  <style>
+    :root {
+      --bg: #020b1d;
+      --bg-2: #07152f;
+      --panel: rgba(10, 24, 52, 0.94);
+      --panel-strong: rgba(12, 28, 58, 0.97);
+      --panel-soft: rgba(255, 255, 255, 0.035);
+      --border: rgba(255, 255, 255, 0.09);
+      --text: #f6f8fc;
+      --muted: #9fb0cf;
+      --blue: #2f8cff;
+      --blue-2: #58a6ff;
+      --gold: #d4af37;
+      --gold-2: #f0c85a;
+      --success: #22c55e;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --shadow: 0 18px 60px rgba(0, 0, 0, 0.34);
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      padding: 24px;
+      font-family: Inter, Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(47, 140, 255, 0.18), transparent 28%),
+        radial-gradient(circle at top right, rgba(212, 175, 55, 0.12), transparent 24%),
+        linear-gradient(180deg, #010814 0%, #05122a 45%, #020b1d 100%);
+    }
+
+    button, input, select { font: inherit; }
+
+    .page {
+      width: 100%;
+      max-width: 1360px;
+      margin: 0 auto;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      flex-wrap: wrap;
+      padding: 14px 0 18px;
+      margin-bottom: 24px;
+      background: linear-gradient(180deg, rgba(2, 11, 29, 0.97), rgba(2, 11, 29, 0.86));
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .topbar-left,
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      display: flex;
+      flex-direction: column;
+      margin-right: 8px;
+    }
+
+    .brand-title {
+      font-size: 21px;
+      font-weight: 900;
+      letter-spacing: -0.03em;
+    }
+
+    .brand-main { color: #fff; }
+    .brand-pro { margin-left: 6px; color: var(--gold); }
+
+    .brand-tagline {
+      margin-top: 3px;
+      color: rgba(240, 200, 90, 0.82);
+      font-size: 11px;
+      letter-spacing: 0.04em;
+    }
+
+    .btn,
+    .lang-btn {
+      appearance: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 46px;
+      padding: 0 16px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.04);
+      text-decoration: none;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .btn:hover,
+    .lang-btn:hover {
+      transform: translateY(-1px);
+      border-color: rgba(255, 255, 255, 0.18);
+    }
+
+    .btn-primary {
+      color: white;
+      background: linear-gradient(135deg, var(--blue), var(--blue-2));
+      border-color: rgba(88, 166, 255, 0.38);
+      box-shadow: 0 12px 28px rgba(47, 140, 255, 0.22);
+    }
+
+    .btn-gold {
+      color: #09111f;
+      background: linear-gradient(135deg, var(--gold), var(--gold-2));
+      border-color: rgba(212, 175, 55, 0.52);
+      box-shadow: 0 12px 28px rgba(212, 175, 55, 0.16);
+    }
+
+    .lang-switcher {
+      display: flex;
+      gap: 7px;
+      flex-wrap: wrap;
+    }
+
+    .lang-btn {
+      min-width: 50px;
+      padding: 0 12px;
+    }
+
+    .lang-btn.is-active {
+      color: white;
+      background: linear-gradient(135deg, var(--blue), var(--blue-2));
+      border-color: rgba(88, 166, 255, 0.38);
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: 34px;
+      margin-bottom: 22px;
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      background:
+        linear-gradient(135deg, rgba(47, 140, 255, 0.12), transparent 44%),
+        linear-gradient(160deg, rgba(212, 175, 55, 0.09), transparent 58%),
+        var(--panel-strong);
+      box-shadow: var(--shadow);
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      top: -70px;
+      right: -70px;
+      width: 250px;
+      height: 250px;
+      border-radius: 50%;
+      background: rgba(212, 175, 55, 0.07);
+      filter: blur(8px);
+      pointer-events: none;
+    }
+
+    .eyebrow {
+      margin-bottom: 12px;
+      color: var(--gold-2);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      font-size: clamp(2rem, 4vw, 3.25rem);
+      line-height: 1.05;
+      letter-spacing: -0.035em;
+    }
+
+    .hero-description {
+      max-width: 860px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 1.02rem;
+      line-height: 1.65;
+    }
+
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin-bottom: 22px;
+    }
+
+    .kpi-card {
+      position: relative;
+      overflow: hidden;
+      padding: 20px;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+
+    .kpi-card.primary {
+      border-color: rgba(212, 175, 55, 0.26);
+      background:
+        linear-gradient(145deg, rgba(212, 175, 55, 0.08), transparent 58%),
+        var(--panel);
+    }
+
+    .kpi-label {
+      display: block;
+      margin-bottom: 10px;
+      color: var(--muted);
+      font-size: 0.76rem;
+      font-weight: 800;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+
+    .kpi-value {
+      font-size: clamp(1.55rem, 3vw, 2.15rem);
+      font-weight: 900;
+      letter-spacing: -0.04em;
+    }
+
+    .kpi-card.primary .kpi-value { color: var(--gold-2); }
+
+    .kpi-note {
+      margin-top: 7px;
+      color: var(--muted);
+      font-size: 0.8rem;
+      line-height: 1.45;
+    }
+
+    .dashboard-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.55fr) minmax(320px, 0.8fr);
+      gap: 20px;
+      align-items: start;
+    }
+
+    .stack {
+      display: grid;
+      gap: 20px;
+    }
+
+    .panel {
+      padding: 22px;
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+
+    .panel-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+
+    .panel-kicker {
+      margin-bottom: 5px;
+      color: var(--gold-2);
+      font-size: 0.76rem;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .panel-title {
+      margin: 0;
+      font-size: 1.22rem;
+      letter-spacing: -0.02em;
+    }
+
+    .panel-subtitle {
+      margin: 7px 0 0;
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.55;
+    }
+
+    .revenue-bars {
+      display: grid;
+      gap: 14px;
+    }
+
+    .revenue-row {
+      display: grid;
+      grid-template-columns: minmax(150px, 0.6fr) minmax(0, 1fr) auto;
+      gap: 14px;
+      align-items: center;
+    }
+
+    .revenue-player {
+      font-weight: 800;
+      line-height: 1.35;
+    }
+
+    .revenue-club {
+      display: block;
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 600;
+    }
+
+    .bar-track {
+      height: 12px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 999px;
+      background: rgba(255,255,255,0.035);
+    }
+
+    .bar-fill {
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--blue), var(--gold-2));
+    }
+
+    .revenue-amount {
+      color: var(--gold-2);
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid rgba(255,255,255,0.055);
+      border-radius: 18px;
+    }
+
+    table {
+      width: 100%;
+      min-width: 860px;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      padding: 14px 15px;
+      text-align: left;
+      border-bottom: 1px solid rgba(255,255,255,0.055);
+      vertical-align: middle;
+    }
+
+    th {
+      color: var(--muted);
+      background: rgba(255,255,255,0.025);
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+    }
+
+    td {
+      color: var(--text);
+      font-size: 0.9rem;
+      font-weight: 650;
+    }
+
+    tr:last-child td { border-bottom: 0; }
+
+    .money { color: var(--gold-2); font-weight: 900; }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 30px;
+      padding: 0 10px;
+      border: 1px solid rgba(34, 197, 94, 0.22);
+      border-radius: 999px;
+      color: #c7f9d4;
+      background: rgba(34, 197, 94, 0.1);
+      font-size: 0.74rem;
+      font-weight: 800;
+    }
+
+    .status-pill.warning {
+      color: #ffe0a3;
+      background: rgba(245, 158, 11, 0.1);
+      border-color: rgba(245, 158, 11, 0.24);
+    }
+
+    .status-pill.danger {
+      color: #ffd1d1;
+      background: rgba(239, 68, 68, 0.1);
+      border-color: rgba(239, 68, 68, 0.24);
+    }
+
+    .view-link {
+      color: var(--blue-2);
+      text-decoration: none;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .attention-list,
+    .quick-links {
+      display: grid;
+      gap: 11px;
+    }
+
+    .attention-item,
+    .quick-link {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 14px;
+      border: 1px solid rgba(255,255,255,0.055);
+      border-radius: 15px;
+      background: rgba(255,255,255,0.025);
+    }
+
+    .attention-item strong,
+    .quick-link strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .attention-item span,
+    .quick-link span {
+      color: var(--muted);
+      font-size: 0.82rem;
+      line-height: 1.45;
+    }
+
+    .attention-value {
+      flex-shrink: 0;
+      color: var(--gold-2);
+      font-weight: 900;
+    }
+
+    .quick-link {
+      color: inherit;
+      text-decoration: none;
+      transition: 0.2s ease;
+    }
+
+    .quick-link:hover {
+      transform: translateY(-1px);
+      border-color: rgba(88, 166, 255, 0.25);
+    }
+
+    .state-box {
+      padding: 28px 20px;
+      border: 1px dashed rgba(255,255,255,0.15);
+      border-radius: 18px;
+      color: var(--muted);
+      background: rgba(255,255,255,0.025);
+      text-align: center;
+    }
+
+    .state-box strong {
+      display: block;
+      margin-bottom: 7px;
+      color: var(--text);
+    }
+
+    .error-box {
+      color: #ffd4d4;
+      border-color: rgba(239,68,68,0.3);
+      background: rgba(239,68,68,0.08);
+    }
+
+    @media print {
+      body {
+        padding: 0;
+        background: #fff;
+        color: #111;
+      }
+
+      .topbar,
+      .quick-links-panel {
+        display: none !important;
+      }
+
+      .hero,
+      .kpi-card,
+      .panel {
+        box-shadow: none;
+        border: 1px solid #bbb;
+        background: #fff;
+        color: #111;
+      }
+
+      .hero-description,
+      .panel-subtitle,
+      .kpi-note,
+      th {
+        color: #555;
+      }
+
+      .money,
+      .kpi-card.primary .kpi-value,
+      .revenue-amount {
+        color: #8a6800;
+      }
+    }
+
+    @media (max-width: 1050px) {
+      .kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .dashboard-layout { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 760px) {
+      body { padding: 16px; }
+      .topbar-left, .topbar-right { width: 100%; }
+      .topbar-right .btn { flex: 1; }
+      .hero { padding: 24px 20px; }
+      .revenue-row { grid-template-columns: 1fr; gap: 8px; }
+    }
+
+    @media (max-width: 560px) {
+      .kpi-grid { grid-template-columns: 1fr; }
+      .btn { width: 100%; }
+      .lang-btn { width: auto; }
+      .topbar-right .lang-switcher { width: 100%; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+    <header class="topbar">
+      <div class="topbar-left">
+        <div class="brand">
+          <div class="brand-title">
+            <span class="brand-main">DealTrack</span>
+            <span class="brand-pro">Pro</span>
+          </div>
+          <div class="brand-tagline" data-i18n="brandTagline">
+            Contract Intelligence for Football Agents
+          </div>
+        </div>
+
+        <a class="btn" href="/dealtrack-pro/contracts.html" data-i18n="openPortfolio">
+          ← Contract Portfolio
+        </a>
+      </div>
+
+      <div class="topbar-right">
+        <a class="btn btn-gold" href="/dealtrack-pro/upload-contract.html" data-i18n="uploadContract">
+          📤 Upload Contract
+        </a>
+
+        <button id="printDashboardBtn" type="button" class="btn btn-primary" data-i18n="printDashboard">
+          🖨 Print Dashboard
+        </button>
+
+        <div class="lang-switcher">
+          <button type="button" class="lang-btn" data-lang-btn="en">EN</button>
+          <button type="button" class="lang-btn" data-lang-btn="fr">FR</button>
+          <button type="button" class="lang-btn" data-lang-btn="es">ES</button>
+        </div>
+      </div>
+    </header>
+
+    <section class="hero">
+      <div class="eyebrow" data-i18n="heroEyebrow">Agency Dashboard</div>
+      <h1 data-i18n="heroTitle">Your agency financial control centre</h1>
+      <p class="hero-description" data-i18n="heroDescription">
+        Monitor your contract portfolio, projected commission revenue, invoice opportunities and items requiring attention from one secure workspace.
+      </p>
+    </section>
+
+    <section class="kpi-grid" aria-label="Agency performance summary">
+      <article class="kpi-card">
+        <span class="kpi-label" data-i18n="kpiActive">Active Contracts</span>
+        <div id="kpiActive" class="kpi-value">—</div>
+        <div class="kpi-note" data-i18n="kpiActiveNote">Currently in force</div>
+      </article>
+
+      <article class="kpi-card primary">
+        <span class="kpi-label" data-i18n="kpiAnnual">Total Annual Revenue</span>
+        <div id="kpiAnnual" class="kpi-value">—</div>
+        <div class="kpi-note" data-i18n="kpiAnnualNote">Projected commission per year</div>
+      </article>
+
+      <article class="kpi-card primary">
+        <span class="kpi-label" data-i18n="kpiLifetime">Total Lifetime Revenue</span>
+        <div id="kpiLifetime" class="kpi-value">—</div>
+        <div class="kpi-note" data-i18n="kpiLifetimeNote">Projected across recorded contract terms</div>
+      </article>
+
+      <article class="kpi-card primary">
+        <span class="kpi-label" data-i18n="kpiInvoices">Forecast Invoices</span>
+        <div id="kpiInvoices" class="kpi-value">—</div>
+        <div class="kpi-note" data-i18n="kpiInvoicesNote">Current annual invoice opportunity</div>
+      </article>
+    </section>
+
+    <div class="dashboard-layout">
+      <main class="stack">
+        <section class="panel">
+          <div class="panel-head">
+            <div>
+              <div class="panel-kicker" data-i18n="revenueKicker">Commercial Performance</div>
+              <h2 class="panel-title" data-i18n="revenueTitle">Annual revenue by contract</h2>
+              <p class="panel-subtitle" data-i18n="revenueSubtitle">
+                A ranked view of the agency's projected annual commission revenue.
+              </p>
+            </div>
+          </div>
+
+          <div id="revenueBars" class="revenue-bars">
+            <div class="state-box">
+              <strong data-i18n="loadingTitle">Loading dashboard</strong>
+              <span data-i18n="loadingText">Preparing your agency overview...</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head">
+            <div>
+              <div class="panel-kicker" data-i18n="portfolioKicker">Portfolio Overview</div>
+              <h2 class="panel-title" data-i18n="portfolioTitle">Contract and invoice snapshot</h2>
+              <p class="panel-subtitle" data-i18n="portfolioSubtitle">
+                Review the financial position of every recorded contract.
+              </p>
+            </div>
+          </div>
+
+          <div id="portfolioTable">
+            <div class="state-box">
+              <strong data-i18n="loadingTitle">Loading dashboard</strong>
+              <span data-i18n="loadingText">Preparing your agency overview...</span>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <aside class="stack">
+        <section class="panel">
+          <div class="panel-head">
+            <div>
+              <div class="panel-kicker" data-i18n="attentionKicker">Attention Centre</div>
+              <h2 class="panel-title" data-i18n="attentionTitle">Items requiring review</h2>
+            </div>
+          </div>
+
+          <div id="attentionList" class="attention-list">
+            <div class="state-box">
+              <span data-i18n="loadingText">Preparing your agency overview...</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel quick-links-panel">
+          <div class="panel-head">
+            <div>
+              <div class="panel-kicker" data-i18n="quickKicker">Quick Actions</div>
+              <h2 class="panel-title" data-i18n="quickTitle">Manage DealTrack Pro</h2>
+            </div>
+          </div>
+
+          <div class="quick-links">
+            <a class="quick-link" href="/dealtrack-pro/contracts.html">
+              <div>
+                <strong data-i18n="quickPortfolio">Open Contract Portfolio</strong>
+                <span data-i18n="quickPortfolioText">Review all contract records and forecasts.</span>
+              </div>
+              <strong>→</strong>
+            </a>
+
+            <a class="quick-link" href="/dealtrack-pro/upload-contract.html">
+              <div>
+                <strong data-i18n="quickUpload">Upload Contract Package</strong>
+                <span data-i18n="quickUploadText">Analyse a main contract and its supporting documents.</span>
+              </div>
+              <strong>→</strong>
+            </a>
+
+            <a class="quick-link" href="/dealtrack-pro/add-contract.html">
+              <div>
+                <strong data-i18n="quickManual">Add Contract Manually</strong>
+                <span data-i18n="quickManualText">Create a record when no contract file is available.</span>
+              </div>
+              <strong>→</strong>
+            </a>
+          </div>
+        </section>
+      </aside>
+    </div>
+  </div>
+
+  <script type="application/json" id="dealtrack-dashboard-i18n">
+  {
+    "en": {
+      "brandTagline": "Contract Intelligence for Football Agents",
+      "openPortfolio": "← Contract Portfolio",
+      "uploadContract": "📤 Upload Contract",
+      "printDashboard": "🖨 Print Dashboard",
+      "heroEyebrow": "Agency Dashboard",
+      "heroTitle": "Your agency financial control centre",
+      "heroDescription": "Monitor your contract portfolio, projected commission revenue, invoice opportunities and items requiring attention from one secure workspace.",
+      "kpiActive": "Active Contracts",
+      "kpiActiveNote": "Currently in force",
+      "kpiAnnual": "Total Annual Revenue",
+      "kpiAnnualNote": "Projected commission per year",
+      "kpiLifetime": "Total Lifetime Revenue",
+      "kpiLifetimeNote": "Projected across recorded contract terms",
+      "kpiInvoices": "Forecast Invoices",
+      "kpiInvoicesNote": "Current annual invoice opportunity",
+      "revenueKicker": "Commercial Performance",
+      "revenueTitle": "Annual revenue by contract",
+      "revenueSubtitle": "A ranked view of the agency's projected annual commission revenue.",
+      "portfolioKicker": "Portfolio Overview",
+      "portfolioTitle": "Contract and invoice snapshot",
+      "portfolioSubtitle": "Review the financial position of every recorded contract.",
+      "attentionKicker": "Attention Centre",
+      "attentionTitle": "Items requiring review",
+      "quickKicker": "Quick Actions",
+      "quickTitle": "Manage DealTrack Pro",
+      "quickPortfolio": "Open Contract Portfolio",
+      "quickPortfolioText": "Review all contract records and forecasts.",
+      "quickUpload": "Upload Contract Package",
+      "quickUploadText": "Analyse a main contract and its supporting documents.",
+      "quickManual": "Add Contract Manually",
+      "quickManualText": "Create a record when no contract file is available.",
+      "loadingTitle": "Loading dashboard",
+      "loadingText": "Preparing your agency overview...",
+      "emptyTitle": "No contracts available",
+      "emptyText": "Upload a contract to begin building the agency dashboard.",
+      "errorTitle": "Unable to load dashboard",
+      "errorText": "Please refresh the page and try again.",
+      "player": "Player",
+      "club": "Club",
+      "annualRevenue": "Annual Revenue",
+      "lifetimeRevenue": "Lifetime Revenue",
+      "invoiceForecast": "Invoice Forecast",
+      "status": "Status",
+      "view": "View",
+      "active": "Active",
+      "expiring": "Expiring Soon",
+      "expired": "Expired",
+      "forecast": "Forecast",
+      "notRecorded": "Not recorded",
+      "mixedCurrencies": "Mixed currencies",
+      "missingFinancialData": "Missing financial data",
+      "missingFinancialDataText": "{count} contract(s) cannot yet be fully calculated.",
+      "expiringContracts": "Contracts expiring within 12 months",
+      "expiringContractsText": "{count} contract(s) require forward planning.",
+      "forecastReview": "Forecast invoices awaiting confirmation",
+      "forecastReviewText": "{count} contract(s) require invoice trigger and date confirmation.",
+      "allClear": "No urgent issues identified",
+      "allClearText": "The current portfolio has no immediate calculation or expiry warnings."
+    },
+
+    "fr": {
+      "brandTagline": "Intelligence contractuelle pour agents de football",
+      "openPortfolio": "← Portefeuille de contrats",
+      "uploadContract": "📤 Importer un contrat",
+      "printDashboard": "🖨 Imprimer le tableau de bord",
+      "heroEyebrow": "Tableau de bord de l’agence",
+      "heroTitle": "Votre centre de contrôle financier",
+      "heroDescription": "Suivez le portefeuille contractuel, les commissions prévisionnelles, les opportunités de facturation et les points d’attention depuis un espace sécurisé.",
+      "kpiActive": "Contrats actifs",
+      "kpiActiveNote": "Actuellement en vigueur",
+      "kpiAnnual": "Revenus annuels totaux",
+      "kpiAnnualNote": "Commissions prévisionnelles par an",
+      "kpiLifetime": "Revenus totaux sur la durée",
+      "kpiLifetimeNote": "Projection sur les durées contractuelles enregistrées",
+      "kpiInvoices": "Factures prévisionnelles",
+      "kpiInvoicesNote": "Opportunité annuelle actuelle de facturation",
+      "revenueKicker": "Performance commerciale",
+      "revenueTitle": "Revenus annuels par contrat",
+      "revenueSubtitle": "Classement des commissions annuelles prévisionnelles de l’agence.",
+      "portfolioKicker": "Vue du portefeuille",
+      "portfolioTitle": "Synthèse des contrats et factures",
+      "portfolioSubtitle": "Consultez la position financière de chaque contrat enregistré.",
+      "attentionKicker": "Centre d’attention",
+      "attentionTitle": "Éléments à vérifier",
+      "quickKicker": "Actions rapides",
+      "quickTitle": "Gérer DealTrack Pro",
+      "quickPortfolio": "Ouvrir le portefeuille de contrats",
+      "quickPortfolioText": "Consultez tous les contrats et leurs prévisions.",
+      "quickUpload": "Importer un dossier contractuel",
+      "quickUploadText": "Analysez un contrat principal et ses documents complémentaires.",
+      "quickManual": "Ajouter un contrat manuellement",
+      "quickManualText": "Créez un dossier lorsqu’aucun fichier contractuel n’est disponible.",
+      "loadingTitle": "Chargement du tableau de bord",
+      "loadingText": "Préparation de la vue d’ensemble de l’agence...",
+      "emptyTitle": "Aucun contrat disponible",
+      "emptyText": "Importez un contrat pour commencer à construire le tableau de bord.",
+      "errorTitle": "Impossible de charger le tableau de bord",
+      "errorText": "Actualisez la page et réessayez.",
+      "player": "Joueur",
+      "club": "Club",
+      "annualRevenue": "Revenus annuels",
+      "lifetimeRevenue": "Revenus sur la durée",
+      "invoiceForecast": "Prévision de facturation",
+      "status": "Statut",
+      "view": "Voir",
+      "active": "Actif",
+      "expiring": "Expiration prochaine",
+      "expired": "Expiré",
+      "forecast": "Prévision",
+      "notRecorded": "Non renseigné",
+      "mixedCurrencies": "Devises multiples",
+      "missingFinancialData": "Données financières manquantes",
+      "missingFinancialDataText": "{count} contrat(s) ne peuvent pas encore être entièrement calculés.",
+      "expiringContracts": "Contrats expirant dans les 12 mois",
+      "expiringContractsText": "{count} contrat(s) nécessitent une planification.",
+      "forecastReview": "Factures prévisionnelles à confirmer",
+      "forecastReviewText": "{count} contrat(s) nécessitent la confirmation du déclencheur et des dates.",
+      "allClear": "Aucun problème urgent identifié",
+      "allClearText": "Le portefeuille actuel ne présente aucun avertissement immédiat de calcul ou d’expiration."
+    },
+
+    "es": {
+      "brandTagline": "Inteligencia contractual para agentes de fútbol",
+      "openPortfolio": "← Cartera de contratos",
+      "uploadContract": "📤 Subir contrato",
+      "printDashboard": "🖨 Imprimir panel",
+      "heroEyebrow": "Panel de la agencia",
+      "heroTitle": "Su centro de control financiero",
+      "heroDescription": "Supervise la cartera contractual, las comisiones previstas, las oportunidades de facturación y los asuntos que requieren atención desde un espacio seguro.",
+      "kpiActive": "Contratos activos",
+      "kpiActiveNote": "Actualmente vigentes",
+      "kpiAnnual": "Ingresos anuales totales",
+      "kpiAnnualNote": "Comisiones previstas por año",
+      "kpiLifetime": "Ingresos totales de vigencia",
+      "kpiLifetimeNote": "Proyección durante los plazos contractuales registrados",
+      "kpiInvoices": "Facturas previstas",
+      "kpiInvoicesNote": "Oportunidad anual actual de facturación",
+      "revenueKicker": "Rendimiento comercial",
+      "revenueTitle": "Ingresos anuales por contrato",
+      "revenueSubtitle": "Clasificación de las comisiones anuales previstas de la agencia.",
+      "portfolioKicker": "Vista de cartera",
+      "portfolioTitle": "Resumen de contratos y facturas",
+      "portfolioSubtitle": "Revise la posición financiera de cada contrato registrado.",
+      "attentionKicker": "Centro de atención",
+      "attentionTitle": "Elementos que requieren revisión",
+      "quickKicker": "Acciones rápidas",
+      "quickTitle": "Gestionar DealTrack Pro",
+      "quickPortfolio": "Abrir cartera de contratos",
+      "quickPortfolioText": "Revise todos los contratos y previsiones.",
+      "quickUpload": "Subir paquete contractual",
+      "quickUploadText": "Analice un contrato principal y sus documentos complementarios.",
+      "quickManual": "Añadir contrato manualmente",
+      "quickManualText": "Cree un registro cuando no haya un archivo contractual disponible.",
+      "loadingTitle": "Cargando panel",
+      "loadingText": "Preparando la visión general de la agencia...",
+      "emptyTitle": "No hay contratos disponibles",
+      "emptyText": "Suba un contrato para comenzar a construir el panel de la agencia.",
+      "errorTitle": "No se puede cargar el panel",
+      "errorText": "Actualice la página e inténtelo de nuevo.",
+      "player": "Jugador",
+      "club": "Club",
+      "annualRevenue": "Ingresos anuales",
+      "lifetimeRevenue": "Ingresos de vigencia",
+      "invoiceForecast": "Previsión de facturación",
+      "status": "Estado",
+      "view": "Ver",
+      "active": "Activo",
+      "expiring": "Próximo a vencer",
+      "expired": "Vencido",
+      "forecast": "Previsión",
+      "notRecorded": "No registrado",
+      "mixedCurrencies": "Varias monedas",
+      "missingFinancialData": "Faltan datos financieros",
+      "missingFinancialDataText": "{count} contrato(s) todavía no pueden calcularse completamente.",
+      "expiringContracts": "Contratos que vencen en 12 meses",
+      "expiringContractsText": "{count} contrato(s) requieren planificación.",
+      "forecastReview": "Facturas previstas pendientes de confirmación",
+      "forecastReviewText": "{count} contrato(s) requieren confirmación del desencadenante y las fechas.",
+      "allClear": "No se identificaron problemas urgentes",
+      "allClearText": "La cartera actual no presenta alertas inmediatas de cálculo o vencimiento."
+    }
+  }
+  </script>
+
+  <script>
+    const I18N = JSON.parse(
+      document.getElementById("dealtrack-dashboard-i18n").textContent
+    );
+
+    let currentLang = localStorage.getItem("lang") || "en";
+    let allContracts = [];
+    let dashboardRows = [];
+
+    function t(key) {
+      return I18N[currentLang]?.[key] || I18N.en?.[key] || key;
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function toNumber(value) {
+      if (value === null || value === undefined || value === "") return null;
+      if (typeof value === "number") return Number.isFinite(value) ? value : null;
+
+      const cleaned = String(value)
+        .replace(/\s/g, "")
+        .replace(/,/g, "")
+        .replace(/[^\d.-]/g, "");
+
+      if (!cleaned) return null;
+
+      const number = Number(cleaned);
+      return Number.isFinite(number) ? number : null;
+    }
+
+    function normaliseFrequency(value) {
+      return String(value || "").trim().toLowerCase();
+    }
+
+    function calculateAnnualSalary(amount, frequency) {
+      const salary = toNumber(amount);
+      if (salary === null) return null;
+
+      const multipliers = {
+        weekly: 52,
+        week: 52,
+        hebdomadaire: 52,
+        semanal: 52,
+        monthly: 12,
+        month: 12,
+        mensuel: 12,
+        mensuelle: 12,
+        mensual: 12,
+        fortnightly: 26,
+        biweekly: 26,
+        quinzaine: 26,
+        quincenal: 26,
+        yearly: 1,
+        annual: 1,
+        annually: 1,
+        year: 1,
+        annuel: 1,
+        annuelle: 1,
+        anual: 1
+      };
+
+      const multiplier = multipliers[normaliseFrequency(frequency)];
+      return multiplier ? salary * multiplier : null;
+    }
+
+    function calculateContractYears(startValue, endValue) {
+      if (!startValue || !endValue) return null;
+
+      const start = new Date(`${startValue}T00:00:00`);
+      const end = new Date(`${endValue}T00:00:00`);
+
+      if (
+        Number.isNaN(start.getTime()) ||
+        Number.isNaN(end.getTime()) ||
+        end <= start
+      ) {
+        return null;
+      }
+
+      const yearMs = 365.2425 * 24 * 60 * 60 * 1000;
+      return Math.max(1, Math.round((end - start) / yearMs));
+    }
+
+    function getCurrency(contract) {
+      return contract.salary_currency || contract.commission_currency || "GBP";
+    }
+
+    function formatMoney(amount, currency) {
+      if (amount === null || amount === undefined) return t("notRecorded");
+
+      const localeMap = {
+        en: "en-GB",
+        fr: "fr-FR",
+        es: "es-ES"
+      };
+
+      try {
+        return new Intl.NumberFormat(localeMap[currentLang] || "en-GB", {
+          style: "currency",
+          currency: currency || "GBP",
+          maximumFractionDigits: 0
+        }).format(amount);
+      } catch {
+        return `${Number(amount).toLocaleString()} ${currency || ""}`.trim();
+      }
+    }
+
+    function getContractState(contract) {
+      const endDate = contract.end_date
+        ? new Date(`${contract.end_date}T00:00:00`)
+        : null;
+
+      if (!endDate || Number.isNaN(endDate.getTime())) {
+        return { key: "active", label: t("active"), monthsRemaining: null };
+      }
+
+      const now = new Date();
+      now.setHours(0, 0, 0, 0);
+
+      const days = Math.ceil((endDate.getTime() - now.getTime()) / 86400000);
+      const monthsRemaining = Math.ceil(days / 30.4375);
+
+      if (days < 0) {
+        return { key: "expired", label: t("expired"), monthsRemaining };
+      }
+
+      if (days <= 365) {
+        return { key: "expiring", label: t("expiring"), monthsRemaining };
+      }
+
+      return { key: "active", label: t("active"), monthsRemaining };
+    }
+
+    function buildDashboardRow(contract) {
+      const annualSalary = calculateAnnualSalary(
+        contract.salary,
+        contract.salary_frequency
+      );
+
+      const commissionRate = toNumber(
+        contract.commission_percentage ?? contract.commission_value
+      );
+
+      const years = calculateContractYears(
+        contract.start_date,
+        contract.end_date
+      );
+
+      const isDual = Boolean(contract.is_dual_representation);
+      const currency = getCurrency(contract);
+
+      const valid =
+        annualSalary !== null &&
+        commissionRate !== null &&
+        years !== null;
+
+      const sideAnnual = valid
+        ? annualSalary * (commissionRate / 100)
+        : null;
+
+      const annualRevenue = valid
+        ? sideAnnual * (isDual ? 2 : 1)
+        : null;
+
+      const lifetimeRevenue = valid
+        ? annualRevenue * years
+        : null;
+
+      const invoiceForecast = valid
+        ? annualRevenue
+        : null;
+
+      return {
+        contract,
+        annualSalary,
+        commissionRate,
+        years,
+        isDual,
+        currency,
+        annualRevenue,
+        lifetimeRevenue,
+        invoiceForecast,
+        valid,
+        state: getContractState(contract)
+      };
+    }
+
+    function summariseCurrency(rows, field) {
+      const validRows = rows.filter(
+        (row) => row.valid && Number.isFinite(row[field])
+      );
+
+      if (!validRows.length) {
+        return { amount: null, currency: null, mixed: false };
+      }
+
+      const currencies = [...new Set(validRows.map((row) => row.currency))];
+
+      if (currencies.length > 1) {
+        return { amount: null, currency: null, mixed: true };
+      }
+
+      return {
+        amount: validRows.reduce((sum, row) => sum + row[field], 0),
+        currency: currencies[0],
+        mixed: false
+      };
+    }
+
+    function formatSummary(summary) {
+      if (summary.mixed) return t("mixedCurrencies");
+      if (summary.amount === null) return t("notRecorded");
+      return formatMoney(summary.amount, summary.currency);
+    }
+
+    function applyTranslations() {
+      document.documentElement.lang = currentLang;
+
+      document.querySelectorAll("[data-i18n]").forEach((el) => {
+        el.textContent = t(el.getAttribute("data-i18n"));
+      });
+
+      document.querySelectorAll("[data-lang-btn]").forEach((btn) => {
+        btn.classList.toggle(
+          "is-active",
+          btn.getAttribute("data-lang-btn") === currentLang
+        );
+      });
+
+      document.title = "DealTrack Pro — " + t("heroEyebrow");
+
+      if (dashboardRows.length || allContracts.length === 0) {
+        renderDashboard();
+      }
+    }
+
+    function renderKpis() {
+      const activeCount = dashboardRows.filter(
+        (row) => row.state.key !== "expired"
+      ).length;
+
+      document.getElementById("kpiActive").textContent = activeCount;
+      document.getElementById("kpiAnnual").textContent =
+        formatSummary(summariseCurrency(dashboardRows, "annualRevenue"));
+      document.getElementById("kpiLifetime").textContent =
+        formatSummary(summariseCurrency(dashboardRows, "lifetimeRevenue"));
+      document.getElementById("kpiInvoices").textContent =
+        formatSummary(summariseCurrency(dashboardRows, "invoiceForecast"));
+    }
+
+    function renderRevenueBars() {
+      const container = document.getElementById("revenueBars");
+      const rows = dashboardRows
+        .filter((row) => row.valid)
+        .sort((a, b) => b.annualRevenue - a.annualRevenue)
+        .slice(0, 8);
+
+      if (!rows.length) {
+        container.innerHTML = `
+          <div class="state-box">
+            <strong>${escapeHtml(t("emptyTitle"))}</strong>
+            <span>${escapeHtml(t("emptyText"))}</span>
+          </div>
+        `;
+        return;
+      }
+
+      const max = Math.max(...rows.map((row) => row.annualRevenue));
+
+      container.innerHTML = rows.map((row) => {
+        const width = max > 0 ? Math.max(5, (row.annualRevenue / max) * 100) : 5;
+
+        return `
+          <div class="revenue-row">
+            <div class="revenue-player">
+              ${escapeHtml(row.contract.player_name || t("notRecorded"))}
+              <span class="revenue-club">
+                ${escapeHtml(row.contract.club_name || t("notRecorded"))}
+              </span>
+            </div>
+
+            <div class="bar-track" aria-hidden="true">
+              <div class="bar-fill" style="width:${width}%"></div>
+            </div>
+
+            <div class="revenue-amount">
+              ${escapeHtml(formatMoney(row.annualRevenue, row.currency))}
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function renderPortfolioTable() {
+      const container = document.getElementById("portfolioTable");
+
+      if (!dashboardRows.length) {
+        container.innerHTML = `
+          <div class="state-box">
+            <strong>${escapeHtml(t("emptyTitle"))}</strong>
+            <span>${escapeHtml(t("emptyText"))}</span>
+          </div>
+        `;
+        return;
+      }
+
+      const sorted = [...dashboardRows].sort((a, b) => {
+        if (a.valid && b.valid) return b.annualRevenue - a.annualRevenue;
+        if (a.valid) return -1;
+        if (b.valid) return 1;
+        return 0;
+      });
+
+      container.innerHTML = `
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>${escapeHtml(t("player"))}</th>
+                <th>${escapeHtml(t("club"))}</th>
+                <th>${escapeHtml(t("annualRevenue"))}</th>
+                <th>${escapeHtml(t("lifetimeRevenue"))}</th>
+                <th>${escapeHtml(t("invoiceForecast"))}</th>
+                <th>${escapeHtml(t("status"))}</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              ${sorted.map((row) => `
+                <tr>
+                  <td>${escapeHtml(row.contract.player_name || t("notRecorded"))}</td>
+                  <td>${escapeHtml(row.contract.club_name || t("notRecorded"))}</td>
+                  <td class="money">${escapeHtml(
+                    row.valid ? formatMoney(row.annualRevenue, row.currency) : t("notRecorded")
+                  )}</td>
+                  <td class="money">${escapeHtml(
+                    row.valid ? formatMoney(row.lifetimeRevenue, row.currency) : t("notRecorded")
+                  )}</td>
+                  <td class="money">${escapeHtml(
+                    row.valid ? formatMoney(row.invoiceForecast, row.currency) : t("notRecorded")
+                  )}</td>
+                  <td>
+                    <span class="status-pill ${
+                      row.state.key === "expiring"
+                        ? "warning"
+                        : row.state.key === "expired"
+                          ? "danger"
+                          : ""
+                    }">
+                      ${escapeHtml(row.state.label)}
+                    </span>
+                  </td>
+                  <td>
+                    <a class="view-link" href="/dealtrack-pro/contract.html?id=${encodeURIComponent(row.contract.id)}">
+                      ${escapeHtml(t("view"))} →
+                    </a>
+                  </td>
+                </tr>
+              `).join("")}
+            </tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    function renderAttentionList() {
+      const container = document.getElementById("attentionList");
+
+      const missing = dashboardRows.filter((row) => !row.valid).length;
+      const expiring = dashboardRows.filter(
+        (row) => row.state.key === "expiring"
+      ).length;
+      const forecastReview = dashboardRows.filter((row) => row.valid).length;
+
+      const items = [];
+
+      if (missing > 0) {
+        items.push({
+          title: t("missingFinancialData"),
+          text: t("missingFinancialDataText").replace("{count}", missing),
+          value: missing
+        });
+      }
+
+      if (expiring > 0) {
+        items.push({
+          title: t("expiringContracts"),
+          text: t("expiringContractsText").replace("{count}", expiring),
+          value: expiring
+        });
+      }
+
+      if (forecastReview > 0) {
+        items.push({
+          title: t("forecastReview"),
+          text: t("forecastReviewText").replace("{count}", forecastReview),
+          value: forecastReview
+        });
+      }
+
+      if (!items.length) {
+        items.push({
+          title: t("allClear"),
+          text: t("allClearText"),
+          value: "✓"
+        });
+      }
+
+      container.innerHTML = items.map((item) => `
+        <div class="attention-item">
+          <div>
+            <strong>${escapeHtml(item.title)}</strong>
+            <span>${escapeHtml(item.text)}</span>
+          </div>
+          <div class="attention-value">${escapeHtml(item.value)}</div>
+        </div>
+      `).join("");
+    }
+
+    function renderDashboard() {
+      renderKpis();
+      renderRevenueBars();
+      renderPortfolioTable();
+      renderAttentionList();
+    }
+
+    function showError() {
+      const message = `
+        <div class="state-box error-box">
+          <strong>${escapeHtml(t("errorTitle"))}</strong>
+          <span>${escapeHtml(t("errorText"))}</span>
+        </div>
+      `;
+
+      document.getElementById("revenueBars").innerHTML = message;
+      document.getElementById("portfolioTable").innerHTML = message;
+      document.getElementById("attentionList").innerHTML = message;
+    }
+
+    document.addEventListener("DOMContentLoaded", async () => {
+      document.querySelectorAll("[data-lang-btn]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          currentLang = btn.getAttribute("data-lang-btn");
+          localStorage.setItem("lang", currentLang);
+          applyTranslations();
+        });
+      });
+
+      document.getElementById("printDashboardBtn").addEventListener(
+        "click",
+        () => window.print()
+      );
+
+      applyTranslations();
+
+      const db = window.supabaseClient || window.sb || null;
+
+      if (!db) {
+        showError();
+        return;
+      }
+
+      const {
+        data: { user },
+        error: userError
+      } = await db.auth.getUser();
+
+      if (userError || !user) {
+        window.location.href = "/agent-academy/login.html";
+        return;
+      }
+
+      const { data, error } = await db
+        .from("contracts")
+        .select("*")
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        console.error("Agency dashboard load error:", error);
+        showError();
+        return;
+      }
+
+      allContracts = Array.isArray(data) ? data : [];
+      dashboardRows = allContracts.map(buildDashboardRow);
+      renderDashboard();
+    });
+  </script>
+</body>
+</html>
