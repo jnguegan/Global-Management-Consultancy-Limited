@@ -1050,8 +1050,8 @@
     "summaryAnnualRevenueNote": "Projected commission per year",
     "summaryLifetimeRevenue": "Total Lifetime Revenue",
     "summaryLifetimeRevenueNote": "Projected across all contract terms",
-    "summaryInvoiceForecast": "Total Forecast Invoices",
-    "summaryInvoiceForecastNote": "Current annual invoice opportunity",
+    "summaryInvoiceForecast": "Next Invoice Opportunities",
+    "summaryInvoiceForecastNote": "Next scheduled invoice amount",
     "annualSalaryLabel": "Annual Salary",
     "representationLabel": "Representation",
     "dualRepresentation": "Dual Representation",
@@ -1059,7 +1059,7 @@
     "commissionRateLabel": "Commission Rate",
     "annualRevenueLabel": "Annual Revenue",
     "lifetimeRevenueLabel": "Lifetime Revenue",
-    "invoiceForecastLabel": "Invoice Forecast",
+    "invoiceForecastLabel": "Next Invoice",
     "playerInvoiceLabel": "Player Invoice",
     "clubInvoiceLabel": "Club Invoice",
     "forecastStatus": "Forecast",
@@ -1119,8 +1119,8 @@
     "summaryAnnualRevenueNote": "Commissions prévisionnelles par an",
     "summaryLifetimeRevenue": "Revenus totaux sur la durée",
     "summaryLifetimeRevenueNote": "Projection sur toutes les durées contractuelles",
-    "summaryInvoiceForecast": "Factures prévisionnelles totales",
-    "summaryInvoiceForecastNote": "Opportunité annuelle de facturation",
+    "summaryInvoiceForecast": "Prochaines factures",
+    "summaryInvoiceForecastNote": "Montant de la prochaine échéance",
     "annualSalaryLabel": "Salaire annuel",
     "representationLabel": "Représentation",
     "dualRepresentation": "Double représentation",
@@ -1128,7 +1128,7 @@
     "commissionRateLabel": "Taux de commission",
     "annualRevenueLabel": "Revenus annuels",
     "lifetimeRevenueLabel": "Revenus sur la durée",
-    "invoiceForecastLabel": "Prévision de facturation",
+    "invoiceForecastLabel": "Prochaine facture",
     "playerInvoiceLabel": "Facture joueur",
     "clubInvoiceLabel": "Facture club",
     "forecastStatus": "Prévision",
@@ -1188,8 +1188,8 @@
     "summaryAnnualRevenueNote": "Comisiones previstas por año",
     "summaryLifetimeRevenue": "Ingresos totales de vigencia",
     "summaryLifetimeRevenueNote": "Proyección de todas las vigencias contractuales",
-    "summaryInvoiceForecast": "Facturas previstas totales",
-    "summaryInvoiceForecastNote": "Oportunidad anual de facturación",
+    "summaryInvoiceForecast": "Próximas facturas",
+    "summaryInvoiceForecastNote": "Importe de la próxima fecha de factura",
     "annualSalaryLabel": "Salario anual",
     "representationLabel": "Representación",
     "dualRepresentation": "Representación dual",
@@ -1197,7 +1197,7 @@
     "commissionRateLabel": "Porcentaje de comisión",
     "annualRevenueLabel": "Ingresos anuales",
     "lifetimeRevenueLabel": "Ingresos de vigencia",
-    "invoiceForecastLabel": "Previsión de facturación",
+    "invoiceForecastLabel": "Próxima factura",
     "playerInvoiceLabel": "Factura del jugador",
     "clubInvoiceLabel": "Factura del club",
     "forecastStatus": "Previsión",
@@ -1214,6 +1214,7 @@
 
     let currentLang = localStorage.getItem("lang") || "en";
     let allContracts = [];
+    let commissionInstalments = [];
     let currentUser = null;
     let currentAgency = null;
 
@@ -1467,15 +1468,111 @@
       return { recurring, oneOff, total: recurring + oneOff };
     }
 
+    function getEffectiveStartDate(contract) {
+      return contract.playing_contract_start_date || contract.start_date || null;
+    }
+
+    function getEffectiveEndDate(contract) {
+      return contract.playing_contract_end_date || contract.end_date || null;
+    }
+
+    function getContractInstalments(contractId) {
+      return commissionInstalments.filter(
+        (item) => String(item.contract_id) === String(contractId)
+      );
+    }
+
+    function getInstalmentMetrics(contract) {
+      const items = getContractInstalments(contract.id).filter((item) => {
+        const status = String(item.invoice_status || "").toLowerCase();
+        return status !== "cancelled";
+      });
+
+      if (!items.length) return null;
+
+      const reportingYear = new Date().getFullYear();
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      const currency =
+        items.find((item) => item.currency)?.currency ||
+        contract.commission_currency ||
+        contract.salary_currency ||
+        "GBP";
+
+      const lifetimeRevenue = items.reduce(
+        (sum, item) => sum + (toNumber(item.amount) || 0),
+        0
+      );
+
+      const annualRevenue = items.reduce((sum, item) => {
+        const dueDate = parseDate(item.due_date);
+        if (!dueDate) return sum;
+
+        return dueDate.getFullYear() === reportingYear
+          ? sum + (toNumber(item.amount) || 0)
+          : sum;
+      }, 0);
+
+      const futureItems = items
+        .filter((item) => {
+          const status = String(item.invoice_status || "").toLowerCase();
+          if (status === "paid") return false;
+
+          const dueDate = parseDate(item.due_date);
+          return dueDate && dueDate >= today;
+        })
+        .sort((a, b) => String(a.due_date).localeCompare(String(b.due_date)));
+
+      const nextDueDate = futureItems[0]?.due_date || null;
+
+      const invoiceForecast = nextDueDate
+        ? futureItems
+            .filter((item) => item.due_date === nextDueDate)
+            .reduce((sum, item) => sum + (toNumber(item.amount) || 0), 0)
+        : 0;
+
+      return {
+        available: true,
+        currency,
+        annualRevenue,
+        lifetimeRevenue,
+        invoiceForecast,
+        nextDueDate,
+        usesInstalmentSchedule: true
+      };
+    }
+
     function getCommercialMetrics(contract) {
+      const instalmentMetrics = getInstalmentMetrics(contract);
+
+      if (instalmentMetrics) {
+        return {
+          ...instalmentMetrics,
+          annualSalary: calculateAnnualSalary(
+            contract.salary,
+            contract.salary_frequency
+          ),
+          commissionRate: toNumber(contract.commission_percentage),
+          fixedAmount: toNumber(contract.fixed_commission_amount),
+          commissionMethod: normaliseCommissionMethod(contract),
+          commissionBasis: contract.commission_basis || "custom",
+          contractYears: calculateContractYears(
+            getEffectiveStartDate(contract),
+            getEffectiveEndDate(contract)
+          ),
+          isDual: Boolean(contract.is_dual_representation)
+        };
+      }
+
       const annualSalary = calculateAnnualSalary(
         contract.salary,
         contract.salary_frequency
       );
 
       const contractYears = calculateContractYears(
-        contract.start_date,
-        contract.end_date
+        getEffectiveStartDate(contract),
+        getEffectiveEndDate(contract)
       );
 
       const method = normaliseCommissionMethod(contract);
@@ -1616,7 +1713,7 @@
     }
 
     function getContractState(contract) {
-      const endDate = parseDate(contract.end_date);
+      const endDate = parseDate(getEffectiveEndDate(contract));
 
       if (!endDate) {
         return {
@@ -1816,12 +1913,12 @@
 
                     <div class="detail">
                       <span class="detail-label">${escapeHtml(t("startLabel"))}</span>
-                      <span class="detail-value">${escapeHtml(formatDate(contract.start_date))}</span>
+                      <span class="detail-value">${escapeHtml(formatDate(getEffectiveStartDate(contract)))}</span>
                     </div>
 
                     <div class="detail">
                       <span class="detail-label">${escapeHtml(t("endLabel"))}</span>
-                      <span class="detail-value">${escapeHtml(formatDate(contract.end_date))}</span>
+                      <span class="detail-value">${escapeHtml(formatDate(getEffectiveEndDate(contract)))}</span>
                     </div>
                   </div>
 
@@ -2014,6 +2111,55 @@
         allContracts = Array.isArray(data)
           ? data
           : [];
+
+        commissionInstalments = [];
+
+        const contractIds = allContracts
+          .map((contract) => contract.id)
+          .filter(Boolean);
+
+        if (contractIds.length) {
+          let instalmentData = [];
+          let instalmentError = null;
+
+          const directResult = await db
+            .from("commission_instalments")
+            .select("*")
+            .in("contract_id", contractIds)
+            .order("due_date", { ascending: true })
+            .order("instalment_number", { ascending: true });
+
+          instalmentData = directResult.data || [];
+          instalmentError = directResult.error;
+
+          if (
+            instalmentError ||
+            !Array.isArray(instalmentData) ||
+            instalmentData.length === 0
+          ) {
+            const rpcResult = await db.rpc(
+              "get_my_commission_instalments"
+            );
+
+            instalmentData = rpcResult.data || [];
+            instalmentError = rpcResult.error;
+          }
+
+          if (instalmentError) {
+            console.error(
+              "Commission instalment load error:",
+              instalmentError
+            );
+          } else {
+            commissionInstalments = Array.isArray(instalmentData)
+              ? instalmentData.filter((item) =>
+                  contractIds.some(
+                    (id) => String(id) === String(item.contract_id)
+                  )
+                )
+              : [];
+          }
+        }
 
         updateSummary();
         renderFilteredContracts();
