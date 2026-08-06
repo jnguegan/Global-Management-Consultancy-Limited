@@ -1358,7 +1358,7 @@
       "kpiLifetime": "Total Lifetime Revenue",
       "kpiLifetimeNote": "Projected across recorded contract terms",
       "kpiInvoices": "Forecast Invoices",
-      "kpiInvoicesNote": "Current annual invoice opportunity",
+      "kpiInvoicesNote": "Upcoming invoice opportunities",
       "revenueKicker": "Commercial Performance",
       "revenueTitle": "Annual revenue by contract",
       "revenueSubtitle": "A ranked view of the agency's projected annual commission revenue.",
@@ -1479,7 +1479,7 @@
       "kpiLifetime": "Revenus totaux sur la durée",
       "kpiLifetimeNote": "Projection sur les durées contractuelles enregistrées",
       "kpiInvoices": "Factures prévisionnelles",
-      "kpiInvoicesNote": "Opportunité annuelle actuelle de facturation",
+      "kpiInvoicesNote": "Prochaines opportunités de facturation",
       "revenueKicker": "Performance commerciale",
       "revenueTitle": "Revenus annuels par contrat",
       "revenueSubtitle": "Classement des commissions annuelles prévisionnelles de l’agence.",
@@ -1602,7 +1602,7 @@
       "kpiLifetime": "Ingresos totales de vigencia",
       "kpiLifetimeNote": "Proyección durante los plazos contractuales registrados",
       "kpiInvoices": "Facturas previstas",
-      "kpiInvoicesNote": "Oportunidad anual actual de facturación",
+      "kpiInvoicesNote": "Próximas oportunidades de facturación",
       "revenueKicker": "Rendimiento comercial",
       "revenueTitle": "Ingresos anuales por contrato",
       "revenueSubtitle": "Clasificación de las comisiones anuales previstas de la agencia.",
@@ -2008,19 +2008,31 @@
     }
 
     function renderCurrencySummary(totals) {
+      if (totals instanceof Map) {
+        totals = Object.fromEntries(totals);
+      }
+
       const visibleCurrencies = DASHBOARD_CURRENCIES.filter(
-        (currency) => Number(totals[currency] || 0) !== 0
+        (currency) =>
+          Object.prototype.hasOwnProperty.call(totals || {}, currency) &&
+          Number.isFinite(Number(totals[currency])) &&
+          Number(totals[currency]) !== 0
       );
 
-      const currencies = visibleCurrencies.length
-        ? visibleCurrencies
-        : DASHBOARD_CURRENCIES.slice(0, 1);
+      if (!visibleCurrencies.length) {
+        return `
+          <div class="currency-summary-row">
+            <span class="currency-summary-code">—</span>
+            <span class="currency-summary-amount">—</span>
+          </div>
+        `;
+      }
 
-      return currencies.map((currency) => `
+      return visibleCurrencies.map((currency) => `
         <div class="currency-summary-row">
           <span class="currency-summary-code">${escapeHtml(currency)}</span>
           <span class="currency-summary-amount">
-            ${escapeHtml(formatMoney(totals[currency] || 0, currency))}
+            ${escapeHtml(formatMoney(totals[currency], currency))}
           </span>
         </div>
       `).join("");
@@ -2113,7 +2125,7 @@
 
       const instalmentTotals = getUpcomingInstalmentTotalsByCurrency();
       const invoiceTotals = instalmentTotals.size
-        ? instalmentTotals
+        ? Object.fromEntries(instalmentTotals)
         : groupTotalsByCurrency(dashboardRows, "invoiceForecast");
 
       document.getElementById("kpiActive").textContent = activeCount;
