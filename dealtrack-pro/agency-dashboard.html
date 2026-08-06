@@ -321,61 +321,6 @@
       line-height: 1.65;
     }
 
-    .executive-alerts {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 14px;
-      margin-bottom: 22px;
-    }
-
-    .executive-alert {
-      display: flex;
-      align-items: flex-start;
-      gap: 12px;
-      min-height: 116px;
-      padding: 17px;
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      background:
-        linear-gradient(145deg, rgba(255,255,255,0.045), rgba(255,255,255,0.018)),
-        var(--panel);
-      box-shadow: var(--shadow);
-    }
-
-    .executive-alert-icon {
-      display: grid;
-      place-items: center;
-      flex: 0 0 38px;
-      width: 38px;
-      height: 38px;
-      border-radius: 12px;
-      font-size: 1rem;
-      background: rgba(255,255,255,0.065);
-    }
-
-    .executive-alert-copy {
-      display: grid;
-      gap: 5px;
-      min-width: 0;
-    }
-
-    .executive-alert-copy strong {
-      color: var(--text);
-      font-size: 0.86rem;
-      line-height: 1.3;
-    }
-
-    .executive-alert-copy span {
-      color: var(--muted);
-      font-size: 0.76rem;
-      line-height: 1.45;
-    }
-
-    .executive-alert.success { border-color: rgba(34,197,94,0.23); }
-    .executive-alert.warning { border-color: rgba(245,158,11,0.27); }
-    .executive-alert.danger { border-color: rgba(239,68,68,0.26); }
-    .executive-alert.info { border-color: rgba(88,166,255,0.24); }
-
     .kpi-grid {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -916,7 +861,6 @@
     }
 
     @media (max-width: 1050px) {
-      .executive-alerts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .health-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .charts-grid { grid-template-columns: 1fr; }
@@ -951,7 +895,6 @@
     }
 
     @media (max-width: 560px) {
-      .executive-alerts { grid-template-columns: 1fr; }
       .kpi-grid { grid-template-columns: 1fr; }
       .health-grid { grid-template-columns: 1fr; }
       .health-score-layout { grid-template-columns: 1fr; }
@@ -1041,19 +984,6 @@
       <p class="hero-description" data-i18n="heroDescription">
         Monitor your contract portfolio, projected commission revenue, invoice opportunities and items requiring attention from one secure workspace.
       </p>
-    </section>
-
-    <section>
-      <div class="panel-kicker" data-i18n="executiveAlertsKicker">Executive Alerts</div>
-      <div id="executiveAlerts" class="executive-alerts" aria-live="polite">
-        <article class="executive-alert info">
-          <div class="executive-alert-icon">…</div>
-          <div class="executive-alert-copy">
-            <strong data-i18n="loadingTitle">Loading dashboard</strong>
-            <span data-i18n="loadingText">Preparing your agency overview...</span>
-          </div>
-        </article>
-      </div>
     </section>
 
     <section class="kpi-grid" aria-label="Agency performance summary">
@@ -1418,20 +1348,7 @@
       "reportUnavailable": "The report could not be created. Please refresh and try again.",
       "heroEyebrow": "Agency Dashboard",
       "heroTitle": "Your agency financial control centre",
-       "heroDescription": "Monitor your contract portfolio, projected commission revenue, invoice opportunities and items requiring attention from one secure workspace.",
-      "executiveAlertsKicker": "Executive Alerts",
-      "alertAllClearTitle": "Portfolio is operationally clear",
-      "alertAllClearText": "No urgent contract, renewal or overdue invoice risks are currently recorded.",
-      "alertIncompleteTitle": "Incomplete financial data",
-      "alertIncompleteText": "{count} contract(s) need salary, commission or date information before full reporting.",
-      "alertExpiryTitle": "Contract renewal attention",
-      "alertExpiryText": "{count} contract(s) expire within the next 180 days.",
-      "alertOverdueTitle": "Overdue invoice attention",
-      "alertOverdueText": "{count} recorded invoice(s) are overdue.",
-      "alertNextInvoiceTitle": "Next invoice opportunity",
-      "alertNextInvoiceText": "{amount} forecast for {date}.",
-      "alertNoInvoiceTitle": "Invoice dates need confirmation",
-      "alertNoInvoiceText": "Forecast values exist, but no confirmed invoice date is recorded yet.",
+      "heroDescription": "Monitor your contract portfolio, projected commission revenue, invoice opportunities and items requiring attention from one secure workspace.",
       "kpiActive": "Active Contracts",
       "kpiActiveNote": "Currently in force",
       "kpiAnnual": "Total Annual Revenue",
@@ -1552,20 +1469,7 @@
       "reportUnavailable": "Le rapport n’a pas pu être créé. Actualisez la page et réessayez.",
       "heroEyebrow": "Tableau de bord de l’agence",
       "heroTitle": "Votre centre de contrôle financier",
-       "heroDescription": "Suivez le portefeuille contractuel, les commissions prévisionnelles, les opportunités de facturation et les points d’attention depuis un espace sécurisé.",
-      "executiveAlertsKicker": "Alertes de direction",
-      "alertAllClearTitle": "Le portefeuille est opérationnellement clair",
-      "alertAllClearText": "Aucun risque urgent lié aux contrats, renouvellements ou factures en retard n’est enregistré.",
-      "alertIncompleteTitle": "Données financières incomplètes",
-      "alertIncompleteText": "{count} contrat(s) nécessitent des informations de salaire, commission ou dates.",
-      "alertExpiryTitle": "Attention au renouvellement",
-      "alertExpiryText": "{count} contrat(s) expirent dans les 180 prochains jours.",
-      "alertOverdueTitle": "Factures en retard",
-      "alertOverdueText": "{count} facture(s) enregistrée(s) sont en retard.",
-      "alertNextInvoiceTitle": "Prochaine opportunité de facturation",
-      "alertNextInvoiceText": "{amount} prévu pour le {date}.",
-      "alertNoInvoiceTitle": "Dates de facture à confirmer",
-      "alertNoInvoiceText": "Des montants prévisionnels existent, mais aucune date de facture confirmée n’est enregistrée.",
+      "heroDescription": "Suivez le portefeuille contractuel, les commissions prévisionnelles, les opportunités de facturation et les points d’attention depuis un espace sécurisé.",
       "kpiActive": "Contrats actifs",
       "kpiActiveNote": "Actuellement en vigueur",
       "kpiAnnual": "Revenus annuels totaux",
@@ -1686,20 +1590,7 @@
       "reportUnavailable": "No se pudo crear el informe. Actualice la página e inténtelo de nuevo.",
       "heroEyebrow": "Panel de la agencia",
       "heroTitle": "Su centro de control financiero",
-       "heroDescription": "Supervise la cartera contractual, las comisiones previstas, las oportunidades de facturación y los asuntos que requieren atención desde un espacio seguro.",
-      "executiveAlertsKicker": "Alertas ejecutivas",
-      "alertAllClearTitle": "La cartera está operativamente clara",
-      "alertAllClearText": "No hay riesgos urgentes registrados de contratos, renovaciones o facturas vencidas.",
-      "alertIncompleteTitle": "Datos financieros incompletos",
-      "alertIncompleteText": "{count} contrato(s) necesitan información de salario, comisión o fechas.",
-      "alertExpiryTitle": "Atención a renovaciones",
-      "alertExpiryText": "{count} contrato(s) vencen en los próximos 180 días.",
-      "alertOverdueTitle": "Facturas vencidas",
-      "alertOverdueText": "{count} factura(s) registrada(s) están vencidas.",
-      "alertNextInvoiceTitle": "Próxima oportunidad de facturación",
-      "alertNextInvoiceText": "{amount} previsto para {date}.",
-      "alertNoInvoiceTitle": "Fechas de factura por confirmar",
-      "alertNoInvoiceText": "Existen importes previstos, pero aún no hay una fecha de factura confirmada.",
+      "heroDescription": "Supervise la cartera contractual, las comisiones previstas, las oportunidades de facturación y los asuntos que requieren atención desde un espacio seguro.",
       "kpiActive": "Contratos activos",
       "kpiActiveNote": "Actualmente vigentes",
       "kpiAnnual": "Ingresos anuales totales",
@@ -1766,6 +1657,7 @@
     let currentLang = localStorage.getItem("lang") || "en";
     let allContracts = [];
     let dashboardRows = [];
+    let commissionInstalments = [];
     let currentAgency = null;
     let currentUser = null;
     let currencyRevenueChart = null;
@@ -1937,56 +1829,133 @@
       return { key: "active", label: t("active"), monthsRemaining };
     }
 
-    function buildDashboardRow(contract) {
-      const annualSalary = calculateAnnualSalary(
-        contract.salary,
-        contract.salary_frequency
+    function normaliseCommissionMethod(contract) {
+      const explicit = String(
+        contract.commission_method || contract.commission_type || ""
+      ).trim().toLowerCase();
+
+      if (explicit === "percentage" || explicit.includes("percentage") || explicit.includes("%")) return "percentage";
+      if (explicit === "fixed" || explicit.includes("fixed")) return "fixed";
+      if (explicit === "mixed" || explicit.includes("mixed")) return "mixed";
+
+      const percentage = toNumber(contract.commission_percentage);
+      const fixed = toNumber(contract.fixed_commission_amount);
+
+      if (percentage !== null && fixed !== null) return "mixed";
+      if (fixed !== null) return "fixed";
+      if (percentage !== null) return "percentage";
+      return "unknown";
+    }
+
+    function getCommissionBasis(contract, annualSalary) {
+      const basis = String(contract.commission_basis || "basic_salary").trim().toLowerCase();
+      const signingBonus = toNumber(contract.signing_bonus) || 0;
+      const guaranteedBonus = toNumber(contract.guaranteed_bonus) || 0;
+      const otherIncome = toNumber(contract.other_commissionable_income) || 0;
+      const customBasis = toNumber(contract.custom_commission_basis_amount);
+
+      if (basis === "custom" && customBasis !== null) {
+        return { recurring: customBasis, oneOff: 0, total: customBasis };
+      }
+
+      const recurring = annualSalary || 0;
+      let oneOff = 0;
+
+      if (
+        basis === "salary_plus_signing_bonus" ||
+        basis === "guaranteed_remuneration" ||
+        basis === "total_gross_remuneration" ||
+        normaliseBoolean(contract.signing_bonus_commissionable)
+      ) oneOff += signingBonus;
+
+      if (
+        basis === "guaranteed_remuneration" ||
+        basis === "total_gross_remuneration" ||
+        normaliseBoolean(contract.guaranteed_bonus_commissionable)
+      ) oneOff += guaranteedBonus;
+
+      if (
+        basis === "total_gross_remuneration" ||
+        normaliseBoolean(contract.other_income_commissionable)
+      ) oneOff += otherIncome;
+
+      return { recurring, oneOff, total: recurring + oneOff };
+    }
+
+    function calculateCommissionRevenue(contract, annualSalary, years) {
+      const method = normaliseCommissionMethod(contract);
+      const percentage = toNumber(
+        contract.commission_percentage ??
+        (method === "percentage" ? contract.commission_value : null)
+      );
+      const fixedAmount = toNumber(
+        contract.fixed_commission_amount ??
+        (method === "fixed" ? contract.commission_value : null)
       );
 
-      const commissionRate = toNumber(
-        contract.commission_percentage ?? contract.commission_value
-      );
-
-      const years = calculateContractYears(
-        contract.start_date,
-        contract.end_date
-      );
-
+      const basis = getCommissionBasis(contract, annualSalary);
       const isDual = hasDualRepresentation(contract);
+
+      const percentageMultiplier =
+        isDual && contract.dual_representation_multiplier == null
+          ? 2
+          : Math.max(1, toNumber(contract.dual_representation_multiplier) || 1);
+
+      const fixedMultiplier =
+        isDual && normaliseBoolean(contract.fixed_commission_per_side) ? 2 : 1;
+
+      const recurringPercentage =
+        percentage !== null ? basis.recurring * (percentage / 100) * percentageMultiplier : 0;
+      const oneOffPercentage =
+        percentage !== null ? basis.oneOff * (percentage / 100) * percentageMultiplier : 0;
+      const fixedCommission =
+        fixedAmount !== null ? fixedAmount * fixedMultiplier : 0;
+
+      let annualRevenue = null;
+      let lifetimeRevenue = null;
+
+      if (method === "percentage" && percentage !== null && years !== null) {
+        annualRevenue = recurringPercentage + oneOffPercentage;
+        lifetimeRevenue = (recurringPercentage * years) + oneOffPercentage;
+      } else if (method === "fixed" && fixedAmount !== null) {
+        annualRevenue = fixedCommission;
+        lifetimeRevenue = fixedCommission;
+      } else if (method === "mixed" && percentage !== null && fixedAmount !== null && years !== null) {
+        annualRevenue = recurringPercentage + oneOffPercentage + fixedCommission;
+        lifetimeRevenue = (recurringPercentage * years) + oneOffPercentage + fixedCommission;
+      }
+
+      return {
+        method,
+        percentage,
+        fixedAmount,
+        commissionBasis: basis.total,
+        annualRevenue,
+        lifetimeRevenue,
+        valid: annualRevenue !== null && lifetimeRevenue !== null
+      };
+    }
+
+    function buildDashboardRow(contract) {
+      const annualSalary = calculateAnnualSalary(contract.salary, contract.salary_frequency);
+      const years = calculateContractYears(contract.start_date, contract.end_date);
+      const commission = calculateCommissionRevenue(contract, annualSalary, years);
       const currency = normaliseCurrencyCode(getCurrency(contract));
-
-      const valid =
-        annualSalary !== null &&
-        commissionRate !== null &&
-        years !== null;
-
-      const sideAnnual = valid
-        ? annualSalary * (commissionRate / 100)
-        : null;
-
-      const annualRevenue = valid
-        ? sideAnnual * (isDual ? 2 : 1)
-        : null;
-
-      const lifetimeRevenue = valid
-        ? annualRevenue * years
-        : null;
-
-      const invoiceForecast = valid
-        ? annualRevenue
-        : null;
 
       return {
         contract,
         annualSalary,
-        commissionRate,
+        commissionRate: commission.percentage,
+        commissionMethod: commission.method,
+        fixedCommissionAmount: commission.fixedAmount,
+        commissionBasis: commission.commissionBasis,
         years,
-        isDual,
+        isDual: hasDualRepresentation(contract),
         currency,
-        annualRevenue,
-        lifetimeRevenue,
-        invoiceForecast,
-        valid,
+        annualRevenue: commission.annualRevenue,
+        lifetimeRevenue: commission.lifetimeRevenue,
+        invoiceForecast: commission.annualRevenue,
+        valid: commission.valid,
         state: getContractState(contract)
       };
     }
@@ -2138,10 +2107,10 @@
         "lifetimeRevenue"
       );
 
-      const invoiceTotals = groupTotalsByCurrency(
-        dashboardRows,
-        "invoiceForecast"
-      );
+      const instalmentTotals = getUpcomingInstalmentTotalsByCurrency();
+      const invoiceTotals = instalmentTotals.size
+        ? instalmentTotals
+        : groupTotalsByCurrency(dashboardRows, "invoiceForecast");
 
       document.getElementById("kpiActive").textContent = activeCount;
       document.getElementById("kpiAnnual").innerHTML =
@@ -2423,8 +2392,91 @@
       `).join("");
     }
 
+    function getUpcomingInstalmentGroups() {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      const contractById = new Map(
+        allContracts.map((contract) => [String(contract.id), contract])
+      );
+      const groups = new Map();
+
+      commissionInstalments.forEach((item) => {
+        if (!item.due_date) return;
+        const status = String(item.invoice_status || "").toLowerCase();
+        if (["paid", "cancelled"].includes(status)) return;
+
+        const dueDate = new Date(`${item.due_date}T00:00:00`);
+        if (Number.isNaN(dueDate.getTime()) || dueDate < today) return;
+
+        const contract = contractById.get(String(item.contract_id));
+        if (!contract) return;
+
+        const currency = normaliseCurrencyCode(
+          item.currency || contract.commission_currency || getCurrency(contract)
+        );
+        const key = `${item.contract_id}|${item.due_date}|${currency}`;
+
+        if (!groups.has(key)) {
+          groups.set(key, {
+            contract,
+            contractId: item.contract_id,
+            dueDate: item.due_date,
+            currency,
+            amount: 0,
+            instalments: []
+          });
+        }
+
+        const group = groups.get(key);
+        group.amount += toNumber(item.amount) || 0;
+        group.instalments.push(item);
+      });
+
+      return [...groups.values()].sort((a, b) => a.dueDate.localeCompare(b.dueDate));
+    }
+
+    function getUpcomingInstalmentTotalsByCurrency() {
+      const totals = new Map();
+      getUpcomingInstalmentGroups().forEach((group) => {
+        totals.set(group.currency, (totals.get(group.currency) || 0) + group.amount);
+      });
+      return totals;
+    }
+
     function renderInvoiceCalendar() {
       const container = document.getElementById("invoiceCalendar");
+      const instalmentGroups = getUpcomingInstalmentGroups().slice(0, 6);
+
+      if (instalmentGroups.length) {
+        const locale = currentLang === "fr" ? "fr-FR" : currentLang === "es" ? "es-ES" : "en-GB";
+
+        container.innerHTML = instalmentGroups.map((group) => {
+          const dateText = new Intl.DateTimeFormat(locale, {
+            day: "2-digit",
+            month: "short",
+            year: "numeric"
+          }).format(new Date(`${group.dueDate}T00:00:00`));
+
+          const sideText = group.instalments
+            .map((item) => String(item.fee_side || "").trim())
+            .filter(Boolean)
+            .join(" + ");
+
+          return `
+            <div class="invoice-calendar-item">
+              <div>
+                <strong>${escapeHtml(group.contract.player_name || t("notRecorded"))}</strong>
+                <span>${escapeHtml(dateText)}${sideText ? ` · ${escapeHtml(sideText)}` : ""}</span>
+              </div>
+              <div class="invoice-calendar-value">
+                ${escapeHtml(formatMoney(group.amount, group.currency))}
+              </div>
+            </div>
+          `;
+        }).join("");
+        return;
+      }
 
       const rows = dashboardRows
         .filter((row) => row.valid && row.invoiceForecast !== null)
@@ -2432,49 +2484,27 @@
         .slice(0, 6);
 
       if (!rows.length) {
-        container.innerHTML = `
-          <div class="state-box">
-            <span>${escapeHtml(t("noInvoices"))}</span>
-          </div>
-        `;
+        container.innerHTML = `<div class="state-box"><span>${escapeHtml(t("noInvoices"))}</span></div>`;
         return;
       }
 
       container.innerHTML = rows.map((row) => {
-        const dateValue =
-          row.contract.invoice_date ||
-          row.contract.next_invoice_date ||
-          row.contract.payment_due_date ||
-          null;
-
+        const dateValue = getInvoiceDate(row.contract);
         const dateText = dateValue
           ? new Intl.DateTimeFormat(
-              currentLang === "fr"
-                ? "fr-FR"
-                : currentLang === "es"
-                  ? "es-ES"
-                  : "en-GB",
-              {
-                day: "2-digit",
-                month: "short",
-                year: "numeric"
-              }
+              currentLang === "fr" ? "fr-FR" : currentLang === "es" ? "es-ES" : "en-GB",
+              { day: "2-digit", month: "short", year: "numeric" }
             ).format(new Date(`${dateValue}T00:00:00`))
           : t("datePending");
 
         return `
           <div class="invoice-calendar-item">
             <div>
-              <strong>${escapeHtml(
-                row.contract.player_name || t("notRecorded")
-              )}</strong>
+              <strong>${escapeHtml(row.contract.player_name || t("notRecorded"))}</strong>
               <span>${escapeHtml(dateText)}</span>
             </div>
-
             <div class="invoice-calendar-value">
-              ${escapeHtml(
-                formatMoney(row.invoiceForecast, row.currency)
-              )}
+              ${escapeHtml(formatMoney(row.invoiceForecast, row.currency))}
             </div>
           </div>
         `;
@@ -3078,35 +3108,38 @@
       invoiceForecastChart = null;
 
       const monthly = new Map();
+      const instalmentGroups = getUpcomingInstalmentGroups();
 
-      dashboardRows.forEach((row) => {
-        if (!row.valid || !row.invoiceForecast) return;
+      if (instalmentGroups.length) {
+        instalmentGroups.forEach((group) => {
+          const date = new Date(`${group.dueDate}T00:00:00`);
+          if (Number.isNaN(date.getTime())) return;
 
-        const dateValue = getInvoiceDate(row.contract);
-        if (!dateValue) return;
+          const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+          if (!monthly.has(key)) monthly.set(key, { date, EUR: 0, GBP: 0, USD: 0 });
 
-        const date = new Date(`${dateValue}T00:00:00`);
-        if (Number.isNaN(date.getTime())) return;
+          if (DASHBOARD_CURRENCIES.includes(group.currency)) {
+            monthly.get(key)[group.currency] += group.amount;
+          }
+        });
+      } else {
+        dashboardRows.forEach((row) => {
+          if (!row.valid || !row.invoiceForecast) return;
+          const dateValue = getInvoiceDate(row.contract);
+          if (!dateValue) return;
 
-        const key = `${date.getFullYear()}-${String(
-          date.getMonth() + 1
-        ).padStart(2, "0")}`;
+          const date = new Date(`${dateValue}T00:00:00`);
+          if (Number.isNaN(date.getTime())) return;
 
-        const currency = normaliseCurrencyCode(row.currency);
+          const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+          const currency = normaliseCurrencyCode(row.currency);
+          if (!monthly.has(key)) monthly.set(key, { date, EUR: 0, GBP: 0, USD: 0 });
 
-        if (!monthly.has(key)) {
-          monthly.set(key, {
-            date,
-            EUR: 0,
-            GBP: 0,
-            USD: 0
-          });
-        }
-
-        if (DASHBOARD_CURRENCIES.includes(currency)) {
-          monthly.get(key)[currency] += row.invoiceForecast;
-        }
-      });
+          if (DASHBOARD_CURRENCIES.includes(currency)) {
+            monthly.get(key)[currency] += row.invoiceForecast;
+          }
+        });
+      }
 
       const rows = [...monthly.entries()]
         .sort((a, b) => a[0].localeCompare(b[0]))
@@ -3363,137 +3396,6 @@
       renderAgencyHealthChart();
     }
 
-    function formatDashboardDate(value) {
-      if (!value) return "—";
-
-      const date = new Date(`${value}T00:00:00`);
-      if (Number.isNaN(date.getTime())) return value;
-
-      return new Intl.DateTimeFormat(
-        currentLang === "fr"
-          ? "fr-FR"
-          : currentLang === "es"
-            ? "es-ES"
-            : "en-GB",
-        {
-          day: "2-digit",
-          month: "short",
-          year: "numeric"
-        }
-      ).format(date);
-    }
-
-    function getNextInvoiceOpportunity() {
-      return dashboardRows
-        .filter((row) => row.valid && getInvoiceDate(row.contract))
-        .map((row) => ({
-          row,
-          dateValue: getInvoiceDate(row.contract),
-          date: new Date(`${getInvoiceDate(row.contract)}T00:00:00`)
-        }))
-        .filter((item) => !Number.isNaN(item.date.getTime()))
-        .sort((a, b) => a.date - b.date)[0] || null;
-    }
-
-    function renderExecutiveAlerts() {
-      const container = document.getElementById("executiveAlerts");
-      if (!container) return;
-
-      const incomplete = dashboardRows.filter((row) => !row.valid).length;
-
-      const expiring = dashboardRows.filter((row) => {
-        const days = getDaysRemaining(row.contract);
-        return days !== null && days >= 0 && days <= 180;
-      }).length;
-
-      const overdue = dashboardRows.filter(
-        (row) => isRecordedOverdue(row.contract)
-      ).length;
-
-      const nextInvoice = getNextInvoiceOpportunity();
-      const hasForecastWithoutDates = dashboardRows.some(
-        (row) =>
-          row.valid &&
-          row.invoiceForecast > 0 &&
-          !getInvoiceDate(row.contract)
-      );
-
-      const alerts = [];
-
-      if (incomplete > 0) {
-        alerts.push({
-          tone: "warning",
-          icon: "⚠",
-          title: t("alertIncompleteTitle"),
-          text: t("alertIncompleteText").replace("{count}", incomplete)
-        });
-      }
-
-      if (expiring > 0) {
-        alerts.push({
-          tone: "warning",
-          icon: "⏳",
-          title: t("alertExpiryTitle"),
-          text: t("alertExpiryText").replace("{count}", expiring)
-        });
-      }
-
-      if (overdue > 0) {
-        alerts.push({
-          tone: "danger",
-          icon: "!",
-          title: t("alertOverdueTitle"),
-          text: t("alertOverdueText").replace("{count}", overdue)
-        });
-      }
-
-      if (nextInvoice) {
-        alerts.push({
-          tone: "info",
-          icon: "£",
-          title: t("alertNextInvoiceTitle"),
-          text: t("alertNextInvoiceText")
-            .replace(
-              "{amount}",
-              formatMoney(
-                nextInvoice.row.invoiceForecast,
-                nextInvoice.row.currency
-              )
-            )
-            .replace(
-              "{date}",
-              formatDashboardDate(nextInvoice.dateValue)
-            )
-        });
-      } else if (hasForecastWithoutDates) {
-        alerts.push({
-          tone: "info",
-          icon: "📅",
-          title: t("alertNoInvoiceTitle"),
-          text: t("alertNoInvoiceText")
-        });
-      }
-
-      if (!alerts.length) {
-        alerts.push({
-          tone: "success",
-          icon: "✓",
-          title: t("alertAllClearTitle"),
-          text: t("alertAllClearText")
-        });
-      }
-
-      container.innerHTML = alerts.slice(0, 4).map((alert) => `
-        <article class="executive-alert ${alert.tone}">
-          <div class="executive-alert-icon">${escapeHtml(alert.icon)}</div>
-          <div class="executive-alert-copy">
-            <strong>${escapeHtml(alert.title)}</strong>
-            <span>${escapeHtml(alert.text)}</span>
-          </div>
-        </article>
-      `).join("");
-    }
-
     function renderAttentionList() {
       const container = document.getElementById("attentionList");
 
@@ -3549,7 +3451,6 @@
     }
 
     function renderDashboard() {
-      renderExecutiveAlerts();
       renderKpis();
       renderPortfolioHealth();
       renderRevenueBars();
@@ -3569,7 +3470,6 @@
         </div>
       `;
 
-      document.getElementById("executiveAlerts").innerHTML = message;
       document.getElementById("revenueBars").innerHTML = message;
       document.getElementById("currencyMix").innerHTML = message;
       document.getElementById("portfolioTable").innerHTML = message;
@@ -3653,6 +3553,25 @@
       }
 
       allContracts = Array.isArray(data) ? data : [];
+      commissionInstalments = [];
+
+      const contractIds = allContracts.map((contract) => contract.id).filter(Boolean);
+
+      if (contractIds.length) {
+        const { data: instalmentData, error: instalmentError } = await db
+          .from("commission_instalments")
+          .select("*")
+          .in("contract_id", contractIds)
+          .order("due_date", { ascending: true })
+          .order("instalment_number", { ascending: true });
+
+        if (instalmentError) {
+          console.error("Commission instalment load error:", instalmentError);
+        } else {
+          commissionInstalments = Array.isArray(instalmentData) ? instalmentData : [];
+        }
+      }
+
       dashboardRows = allContracts.map(buildDashboardRow);
       renderDashboard();
     });
