@@ -62,34 +62,70 @@
       position: sticky;
       top: 0;
       z-index: 1000;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 18px;
-      flex-wrap: wrap;
-      padding: 14px 0 18px;
+      display: grid;
+      gap: 12px;
+      padding: 14px 0 16px;
       margin-bottom: 24px;
-      background: linear-gradient(180deg, rgba(2, 11, 29, 0.97), rgba(2, 11, 29, 0.86));
-      backdrop-filter: blur(12px);
+      background: linear-gradient(
+        180deg,
+        rgba(2, 11, 29, 0.985),
+        rgba(2, 11, 29, 0.93)
+      );
+      backdrop-filter: blur(16px);
       border-bottom: 1px solid var(--border);
+      box-shadow: 0 12px 28px rgba(0,0,0,0.16);
     }
 
-    .topbar-left,
-    .topbar-right {
+    .topbar-primary,
+    .topbar-secondary,
+    .topbar-brand-nav,
+    .topbar-tools,
+    .topbar-session-actions {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .topbar-primary,
+    .topbar-secondary {
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .topbar-tools {
       flex-wrap: wrap;
+    }
+
+    .topbar-session-actions {
+      justify-content: flex-end;
+      margin-left: auto;
     }
 
     .identity-bar {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 11px;
+      min-width: 285px;
+      max-width: 390px;
       padding: 8px 10px 8px 12px;
       border: 1px solid var(--border);
       border-radius: 14px;
-      background: rgba(255,255,255,0.035);
+      background: rgba(255,255,255,0.04);
+    }
+
+    .identity-avatar {
+      display: grid;
+      place-items: center;
+      flex: 0 0 38px;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      color: #08111f;
+      background: linear-gradient(135deg, var(--gold), var(--gold-2));
+      font-size: 0.78rem;
+      font-weight: 950;
+      letter-spacing: 0.02em;
     }
 
     .identity-copy {
@@ -106,6 +142,21 @@
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
+    }
+
+    .topbar-logout {
+      min-height: 38px;
+      padding: 0 12px;
+      white-space: nowrap;
+    }
+
+    .topbar .lang-switcher {
+      flex-wrap: nowrap;
+    }
+
+    .topbar .lang-btn {
+      min-width: 44px;
+      min-height: 38px;
     }
 
     .identity-label {
@@ -818,8 +869,27 @@
 
     @media (max-width: 760px) {
       body { padding: 16px; }
-      .topbar-left, .topbar-right { width: 100%; }
-      .topbar-right .btn { flex: 1; }
+      .topbar-primary,
+      .topbar-secondary {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .topbar-brand-nav,
+      .topbar-session-actions,
+      .topbar-tools {
+        width: 100%;
+      }
+
+      .topbar-brand-nav,
+      .topbar-session-actions {
+        justify-content: space-between;
+      }
+
+      .topbar-tools {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+      }
       .hero { padding: 24px 20px; }
       .revenue-row { grid-template-columns: 1fr; gap: 8px; }
     }
@@ -830,8 +900,11 @@
       .health-score-layout { grid-template-columns: 1fr; }
       .btn { width: 100%; }
       .lang-btn { width: auto; }
-      .topbar-right .lang-switcher { width: 100%; }
-      .identity-bar { width: 100%; justify-content: space-between; }
+      .topbar .lang-switcher { width: auto; }
+      .identity-bar {
+        width: 100%;
+        max-width: none;
+      }
       .identity-label, .identity-name, .identity-agency, .identity-email { max-width: 220px; }
     }
   </style>
@@ -840,57 +913,67 @@
 <body>
   <div class="page">
     <header class="topbar">
-      <div class="topbar-left">
-        <div class="brand">
-          <div class="brand-title">
-            <span class="brand-main">DealTrack</span>
-            <span class="brand-pro">Pro</span>
+      <div class="topbar-primary">
+        <div class="topbar-brand-nav">
+          <div class="brand">
+            <div class="brand-title">
+              <span class="brand-main">DealTrack</span>
+              <span class="brand-pro">Pro</span>
+            </div>
+            <div class="brand-tagline" data-i18n="brandTagline">
+              Contract Intelligence for Football Agents
+            </div>
           </div>
-          <div class="brand-tagline" data-i18n="brandTagline">
-            Contract Intelligence for Football Agents
-          </div>
+
+          <a class="btn" href="/dealtrack-pro/contracts.html" data-i18n="openPortfolio">
+            ← Contract Portfolio
+          </a>
         </div>
 
-        <a class="btn" href="/dealtrack-pro/contracts.html" data-i18n="openPortfolio">
-          ← Contract Portfolio
-        </a>
+        <div class="topbar-session-actions">
+          <div class="identity-bar" aria-live="polite">
+            <div id="identityInitials" class="identity-avatar">—</div>
+            <div class="identity-copy">
+              <span class="identity-label" data-i18n="loggedInAs">Logged in as</span>
+              <strong id="identityName" class="identity-name">—</strong>
+              <span id="identityAgency" class="identity-agency">—</span>
+              <span id="identityEmail" class="identity-email">—</span>
+            </div>
+          </div>
+
+          <button id="logoutBtn" type="button" class="btn topbar-logout" data-i18n="logOut">
+            Log out
+          </button>
+
+          <div class="lang-switcher">
+            <button type="button" class="lang-btn" data-lang-btn="en">EN</button>
+            <button type="button" class="lang-btn" data-lang-btn="fr">FR</button>
+            <button type="button" class="lang-btn" data-lang-btn="es">ES</button>
+          </div>
+        </div>
       </div>
 
-      <div class="topbar-right">
-        <a class="btn btn-gold" href="/dealtrack-pro/upload-contract.html" data-i18n="uploadContract">
-          📤 Upload Contract
-        </a>
+      <div class="topbar-secondary">
+        <div class="topbar-tools">
+          <a class="btn btn-gold" href="/dealtrack-pro/upload-contract.html" data-i18n="uploadContract">
+            📤 Upload Contract
+          </a>
 
-        <button id="downloadExcelBtn" type="button" class="btn btn-gold" data-i18n="downloadExcel">
-          📊 Download Excel Report
-        </button>
+          <button id="downloadExcelBtn" type="button" class="btn btn-gold" data-i18n="downloadExcel">
+            📊 Download Excel Report
+          </button>
 
-        <button id="downloadReportBtn" type="button" class="btn btn-primary" data-i18n="downloadReport">
-          ⬇ Download Management Report
-        </button>
+          <button id="downloadReportBtn" type="button" class="btn btn-primary" data-i18n="downloadReport">
+            ⬇ Download Management Report
+          </button>
 
-        <button id="printDashboardBtn" type="button" class="btn" data-i18n="printDashboard">
-          🖨 Print Dashboard
-        </button>
+          <button id="printDashboardBtn" type="button" class="btn" data-i18n="printDashboard">
+            🖨 Print Dashboard
+          </button>
 
-        <a class="btn" href="/dealtrack-pro/agency-settings.html" data-i18n="agencySettings">
-          ⚙ Agency Settings
-        </a>
-
-        <div class="identity-bar" aria-live="polite">
-          <div class="identity-copy">
-            <span class="identity-label" data-i18n="loggedInAs">Logged in as</span>
-            <strong id="identityName" class="identity-name">—</strong>
-            <span id="identityAgency" class="identity-agency">—</span>
-            <span id="identityEmail" class="identity-email">—</span>
-          </div>
-          <button id="logoutBtn" type="button" class="btn logout-btn" data-i18n="logOut">Log out</button>
-        </div>
-
-        <div class="lang-switcher">
-          <button type="button" class="lang-btn" data-lang-btn="en">EN</button>
-          <button type="button" class="lang-btn" data-lang-btn="fr">FR</button>
-          <button type="button" class="lang-btn" data-lang-btn="es">ES</button>
+          <a class="btn" href="/dealtrack-pro/agency-settings.html" data-i18n="agencySettings">
+            ⚙ Agency Settings
+          </a>
         </div>
       </div>
     </header>
@@ -1895,6 +1978,18 @@
         currentAgency?.name ||
         t("noAgencyAssigned");
       emailEl.textContent = currentUser?.email || "—";
+
+      const initialsEl = document.getElementById("identityInitials");
+      if (initialsEl) {
+        const initials = getUserDisplayName(currentUser)
+          .split(/\s+/)
+          .filter(Boolean)
+          .slice(0, 2)
+          .map((part) => part.charAt(0).toUpperCase())
+          .join("");
+
+        initialsEl.textContent = initials || "U";
+      }
     }
 
     function applyTranslations() {
