@@ -631,31 +631,57 @@
 
       currentUser = user;
 
-      const { data: membershipData, error: membershipError } = await db
-        .from("agency_users")
-        .select("agency_id, role, is_owner, is_active")
-        .eq("user_id", user.id)
-        .eq("is_active", true)
-        .limit(1)
-        .maybeSingle();
+      /*
+       * Preferred route:
+       * A SECURITY DEFINER RPC returns the current user's active agency
+       * context without exposing other agencies or memberships.
+       *
+       * This avoids the RLS circularity that can occur when agency_users
+       * policies themselves depend on reading agency_users.
+       */
+      const { data: contextRows, error: contextError } = await db
+        .rpc("get_my_agency_context");
 
-      if (membershipError || !membershipData?.agency_id) {
-        throw new Error("No active DealTrack Pro agency membership was found for this account.");
+      if (contextError) {
+        console.error("Agency context RPC error:", contextError);
+        throw new Error(
+          "Your agency membership exists, but DealTrack Pro could not read it securely. " +
+          "Please confirm that the get_my_agency_context database function has been installed."
+        );
       }
 
-      membership = membershipData;
+      const context = Array.isArray(contextRows)
+        ? contextRows[0]
+        : contextRows;
 
-      const { data: agencyData, error: agencyError } = await db
-        .from("agencies")
-        .select("*")
-        .eq("id", membership.agency_id)
-        .maybeSingle();
-
-      if (agencyError || !agencyData) {
-        throw new Error("The agency record could not be loaded.");
+      if (!context?.agency_id) {
+        throw new Error(
+          "No active DealTrack Pro agency membership was found for this account."
+        );
       }
 
-      agency = agencyData;
+      membership = {
+        agency_id: context.agency_id,
+        role: context.role,
+        is_owner: context.is_owner,
+        is_active: context.is_active
+      };
+
+      agency = {
+        id: context.agency_id,
+        name: context.name,
+        legal_name: context.legal_name,
+        email: context.email,
+        telephone: context.telephone,
+        website: context.website,
+        country: context.country,
+        base_currency: context.base_currency,
+        logo_url: context.logo_url,
+        subscription_plan: context.subscription_plan,
+        status: context.status,
+        created_at: context.created_at,
+        updated_at: context.updated_at
+      };
 
       renderIdentity();
       renderWorkspaceSummary();
@@ -745,6 +771,26 @@
         await loadAgencyContext();
       } catch (error) {
         console.error(error);
+
+        renderIdentity();
+
+        document.getElementById("workspaceSummary").innerHTML = `
+          <div class="state">
+            ${escapeHtml(
+              error?.message || "Unable to load agency settings."
+            )}
+          </div>
+        `;
+
+        document.querySelectorAll(
+          "#agencyForm input, #agencyForm select, #agencyForm textarea"
+        ).forEach((el) => {
+          el.disabled = true;
+        });
+
+        document.getElementById("saveBtn").disabled = true;
+        document.getElementById("resetBtn").disabled = true;
+
         showNotice(
           error?.message || "Unable to load agency settings.",
           "error"
