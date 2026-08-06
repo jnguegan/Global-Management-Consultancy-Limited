@@ -391,6 +391,158 @@
       text-align: right;
     }
 
+    .commercial-value-card {
+  position: relative;
+  overflow: hidden;
+  border-color: rgba(212, 175, 55, 0.34);
+  background:
+    radial-gradient(
+      circle at top right,
+      rgba(240, 200, 90, 0.13),
+      transparent 34%
+    ),
+    linear-gradient(
+      145deg,
+      rgba(212, 175, 55, 0.09),
+      rgba(8, 22, 48, 0.98) 48%
+    );
+}
+
+.commercial-value-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 22px;
+  right: 22px;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--gold),
+    transparent
+  );
+}
+
+.commercial-value-headline {
+  padding: 22px;
+  margin-bottom: 16px;
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  border-radius: 20px;
+  background: rgba(212, 175, 55, 0.055);
+  text-align: center;
+}
+
+.commercial-value-label {
+  display: block;
+  margin-bottom: 9px;
+  color: var(--muted);
+  font-size: 0.77rem;
+  font-weight: 800;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.commercial-value-annual {
+  color: var(--gold-2);
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -0.045em;
+}
+
+.commercial-value-period {
+  margin-top: 9px;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.commercial-total-box {
+  padding: 20px;
+  margin-bottom: 16px;
+  border: 1px solid rgba(88, 166, 255, 0.17);
+  border-radius: 18px;
+  background: rgba(47, 140, 255, 0.055);
+  text-align: center;
+}
+
+.commercial-total-value {
+  margin-top: 7px;
+  color: var(--text);
+  font-size: clamp(1.55rem, 4vw, 2.25rem);
+  font-weight: 900;
+  letter-spacing: -0.035em;
+}
+
+.commercial-breakdown {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.commission-side-box {
+  padding: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 17px;
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.commission-side-title {
+  margin-bottom: 12px;
+  color: var(--gold-2);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.commission-side-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.055);
+}
+
+.commission-side-row:last-child {
+  border-bottom: 0;
+}
+
+.commission-side-row span {
+  color: var(--muted);
+  font-size: 0.84rem;
+}
+
+.commission-side-row strong {
+  color: var(--text);
+  text-align: right;
+}
+
+.commercial-calculation {
+  margin-top: 16px;
+  padding: 15px;
+  border-radius: 16px;
+  color: var(--muted);
+  background: rgba(255, 255, 255, 0.025);
+  font-size: 0.88rem;
+  line-height: 1.65;
+}
+
+.commercial-warning {
+  padding: 17px;
+  border: 1px solid rgba(245, 158, 11, 0.25);
+  border-radius: 17px;
+  color: #ffe4ad;
+  background: rgba(245, 158, 11, 0.08);
+  line-height: 1.6;
+}
+
+@media (max-width: 620px) {
+  .commercial-breakdown {
+    grid-template-columns: 1fr;
+  }
+}
+    
     .status-box {
       padding: 18px 20px;
       border-radius: 18px;
@@ -506,6 +658,25 @@
       "sectionContract": "Contract Timeline",
       "sectionSalary": "Salary Baseline",
       "sectionCommission": "Commission Structure",
+    "sectionCommercialValue": "Commercial Value",
+"commercialValueSubtitle": "Expected commission revenue based on the currently recorded salary, commission rate and representation structure.",
+"expectedAnnualRevenue": "Expected Annual Commission Revenue",
+"expectedContractRevenue": "Expected Total Commission Revenue",
+"perYear": "per year",
+"overContractTerm": "over {years} years",
+"playerSide": "Player-Side Representation",
+"clubSide": "Club-Side Representation",
+"commissionRate": "Commission Rate",
+"annualRevenue": "Annual Revenue",
+"contractRevenue": "Contract Revenue",
+"annualSalaryBasis": "Annual Salary Basis",
+"totalCommissionRate": "Total Commission Rate",
+"representationType": "Representation",
+"dualRepresentationValue": "Dual Representation",
+"singleRepresentationValue": "Single Representation",
+"commercialCalculation": "Calculation",
+"commercialValueUnavailable": "The commercial value cannot yet be calculated because the salary amount, salary frequency or commission rate is missing.",
+"commercialEstimateNote": "Estimate based on the current recorded terms. Bonuses, amendments, taxes and conditional payments are not included.",
       "sectionSnapshot": "Commercial Snapshot",
       "sectionSnapshotText": "A premium summary of the commercial foundations currently recorded for this mandate.",
       "labelClubName": "Club Name",
@@ -560,6 +731,25 @@
       "sectionContract": "Calendrier du contrat",
       "sectionSalary": "Base salariale",
       "sectionCommission": "Structure de commission",
+    "sectionCommercialValue": "Valeur commerciale",
+"commercialValueSubtitle": "Revenus de commission estimés sur la base du salaire, du taux de commission et de la structure de représentation actuellement enregistrés.",
+"expectedAnnualRevenue": "Revenus annuels de commission estimés",
+"expectedContractRevenue": "Revenus totaux de commission estimés",
+"perYear": "par an",
+"overContractTerm": "sur {years} ans",
+"playerSide": "Représentation côté joueur",
+"clubSide": "Représentation côté club",
+"commissionRate": "Taux de commission",
+"annualRevenue": "Revenus annuels",
+"contractRevenue": "Revenus sur la durée du contrat",
+"annualSalaryBasis": "Base salariale annuelle",
+"totalCommissionRate": "Taux total de commission",
+"representationType": "Représentation",
+"dualRepresentationValue": "Double représentation",
+"singleRepresentationValue": "Représentation simple",
+"commercialCalculation": "Calcul",
+"commercialValueUnavailable": "La valeur commerciale ne peut pas encore être calculée, car le salaire, la fréquence salariale ou le taux de commission est manquant.",
+"commercialEstimateNote": "Estimation basée sur les conditions actuellement enregistrées. Les primes, modifications, taxes et paiements conditionnels ne sont pas inclus.",
       "sectionSnapshot": "Synthèse commerciale",
       "sectionSnapshotText": "Une synthèse premium des fondements commerciaux actuellement enregistrés pour ce mandat.",
       "labelClubName": "Nom du club",
@@ -614,6 +804,25 @@
       "sectionContract": "Calendario contractual",
       "sectionSalary": "Base salarial",
       "sectionCommission": "Estructura de comisión",
+    "sectionCommercialValue": "Valor comercial",
+"commercialValueSubtitle": "Ingresos de comisión estimados según el salario, el porcentaje de comisión y la estructura de representación actualmente registrados.",
+"expectedAnnualRevenue": "Ingresos anuales de comisión estimados",
+"expectedContractRevenue": "Ingresos totales de comisión estimados",
+"perYear": "por año",
+"overContractTerm": "durante {years} años",
+"playerSide": "Representación del jugador",
+"clubSide": "Representación del club",
+"commissionRate": "Porcentaje de comisión",
+"annualRevenue": "Ingresos anuales",
+"contractRevenue": "Ingresos durante el contrato",
+"annualSalaryBasis": "Base salarial anual",
+"totalCommissionRate": "Porcentaje total de comisión",
+"representationType": "Representación",
+"dualRepresentationValue": "Representación dual",
+"singleRepresentationValue": "Representación única",
+"commercialCalculation": "Cálculo",
+"commercialValueUnavailable": "El valor comercial todavía no puede calcularse porque falta el salario, la frecuencia salarial o el porcentaje de comisión.",
+"commercialEstimateNote": "Estimación basada en las condiciones actualmente registradas. No incluye primas, modificaciones, impuestos ni pagos condicionales.",
       "sectionSnapshot": "Resumen comercial",
       "sectionSnapshotText": "Un resumen premium de las bases comerciales actualmente registradas para este mandato.",
       "labelClubName": "Nombre del club",
@@ -690,7 +899,407 @@
       if (a === null || a === "" || typeof a === "undefined") return t("na");
       return `${a} ${c}${f ? ` · ${f}` : ""}`.trim();
     }
+function toNumber(value) {
+  if (
+    value === null ||
+    value === undefined ||
+    value === ""
+  ) {
+    return null;
+  }
 
+  if (typeof value === "number") {
+    return Number.isFinite(value)
+      ? value
+      : null;
+  }
+
+  const cleaned = String(value)
+    .replace(/\s/g, "")
+    .replace(/,/g, "")
+    .replace(/[^\d.-]/g, "");
+
+  if (!cleaned) {
+    return null;
+  }
+
+  const number = Number(cleaned);
+
+  return Number.isFinite(number)
+    ? number
+    : null;
+}
+
+function normaliseFrequency(value) {
+  return String(value || "")
+    .trim()
+    .toLowerCase();
+}
+
+function calculateAnnualSalary(
+  salaryAmount,
+  salaryFrequency
+) {
+  const salary =
+    toNumber(salaryAmount);
+
+  if (salary === null) {
+    return null;
+  }
+
+  const frequency =
+    normaliseFrequency(salaryFrequency);
+
+  const frequencyMultipliers = {
+    weekly: 52,
+    week: 52,
+    hebdomadaire: 52,
+    semanal: 52,
+
+    monthly: 12,
+    month: 12,
+    mensuel: 12,
+    mensuelle: 12,
+    mensual: 12,
+
+    fortnightly: 26,
+    biweekly: 26,
+    quinzaine: 26,
+    quincenal: 26,
+
+    yearly: 1,
+    annual: 1,
+    annually: 1,
+    year: 1,
+    annuel: 1,
+    annuelle: 1,
+    anual: 1
+  };
+
+  const multiplier =
+    frequencyMultipliers[frequency];
+
+  if (!multiplier) {
+    return null;
+  }
+
+  return salary * multiplier;
+}
+
+function calculateContractYears(
+  startDateValue,
+  endDateValue
+) {
+  if (!startDateValue || !endDateValue) {
+    return null;
+  }
+
+  const startDate =
+    new Date(`${startDateValue}T00:00:00`);
+
+  const endDate =
+    new Date(`${endDateValue}T00:00:00`);
+
+  if (
+    Number.isNaN(startDate.getTime()) ||
+    Number.isNaN(endDate.getTime()) ||
+    endDate <= startDate
+  ) {
+    return null;
+  }
+
+  const millisecondsPerYear =
+    365.2425 * 24 * 60 * 60 * 1000;
+
+  const exactYears =
+    (endDate - startDate) /
+    millisecondsPerYear;
+
+  return Math.max(
+    1,
+    Math.round(exactYears)
+  );
+}
+
+function getCurrencyCode(data) {
+  return (
+    data.salary_currency ||
+    data.commission_currency ||
+    "GBP"
+  );
+}
+
+function formatMoneyValue(
+  amount,
+  currency
+) {
+  const numericAmount =
+    toNumber(amount);
+
+  if (numericAmount === null) {
+    return t("na");
+  }
+
+  const localeMap = {
+    en: "en-GB",
+    fr: "fr-FR",
+    es: "es-ES"
+  };
+
+  try {
+    return new Intl.NumberFormat(
+      localeMap[currentLang] || "en-GB",
+      {
+        style: "currency",
+        currency: currency || "GBP",
+        maximumFractionDigits: 0
+      }
+    ).format(numericAmount);
+  } catch {
+    return `${numericAmount.toLocaleString()} ${
+      currency || ""
+    }`.trim();
+  }
+}
+
+function renderCommissionSideBox({
+  title,
+  rate,
+  annualRevenue,
+  contractRevenue,
+  currency
+}) {
+  return `
+    <div class="commission-side-box">
+      <div class="commission-side-title">
+        ${title}
+      </div>
+
+      <div class="commission-side-row">
+        <span>${t("commissionRate")}</span>
+        <strong>${rate}%</strong>
+      </div>
+
+      <div class="commission-side-row">
+        <span>${t("annualRevenue")}</span>
+        <strong>
+          ${formatMoneyValue(
+            annualRevenue,
+            currency
+          )}
+        </strong>
+      </div>
+
+      <div class="commission-side-row">
+        <span>${t("contractRevenue")}</span>
+        <strong>
+          ${formatMoneyValue(
+            contractRevenue,
+            currency
+          )}
+        </strong>
+      </div>
+    </div>
+  `;
+}
+
+function renderCommercialValue(data) {
+  const annualSalary =
+    calculateAnnualSalary(
+      data.salary,
+      data.salary_frequency
+    );
+
+  const commissionRate =
+    toNumber(
+      data.commission_percentage ??
+      data.commission_value
+    );
+
+  const contractYears =
+    calculateContractYears(
+      data.start_date,
+      data.end_date
+    );
+
+  const isDual =
+    Boolean(
+      data.is_dual_representation
+    );
+
+  const currency =
+    getCurrencyCode(data);
+
+  if (
+    annualSalary === null ||
+    commissionRate === null ||
+    contractYears === null
+  ) {
+    return `
+      <section class="premium-card commercial-value-card">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">06</div>
+            <h2 class="section-title">
+              ${t("sectionCommercialValue")}
+            </h2>
+          </div>
+        </div>
+
+        <div class="commercial-warning">
+          ${t("commercialValueUnavailable")}
+        </div>
+      </section>
+    `;
+  }
+
+  const playerSideAnnual =
+    annualSalary *
+    (commissionRate / 100);
+
+  const clubSideAnnual =
+    isDual
+      ? annualSalary *
+        (commissionRate / 100)
+      : 0;
+
+  const totalAnnualRevenue =
+    playerSideAnnual +
+    clubSideAnnual;
+
+  const playerContractRevenue =
+    playerSideAnnual *
+    contractYears;
+
+  const clubContractRevenue =
+    clubSideAnnual *
+    contractYears;
+
+  const totalContractRevenue =
+    totalAnnualRevenue *
+    contractYears;
+
+  const totalCommissionRate =
+    isDual
+      ? commissionRate * 2
+      : commissionRate;
+
+  const representationText =
+    isDual
+      ? t("dualRepresentationValue")
+      : t("singleRepresentationValue");
+
+  const termText =
+    t("overContractTerm").replace(
+      "{years}",
+      contractYears
+    );
+
+  return `
+    <section class="premium-card commercial-value-card">
+      <div class="section-head">
+        <div>
+          <div class="section-kicker">06</div>
+          <h2 class="section-title">
+            ${t("sectionCommercialValue")}
+          </h2>
+        </div>
+      </div>
+
+      <p class="muted">
+        ${t("commercialValueSubtitle")}
+      </p>
+
+      <div class="commercial-value-headline">
+        <span class="commercial-value-label">
+          ${t("expectedAnnualRevenue")}
+        </span>
+
+        <div class="commercial-value-annual">
+          ${formatMoneyValue(
+            totalAnnualRevenue,
+            currency
+          )}
+        </div>
+
+        <div class="commercial-value-period">
+          ${t("perYear")}
+        </div>
+      </div>
+
+      <div class="commercial-total-box">
+        <span class="commercial-value-label">
+          ${t("expectedContractRevenue")}
+        </span>
+
+        <div class="commercial-total-value">
+          ${formatMoneyValue(
+            totalContractRevenue,
+            currency
+          )}
+        </div>
+
+        <div class="commercial-value-period">
+          ${termText}
+        </div>
+      </div>
+
+      <div class="commercial-breakdown">
+        ${renderCommissionSideBox({
+          title: t("playerSide"),
+          rate: commissionRate,
+          annualRevenue: playerSideAnnual,
+          contractRevenue:
+            playerContractRevenue,
+          currency
+        })}
+
+        ${
+          isDual
+            ? renderCommissionSideBox({
+                title: t("clubSide"),
+                rate: commissionRate,
+                annualRevenue:
+                  clubSideAnnual,
+                contractRevenue:
+                  clubContractRevenue,
+                currency
+              })
+            : ""
+        }
+      </div>
+
+      <div class="commercial-calculation">
+        <strong>
+          ${t("commercialCalculation")}:
+        </strong>
+
+        ${t("annualSalaryBasis")}
+        ${formatMoneyValue(
+          annualSalary,
+          currency
+        )}
+
+        × ${t("totalCommissionRate")}
+        ${totalCommissionRate}%
+
+        = ${formatMoneyValue(
+          totalAnnualRevenue,
+          currency
+        )}
+        ${t("perYear")}.
+
+        ${t("representationType")}:
+        ${representationText}.
+
+        <br />
+
+        ${t("commercialEstimateNote")}
+      </div>
+    </section>
+  `;
+}
+    
     function renderTile(labelKey, valueHtml) {
       return `
         <div class="data-tile">
@@ -793,9 +1402,11 @@
                 ${renderTile("labelCommissionPayer", safeValue(data.commission_payer))}
                 ${renderTile("labelCommissionFrequency", safeValue(data.commission_frequency))}
                 ${renderTile("labelCommissionInstalments", safeValue(data.commission_instalments))}
-                ${renderTile("labelDualRepresentation", yesNo(data.is_dual_representation))}
+               ${renderTile("labelDualRepresentation", yesNo(data.is_dual_representation))}
               </div>
             </section>
+
+            ${renderCommercialValue(data)}
 
             <section class="premium-card summary-card">
               <div class="summary-top">
