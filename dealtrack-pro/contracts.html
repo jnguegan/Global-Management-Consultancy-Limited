@@ -82,29 +82,112 @@
       position: sticky;
       top: 0;
       z-index: 1000;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 18px;
-      flex-wrap: wrap;
-      padding: 14px 0 18px;
+      display: grid;
+      gap: 12px;
+      padding: 14px 0 16px;
       margin-bottom: 24px;
-      background: linear-gradient(
-        180deg,
-        rgba(2, 11, 29, 0.97),
-        rgba(2, 11, 29, 0.86)
-      );
-      backdrop-filter: blur(12px);
+      background: linear-gradient(180deg, rgba(2, 11, 29, 0.985), rgba(2, 11, 29, 0.93));
+      backdrop-filter: blur(16px);
       border-bottom: 1px solid var(--border);
+      box-shadow: 0 12px 28px rgba(0,0,0,0.16);
     }
 
-    .topbar-left,
-    .topbar-right {
+    .topbar-primary,
+    .topbar-secondary,
+    .topbar-brand-nav,
+    .topbar-tools,
+    .topbar-session-actions {
       display: flex;
       align-items: center;
-      gap: 12px;
-      flex-wrap: wrap;
+      gap: 10px;
+      min-width: 0;
     }
+
+    .topbar-primary,
+    .topbar-secondary {
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .topbar-tools { flex-wrap: wrap; }
+
+    .topbar-session-actions {
+      justify-content: flex-end;
+      margin-left: auto;
+    }
+
+    .identity-bar {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      min-width: 285px;
+      max-width: 390px;
+      padding: 8px 10px 8px 12px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: rgba(255,255,255,0.04);
+    }
+
+    .identity-avatar {
+      display: grid;
+      place-items: center;
+      flex: 0 0 38px;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      color: #08111f;
+      background: linear-gradient(135deg, var(--gold), var(--gold-2));
+      font-size: 0.78rem;
+      font-weight: 950;
+    }
+
+    .identity-copy { min-width: 0; line-height: 1.22; }
+
+    .identity-label,
+    .identity-name,
+    .identity-agency,
+    .identity-email {
+      display: block;
+      max-width: 240px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .identity-label {
+      color: var(--muted);
+      font-size: 0.64rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .identity-name {
+      color: var(--text);
+      font-size: 0.82rem;
+      font-weight: 900;
+    }
+
+    .identity-agency {
+      color: var(--gold-2);
+      font-size: 0.72rem;
+      font-weight: 800;
+    }
+
+    .identity-email {
+      color: var(--muted);
+      font-size: 0.69rem;
+      font-weight: 650;
+    }
+
+    .topbar-logout {
+      min-height: 38px;
+      padding: 0 12px;
+      white-space: nowrap;
+    }
+
+    .topbar .lang-switcher { flex-wrap: nowrap; }
+    .topbar .lang-btn { min-width: 44px; min-height: 38px; }
 
     .brand {
       display: flex;
@@ -650,13 +733,31 @@
         padding: 16px;
       }
 
-      .topbar-left,
-      .topbar-right {
+      .topbar-primary,
+      .topbar-secondary {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .topbar-brand-nav,
+      .topbar-session-actions,
+      .topbar-tools {
         width: 100%;
       }
 
-      .topbar-right .btn {
-        flex: 1;
+      .topbar-brand-nav,
+      .topbar-session-actions {
+        justify-content: space-between;
+      }
+
+      .topbar-tools {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .identity-bar {
+        width: 100%;
+        max-width: none;
       }
 
       .hero {
@@ -690,8 +791,8 @@
         width: auto;
       }
 
-      .topbar-right .lang-switcher {
-        width: 100%;
+      .topbar .lang-switcher {
+        width: auto;
       }
     }
   </style>
@@ -700,79 +801,56 @@
 <body>
   <div class="page">
     <header class="topbar">
-      <div class="topbar-left">
-        <div class="brand">
-          <div class="brand-title">
-            <span class="brand-main">DealTrack</span>
-            <span class="brand-pro">Pro</span>
+      <div class="topbar-primary">
+        <div class="topbar-brand-nav">
+          <div class="brand">
+            <div class="brand-title">
+              <span class="brand-main">DealTrack</span>
+              <span class="brand-pro">Pro</span>
+            </div>
+            <div class="brand-tagline" data-i18n="brandTagline">
+              Contract Intelligence for Football Agents
+            </div>
           </div>
 
-          <div
-            class="brand-tagline"
-            data-i18n="brandTagline"
-          >
-            Contract Intelligence for Football Agents
-          </div>
+          <a class="btn" href="/dealtrack-pro/agency-dashboard.html" data-i18n="backDashboard">
+            ← Agency Dashboard
+          </a>
         </div>
 
-        <a
-          class="btn"
-          href="/agent-academy/dashboard.html"
-          data-i18n="backDashboard"
-        >
-          ← Back to Dashboard
-        </a>
+        <div class="topbar-session-actions">
+          <div class="identity-bar" aria-live="polite">
+            <div id="identityInitials" class="identity-avatar">—</div>
+            <div class="identity-copy">
+              <span class="identity-label" data-i18n="loggedInAs">Logged in as</span>
+              <strong id="identityName" class="identity-name">—</strong>
+              <span id="identityAgency" class="identity-agency">—</span>
+              <span id="identityEmail" class="identity-email">—</span>
+            </div>
+          </div>
+
+          <button id="logoutBtn" type="button" class="btn topbar-logout" data-i18n="logOut">
+            Log out
+          </button>
+
+          <div class="lang-switcher">
+            <button type="button" class="lang-btn" data-lang-btn="en">EN</button>
+            <button type="button" class="lang-btn" data-lang-btn="fr">FR</button>
+            <button type="button" class="lang-btn" data-lang-btn="es">ES</button>
+          </div>
+        </div>
       </div>
 
-      <div class="topbar-right">
-        <a
-          class="btn btn-gold"
-          href="/dealtrack-pro/upload-contract.html"
-          data-i18n="uploadContract"
-        >
-          📤 Upload Contract
-        </a>
-
-        <a
-          class="btn btn-primary"
-          href="/dealtrack-pro/add-contract.html"
-          data-i18n="addManually"
-        >
-          ➕ Add Manually
-        </a>
-
-        <button
-          id="printReportBtn"
-          type="button"
-          class="btn"
-          data-i18n="printReport"
-        >
-          🖨️ Print Partner Report
-        </button>
-
-        <div class="lang-switcher">
-          <button
-            type="button"
-            class="lang-btn"
-            data-lang-btn="en"
-          >
-            EN
-          </button>
-
-          <button
-            type="button"
-            class="lang-btn"
-            data-lang-btn="fr"
-          >
-            FR
-          </button>
-
-          <button
-            type="button"
-            class="lang-btn"
-            data-lang-btn="es"
-          >
-            ES
+      <div class="topbar-secondary">
+        <div class="topbar-tools">
+          <a class="btn btn-gold" href="/dealtrack-pro/upload-contract.html" data-i18n="uploadContract">
+            📤 Upload Contract
+          </a>
+          <a class="btn btn-primary" href="/dealtrack-pro/add-contract.html" data-i18n="addManually">
+            ➕ Add Manually
+          </a>
+          <button id="printReportBtn" type="button" class="btn" data-i18n="printReport">
+            🖨️ Print Partner Report
           </button>
         </div>
       </div>
@@ -921,7 +999,10 @@
   {
   "en": {
     "brandTagline": "Contract Intelligence for Football Agents",
-    "backDashboard": "← Back to Dashboard",
+    "backDashboard": "← Agency Dashboard",
+    "loggedInAs": "Logged in as",
+    "logOut": "Log out",
+    "noAgencyAssigned": "No agency assigned",
     "uploadContract": "📤 Upload Contract",
     "addManually": "➕ Add Manually",
     "heroEyebrow": "Contract Portfolio",
@@ -987,7 +1068,10 @@
   },
   "fr": {
     "brandTagline": "Intelligence contractuelle pour agents de football",
-    "backDashboard": "← Retour au tableau de bord",
+    "backDashboard": "← Tableau de bord de l’agence",
+    "loggedInAs": "Connecté en tant que",
+    "logOut": "Se déconnecter",
+    "noAgencyAssigned": "Aucune agence attribuée",
     "uploadContract": "📤 Importer un contrat",
     "addManually": "➕ Ajouter manuellement",
     "heroEyebrow": "Portefeuille de contrats",
@@ -1053,7 +1137,10 @@
   },
   "es": {
     "brandTagline": "Inteligencia contractual para agentes de fútbol",
-    "backDashboard": "← Volver al panel",
+    "backDashboard": "← Panel de la agencia",
+    "loggedInAs": "Sesión iniciada como",
+    "logOut": "Cerrar sesión",
+    "noAgencyAssigned": "Ninguna agencia asignada",
     "uploadContract": "📤 Subir contrato",
     "addManually": "➕ Añadir manualmente",
     "heroEyebrow": "Cartera de contratos",
@@ -1127,6 +1214,8 @@
 
     let currentLang = localStorage.getItem("lang") || "en";
     let allContracts = [];
+    let currentUser = null;
+    let currentAgency = null;
 
     function t(key) {
       return (
@@ -1143,6 +1232,54 @@
         .replaceAll(">", "&gt;")
         .replaceAll('"', "&quot;")
         .replaceAll("'", "&#039;");
+    }
+
+    function getUserDisplayName(user) {
+      const metadata = user?.user_metadata || {};
+      const fullName =
+        metadata.full_name ||
+        metadata.name ||
+        [metadata.first_name, metadata.last_name].filter(Boolean).join(" ");
+
+      return String(fullName || user?.email?.split("@")[0] || "User")
+        .trim()
+        .replace(/[._-]+/g, " ")
+        .replace(/\b\w/g, (letter) => letter.toUpperCase());
+    }
+
+    async function loadAgencyContext(db) {
+      const { data, error } = await db.rpc("get_my_agency_context");
+
+      if (error) {
+        console.warn("Agency context could not be loaded:", error);
+        return null;
+      }
+
+      const context = Array.isArray(data) ? data[0] : data;
+      return context?.agency_id ? context : null;
+    }
+
+    function renderIdentityBar() {
+      const name = getUserDisplayName(currentUser);
+      const agencyName =
+        currentAgency?.legal_name ||
+        currentAgency?.name ||
+        t("noAgencyAssigned");
+
+      document.getElementById("identityName").textContent = name;
+      document.getElementById("identityAgency").textContent = agencyName;
+      document.getElementById("identityEmail").textContent =
+        currentUser?.email || "—";
+
+      const initials = name
+        .split(/\s+/)
+        .filter(Boolean)
+        .slice(0, 2)
+        .map((part) => part.charAt(0).toUpperCase())
+        .join("");
+
+      document.getElementById("identityInitials").textContent =
+        initials || "U";
     }
 
     function applyTranslations() {
@@ -1274,14 +1411,66 @@
       return Math.max(1, Math.round(years));
     }
 
+    function normaliseCommissionMethod(contract) {
+      const explicit = String(
+        contract.commission_method || contract.commission_type || ""
+      ).trim().toLowerCase();
+
+      if (explicit === "percentage" || explicit.includes("percentage") || explicit.includes("%")) return "percentage";
+      if (explicit === "fixed" || explicit.includes("fixed")) return "fixed";
+      if (explicit === "mixed" || explicit.includes("mixed")) return "mixed";
+
+      const percentage = toNumber(contract.commission_percentage);
+      const fixed = toNumber(contract.fixed_commission_amount);
+
+      if (percentage !== null && fixed !== null) return "mixed";
+      if (fixed !== null) return "fixed";
+      if (percentage !== null) return "percentage";
+      return "unknown";
+    }
+
+    function getCommissionBasis(contract, annualSalary) {
+      const basis = String(contract.commission_basis || "basic_salary")
+        .trim()
+        .toLowerCase();
+
+      const signingBonus = toNumber(contract.signing_bonus) || 0;
+      const guaranteedBonus = toNumber(contract.guaranteed_bonus) || 0;
+      const otherIncome = toNumber(contract.other_commissionable_income) || 0;
+      const customBasis = toNumber(contract.custom_commission_basis_amount);
+
+      if (basis === "custom" && customBasis !== null) {
+        return { recurring: customBasis, oneOff: 0, total: customBasis };
+      }
+
+      const recurring = annualSalary || 0;
+      let oneOff = 0;
+
+      if (
+        basis === "salary_plus_signing_bonus" ||
+        basis === "guaranteed_remuneration" ||
+        basis === "total_gross_remuneration" ||
+        Boolean(contract.signing_bonus_commissionable)
+      ) oneOff += signingBonus;
+
+      if (
+        basis === "guaranteed_remuneration" ||
+        basis === "total_gross_remuneration" ||
+        Boolean(contract.guaranteed_bonus_commissionable)
+      ) oneOff += guaranteedBonus;
+
+      if (
+        basis === "total_gross_remuneration" ||
+        Boolean(contract.other_income_commissionable)
+      ) oneOff += otherIncome;
+
+      return { recurring, oneOff, total: recurring + oneOff };
+    }
+
     function getCommercialMetrics(contract) {
       const annualSalary = calculateAnnualSalary(
         contract.salary,
         contract.salary_frequency
-      );
-
-      const commissionRate = toNumber(
-        contract.commission_percentage ?? contract.commission_value
       );
 
       const contractYears = calculateContractYears(
@@ -1289,39 +1478,84 @@
         contract.end_date
       );
 
-      const isDual = Boolean(contract.is_dual_representation);
-      const currency = contract.salary_currency || contract.commission_currency || "GBP";
+      const method = normaliseCommissionMethod(contract);
+      const commissionRate = toNumber(
+        contract.commission_percentage ??
+        (method === "percentage" ? contract.commission_value : null)
+      );
+      const fixedAmount = toNumber(
+        contract.fixed_commission_amount ??
+        (method === "fixed" ? contract.commission_value : null)
+      );
 
-      if (annualSalary === null || commissionRate === null) {
-        return {
-          available: false,
-          currency,
-          annualSalary,
-          commissionRate,
-          contractYears,
-          isDual
-        };
+      const isDual = Boolean(contract.is_dual_representation);
+      const currency =
+        contract.commission_currency ||
+        contract.salary_currency ||
+        "GBP";
+
+      const basis = getCommissionBasis(contract, annualSalary);
+
+      const percentageMultiplier =
+        isDual && contract.dual_representation_multiplier == null
+          ? 2
+          : Math.max(1, toNumber(contract.dual_representation_multiplier) || 1);
+
+      const fixedMultiplier =
+        isDual && Boolean(contract.fixed_commission_per_side) ? 2 : 1;
+
+      const recurringPercentage =
+        commissionRate !== null
+          ? basis.recurring * (commissionRate / 100) * percentageMultiplier
+          : 0;
+
+      const oneOffPercentage =
+        commissionRate !== null
+          ? basis.oneOff * (commissionRate / 100) * percentageMultiplier
+          : 0;
+
+      const fixedCommission =
+        fixedAmount !== null ? fixedAmount * fixedMultiplier : 0;
+
+      let annualRevenue = null;
+      let lifetimeRevenue = null;
+
+      if (method === "percentage" && commissionRate !== null && contractYears !== null) {
+        annualRevenue = recurringPercentage + oneOffPercentage;
+        lifetimeRevenue = (recurringPercentage * contractYears) + oneOffPercentage;
+      } else if (method === "fixed" && fixedAmount !== null) {
+        annualRevenue = fixedCommission;
+        lifetimeRevenue = fixedCommission;
+      } else if (
+        method === "mixed" &&
+        commissionRate !== null &&
+        fixedAmount !== null &&
+        contractYears !== null
+      ) {
+        annualRevenue = recurringPercentage + oneOffPercentage + fixedCommission;
+        lifetimeRevenue =
+          (recurringPercentage * contractYears) +
+          oneOffPercentage +
+          fixedCommission;
       }
 
-      const oneSideAnnual = annualSalary * (commissionRate / 100);
-      const annualRevenue = oneSideAnnual * (isDual ? 2 : 1);
-      const lifetimeRevenue = contractYears
-        ? annualRevenue * contractYears
-        : null;
+      const available =
+        annualRevenue !== null &&
+        lifetimeRevenue !== null;
 
       return {
-        available: true,
+        available,
         currency,
         annualSalary,
         commissionRate,
+        fixedAmount,
+        commissionMethod: method,
+        commissionBasis: basis.total,
         contractYears,
         isDual,
-        oneSideAnnual,
         annualRevenue,
         lifetimeRevenue,
-        invoiceForecast: annualRevenue,
-        playerInvoice: oneSideAnnual,
-        clubInvoice: isDual ? oneSideAnnual : 0
+        invoiceForecast: annualRevenue
       };
     }
 
@@ -1523,9 +1757,12 @@
                 ? formatMoney(metrics.annualSalary, metrics.currency)
                 : t("notRecorded");
 
-              const commissionRateDisplay = metrics.commissionRate !== null
-                ? `${metrics.commissionRate}%`
-                : t("notRecorded");
+              const commissionRateDisplay =
+                metrics.commissionMethod === "fixed" && metrics.fixedAmount !== null
+                  ? formatMoney(metrics.fixedAmount, metrics.currency)
+                  : metrics.commissionRate !== null
+                    ? `${metrics.commissionRate}%`
+                    : t("notRecorded");
 
               const annualRevenueDisplay = metrics.available
                 ? formatMoney(metrics.annualRevenue, metrics.currency)
@@ -1699,6 +1936,7 @@
               );
 
               applyTranslations();
+              renderIdentityBar();
             });
           });
 
@@ -1742,6 +1980,18 @@
             "/agent-academy/login.html";
           return;
         }
+
+        currentUser = user;
+        currentAgency = await loadAgencyContext(db);
+        renderIdentityBar();
+
+        document.getElementById("logoutBtn")?.addEventListener(
+          "click",
+          async () => {
+            await db.auth.signOut();
+            window.location.href = "/agent-academy/login.html";
+          }
+        );
 
         const { data, error } = await db
           .from("contracts")
