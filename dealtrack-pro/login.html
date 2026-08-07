@@ -554,8 +554,27 @@
     message.textContent = "";
   }
 
-  function goToDashboard(){
-    window.location.href = "/dealtrack-pro/agency-dashboard.html";
+  async function routeAuthenticatedUser(){
+    try{
+      const { data, error } = await db.rpc("get_my_agency_context");
+
+      if(error){
+        console.error("DealTrack Pro agency routing error:", error);
+        window.location.href = "/dealtrack-pro/agency-setup.html";
+        return;
+      }
+
+      const context = Array.isArray(data) ? data[0] : data;
+
+      if(context?.agency_id && context?.is_active !== false){
+        window.location.href = "/dealtrack-pro/agency-dashboard.html";
+      }else{
+        window.location.href = "/dealtrack-pro/agency-setup.html";
+      }
+    }catch(err){
+      console.error("DealTrack Pro routing error:", err);
+      window.location.href = "/dealtrack-pro/agency-setup.html";
+    }
   }
 
   showPassword.addEventListener("click",()=>{
@@ -589,7 +608,7 @@
 
       if(error) throw error;
 
-      goToDashboard();
+      await routeAuthenticatedUser();
     }catch(err){
       console.error("DealTrack Pro login error:",err);
       showMessage("error",translations[currentLang].invalidLogin);
@@ -622,7 +641,7 @@
     const { data } = await db.auth.getSession();
 
     if(data?.session){
-      goToDashboard();
+      await routeAuthenticatedUser();
     }
   }
 
