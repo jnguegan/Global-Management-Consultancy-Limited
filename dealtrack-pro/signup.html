@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DealTrack Pro | Create Account</title>
+
+  <link rel="icon" href="/assets/images/gmc-logo.png">
+  <link rel="shortcut icon" href="/assets/images/gmc-logo.png">
+
+  <style>
+    :root{
+      --bg-1:#07101d;
+      --bg-2:#0c1628;
+      --gold:#d4af37;
+      --gold-light:#f2d16b;
+      --text:#edf3ff;
+      --muted:rgba(237,243,255,.68);
+      --border:rgba(255,255,255,.11);
+      --panel:rgba(255,255,255,.055);
+      --error:#ffd8d8;
+      --success:#d9f7e8;
+      --max:980px;
+    }
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      min-height:100vh;
+      font-family:Inter,Arial,sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at 10% 0%,rgba(212,175,55,.12),transparent 26%),
+        radial-gradient(circle at 90% 18%,rgba(66,120,190,.10),transparent 25%),
+        linear-gradient(180deg,var(--bg-1),var(--bg-2));
+    }
+
+    a{color:inherit;text-decoration:none}
+    button,input{font:inherit}
+    .page{min-height:100vh;display:flex;flex-direction:column}
+    .container{width:min(var(--max),calc(100% - 32px));margin:0 auto}
+
+    .topbar{
+      padding:20px 0;
+      border-bottom:1px solid var(--border);
+      background:rgba(7,16,29,.7);
+      backdrop-filter:blur(16px);
+    }
+
+    .topbar-inner{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:18px;
+      flex-wrap:wrap;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:13px;
+    }
+
+    .brand img{
+      width:48px;
+      height:48px;
+      object-fit:contain;
+      border-radius:12px;
+      padding:3px;
+      background:rgba(255,255,255,.03);
+    }
+
+    .brand strong{display:block;font-size:17px}
+    .brand span{display:block;margin-top:3px;color:var(--muted);font-size:12px}
+
+    .topbar-right{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+
+    .lang-switch{
+      display:flex;
+      gap:3px;
+      padding:4px;
+      border:1px solid var(--border);
+      border-radius:999px;
+      background:rgba(255,255,255,.03);
+    }
+
+    .lang-switch button{
+      border:0;
+      padding:8px 10px;
+      border-radius:999px;
+      color:var(--muted);
+      background:transparent;
+      font-weight:800;
+      cursor:pointer;
+      font-size:12px;
+    }
+
+    .lang-switch button.active{background:var(--gold);color:#09111f}
+
+    .back{
+      padding:10px 14px;
+      border:1px solid var(--border);
+      border-radius:999px;
+      background:rgba(255,255,255,.04);
+      color:var(--text);
+      font-weight:700;
+    }
+
+    main{
+      flex:1;
+      display:flex;
+      align-items:center;
+      padding:52px 0;
+    }
+
+    .signup-grid{
+      display:grid;
+      grid-template-columns:.92fr 1.08fr;
+      gap:24px;
+      align-items:stretch;
+    }
+
+    .intro,
+    .signup-card{
+      border:1px solid var(--border);
+      border-radius:28px;
+      box-shadow:0 24px 80px rgba(0,0,0,.32);
+    }
+
+    .intro{
+      padding:34px;
+      background:
+        radial-gradient(circle at bottom right,rgba(212,175,55,.11),transparent 30%),
+        var(--panel);
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      gap:28px;
+    }
+
+    .eyebrow{
+      display:inline-flex;
+      margin-bottom:16px;
+      padding:7px 11px;
+      border:1px solid rgba(212,175,55,.23);
+      border-radius:999px;
+      background:rgba(212,175,55,.09);
+      color:var(--gold-light);
+      font-size:11px;
+      font-weight:800;
+      letter-spacing:.1em;
+      text-transform:uppercase;
+    }
+
+    .intro h1{
+      margin:0 0 14px;
+      font-size:clamp(34px,5vw,50px);
+      line-height:1.02;
+      letter-spacing:-.04em;
+    }
+
+    .intro p{
+      margin:0;
+      color:var(--muted);
+      line-height:1.72;
+      font-size:16px;
+    }
+
+    .intro-list{
+      display:grid;
+      gap:10px;
+    }
+
+    .intro-item{
+      padding:12px 14px;
+      border:1px solid var(--border);
+      border-radius:15px;
+      background:rgba(255,255,255,.03);
+      color:#dfe7f4;
+      font-size:14px;
+      line-height:1.5;
+    }
+
+    .signup-card{
+      padding:34px;
+      background:rgba(255,255,255,.045);
+    }
+
+    .signup-card h2{
+      margin:0 0 8px;
+      font-size:34px;
+      letter-spacing:-.03em;
+    }
+
+    .signup-intro{
+      margin:0 0 24px;
+      color:var(--muted);
+      line-height:1.65;
+    }
+
+    .field{margin-bottom:15px}
+    label{display:block;margin-bottom:7px;font-size:13px;font-weight:800}
+    input{
+      width:100%;
+      min-height:50px;
+      padding:0 15px;
+      border:1px solid var(--border);
+      border-radius:13px;
+      background:rgba(255,255,255,.045);
+      color:var(--text);
+      outline:none;
+    }
+
+    input:focus{border-color:rgba(212,175,55,.48);box-shadow:0 0 0 3px rgba(212,175,55,.08)}
+
+    .password-wrap{position:relative}
+    .password-wrap input{padding-right:74px}
+
+    .show-password{
+      position:absolute;
+      right:8px;
+      top:8px;
+      min-height:34px;
+      padding:0 10px;
+      border:0;
+      border-radius:9px;
+      background:rgba(255,255,255,.06);
+      color:var(--muted);
+      cursor:pointer;
+      font-weight:700;
+      font-size:12px;
+    }
+
+    .btn{
+      width:100%;
+      min-height:50px;
+      border-radius:999px;
+      border:1px solid transparent;
+      font-weight:800;
+      cursor:pointer;
+      transition:.18s ease;
+    }
+
+    .btn:hover{transform:translateY(-1px)}
+    .btn:disabled{opacity:.65;cursor:not-allowed;transform:none}
+
+    .btn-primary{
+      background:linear-gradient(135deg,var(--gold-light),var(--gold));
+      color:#09111f;
+      box-shadow:0 14px 30px rgba(212,175,55,.18);
+    }
+
+    .btn-google{
+      margin-bottom:12px;
+      border-color:var(--border);
+      background:rgba(255,255,255,.045);
+      color:var(--text);
+    }
+
+    .divider{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      margin:18px 0;
+      color:var(--muted);
+      font-size:12px;
+    }
+
+    .divider::before,.divider::after{
+      content:"";
+      flex:1;
+      height:1px;
+      background:var(--border);
+    }
+
+    .helper{
+      margin-top:17px;
+      text-align:center;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.6;
+    }
+
+    .helper a{color:var(--gold-light);font-weight:800}
+
+    .message{
+      display:none;
+      margin:16px 0 0;
+      padding:12px 14px;
+      border-radius:13px;
+      line-height:1.55;
+      font-size:13px;
+    }
+
+    .message.error{
+      display:block;
+      color:var(--error);
+      border:1px solid rgba(255,110,110,.25);
+      background:rgba(180,50,50,.11);
+    }
+
+    .message.success{
+      display:block;
+      color:var(--success);
+      border:1px solid rgba(90,205,150,.24);
+      background:rgba(50,160,110,.10);
+    }
+
+    .footer{
+      padding:20px 0 28px;
+      border-top:1px solid var(--border);
+      color:var(--muted);
+      font-size:12px;
+    }
+
+    @media(max-width:780px){
+      .signup-grid{grid-template-columns:1fr}
+      main{align-items:flex-start;padding:30px 0}
+      .intro,.signup-card{padding:24px;border-radius:22px}
+      .topbar-inner{align-items:flex-start}
+      .topbar-right{width:100%;justify-content:flex-start}
+    }
+  </style>
+</head>
+
+<body>
+<div class="page">
+
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="/dealtrack-pro/index.html">
+        <img src="/assets/images/gmc-logo.png" alt="Global Management Consultancy Limited">
+        <div>
+          <strong>DealTrack Pro</strong>
+          <span data-i18n="brandLine">Contract Intelligence for Football Agents</span>
+        </div>
+      </a>
+
+      <div class="topbar-right">
+        <a class="back" href="/dealtrack-pro/index.html" data-i18n="back">Back to DealTrack Pro</a>
+
+        <div class="lang-switch">
+          <button type="button" data-lang="en">EN</button>
+          <button type="button" data-lang="fr">FR</button>
+          <button type="button" data-lang="es">ES</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="container signup-grid">
+
+      <section class="intro">
+        <div>
+          <span class="eyebrow" data-i18n="eyebrow">Create Your Account</span>
+          <h1 data-i18n="welcomeTitle">Create your DealTrack Pro account.</h1>
+          <p data-i18n="welcomeText">
+            Start with your personal account. After registration, you will set up your agency workspace and enter your DealTrack Pro dashboard.
+          </p>
+        </div>
+
+        <div class="intro-list">
+          <div class="intro-item" data-i18n="item1">Create your secure DealTrack Pro account</div>
+          <div class="intro-item" data-i18n="item2">Set up your agency workspace</div>
+          <div class="intro-item" data-i18n="item3">Access contracts, commissions and invoice schedules</div>
+          <div class="intro-item" data-i18n="item4">Use agency reporting and financial-control tools</div>
+        </div>
+      </section>
+
+      <section class="signup-card">
+        <h2 data-i18n="signupTitle">Sign up / Create account</h2>
+        <p class="signup-intro" data-i18n="signupIntro">
+          Create a new DealTrack Pro account with Google or your email address.
+        </p>
+
+        <button type="button" class="btn btn-google" id="googleButton" data-i18n="googleButton">
+          Continue with Google
+        </button>
+
+        <div class="divider" data-i18n="or">or create account with email</div>
+
+        <form id="signupForm">
+          <div class="field">
+            <label for="fullName" data-i18n="nameLabel">Full name</label>
+            <input id="fullName" type="text" autocomplete="name" required placeholder="Your full name">
+          </div>
+
+          <div class="field">
+            <label for="email" data-i18n="emailLabel">Email address</label>
+            <input id="email" type="email" autocomplete="email" required placeholder="name@example.com">
+          </div>
+
+          <div class="field">
+            <label for="password" data-i18n="passwordLabel">Create password</label>
+            <div class="password-wrap">
+              <input id="password" type="password" autocomplete="new-password" required minlength="8" placeholder="Minimum 8 characters">
+              <button type="button" class="show-password" id="showPassword" data-i18n="show">Show</button>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary" id="signupButton" data-i18n="signupButton">
+            Create DealTrack Pro Account
+          </button>
+        </form>
+
+        <div id="message" class="message" role="alert" aria-live="polite"></div>
+
+        <p class="helper">
+          <span data-i18n="already">Already have an account?</span>
+          <a href="/dealtrack-pro/login.html" data-i18n="signIn">Sign in</a>
+        </p>
+      </section>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container" data-i18n="footer">
+      DealTrack Pro · Global Management Consultancy Limited
+    </div>
+  </footer>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  const SUPABASE_URL = "https://ysaxtuvuzqkyfmganven.supabase.co";
+  const SUPABASE_ANON_KEY = "sb_publishable_esfhuUEIcUJEL6z9zryRAA_FGMmUHlw";
+
+  const db = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_ANON_KEY
+  );
+
+  const translations = {
+    en: {
+      brandLine:"Contract Intelligence for Football Agents",
+      back:"Back to DealTrack Pro",
+      eyebrow:"Create Your Account",
+      welcomeTitle:"Create your DealTrack Pro account.",
+      welcomeText:"Start with your personal account. After registration, you will set up your agency workspace and enter your DealTrack Pro dashboard.",
+      item1:"Create your secure DealTrack Pro account",
+      item2:"Set up your agency workspace",
+      item3:"Access contracts, commissions and invoice schedules",
+      item4:"Use agency reporting and financial-control tools",
+      signupTitle:"Sign up / Create account",
+      signupIntro:"Create a new DealTrack Pro account with Google or your email address.",
+      googleButton:"Continue with Google",
+      or:"or create account with email",
+      nameLabel:"Full name",
+      emailLabel:"Email address",
+      passwordLabel:"Create password",
+      show:"Show",
+      hide:"Hide",
+      signupButton:"Create DealTrack Pro Account",
+      creating:"Creating account...",
+      already:"Already have an account?",
+      signIn:"Sign in",
+      footer:"DealTrack Pro · Global Management Consultancy Limited",
+      missingFields:"Please complete your name, email address and password.",
+      shortPassword:"Please use a password of at least 8 characters.",
+      accountCreated:"Your account has been created. Continue to agency setup.",
+      confirmationRequired:"Your account has been created. Please check your email and confirm your email address. After confirmation, return to DealTrack Pro and sign in.",
+      signupError:"We could not create your account. Please try again.",
+      googleError:"Google account creation could not be started. Please try again."
+    },
+    fr: {
+      brandLine:"Intelligence contractuelle pour agents de football",
+      back:"Retour à DealTrack Pro",
+      eyebrow:"Créer votre compte",
+      welcomeTitle:"Créez votre compte DealTrack Pro.",
+      welcomeText:"Commencez par créer votre compte personnel. Après l’inscription, vous configurerez votre espace agence avant d’accéder au tableau de bord DealTrack Pro.",
+      item1:"Créer votre compte DealTrack Pro sécurisé",
+      item2:"Configurer votre espace agence",
+      item3:"Accéder aux contrats, commissions et échéanciers de facturation",
+      item4:"Utiliser les outils de reporting et de contrôle financier",
+      signupTitle:"Inscription / Créer un compte",
+      signupIntro:"Créez un nouveau compte DealTrack Pro avec Google ou votre adresse e-mail.",
+      googleButton:"Continuer avec Google",
+      or:"ou créer un compte avec e-mail",
+      nameLabel:"Nom complet",
+      emailLabel:"Adresse e-mail",
+      passwordLabel:"Créer un mot de passe",
+      show:"Afficher",
+      hide:"Masquer",
+      signupButton:"Créer le compte DealTrack Pro",
+      creating:"Création du compte...",
+      already:"Vous avez déjà un compte ?",
+      signIn:"Se connecter",
+      footer:"DealTrack Pro · Global Management Consultancy Limited",
+      missingFields:"Veuillez compléter votre nom, votre adresse e-mail et votre mot de passe.",
+      shortPassword:"Veuillez utiliser un mot de passe d’au moins 8 caractères.",
+      accountCreated:"Votre compte a été créé. Continuez vers la configuration de l’agence.",
+      confirmationRequired:"Votre compte a été créé. Veuillez consulter votre e-mail et confirmer votre adresse. Après confirmation, revenez sur DealTrack Pro et connectez-vous.",
+      signupError:"Nous n’avons pas pu créer votre compte. Veuillez réessayer.",
+      googleError:"La création du compte avec Google n’a pas pu être lancée. Veuillez réessayer."
+    },
+    es: {
+      brandLine:"Inteligencia contractual para agentes de fútbol",
+      back:"Volver a DealTrack Pro",
+      eyebrow:"Crear su cuenta",
+      welcomeTitle:"Cree su cuenta de DealTrack Pro.",
+      welcomeText:"Empiece creando su cuenta personal. Después del registro, configurará el espacio de su agencia antes de entrar en el panel de DealTrack Pro.",
+      item1:"Crear su cuenta segura de DealTrack Pro",
+      item2:"Configurar el espacio de su agencia",
+      item3:"Acceder a contratos, comisiones y calendarios de facturación",
+      item4:"Utilizar informes y herramientas de control financiero",
+      signupTitle:"Registrarse / Crear cuenta",
+      signupIntro:"Cree una nueva cuenta de DealTrack Pro con Google o con su correo electrónico.",
+      googleButton:"Continuar con Google",
+      or:"o crear cuenta con correo electrónico",
+      nameLabel:"Nombre completo",
+      emailLabel:"Correo electrónico",
+      passwordLabel:"Crear contraseña",
+      show:"Mostrar",
+      hide:"Ocultar",
+      signupButton:"Crear cuenta de DealTrack Pro",
+      creating:"Creando cuenta...",
+      already:"¿Ya tiene una cuenta?",
+      signIn:"Iniciar sesión",
+      footer:"DealTrack Pro · Global Management Consultancy Limited",
+      missingFields:"Complete su nombre, correo electrónico y contraseña.",
+      shortPassword:"Utilice una contraseña de al menos 8 caracteres.",
+      accountCreated:"Su cuenta ha sido creada. Continúe con la configuración de la agencia.",
+      confirmationRequired:"Su cuenta ha sido creada. Revise su correo electrónico y confirme su dirección. Después de confirmar, vuelva a DealTrack Pro e inicie sesión.",
+      signupError:"No hemos podido crear su cuenta. Inténtelo de nuevo.",
+      googleError:"No se pudo iniciar la creación de la cuenta con Google. Inténtelo de nuevo."
+    }
+  };
+
+  let currentLang = localStorage.getItem("lang") || "en";
+
+  function setLang(lang){
+    currentLang = translations[lang] ? lang : "en";
+    localStorage.setItem("lang", currentLang);
+    document.documentElement.lang = currentLang;
+
+    document.querySelectorAll("[data-i18n]").forEach((el)=>{
+      const key = el.getAttribute("data-i18n");
+      const value = translations[currentLang]?.[key];
+      if(value) el.textContent = value;
+    });
+
+    document.querySelectorAll("[data-lang]").forEach((btn)=>{
+      btn.classList.toggle(
+        "active",
+        btn.getAttribute("data-lang") === currentLang
+      );
+    });
+  }
+
+  document.querySelectorAll("[data-lang]").forEach((btn)=>{
+    btn.addEventListener("click",()=>setLang(btn.getAttribute("data-lang")));
+  });
+
+  const signupForm = document.getElementById("signupForm");
+  const fullNameInput = document.getElementById("fullName");
+  const emailInput = document.getElementById("email");
+  const passwordInput = document.getElementById("password");
+  const signupButton = document.getElementById("signupButton");
+  const googleButton = document.getElementById("googleButton");
+  const message = document.getElementById("message");
+  const showPassword = document.getElementById("showPassword");
+
+  function showMessage(type,text){
+    message.className = "message " + type;
+    message.textContent = text;
+  }
+
+  function clearMessage(){
+    message.className = "message";
+    message.textContent = "";
+  }
+
+  showPassword.addEventListener("click",()=>{
+    const isHidden = passwordInput.type === "password";
+    passwordInput.type = isHidden ? "text" : "password";
+    showPassword.textContent = translations[currentLang][
+      isHidden ? "hide" : "show"
+    ];
+  });
+
+  signupForm.addEventListener("submit",async(e)=>{
+    e.preventDefault();
+    clearMessage();
+
+    const fullName = fullNameInput.value.trim();
+    const email = emailInput.value.trim();
+    const password = passwordInput.value;
+
+    if(!fullName || !email || !password){
+      showMessage("error",translations[currentLang].missingFields);
+      return;
+    }
+
+    if(password.length < 8){
+      showMessage("error",translations[currentLang].shortPassword);
+      return;
+    }
+
+    signupButton.disabled = true;
+    signupButton.textContent = translations[currentLang].creating;
+
+    try{
+      const emailRedirectTo =
+        window.location.origin +
+        "/dealtrack-pro/login.html";
+
+      const { data, error } = await db.auth.signUp({
+        email,
+        password,
+        options:{
+          data:{
+            full_name:fullName,
+            product:"dealtrack_pro"
+          },
+          emailRedirectTo
+        }
+      });
+
+      if(error) throw error;
+
+      if(data?.session){
+        showMessage("success",translations[currentLang].accountCreated);
+        setTimeout(()=>{
+          window.location.href = "/dealtrack-pro/agency-setup.html";
+        },700);
+      }else{
+        showMessage("success",translations[currentLang].confirmationRequired);
+        signupButton.disabled = false;
+        signupButton.textContent = translations[currentLang].signupButton;
+      }
+    }catch(err){
+      console.error("DealTrack Pro signup error:",err);
+      showMessage(
+        "error",
+        err?.message || translations[currentLang].signupError
+      );
+      signupButton.disabled = false;
+      signupButton.textContent = translations[currentLang].signupButton;
+    }
+  });
+
+  googleButton.addEventListener("click",async()=>{
+    clearMessage();
+
+    try{
+      const redirectTo =
+        window.location.origin +
+        "/dealtrack-pro/agency-setup.html";
+
+      const { error } = await db.auth.signInWithOAuth({
+        provider:"google",
+        options:{
+          redirectTo,
+          queryParams:{
+            access_type:"offline",
+            prompt:"consent"
+          }
+        }
+      });
+
+      if(error) throw error;
+    }catch(err){
+      console.error("DealTrack Pro Google signup error:",err);
+      showMessage("error",translations[currentLang].googleError);
+    }
+  });
+
+  setLang(currentLang);
+</script>
+</body>
+</html>
