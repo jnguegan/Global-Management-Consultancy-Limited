@@ -321,6 +321,56 @@
       line-height: 1.65;
     }
 
+    .plan-status {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 14px 18px;
+      margin: -6px 0 22px;
+      border: 1px solid rgba(212, 175, 55, 0.22);
+      border-radius: 16px;
+      background:
+        linear-gradient(135deg, rgba(212, 175, 55, 0.07), transparent 58%),
+        rgba(255, 255, 255, 0.025);
+    }
+
+    .plan-status-copy { min-width: 0; }
+
+    .plan-status-label {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--muted);
+      font-size: 0.7rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .plan-status-value {
+      color: var(--gold-2);
+      font-size: 0.95rem;
+      font-weight: 900;
+      line-height: 1.35;
+    }
+
+    .plan-status-usage {
+      flex-shrink: 0;
+      color: var(--text);
+      font-size: 0.82rem;
+      font-weight: 800;
+      text-align: right;
+    }
+
+    @media (max-width: 560px) {
+      .plan-status {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .plan-status-usage { text-align: left; }
+    }
+
     .kpi-grid {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -986,6 +1036,16 @@
       </p>
     </section>
 
+    <section class="plan-status" aria-live="polite">
+      <div class="plan-status-copy">
+        <span class="plan-status-label" data-i18n="planLabel">DealTrack Pro Plan</span>
+        <div id="planStatusValue" class="plan-status-value" data-i18n="planLoading">
+          Loading plan...
+        </div>
+      </div>
+      <div id="planStatusUsage" class="plan-status-usage">—</div>
+    </section>
+
     <section class="kpi-grid" aria-label="Agency performance summary">
       <article class="kpi-card">
         <span class="kpi-label" data-i18n="kpiActive">Active Contracts</span>
@@ -1293,6 +1353,11 @@
       "loggedInAs": "Logged in as",
       "logOut": "Log out",
       "noAgencyAssigned": "No agency assigned",
+      "planLabel": "DealTrack Pro Plan",
+      "planLoading": "Loading plan...",
+      "planUnlimited": "Unlimited contracts",
+      "planUsage": "{used} of {limit} contracts used",
+      "planUnavailable": "Plan information unavailable",
       "downloadReport": "⬇ Download Management Report",
       "downloadExcel": "📊 Download Excel Report",
       "healthKicker": "Portfolio Health",
@@ -1416,6 +1481,11 @@
       "loggedInAs": "Connecté en tant que",
       "logOut": "Se déconnecter",
       "noAgencyAssigned": "Aucune agence attribuée",
+      "planLabel": "Forfait DealTrack Pro",
+      "planLoading": "Chargement du forfait...",
+      "planUnlimited": "Contrats illimités",
+      "planUsage": "{used} contrat(s) utilisé(s) sur {limit}",
+      "planUnavailable": "Informations du forfait indisponibles",
       "downloadReport": "⬇ Télécharger le rapport de gestion",
       "downloadExcel": "📊 Télécharger le rapport Excel",
       "healthKicker": "Santé du portefeuille",
@@ -1537,6 +1607,11 @@
       "loggedInAs": "Sesión iniciada como",
       "logOut": "Cerrar sesión",
       "noAgencyAssigned": "No hay agencia asignada",
+      "planLabel": "Plan DealTrack Pro",
+      "planLoading": "Cargando plan...",
+      "planUnlimited": "Contratos ilimitados",
+      "planUsage": "{used} de {limit} contratos utilizados",
+      "planUnavailable": "Información del plan no disponible",
       "downloadReport": "⬇ Descargar informe de gestión",
       "downloadExcel": "📊 Descargar informe Excel",
       "healthKicker": "Salud de la cartera",
@@ -1664,6 +1739,7 @@
     let commissionInstalments = [];
     let currentAgency = null;
     let currentUser = null;
+    let currentPlanUsage = null;
     let currencyRevenueChart = null;
     let contractStatusChart = null;
     let invoiceForecastChart = null;
@@ -2050,6 +2126,48 @@
       return context?.agency_id ? context : null;
     }
 
+    async function loadPlanUsage(db) {
+      const { data, error } = await db.rpc("get_my_dealtrack_plan_usage");
+
+      if (error) {
+        console.warn("DealTrack Pro plan usage could not be loaded:", error);
+        return null;
+      }
+
+      const usage = Array.isArray(data) ? data[0] : data;
+      return usage?.agency_id ? usage : null;
+    }
+
+    function renderPlanUsage() {
+      const valueEl = document.getElementById("planStatusValue");
+      const usageEl = document.getElementById("planStatusUsage");
+
+      if (!valueEl || !usageEl) return;
+
+      if (!currentPlanUsage) {
+        valueEl.textContent = t("planUnavailable");
+        usageEl.textContent = "—";
+        return;
+      }
+
+      const planName =
+        currentPlanUsage.plan_name ||
+        currentPlanUsage.subscription_plan ||
+        "—";
+
+      valueEl.textContent = `${planName} Plan`;
+
+      if (currentPlanUsage.effective_limit == null) {
+        usageEl.textContent = t("planUnlimited");
+        return;
+      }
+
+      usageEl.textContent = template(t("planUsage"), {
+        used: Number(currentPlanUsage.contracts_used || 0),
+        limit: Number(currentPlanUsage.effective_limit || 0)
+      });
+    }
+
     function getUserDisplayName(user) {
       return (
         user?.user_metadata?.full_name ||
@@ -2102,6 +2220,7 @@
 
       document.title = "DealTrack Pro — " + t("heroEyebrow");
       renderIdentityBar();
+      renderPlanUsage();
 
       if (dashboardRows.length || allContracts.length === 0) {
         renderDashboard();
@@ -3680,7 +3799,9 @@
 
       currentUser = user;
       currentAgency = await loadAgencyContext(db, user);
+      currentPlanUsage = await loadPlanUsage(db);
       renderIdentityBar();
+      renderPlanUsage();
 
       const { data, error } = await db
         .from("contracts")
