@@ -306,6 +306,70 @@
       background:rgba(50,160,110,.10);
     }
 
+    .success-modal{
+      position:fixed;
+      inset:0;
+      z-index:2000;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+      background:rgba(2,8,20,.78);
+      backdrop-filter:blur(10px);
+    }
+
+    .success-modal.is-visible{display:flex}
+
+    .success-modal-card{
+      width:min(520px,100%);
+      padding:30px;
+      border:1px solid rgba(212,175,55,.28);
+      border-radius:24px;
+      background:
+        radial-gradient(circle at top right,rgba(212,175,55,.12),transparent 28%),
+        #0b1628;
+      box-shadow:0 30px 90px rgba(0,0,0,.5);
+      text-align:center;
+    }
+
+    .success-modal-icon{
+      display:grid;
+      place-items:center;
+      width:58px;
+      height:58px;
+      margin:0 auto 18px;
+      border-radius:50%;
+      background:rgba(90,205,150,.14);
+      border:1px solid rgba(90,205,150,.28);
+      font-size:28px;
+    }
+
+    .success-modal-card h3{
+      margin:0 0 10px;
+      font-size:28px;
+      letter-spacing:-.03em;
+    }
+
+    .success-modal-card p{
+      margin:0;
+      color:var(--muted);
+      line-height:1.65;
+    }
+
+    .success-modal-actions{
+      display:flex;
+      gap:10px;
+      justify-content:center;
+      flex-wrap:wrap;
+      margin-top:22px;
+    }
+
+    .success-modal-actions .btn{
+      width:auto;
+      min-width:180px;
+      padding:0 20px;
+    }
+
     .footer{
       padding:20px 0 28px;
       border-top:1px solid var(--border);
@@ -415,6 +479,20 @@
     </div>
   </main>
 
+  <div id="signupSuccessModal" class="success-modal" role="dialog" aria-modal="true" aria-labelledby="signupSuccessTitle">
+    <div class="success-modal-card">
+      <div class="success-modal-icon">✓</div>
+      <h3 id="signupSuccessTitle" data-i18n="successModalTitle">Account created successfully</h3>
+      <p id="signupSuccessText" data-i18n="confirmationRequired">
+        Your account has been created. Please check your email and confirm your email address. After confirmation, return to DealTrack Pro and sign in.
+      </p>
+      <div class="success-modal-actions">
+        <a class="btn btn-primary" href="/dealtrack-pro/login.html" data-i18n="goToSignIn">Go to Sign In</a>
+        <button type="button" class="btn btn-google" id="closeSuccessModal" data-i18n="closeModal">Close</button>
+      </div>
+    </div>
+  </div>
+
   <footer class="footer">
     <div class="container" data-i18n="footer">
       DealTrack Pro · Global Management Consultancy Limited
@@ -462,6 +540,9 @@
       shortPassword:"Please use a password of at least 8 characters.",
       accountCreated:"Your account has been created. Continue to agency setup.",
       confirmationRequired:"Your account has been created. Please check your email and confirm your email address. After confirmation, return to DealTrack Pro and sign in.",
+      successModalTitle:"Account created successfully",
+      goToSignIn:"Go to Sign In",
+      closeModal:"Close",
       signupError:"We could not create your account. Please try again.",
       googleError:"Google account creation could not be started. Please try again."
     },
@@ -493,6 +574,9 @@
       shortPassword:"Veuillez utiliser un mot de passe d’au moins 8 caractères.",
       accountCreated:"Votre compte a été créé. Continuez vers la configuration de l’agence.",
       confirmationRequired:"Votre compte a été créé. Veuillez consulter votre e-mail et confirmer votre adresse. Après confirmation, revenez sur DealTrack Pro et connectez-vous.",
+      successModalTitle:"Compte créé avec succès",
+      goToSignIn:"Aller à la connexion",
+      closeModal:"Fermer",
       signupError:"Nous n’avons pas pu créer votre compte. Veuillez réessayer.",
       googleError:"La création du compte avec Google n’a pas pu être lancée. Veuillez réessayer."
     },
@@ -524,6 +608,9 @@
       shortPassword:"Utilice una contraseña de al menos 8 caracteres.",
       accountCreated:"Su cuenta ha sido creada. Continúe con la configuración de la agencia.",
       confirmationRequired:"Su cuenta ha sido creada. Revise su correo electrónico y confirme su dirección. Después de confirmar, vuelva a DealTrack Pro e inicie sesión.",
+      successModalTitle:"Cuenta creada correctamente",
+      goToSignIn:"Ir a iniciar sesión",
+      closeModal:"Cerrar",
       signupError:"No hemos podido crear su cuenta. Inténtelo de nuevo.",
       googleError:"No se pudo iniciar la creación de la cuenta con Google. Inténtelo de nuevo."
     }
@@ -572,6 +659,33 @@
     message.className = "message";
     message.textContent = "";
   }
+
+  function clearSignupForm(){
+    fullNameInput.value = "";
+    emailInput.value = "";
+    passwordInput.value = "";
+    passwordInput.type = "password";
+    showPassword.textContent = translations[currentLang].show;
+  }
+
+  function showSuccessModal(){
+    const modal = document.getElementById("signupSuccessModal");
+    if (!modal) return;
+
+    const title = document.getElementById("signupSuccessTitle");
+    const body = document.getElementById("signupSuccessText");
+
+    if (title) title.textContent = translations[currentLang].successModalTitle;
+    if (body) body.textContent = translations[currentLang].confirmationRequired;
+
+    modal.classList.add("is-visible");
+  }
+
+  function hideSuccessModal(){
+    document.getElementById("signupSuccessModal")?.classList.remove("is-visible");
+  }
+
+  document.getElementById("closeSuccessModal")?.addEventListener("click", hideSuccessModal);
 
   showPassword.addEventListener("click",()=>{
     const isHidden = passwordInput.type === "password";
@@ -622,14 +736,17 @@
       if(error) throw error;
 
       if(data?.session){
+        clearSignupForm();
         showMessage("success",translations[currentLang].accountCreated);
         setTimeout(()=>{
           window.location.href = "/dealtrack-pro/agency-setup.html";
         },700);
       }else{
-        showMessage("success",translations[currentLang].confirmationRequired);
+        clearSignupForm();
+        clearMessage();
         signupButton.disabled = false;
         signupButton.textContent = translations[currentLang].signupButton;
+        showSuccessModal();
       }
     }catch(err){
       console.error("DealTrack Pro signup error:",err);
