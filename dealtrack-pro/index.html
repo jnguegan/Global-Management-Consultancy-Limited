@@ -2,464 +2,276 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>DealTrack Pro | Contract Intelligence</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DealTrack Pro | Contract Intelligence for Football Agents</title>
 
-  <link rel="icon" href="/agent-academy/assets/academy-logo.png">
-  <link rel="shortcut icon" href="/agent-academy/assets/academy-logo.png">
+  <link rel="icon" href="/assets/images/gmc-logo.png">
+  <link rel="shortcut icon" href="/assets/images/gmc-logo.png">
 
   <style>
     :root {
-      --bg-1: #07101d;
-      --bg-2: #0c1628;
-      --gold: #d4af37;
-      --text: #edf3ff;
-      --muted: rgba(237,243,255,0.7);
-      --border: rgba(255,255,255,0.12);
-      --panel: rgba(255,255,255,0.06);
-      --panel-strong: rgba(255,255,255,0.08);
-      --success: #dff7d6;
-      --error: #ffd9d9;
+      --bg-1:#07101d; --bg-2:#0c1628; --panel:rgba(255,255,255,.055);
+      --gold:#d4af37; --gold-light:#f2d16b; --text:#edf3ff;
+      --muted:rgba(237,243,255,.70); --border:rgba(255,255,255,.11);
+      --green:#63d5a0; --shadow:0 24px 80px rgba(0,0,0,.34); --max:1180px;
     }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      font-family: Inter, Arial, sans-serif;
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0; min-height:100vh; font-family:Inter,Arial,sans-serif; color:var(--text);
       background:
-        radial-gradient(circle at top left, rgba(212,175,55,0.10), transparent 25%),
-        linear-gradient(180deg, var(--bg-1), var(--bg-2));
-      color: var(--text);
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
+        radial-gradient(circle at 10% 0%, rgba(212,175,55,.12), transparent 25%),
+        radial-gradient(circle at 90% 15%, rgba(58,108,180,.12), transparent 24%),
+        linear-gradient(180deg,var(--bg-1),var(--bg-2));
     }
-
-    .topbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 20px 24px;
-      gap: 16px;
-      flex-wrap: wrap;
-    }
-
-    .brand img {
-      height: 36px;
-      width: auto;
-      display: block;
-    }
-
-    .topbar-right {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .back-btn,
-    .lang-switch button,
-    .cta-btn {
-      padding: 10px 16px;
-      border-radius: 999px;
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,0.05);
-      color: var(--text);
-      text-decoration: none;
-      font-weight: 600;
-      cursor: pointer;
-      transition: 0.18s ease;
-    }
-
-    .lang-switch button:hover,
-    .back-btn:hover,
-    .cta-btn:hover {
-      transform: translateY(-1px);
-      border-color: rgba(212,175,55,0.45);
-      background: rgba(255,255,255,0.08);
-    }
-
-    .lang-switch {
-      display: inline-flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    .container {
-      flex: 1;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
-    }
-
-    .card {
-      max-width: 760px;
-      width: 100%;
-      padding: 42px;
-      border-radius: 24px;
-      background: var(--panel);
-      border: 1px solid var(--border);
-      text-align: center;
-      box-shadow: 0 24px 80px rgba(0,0,0,0.34);
-    }
-
-    h1 {
-      font-size: 48px;
-      margin: 0 0 10px;
-      line-height: 1.05;
-    }
-
-    .gold {
-      color: var(--gold);
-    }
-
-    .subtitle {
-      font-size: 21px;
-      margin-bottom: 14px;
-      font-weight: 700;
-    }
-
-    .tagline {
-      color: #fff4cf;
-      margin-bottom: 18px;
-      font-size: 16px;
-      letter-spacing: 0.03em;
-    }
-
-    p.description {
-      color: var(--muted);
-      margin: 0 auto 30px;
-      line-height: 1.8;
-      max-width: 650px;
-      font-size: 17px;
-    }
-
-    form {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      margin-top: 10px;
-    }
-
-    input,
-    select {
-      padding: 14px 16px;
-      border-radius: 12px;
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,0.05);
-      color: var(--text);
-      font: inherit;
-      width: 100%;
-    }
-
-    select option {
-      color: #111;
-    }
-
-    button[type="submit"] {
-      padding: 14px 18px;
-      border-radius: 999px;
-      border: 1px solid rgba(212,175,55,0.4);
-      background: rgba(212,175,55,0.2);
-      color: #fff4cf;
-      font-weight: 700;
-      cursor: pointer;
-      transition: 0.18s ease;
-    }
-
-    button[type="submit"]:hover {
-      transform: translateY(-1px);
-      background: rgba(212,175,55,0.25);
-    }
-
-    button[type="submit"]:disabled {
-      opacity: 0.65;
-      cursor: not-allowed;
-      transform: none;
-    }
-
-    .form-message {
-      margin-top: 16px;
-      padding: 14px 16px;
-      border-radius: 14px;
-      line-height: 1.65;
-      display: none;
-      text-align: left;
-    }
-
-    .form-message.success {
-      display: block;
-      background: rgba(22,163,74,0.14);
-      border: 1px solid rgba(22,163,74,0.35);
-      color: var(--success);
-    }
-
-    .form-message.error {
-      display: block;
-      background: rgba(220,38,38,0.14);
-      border: 1px solid rgba(220,38,38,0.35);
-      color: var(--error);
-    }
-
-    .footer {
-      text-align: center;
-      padding: 16px;
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    @media (max-width: 720px) {
-      .topbar {
-        padding: 16px;
-      }
-
-      .card {
-        padding: 28px 20px;
-      }
-
-      h1 {
-        font-size: 36px;
-      }
-
-      .subtitle {
-        font-size: 18px;
-      }
-
-      p.description {
-        font-size: 16px;
-      }
+    a{color:inherit;text-decoration:none}
+    button{font:inherit}
+    .container{width:min(var(--max),calc(100% - 40px));margin:0 auto}
+    .topbar{position:sticky;top:0;z-index:50;border-bottom:1px solid var(--border);background:rgba(7,16,29,.88);backdrop-filter:blur(18px)}
+    .topbar-inner{min-height:78px;display:flex;align-items:center;justify-content:space-between;gap:18px}
+    .brand{display:flex;align-items:center;gap:12px;min-width:0}
+    .brand img{width:46px;height:46px;object-fit:contain;border-radius:12px;background:rgba(255,255,255,.03);padding:3px}
+    .brand-copy strong{display:block;font-size:16px;letter-spacing:.01em}
+    .brand-copy span{display:block;margin-top:3px;color:var(--muted);font-size:12px}
+    .topbar-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+    .lang-switch{display:flex;gap:4px;padding:4px;border:1px solid var(--border);border-radius:999px;background:rgba(255,255,255,.03)}
+    .lang-switch button{border:0;border-radius:999px;padding:8px 10px;background:transparent;color:var(--muted);cursor:pointer;font-weight:800;font-size:12px}
+    .lang-switch button.active{background:var(--gold);color:#09111f}
+    .btn{display:inline-flex;min-height:46px;align-items:center;justify-content:center;padding:0 18px;border:1px solid transparent;border-radius:999px;font-weight:800;transition:.18s ease}
+    .btn:hover{transform:translateY(-1px)}
+    .btn.primary{color:#09111f;background:linear-gradient(135deg,var(--gold-light),var(--gold));box-shadow:0 14px 30px rgba(212,175,55,.18)}
+    .btn.secondary{border-color:var(--border);background:rgba(255,255,255,.04);color:var(--text)}
+    .hero{padding:74px 0 38px}
+    .hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:30px;align-items:center}
+    .eyebrow{display:inline-flex;margin-bottom:16px;padding:8px 13px;border:1px solid rgba(212,175,55,.24);border-radius:999px;background:rgba(212,175,55,.09);color:var(--gold-light);font-size:12px;font-weight:800;letter-spacing:.11em;text-transform:uppercase}
+    h1{margin:0 0 18px;font-size:clamp(42px,6vw,72px);line-height:.98;letter-spacing:-.05em}
+    h1 .gold{color:var(--gold-light)}
+    .lead{max-width:700px;margin:0 0 26px;color:var(--muted);font-size:18px;line-height:1.75}
+    .hero-actions{display:flex;gap:11px;flex-wrap:wrap}
+    .dashboard-preview{padding:22px;border:1px solid rgba(212,175,55,.22);border-radius:26px;background:linear-gradient(180deg,rgba(255,255,255,.065),rgba(255,255,255,.025));box-shadow:var(--shadow)}
+    .preview-head{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:18px}
+    .preview-head strong{font-size:17px}
+    .status{display:inline-flex;align-items:center;gap:7px;padding:7px 10px;border-radius:999px;background:rgba(99,213,160,.09);color:#bdf0d5;font-size:11px;font-weight:800;text-transform:uppercase}
+    .status::before{width:7px;height:7px;border-radius:50%;content:"";background:var(--green);box-shadow:0 0 10px rgba(99,213,160,.55)}
+    .kpi-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+    .kpi{padding:16px;border:1px solid var(--border);border-radius:17px;background:rgba(255,255,255,.035)}
+    .kpi span{display:block;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:7px}
+    .kpi strong{font-size:19px}
+    .preview-row{margin-top:12px;padding:16px;border:1px solid var(--border);border-radius:17px;background:rgba(255,255,255,.035)}
+    .preview-row-top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px}
+    .preview-row p{margin:0;color:var(--muted);line-height:1.55;font-size:13px}
+    .section{padding:42px 0}
+    .section-head{max-width:760px;margin-bottom:24px}
+    .section-head h2{margin:0 0 12px;font-size:clamp(28px,4vw,42px);line-height:1.08;letter-spacing:-.035em}
+    .section-head p{margin:0;color:var(--muted);font-size:17px;line-height:1.75}
+    .features{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+    .feature{padding:22px;border:1px solid var(--border);border-radius:21px;background:var(--panel);box-shadow:0 14px 40px rgba(0,0,0,.18)}
+    .feature .tag{display:inline-flex;margin-bottom:12px;color:var(--gold-light);font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.09em}
+    .feature h3{margin:0 0 9px;font-size:22px}
+    .feature p{margin:0;color:var(--muted);line-height:1.7}
+    .access-box{display:grid;grid-template-columns:1fr auto;gap:22px;align-items:center;padding:28px;border:1px solid rgba(212,175,55,.22);border-radius:26px;background:linear-gradient(180deg,rgba(212,175,55,.08),rgba(255,255,255,.025));box-shadow:var(--shadow)}
+    .access-box h2{margin:0 0 10px;font-size:32px}
+    .access-box p{margin:0;color:var(--muted);line-height:1.7;max-width:720px}
+    .access-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+    .footer{margin-top:44px;padding:24px 0 34px;border-top:1px solid var(--border);color:var(--muted);font-size:13px}
+    @media(max-width:900px){.hero-grid,.access-box{grid-template-columns:1fr}.access-actions{justify-content:flex-start}}
+    @media(max-width:680px){
+      .container{width:min(var(--max),calc(100% - 24px))}
+      .topbar-inner{align-items:flex-start;padding:10px 0}
+      .topbar-right{width:100%;justify-content:flex-start}
+      .brand-copy span{display:none}
+      .hero{padding-top:42px}
+      .features,.kpi-grid{grid-template-columns:1fr}
+      .hero-actions .btn,.access-actions .btn{width:100%}
+      .dashboard-preview{padding:16px}
     }
   </style>
 </head>
 
 <body>
-  <div class="topbar">
-    <div class="brand">
-      <img src="/agent-academy/assets/academy-logo.png" alt="GMC">
-    </div>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="/index.html" aria-label="Global Management Consultancy Limited">
+        <img src="/assets/images/gmc-logo.png" alt="GMC">
+        <div class="brand-copy">
+          <strong>DealTrack Pro</strong>
+          <span data-i18n="brandLine">Contract Intelligence for Football Agents</span>
+        </div>
+      </a>
 
-    <div class="topbar-right">
-      <a href="/agent-academy/dashboard.html" class="back-btn" data-i18n="backBtn">Back to Dashboard</a>
-
-      <div class="lang-switch">
-        <button type="button" onclick="setLang('en')">EN</button>
-        <button type="button" onclick="setLang('fr')">FR</button>
-        <button type="button" onclick="setLang('es')">ES</button>
+      <div class="topbar-right">
+        <a class="btn secondary" href="/index.html" data-i18n="backGmc">GMC Home</a>
+        <div class="lang-switch">
+          <button type="button" data-lang="en">EN</button>
+          <button type="button" data-lang="fr">FR</button>
+          <button type="button" data-lang="es">ES</button>
+        </div>
+        <a class="btn primary" href="/agent-academy/login.html" data-i18n="signIn">Sign In</a>
       </div>
     </div>
-  </div>
+  </header>
 
-  <div class="container">
-    <div class="card">
-      <h1>DealTrack <span class="gold">Pro</span></h1>
+  <main>
+    <section class="hero">
+      <div class="container hero-grid">
+        <div>
+          <div class="eyebrow" data-i18n="eyebrow">DealTrack Pro</div>
+          <h1>
+            <span data-i18n="heroTitle1">Contract intelligence.</span>
+            <span class="gold" data-i18n="heroTitle2">Financial control.</span>
+          </h1>
+          <p class="lead" data-i18n="heroLead">
+            DealTrack Pro helps professional football agents and agencies turn complex contracts into clear commission schedules, invoice opportunities and management information — so important payments are not missed.
+          </p>
+          <div class="hero-actions">
+            <a class="btn primary" href="/agent-academy/login.html" data-i18n="accessPlatform">Access DealTrack Pro</a>
+            <a class="btn secondary" href="#platform" data-i18n="seePlatform">See the Platform</a>
+          </div>
+        </div>
 
-      <div class="subtitle" data-i18n="subtitle">
-        Contract Intelligence for Football Agents
+        <div class="dashboard-preview" aria-label="DealTrack Pro dashboard preview">
+          <div class="preview-head">
+            <strong data-i18n="previewTitle">Agency Financial Control Centre</strong>
+            <span class="status" data-i18n="previewStatus">Live Workspace</span>
+          </div>
+
+          <div class="kpi-grid">
+            <div class="kpi"><span data-i18n="kpi1Label">Active Contracts</span><strong>Portfolio</strong></div>
+            <div class="kpi"><span data-i18n="kpi2Label">Annual Revenue</span><strong data-i18n="kpi2Value">Tracked by Currency</strong></div>
+            <div class="kpi"><span data-i18n="kpi3Label">Lifetime Revenue</span><strong data-i18n="kpi3Value">Contract-Based</strong></div>
+            <div class="kpi"><span data-i18n="kpi4Label">Next Invoice</span><strong data-i18n="kpi4Value">Action Focused</strong></div>
+          </div>
+
+          <div class="preview-row">
+            <div class="preview-row-top">
+              <strong data-i18n="previewRowTitle">Contract & Invoice Snapshot</strong>
+              <span class="status" data-i18n="previewRowStatus">Controlled</span>
+            </div>
+            <p data-i18n="previewRowText">Review contract value, commission structure, scheduled instalments and the next invoice opportunity from one secure agency view.</p>
+          </div>
+        </div>
       </div>
+    </section>
 
-      <div class="tagline" data-i18n="tagline">
-        Never miss a payment again.
+    <section class="section" id="platform">
+      <div class="container">
+        <div class="section-head">
+          <div class="eyebrow" data-i18n="platformEyebrow">What DealTrack Pro Does</div>
+          <h2 data-i18n="platformTitle">One workspace for contracts, commissions and invoices.</h2>
+          <p data-i18n="platformText">Built around the way football agencies actually work, DealTrack Pro connects contract information with the financial actions that follow.</p>
+        </div>
+
+        <div class="features">
+          <article class="feature">
+            <span class="tag" data-i18n="f1Tag">Contract Portfolio</span>
+            <h3 data-i18n="f1Title">Keep every agreement organised.</h3>
+            <p data-i18n="f1Text">Store and review contract terms, parties, dates, currencies and supporting documents in one portfolio.</p>
+          </article>
+
+          <article class="feature">
+            <span class="tag" data-i18n="f2Tag">Commission Intelligence</span>
+            <h3 data-i18n="f2Title">Understand what the agency earns.</h3>
+            <p data-i18n="f2Text">Track percentage, fixed and mixed commission structures, including dual representation and commissionable remuneration.</p>
+          </article>
+
+          <article class="feature">
+            <span class="tag" data-i18n="f3Tag">Invoice Control</span>
+            <h3 data-i18n="f3Title">Know what needs invoicing next.</h3>
+            <p data-i18n="f3Text">Turn instalment schedules into clear upcoming invoice opportunities and maintain visibility over future payments.</p>
+          </article>
+
+          <article class="feature">
+            <span class="tag" data-i18n="f4Tag">Agency Management</span>
+            <h3 data-i18n="f4Title">See the financial picture at agency level.</h3>
+            <p data-i18n="f4Text">Monitor annual and lifetime revenue, contract exposure, upcoming invoices and management reporting from the Agency Dashboard.</p>
+          </article>
+        </div>
       </div>
+    </section>
 
-      <p class="description" data-i18n="description">
-        A contract intelligence platform built for professional football agents.
-        Transform complex contract clauses into trackable financial outcomes and ensure every payment is captured.
-      </p>
+    <section class="section">
+      <div class="container">
+        <div class="access-box">
+          <div>
+            <h2 data-i18n="accessTitle">Already have access?</h2>
+            <p data-i18n="accessText">Sign in to open your Agency Dashboard, Contract Portfolio, individual contract views and invoice schedule.</p>
+          </div>
+          <div class="access-actions">
+            <a class="btn primary" href="/agent-academy/login.html" data-i18n="signInDealTrack">Sign In to DealTrack Pro</a>
+            <a class="btn secondary" href="/contact.html" data-i18n="contactGmc">Contact GMC</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
 
-      <form id="waitlistForm">
-        <input type="hidden" name="_subject" value="New DealTrack Pro Early Access Request">
-        <input type="hidden" name="_template" value="table">
-        <input type="hidden" name="_captcha" value="false">
-        <input type="hidden" name="_to" value="jnguegan@gmail.com">
-
-        <input
-          id="fullName"
-          name="fullName"
-          type="text"
-          placeholder="Full name"
-          data-i18n-placeholder="name"
-          required
-        >
-
-        <input
-          id="email"
-          name="email"
-          type="email"
-          placeholder="Email address"
-          data-i18n-placeholder="email"
-          required
-        >
-
-        <select id="role" name="role" required>
-          <option value="" data-i18n="role">I am...</option>
-          <option value="Agent" data-i18n="roleAgent">Agent</option>
-          <option value="Player" data-i18n="rolePlayer">Player</option>
-          <option value="Agency" data-i18n="roleAgency">Agency</option>
-          <option value="Club" data-i18n="roleClub">Club</option>
-        </select>
-
-        <button id="submitBtn" type="submit" data-i18n="cta">
-          Join Early Access
-        </button>
-      </form>
-
-      <div id="formMessage" class="form-message"></div>
-    </div>
-  </div>
-
-  <div class="footer" data-i18n="footer">
-    Global Management Consultancy Limited
-  </div>
-
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <footer class="footer">
+    <div class="container" data-i18n="footer">DealTrack Pro · Global Management Consultancy Limited</div>
+  </footer>
 
   <script>
-    const supabaseClient = window.supabase.createClient(
-      "https://ysaxtuvuzqkyfmganven.supabase.co",
-      "sb_publishable_esfhuUEIcUJEL6z9zryRAA_FGMmUHlw"
-    );
-
     const translations = {
       en: {
-        backBtn: "Back to Dashboard",
-        subtitle: "Contract Intelligence for Football Agents",
-        tagline: "Never miss a payment again.",
-        description: "A contract intelligence platform built for professional football agents. Transform complex contract clauses into trackable financial outcomes and ensure every payment is captured.",
-        name: "Full name",
-        email: "Email address",
-        role: "I am...",
-        roleAgent: "Agent",
-        rolePlayer: "Player",
-        roleAgency: "Agency",
-        roleClub: "Club",
-        cta: "Join Early Access",
-        success: "Thank you. Your early access request has been received.",
-        error: "We could not submit your request right now. Please try again.",
-        sending: "Submitting...",
-        footer: "Global Management Consultancy Limited"
+        brandLine:"Contract Intelligence for Football Agents",backGmc:"GMC Home",signIn:"Sign In",eyebrow:"DealTrack Pro",
+        heroTitle1:"Contract intelligence.",heroTitle2:"Financial control.",
+        heroLead:"DealTrack Pro helps professional football agents and agencies turn complex contracts into clear commission schedules, invoice opportunities and management information — so important payments are not missed.",
+        accessPlatform:"Access DealTrack Pro",seePlatform:"See the Platform",previewTitle:"Agency Financial Control Centre",previewStatus:"Live Workspace",
+        kpi1Label:"Active Contracts",kpi2Label:"Annual Revenue",kpi2Value:"Tracked by Currency",kpi3Label:"Lifetime Revenue",kpi3Value:"Contract-Based",kpi4Label:"Next Invoice",kpi4Value:"Action Focused",
+        previewRowTitle:"Contract & Invoice Snapshot",previewRowStatus:"Controlled",previewRowText:"Review contract value, commission structure, scheduled instalments and the next invoice opportunity from one secure agency view.",
+        platformEyebrow:"What DealTrack Pro Does",platformTitle:"One workspace for contracts, commissions and invoices.",platformText:"Built around the way football agencies actually work, DealTrack Pro connects contract information with the financial actions that follow.",
+        f1Tag:"Contract Portfolio",f1Title:"Keep every agreement organised.",f1Text:"Store and review contract terms, parties, dates, currencies and supporting documents in one portfolio.",
+        f2Tag:"Commission Intelligence",f2Title:"Understand what the agency earns.",f2Text:"Track percentage, fixed and mixed commission structures, including dual representation and commissionable remuneration.",
+        f3Tag:"Invoice Control",f3Title:"Know what needs invoicing next.",f3Text:"Turn instalment schedules into clear upcoming invoice opportunities and maintain visibility over future payments.",
+        f4Tag:"Agency Management",f4Title:"See the financial picture at agency level.",f4Text:"Monitor annual and lifetime revenue, contract exposure, upcoming invoices and management reporting from the Agency Dashboard.",
+        accessTitle:"Already have access?",accessText:"Sign in to open your Agency Dashboard, Contract Portfolio, individual contract views and invoice schedule.",signInDealTrack:"Sign In to DealTrack Pro",contactGmc:"Contact GMC",
+        footer:"DealTrack Pro · Global Management Consultancy Limited"
       },
       fr: {
-        backBtn: "Retour au tableau de bord",
-        subtitle: "Intelligence Contractuelle pour Agents de Football",
-        tagline: "Ne manquez plus jamais un paiement.",
-        description: "Une plateforme d’intelligence contractuelle conçue pour les agents de football professionnels. Transformez des clauses contractuelles complexes en résultats financiers mesurables et assurez-vous que chaque paiement soit capturé.",
-        name: "Nom complet",
-        email: "Adresse e-mail",
-        role: "Je suis...",
-        roleAgent: "Agent",
-        rolePlayer: "Joueur",
-        roleAgency: "Agence",
-        roleClub: "Club",
-        cta: "Rejoindre l’accès anticipé",
-        success: "Merci. Votre demande d’accès anticipé a bien été reçue.",
-        error: "Nous n’avons pas pu soumettre votre demande pour le moment. Veuillez réessayer.",
-        sending: "Envoi...",
-        footer: "Global Management Consultancy Limited"
+        brandLine:"Intelligence contractuelle pour agents de football",backGmc:"Accueil GMC",signIn:"Connexion",eyebrow:"DealTrack Pro",
+        heroTitle1:"Intelligence contractuelle.",heroTitle2:"Contrôle financier.",
+        heroLead:"DealTrack Pro aide les agents et agences de football professionnels à transformer des contrats complexes en échéanciers de commissions, opportunités de facturation et informations de gestion claires, afin qu’aucun paiement important ne soit manqué.",
+        accessPlatform:"Accéder à DealTrack Pro",seePlatform:"Voir la plateforme",previewTitle:"Centre de contrôle financier de l’agence",previewStatus:"Espace actif",
+        kpi1Label:"Contrats actifs",kpi2Label:"Revenu annuel",kpi2Value:"Suivi par devise",kpi3Label:"Revenu total du contrat",kpi3Value:"Basé sur les contrats",kpi4Label:"Prochaine facture",kpi4Value:"Orienté action",
+        previewRowTitle:"Aperçu contrats & factures",previewRowStatus:"Sous contrôle",previewRowText:"Consultez la valeur des contrats, la structure des commissions, les échéanciers et la prochaine opportunité de facturation depuis un espace sécurisé.",
+        platformEyebrow:"Ce que fait DealTrack Pro",platformTitle:"Un seul espace pour les contrats, commissions et factures.",platformText:"Conçu autour du fonctionnement réel des agences de football, DealTrack Pro relie les informations contractuelles aux actions financières qui en découlent.",
+        f1Tag:"Portefeuille de contrats",f1Title:"Gardez chaque accord bien organisé.",f1Text:"Centralisez et consultez les clauses, parties, dates, devises et documents associés dans un seul portefeuille.",
+        f2Tag:"Intelligence des commissions",f2Title:"Comprenez ce que l’agence gagne.",f2Text:"Suivez les commissions en pourcentage, fixes ou mixtes, y compris la double représentation et la rémunération commissionnable.",
+        f3Tag:"Contrôle de facturation",f3Title:"Sachez ce qui doit être facturé ensuite.",f3Text:"Transformez les échéanciers en opportunités de facturation claires et gardez une visibilité sur les paiements futurs.",
+        f4Tag:"Gestion d’agence",f4Title:"Visualisez la situation financière au niveau de l’agence.",f4Text:"Suivez les revenus annuels et totaux, l’exposition contractuelle, les prochaines factures et le reporting depuis le tableau de bord de l’agence.",
+        accessTitle:"Vous avez déjà accès ?",accessText:"Connectez-vous pour ouvrir votre tableau de bord d’agence, portefeuille de contrats, vues contractuelles et échéancier de facturation.",signInDealTrack:"Se connecter à DealTrack Pro",contactGmc:"Contacter GMC",
+        footer:"DealTrack Pro · Global Management Consultancy Limited"
       },
       es: {
-        backBtn: "Volver al panel",
-        subtitle: "Inteligencia Contractual para Agentes de Fútbol",
-        tagline: "No pierda nunca más un pago.",
-        description: "Una plataforma de inteligencia contractual diseñada para agentes de fútbol profesionales. Convierte cláusulas contractuales complejas en resultados financieros medibles y garantiza que cada pago quede registrado.",
-        name: "Nombre completo",
-        email: "Correo electrónico",
-        role: "Soy...",
-        roleAgent: "Agente",
-        rolePlayer: "Jugador",
-        roleAgency: "Agencia",
-        roleClub: "Club",
-        cta: "Solicitar acceso anticipado",
-        success: "Gracias. Su solicitud de acceso anticipado ha sido recibida.",
-        error: "No hemos podido enviar su solicitud en este momento. Inténtelo de nuevo.",
-        sending: "Enviando...",
-        footer: "Global Management Consultancy Limited"
+        brandLine:"Inteligencia contractual para agentes de fútbol",backGmc:"Inicio GMC",signIn:"Iniciar sesión",eyebrow:"DealTrack Pro",
+        heroTitle1:"Inteligencia contractual.",heroTitle2:"Control financiero.",
+        heroLead:"DealTrack Pro ayuda a agentes y agencias de fútbol profesionales a convertir contratos complejos en calendarios claros de comisiones, oportunidades de facturación e información de gestión, para que no se pierdan pagos importantes.",
+        accessPlatform:"Acceder a DealTrack Pro",seePlatform:"Ver la plataforma",previewTitle:"Centro de control financiero de la agencia",previewStatus:"Espacio activo",
+        kpi1Label:"Contratos activos",kpi2Label:"Ingresos anuales",kpi2Value:"Seguimiento por moneda",kpi3Label:"Ingresos totales del contrato",kpi3Value:"Basado en contratos",kpi4Label:"Próxima factura",kpi4Value:"Enfoque operativo",
+        previewRowTitle:"Resumen de contratos y facturas",previewRowStatus:"Controlado",previewRowText:"Revise el valor contractual, la estructura de comisiones, los calendarios de pagos y la próxima oportunidad de facturación desde una vista segura de agencia.",
+        platformEyebrow:"Qué hace DealTrack Pro",platformTitle:"Un solo espacio para contratos, comisiones y facturas.",platformText:"Diseñado alrededor de la forma real de trabajar de las agencias de fútbol, DealTrack Pro conecta la información contractual con las acciones financieras posteriores.",
+        f1Tag:"Cartera de contratos",f1Title:"Mantenga cada acuerdo organizado.",f1Text:"Guarde y revise términos, partes, fechas, monedas y documentos de apoyo en una sola cartera.",
+        f2Tag:"Inteligencia de comisiones",f2Title:"Entienda cuánto gana la agencia.",f2Text:"Controle comisiones porcentuales, fijas y mixtas, incluida la doble representación y la remuneración comisionable.",
+        f3Tag:"Control de facturación",f3Title:"Sepa qué debe facturarse a continuación.",f3Text:"Convierta los calendarios de pagos en oportunidades claras de facturación y mantenga visibilidad sobre pagos futuros.",
+        f4Tag:"Gestión de agencia",f4Title:"Vea la situación financiera a nivel de agencia.",f4Text:"Controle ingresos anuales y totales, exposición contractual, próximas facturas e informes de gestión desde el panel de la agencia.",
+        accessTitle:"¿Ya tiene acceso?",accessText:"Inicie sesión para abrir su panel de agencia, cartera de contratos, vistas individuales y calendario de facturación.",signInDealTrack:"Iniciar sesión en DealTrack Pro",contactGmc:"Contactar con GMC",
+        footer:"DealTrack Pro · Global Management Consultancy Limited"
       }
     };
 
     let currentLang = localStorage.getItem("lang") || "en";
-
-    function setLang(lang) {
-      currentLang = lang;
-      localStorage.setItem("lang", lang);
-
-      document.documentElement.lang = lang;
-
-      document.querySelectorAll("[data-i18n]").forEach((el) => {
+    function setLang(lang){
+      currentLang = translations[lang] ? lang : "en";
+      localStorage.setItem("lang", currentLang);
+      document.documentElement.lang = currentLang;
+      document.querySelectorAll("[data-i18n]").forEach((el)=>{
         const key = el.getAttribute("data-i18n");
-        if (translations[lang] && translations[lang][key]) {
-          el.textContent = translations[lang][key];
-        }
+        if(translations[currentLang]?.[key]) el.textContent = translations[currentLang][key];
       });
-
-      document.querySelectorAll("[data-i18n-placeholder]").forEach((el) => {
-        const key = el.getAttribute("data-i18n-placeholder");
-        if (translations[lang] && translations[lang][key]) {
-          el.placeholder = translations[lang][key];
-        }
+      document.querySelectorAll("[data-lang]").forEach((btn)=>{
+        btn.classList.toggle("active", btn.getAttribute("data-lang") === currentLang);
       });
-
-      document.title = "DealTrack Pro | Contract Intelligence";
     }
-
-    const waitlistForm = document.getElementById("waitlistForm");
-    const formMessage = document.getElementById("formMessage");
-    const submitBtn = document.getElementById("submitBtn");
-
-    waitlistForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
-
-      formMessage.className = "form-message";
-      formMessage.textContent = "";
-
-      const fullName = document.getElementById("fullName").value.trim();
-      const email = document.getElementById("email").value.trim();
-      const role = document.getElementById("role").value;
-
-      if (!email || !role) {
-        formMessage.className = "form-message error";
-        formMessage.textContent = translations[currentLang].error;
-        return;
-      }
-
-      submitBtn.disabled = true;
-      submitBtn.textContent = translations[currentLang].sending;
-
-      try {
-        const { error } = await supabaseClient
-          .from("dealtrack_waitlist")
-          .insert([{
-            full_name: fullName || null,
-            email,
-            role: role || null
-          }]);
-
-        if (error) throw error;
-
-        const formData = new FormData(waitlistForm);
-
-        await fetch("https://formsubmit.co/ajax/jnguegan@gmail.com", {
-          method: "POST",
-          body: formData
-        });
-
-        waitlistForm.reset();
-
-        formMessage.className = "form-message success";
-        formMessage.textContent = translations[currentLang].success;
-      } catch (err) {
-        console.error("DealTrack waitlist error:", err);
-        formMessage.className = "form-message error";
-        formMessage.textContent = translations[currentLang].error;
-      } finally {
-        submitBtn.disabled = false;
-        submitBtn.textContent = translations[currentLang].cta;
-      }
-    });
-
+    document.querySelectorAll("[data-lang]").forEach((btn)=>btn.addEventListener("click",()=>setLang(btn.getAttribute("data-lang"))));
     setLang(currentLang);
   </script>
 </body>
