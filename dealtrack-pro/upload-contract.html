@@ -285,6 +285,14 @@
       background: rgba(212, 175, 55, 0.07);
     }
 
+    .upload-zone.is-disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      pointer-events: none;
+      border-color: rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.025);
+    }
+
     .upload-icon {
       margin-bottom: 12px;
       font-size: 44px;
@@ -676,6 +684,7 @@
       "planUnlimited": "Unlimited contracts",
       "planUsage": "{used} of {limit} contracts used",
       "planUnavailable": "Plan information unavailable",
+      "planLimitReached": "You have reached your {plan} Plan contract limit. Upgrade your DealTrack Pro plan to add another contract.",
       "backPortfolio": "← Back to Portfolio",
       "eyebrow": "Contract Upload",
       "pageTitle": "Add a New Contract",
@@ -721,6 +730,7 @@
       "planUnlimited": "Contrats illimités",
       "planUsage": "{used} contrat(s) utilisé(s) sur {limit}",
       "planUnavailable": "Informations du forfait indisponibles",
+      "planLimitReached": "Vous avez atteint la limite de contrats de votre forfait {plan}. Mettez à niveau votre forfait DealTrack Pro pour ajouter un autre contrat.",
       "backPortfolio": "← Retour au portefeuille",
       "eyebrow": "Importation du contrat",
       "pageTitle": "Ajouter un nouveau contrat",
@@ -766,6 +776,7 @@
       "planUnlimited": "Contratos ilimitados",
       "planUsage": "{used} de {limit} contratos utilizados",
       "planUnavailable": "Información del plan no disponible",
+      "planLimitReached": "Ha alcanzado el límite de contratos de su plan {plan}. Actualice su plan DealTrack Pro para añadir otro contrato.",
       "backPortfolio": "← Volver a la cartera",
       "eyebrow": "Carga de contrato",
       "pageTitle": "Añadir un nuevo contrato",
@@ -875,6 +886,43 @@
       }
     }
 
+    function isPlanLimitReached() {
+      if (!currentPlanUsage) return false;
+      if (currentPlanUsage.effective_limit == null) return false;
+
+      return Number(currentPlanUsage.contracts_used || 0) >=
+        Number(currentPlanUsage.effective_limit || 0);
+    }
+
+    function applyPlanLimitState() {
+      const uploadZone = document.getElementById("uploadZone");
+      const fileInput = document.getElementById("contractFiles");
+      const analyseButton = document.getElementById("analyseBtn");
+
+      if (!uploadZone || !fileInput || !analyseButton) return;
+
+      const reached = isPlanLimitReached();
+
+      uploadZone.classList.toggle("is-disabled", reached);
+      fileInput.disabled = reached;
+
+      if (reached) {
+        selectedFiles = [];
+        renderSelectedFiles();
+        analyseButton.disabled = true;
+
+        const planName =
+          currentPlanUsage?.plan_name ||
+          currentPlanUsage?.subscription_plan ||
+          "Free";
+
+        setStatus(
+          template(t("planLimitReached"), { plan: planName }),
+          "warning"
+        );
+      }
+    }
+
     function applyTranslations() {
       document.documentElement.lang = currentLang;
 
@@ -912,6 +960,18 @@
         "DealTrack Pro — " + t("pageTitle");
 
       renderPlanUsage();
+
+      if (isPlanLimitReached()) {
+        const planName =
+          currentPlanUsage?.plan_name ||
+          currentPlanUsage?.subscription_plan ||
+          "Free";
+
+        setStatus(
+          template(t("planLimitReached"), { plan: planName }),
+          "warning"
+        );
+      }
     }
 
     function setStatus(message, type = "info") {
@@ -1074,6 +1134,19 @@
     }
 
     function addSelectedFiles(files) {
+      if (isPlanLimitReached()) {
+        const planName =
+          currentPlanUsage?.plan_name ||
+          currentPlanUsage?.subscription_plan ||
+          "Free";
+
+        setStatus(
+          template(t("planLimitReached"), { plan: planName }),
+          "warning"
+        );
+        return;
+      }
+
       if (!files || files.length === 0) {
         return;
       }
@@ -1157,6 +1230,7 @@
         currentUser = user;
         currentPlanUsage = await loadPlanUsage(db);
         renderPlanUsage();
+        applyPlanLimitState();
 
         const uploadZone =
           document.getElementById("uploadZone");
@@ -1166,7 +1240,10 @@
 
         uploadZone.addEventListener(
           "click",
-          () => fileInput.click()
+          () => {
+            if (isPlanLimitReached()) return;
+            fileInput.click();
+          }
         );
 
         uploadZone.addEventListener(
@@ -1177,6 +1254,7 @@
               event.key === " "
             ) {
               event.preventDefault();
+              if (isPlanLimitReached()) return;
               fileInput.click();
             }
           }
@@ -1230,6 +1308,20 @@
               event.preventDefault();
 
               if (!currentUser) {
+                return;
+              }
+
+              if (isPlanLimitReached()) {
+                const planName =
+                  currentPlanUsage?.plan_name ||
+                  currentPlanUsage?.subscription_plan ||
+                  "Free";
+
+                setStatus(
+                  template(t("planLimitReached"), { plan: planName }),
+                  "warning"
+                );
+
                 return;
               }
 
