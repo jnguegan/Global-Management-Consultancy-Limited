@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DealTrack Pro | Sign In</title>
+
+  <link rel="icon" href="/assets/images/gmc-logo.png">
+  <link rel="shortcut icon" href="/assets/images/gmc-logo.png">
+
+  <style>
+    :root{
+      --bg-1:#07101d;
+      --bg-2:#0c1628;
+      --gold:#d4af37;
+      --gold-light:#f2d16b;
+      --text:#edf3ff;
+      --muted:rgba(237,243,255,.68);
+      --border:rgba(255,255,255,.11);
+      --panel:rgba(255,255,255,.055);
+      --error:#ffd8d8;
+      --success:#d9f7e8;
+      --max:980px;
+    }
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      min-height:100vh;
+      font-family:Inter,Arial,sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at 10% 0%,rgba(212,175,55,.12),transparent 26%),
+        radial-gradient(circle at 90% 18%,rgba(66,120,190,.10),transparent 25%),
+        linear-gradient(180deg,var(--bg-1),var(--bg-2));
+    }
+
+    a{color:inherit;text-decoration:none}
+    button,input{font:inherit}
+    .page{min-height:100vh;display:flex;flex-direction:column}
+    .container{width:min(var(--max),calc(100% - 32px));margin:0 auto}
+
+    .topbar{
+      padding:20px 0;
+      border-bottom:1px solid var(--border);
+      background:rgba(7,16,29,.7);
+      backdrop-filter:blur(16px);
+    }
+
+    .topbar-inner{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:18px;
+      flex-wrap:wrap;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:13px;
+    }
+
+    .brand img{
+      width:48px;
+      height:48px;
+      object-fit:contain;
+      border-radius:12px;
+      padding:3px;
+      background:rgba(255,255,255,.03);
+    }
+
+    .brand strong{display:block;font-size:17px}
+    .brand span{display:block;margin-top:3px;color:var(--muted);font-size:12px}
+
+    .topbar-right{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+
+    .lang-switch{
+      display:flex;
+      gap:3px;
+      padding:4px;
+      border:1px solid var(--border);
+      border-radius:999px;
+      background:rgba(255,255,255,.03);
+    }
+
+    .lang-switch button{
+      border:0;
+      padding:8px 10px;
+      border-radius:999px;
+      color:var(--muted);
+      background:transparent;
+      font-weight:800;
+      cursor:pointer;
+      font-size:12px;
+    }
+
+    .lang-switch button.active{background:var(--gold);color:#09111f}
+
+    .back{
+      padding:10px 14px;
+      border:1px solid var(--border);
+      border-radius:999px;
+      background:rgba(255,255,255,.04);
+      color:var(--text);
+      font-weight:700;
+    }
+
+    main{
+      flex:1;
+      display:flex;
+      align-items:center;
+      padding:52px 0;
+    }
+
+    .login-grid{
+      display:grid;
+      grid-template-columns:.92fr 1.08fr;
+      gap:24px;
+      align-items:stretch;
+    }
+
+    .intro,
+    .login-card{
+      border:1px solid var(--border);
+      border-radius:28px;
+      box-shadow:0 24px 80px rgba(0,0,0,.32);
+    }
+
+    .intro{
+      padding:34px;
+      background:
+        radial-gradient(circle at bottom right,rgba(212,175,55,.11),transparent 30%),
+        var(--panel);
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      gap:28px;
+    }
+
+    .eyebrow{
+      display:inline-flex;
+      margin-bottom:16px;
+      padding:7px 11px;
+      border:1px solid rgba(212,175,55,.23);
+      border-radius:999px;
+      background:rgba(212,175,55,.09);
+      color:var(--gold-light);
+      font-size:11px;
+      font-weight:800;
+      letter-spacing:.1em;
+      text-transform:uppercase;
+    }
+
+    .intro h1{
+      margin:0 0 14px;
+      font-size:clamp(34px,5vw,50px);
+      line-height:1.02;
+      letter-spacing:-.04em;
+    }
+
+    .intro p{
+      margin:0;
+      color:var(--muted);
+      line-height:1.72;
+      font-size:16px;
+    }
+
+    .intro-list{
+      display:grid;
+      gap:10px;
+    }
+
+    .intro-item{
+      padding:12px 14px;
+      border:1px solid var(--border);
+      border-radius:15px;
+      background:rgba(255,255,255,.03);
+      color:#dfe7f4;
+      font-size:14px;
+      line-height:1.5;
+    }
+
+    .login-card{
+      padding:34px;
+      background:rgba(255,255,255,.045);
+    }
+
+    .login-card h2{
+      margin:0 0 8px;
+      font-size:34px;
+      letter-spacing:-.03em;
+    }
+
+    .login-intro{
+      margin:0 0 24px;
+      color:var(--muted);
+      line-height:1.65;
+    }
+
+    .field{margin-bottom:15px}
+    label{display:block;margin-bottom:7px;font-size:13px;font-weight:800}
+    input{
+      width:100%;
+      min-height:50px;
+      padding:0 15px;
+      border:1px solid var(--border);
+      border-radius:13px;
+      background:rgba(255,255,255,.045);
+      color:var(--text);
+      outline:none;
+    }
+
+    input:focus{border-color:rgba(212,175,55,.48);box-shadow:0 0 0 3px rgba(212,175,55,.08)}
+
+    .password-wrap{position:relative}
+    .password-wrap input{padding-right:74px}
+    .show-password{
+      position:absolute;
+      right:8px;
+      top:8px;
+      min-height:34px;
+      padding:0 10px;
+      border:0;
+      border-radius:9px;
+      background:rgba(255,255,255,.06);
+      color:var(--muted);
+      cursor:pointer;
+      font-weight:700;
+      font-size:12px;
+    }
+
+    .btn{
+      width:100%;
+      min-height:50px;
+      border-radius:999px;
+      border:1px solid transparent;
+      font-weight:800;
+      cursor:pointer;
+      transition:.18s ease;
+    }
+
+    .btn:hover{transform:translateY(-1px)}
+    .btn:disabled{opacity:.65;cursor:not-allowed;transform:none}
+
+    .btn-primary{
+      background:linear-gradient(135deg,var(--gold-light),var(--gold));
+      color:#09111f;
+      box-shadow:0 14px 30px rgba(212,175,55,.18);
+    }
+
+    .btn-google{
+      margin-top:12px;
+      border-color:var(--border);
+      background:rgba(255,255,255,.045);
+      color:var(--text);
+    }
+
+    .divider{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      margin:18px 0;
+      color:var(--muted);
+      font-size:12px;
+    }
+
+    .divider::before,.divider::after{
+      content:"";
+      flex:1;
+      height:1px;
+      background:var(--border);
+    }
+
+    .helper{
+      margin-top:17px;
+      text-align:center;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.6;
+    }
+
+    .helper a{color:var(--gold-light);font-weight:800}
+
+    .message{
+      display:none;
+      margin:16px 0 0;
+      padding:12px 14px;
+      border-radius:13px;
+      line-height:1.55;
+      font-size:13px;
+    }
+
+    .message.error{
+      display:block;
+      color:var(--error);
+      border:1px solid rgba(255,110,110,.25);
+      background:rgba(180,50,50,.11);
+    }
+
+    .message.success{
+      display:block;
+      color:var(--success);
+      border:1px solid rgba(90,205,150,.24);
+      background:rgba(50,160,110,.10);
+    }
+
+    .footer{
+      padding:20px 0 28px;
+      border-top:1px solid var(--border);
+      color:var(--muted);
+      font-size:12px;
+    }
+
+    @media(max-width:780px){
+      .login-grid{grid-template-columns:1fr}
+      main{align-items:flex-start;padding:30px 0}
+      .intro,.login-card{padding:24px;border-radius:22px}
+      .topbar-inner{align-items:flex-start}
+      .topbar-right{width:100%;justify-content:flex-start}
+    }
+  </style>
+</head>
+
+<body>
+<div class="page">
+
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="/dealtrack-pro/index.html">
+        <img src="/assets/images/gmc-logo.png" alt="Global Management Consultancy Limited">
+        <div>
+          <strong>DealTrack Pro</strong>
+          <span data-i18n="brandLine">Contract Intelligence for Football Agents</span>
+        </div>
+      </a>
+
+      <div class="topbar-right">
+        <a class="back" href="/dealtrack-pro/index.html" data-i18n="back">Back to DealTrack Pro</a>
+
+        <div class="lang-switch">
+          <button type="button" data-lang="en">EN</button>
+          <button type="button" data-lang="fr">FR</button>
+          <button type="button" data-lang="es">ES</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="container login-grid">
+
+      <section class="intro">
+        <div>
+          <span class="eyebrow" data-i18n="eyebrow">DealTrack Pro Access</span>
+          <h1 data-i18n="welcomeTitle">Sign in to your agency workspace.</h1>
+          <p data-i18n="welcomeText">
+            Access your Agency Dashboard, Contract Portfolio, commission schedules, invoice opportunities and management reports.
+          </p>
+        </div>
+
+        <div class="intro-list">
+          <div class="intro-item" data-i18n="item1">Contract portfolio and document intelligence</div>
+          <div class="intro-item" data-i18n="item2">Commission and lifetime revenue tracking</div>
+          <div class="intro-item" data-i18n="item3">Upcoming invoice opportunities and schedules</div>
+          <div class="intro-item" data-i18n="item4">Agency-level financial control and reporting</div>
+        </div>
+      </section>
+
+      <section class="login-card">
+        <h2 data-i18n="signInTitle">Sign in</h2>
+        <p class="login-intro" data-i18n="signInIntro">
+          Use your GMC account credentials to access DealTrack Pro.
+        </p>
+
+        <form id="loginForm">
+          <div class="field">
+            <label for="email" data-i18n="emailLabel">Email address</label>
+            <input id="email" type="email" autocomplete="email" required placeholder="name@example.com">
+          </div>
+
+          <div class="field">
+            <label for="password" data-i18n="passwordLabel">Password</label>
+            <div class="password-wrap">
+              <input id="password" type="password" autocomplete="current-password" required placeholder="Enter your password">
+              <button type="button" class="show-password" id="showPassword" data-i18n="show">Show</button>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary" id="signInButton" data-i18n="signInButton">
+            Sign In to DealTrack Pro
+          </button>
+        </form>
+
+        <div class="divider" data-i18n="or">or</div>
+
+        <button type="button" class="btn btn-google" id="googleButton" data-i18n="googleButton">
+          Continue with Google
+        </button>
+
+        <div id="message" class="message" role="alert" aria-live="polite"></div>
+
+        <p class="helper">
+          <span data-i18n="accessHelp">Need DealTrack Pro access?</span>
+          <a href="/contact.html" data-i18n="contactGmc">Contact GMC</a>
+        </p>
+      </section>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container" data-i18n="footer">
+      DealTrack Pro · Global Management Consultancy Limited
+    </div>
+  </footer>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  const SUPABASE_URL = "https://ysaxtuvuzqkyfmganven.supabase.co";
+  const SUPABASE_ANON_KEY = "sb_publishable_esfhuUEIcUJEL6z9zryRAA_FGMmUHlw";
+
+  const db = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_ANON_KEY
+  );
+
+  const translations = {
+    en: {
+      brandLine:"Contract Intelligence for Football Agents",
+      back:"Back to DealTrack Pro",
+      eyebrow:"DealTrack Pro Access",
+      welcomeTitle:"Sign in to your agency workspace.",
+      welcomeText:"Access your Agency Dashboard, Contract Portfolio, commission schedules, invoice opportunities and management reports.",
+      item1:"Contract portfolio and document intelligence",
+      item2:"Commission and lifetime revenue tracking",
+      item3:"Upcoming invoice opportunities and schedules",
+      item4:"Agency-level financial control and reporting",
+      signInTitle:"Sign in",
+      signInIntro:"Use your GMC account credentials to access DealTrack Pro.",
+      emailLabel:"Email address",
+      passwordLabel:"Password",
+      show:"Show",
+      hide:"Hide",
+      signInButton:"Sign In to DealTrack Pro",
+      signingIn:"Signing in...",
+      or:"or",
+      googleButton:"Continue with Google",
+      accessHelp:"Need DealTrack Pro access?",
+      contactGmc:"Contact GMC",
+      footer:"DealTrack Pro · Global Management Consultancy Limited",
+      missingFields:"Please enter your email address and password.",
+      invalidLogin:"We could not sign you in. Please check your email address and password.",
+      googleError:"Google sign-in could not be started. Please try again."
+    },
+    fr: {
+      brandLine:"Intelligence contractuelle pour agents de football",
+      back:"Retour à DealTrack Pro",
+      eyebrow:"Accès DealTrack Pro",
+      welcomeTitle:"Connectez-vous à votre espace agence.",
+      welcomeText:"Accédez à votre tableau de bord d'agence, portefeuille de contrats, échéanciers de commissions, opportunités de facturation et rapports de gestion.",
+      item1:"Portefeuille de contrats et intelligence documentaire",
+      item2:"Suivi des commissions et du revenu total",
+      item3:"Prochaines opportunités et échéanciers de facturation",
+      item4:"Contrôle financier et reporting au niveau de l'agence",
+      signInTitle:"Connexion",
+      signInIntro:"Utilisez vos identifiants de compte GMC pour accéder à DealTrack Pro.",
+      emailLabel:"Adresse e-mail",
+      passwordLabel:"Mot de passe",
+      show:"Afficher",
+      hide:"Masquer",
+      signInButton:"Se connecter à DealTrack Pro",
+      signingIn:"Connexion...",
+      or:"ou",
+      googleButton:"Continuer avec Google",
+      accessHelp:"Besoin d'un accès à DealTrack Pro ?",
+      contactGmc:"Contacter GMC",
+      footer:"DealTrack Pro · Global Management Consultancy Limited",
+      missingFields:"Veuillez saisir votre adresse e-mail et votre mot de passe.",
+      invalidLogin:"Connexion impossible. Vérifiez votre adresse e-mail et votre mot de passe.",
+      googleError:"La connexion Google n'a pas pu être lancée. Veuillez réessayer."
+    },
+    es: {
+      brandLine:"Inteligencia contractual para agentes de fútbol",
+      back:"Volver a DealTrack Pro",
+      eyebrow:"Acceso a DealTrack Pro",
+      welcomeTitle:"Inicie sesión en su espacio de agencia.",
+      welcomeText:"Acceda a su panel de agencia, cartera de contratos, calendarios de comisiones, oportunidades de facturación e informes de gestión.",
+      item1:"Cartera de contratos e inteligencia documental",
+      item2:"Seguimiento de comisiones e ingresos totales",
+      item3:"Próximas oportunidades y calendarios de facturación",
+      item4:"Control financiero e informes a nivel de agencia",
+      signInTitle:"Iniciar sesión",
+      signInIntro:"Utilice sus credenciales de cuenta GMC para acceder a DealTrack Pro.",
+      emailLabel:"Correo electrónico",
+      passwordLabel:"Contraseña",
+      show:"Mostrar",
+      hide:"Ocultar",
+      signInButton:"Iniciar sesión en DealTrack Pro",
+      signingIn:"Iniciando sesión...",
+      or:"o",
+      googleButton:"Continuar con Google",
+      accessHelp:"¿Necesita acceso a DealTrack Pro?",
+      contactGmc:"Contactar con GMC",
+      footer:"DealTrack Pro · Global Management Consultancy Limited",
+      missingFields:"Introduzca su correo electrónico y contraseña.",
+      invalidLogin:"No hemos podido iniciar sesión. Compruebe su correo electrónico y contraseña.",
+      googleError:"No se pudo iniciar la sesión con Google. Inténtelo de nuevo."
+    }
+  };
+
+  let currentLang = localStorage.getItem("lang") || "en";
+
+  function setLang(lang){
+    currentLang = translations[lang] ? lang : "en";
+    localStorage.setItem("lang", currentLang);
+    document.documentElement.lang = currentLang;
+
+    document.querySelectorAll("[data-i18n]").forEach((el)=>{
+      const key = el.getAttribute("data-i18n");
+      const value = translations[currentLang]?.[key];
+      if(value) el.textContent = value;
+    });
+
+    document.querySelectorAll("[data-lang]").forEach((btn)=>{
+      btn.classList.toggle(
+        "active",
+        btn.getAttribute("data-lang") === currentLang
+      );
+    });
+  }
+
+  document.querySelectorAll("[data-lang]").forEach((btn)=>{
+    btn.addEventListener("click",()=>setLang(btn.getAttribute("data-lang")));
+  });
+
+  const loginForm = document.getElementById("loginForm");
+  const emailInput = document.getElementById("email");
+  const passwordInput = document.getElementById("password");
+  const signInButton = document.getElementById("signInButton");
+  const googleButton = document.getElementById("googleButton");
+  const message = document.getElementById("message");
+  const showPassword = document.getElementById("showPassword");
+
+  function showMessage(type,text){
+    message.className = "message " + type;
+    message.textContent = text;
+  }
+
+  function clearMessage(){
+    message.className = "message";
+    message.textContent = "";
+  }
+
+  function goToDashboard(){
+    window.location.href = "/dealtrack-pro/agency-dashboard.html";
+  }
+
+  showPassword.addEventListener("click",()=>{
+    const isHidden = passwordInput.type === "password";
+    passwordInput.type = isHidden ? "text" : "password";
+    showPassword.textContent = translations[currentLang][
+      isHidden ? "hide" : "show"
+    ];
+  });
+
+  loginForm.addEventListener("submit",async(e)=>{
+    e.preventDefault();
+    clearMessage();
+
+    const email = emailInput.value.trim();
+    const password = passwordInput.value;
+
+    if(!email || !password){
+      showMessage("error",translations[currentLang].missingFields);
+      return;
+    }
+
+    signInButton.disabled = true;
+    signInButton.textContent = translations[currentLang].signingIn;
+
+    try{
+      const { error } = await db.auth.signInWithPassword({
+        email,
+        password
+      });
+
+      if(error) throw error;
+
+      goToDashboard();
+    }catch(err){
+      console.error("DealTrack Pro login error:",err);
+      showMessage("error",translations[currentLang].invalidLogin);
+      signInButton.disabled = false;
+      signInButton.textContent = translations[currentLang].signInButton;
+    }
+  });
+
+  googleButton.addEventListener("click",async()=>{
+    clearMessage();
+
+    try{
+      const redirectTo =
+        window.location.origin +
+        "/dealtrack-pro/login.html";
+
+      const { error } = await db.auth.signInWithOAuth({
+        provider:"google",
+        options:{ redirectTo }
+      });
+
+      if(error) throw error;
+    }catch(err){
+      console.error("DealTrack Pro Google login error:",err);
+      showMessage("error",translations[currentLang].googleError);
+    }
+  });
+
+  async function checkExistingSession(){
+    const { data } = await db.auth.getSession();
+
+    if(data?.session){
+      goToDashboard();
+    }
+  }
+
+  setLang(currentLang);
+  checkExistingSession();
+</script>
+</body>
+</html>
