@@ -257,7 +257,7 @@
 
     .heroStats{
       display:grid;
-      grid-template-columns:repeat(3,1fr);
+      grid-template-columns:repeat(2,1fr);
       gap:14px;
     }
 
@@ -512,6 +512,97 @@
       text-transform:uppercase;
     }
 
+
+    .ecosystemBox{
+      padding:30px;
+      border-radius:26px;
+      border:1px solid rgba(212,175,55,0.22);
+      background:linear-gradient(180deg, rgba(212,175,55,0.07), rgba(255,255,255,0.02));
+      box-shadow:var(--shadow);
+      text-align:center;
+    }
+    .ecosystemBox h2{
+      margin:0 0 14px;
+      font-size:clamp(28px,4vw,40px);
+      line-height:1.15;
+      letter-spacing:-0.03em;
+    }
+    .ecosystemBox p{
+      max-width:860px;
+      margin:0 auto;
+      color:var(--muted);
+      font-size:17px;
+      line-height:1.78;
+    }
+    .audienceGrid{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:14px;
+      margin-top:22px;
+    }
+    .audienceCard{
+      min-height:118px;
+      padding:18px;
+      border-radius:18px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,0.03);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      font-weight:800;
+      line-height:1.45;
+    }
+    .positionStrip{
+      display:flex;
+      justify-content:center;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:18px;
+    }
+    .positionPill{
+      display:inline-flex;
+      align-items:center;
+      min-height:34px;
+      padding:0 12px;
+      border-radius:999px;
+      border:1px solid rgba(212,175,55,0.18);
+      background:var(--gold-soft);
+      color:var(--gold);
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:.06em;
+    }
+    .finalCta{
+      padding:30px;
+      border-radius:28px;
+      border:1px solid var(--line);
+      background:linear-gradient(180deg, rgba(255,255,255,0.035), rgba(255,255,255,0.015));
+      box-shadow:var(--shadow);
+      display:grid;
+      grid-template-columns:1fr auto;
+      align-items:center;
+      gap:24px;
+    }
+    .finalCta h2{
+      margin:0 0 10px;
+      font-size:clamp(28px,4vw,40px);
+      line-height:1.1;
+      letter-spacing:-0.03em;
+    }
+    .finalCta p{
+      margin:0;
+      color:var(--muted);
+      line-height:1.7;
+      max-width:720px;
+    }
+    .finalCtaActions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+
     .site-footer{
       margin-top:36px;
       border-top:1px solid var(--line);
@@ -605,6 +696,7 @@
       .heroStats{
         grid-template-columns:1fr;
       }
+      .audienceGrid{grid-template-columns:1fr;}
       .heroActions .btn,
       .gatewayBtn{
         width:100%;
@@ -612,6 +704,9 @@
       .footer-grid{
         grid-template-columns:1fr;
       }
+      .audienceGrid{grid-template-columns:1fr 1fr;}
+      .finalCta{grid-template-columns:1fr;}
+      .finalCtaActions{justify-content:flex-start;}
     }
   </style>
 </head>
@@ -620,7 +715,7 @@
   <header class="topbar">
     <div class="container topbar-inner">
       <a class="brand" href="index.html" aria-label="Global Management Consultancy Limited">
-        <img src="assets/images/gmc-logo.png" alt="Global Management Consultancy Limited" />
+        <img src="https://globalmgm.co.uk/assets/images/gmc-logo.png" alt="Global Management Consultancy Limited" />
         <div class="brand-copy">
           <p class="brand-eyebrow" data-i18n="brand.eyebrow">Global Management Consultancy Limited</p>
           <p class="brand-title" data-i18n="brand.title">Premium advisory, finance and academy platform</p>
@@ -652,53 +747,114 @@
     <section class="hero">
       <div class="container heroGrid">
         <div class="heroCopy">
-          <p class="kicker" data-i18n="hero.kicker">Global Management Consultancy Limited</p>
-
-          <h1 class="gatewayTitle" data-i18n="hero.title">
-            Consultancy, finance and professional learning under one premium platform.
-          </h1>
-
-          <p class="gatewayLead" data-i18n="hero.lead">
-            Global Management Consultancy Limited brings together strategic advisory, Global Sport Finance solutions and Agent Academy learning resources for football, international business and cross-border operations.
-          </p>
+          <p class="kicker" data-home-i18n="hero.kicker">Global Management Consultancy Limited</p>
+          <h1 class="gatewayTitle" data-home-i18n="hero.title">Global expertise for sport, finance and international business.</h1>
+          <p class="gatewayLead" data-home-i18n="hero.lead">One international platform connecting strategic consultancy, Global Sport Finance, football contract intelligence and specialist FIFA Football Agent Exam education.</p>
 
           <div class="heroActions">
-            <a class="btn primary" href="services.html" data-i18n="hero.cta1">Explore Consultancy</a>
-            <a class="btn secondary" href="finance.html" data-i18n="hero.cta2">Explore Finance</a>
-            <a class="btn outline" href="/agent-academy/" data-i18n="hero.cta3">Explore Academy</a>
+            <a class="btn primary" href="#gmc-platforms" data-home-i18n="hero.cta1">Explore GMC</a>
+            <a class="btn secondary" href="contact.html" data-home-i18n="hero.cta2">Contact Us</a>
           </div>
 
           <div class="heroStats">
             <div class="statCard">
-              <span class="statLabel" data-i18n="hero.stat1Label">Coverage</span>
-              <span class="statValue" data-i18n="hero.stat1Value">Consultancy · Finance · Academy</span>
+              <span class="statLabel" data-home-i18n="hero.stat1Label">Advisory</span>
+              <span class="statValue" data-home-i18n="hero.stat1Value">Consultancy &amp; Football Services</span>
             </div>
             <div class="statCard">
-              <span class="statLabel" data-i18n="hero.stat2Label">Focus</span>
-              <span class="statValue" data-i18n="hero.stat2Value">Football · International Business · Education</span>
+              <span class="statLabel" data-home-i18n="hero.stat2Label">Finance &amp; Technology</span>
+              <span class="statValue" data-home-i18n="hero.stat2Value">Global Sport Finance · DealTrack Pro</span>
             </div>
             <div class="statCard">
-              <span class="statLabel" data-i18n="hero.stat3Label">Positioning</span>
-              <span class="statValue" data-i18n="hero.stat3Value">Premium, global and cross-border</span>
+              <span class="statLabel" data-home-i18n="hero.stat3Label">Education</span>
+              <span class="statValue" data-home-i18n="hero.stat3Value">FIFA Football Agent Exam Education</span>
             </div>
           </div>
         </div>
 
         <div class="heroPanel">
           <div>
-            <p class="panelKicker" data-i18n="panel.kicker">Platform Overview</p>
-            <h2 data-i18n="panel.title">Three clear entry points for different client needs.</h2>
-            <p data-i18n="panel.text">
-              Whether you need advisory and football agency support, international finance tools, or structured professional learning, this platform is designed to guide you directly to the right area.
-            </p>
+            <p class="panelKicker" data-home-i18n="panel.kicker">GMC Platform</p>
+            <h2 data-home-i18n="panel.title">Four specialist areas. One connected international platform.</h2>
+            <p data-home-i18n="panel.text">Choose the area that matches your objective while benefiting from the wider experience and international perspective of Global Management Consultancy Limited.</p>
           </div>
 
           <ul class="featureList">
-            <li data-i18n="panel.feature1">Consultancy and football agency support for international operations</li>
-            <li data-i18n="panel.feature2">Global Sport Finance solutions for payments, cards and FX workflows</li>
-            <li data-i18n="panel.feature3">Agent Academy learning resources with premium multilingual study tools</li>
-            <li data-i18n="panel.feature4">Built to serve professionals, athletes, clubs and global partners</li>
+            <li data-home-i18n="panel.feature1">Consultancy &amp; Football Services</li>
+            <li data-home-i18n="panel.feature2">Global Sport Finance</li>
+            <li data-home-i18n="panel.feature3">DealTrack Pro</li>
+            <li data-home-i18n="panel.feature4">Agent Academy — FIFA Football Agent Exam Education</li>
           </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="gmc-platforms">
+      <div class="container">
+        <div class="sectionHeader">
+          <p class="sectionKicker" data-home-i18n="gateway.kicker">Choose Your Path</p>
+          <h2 class="sectionTitle" data-home-i18n="gateway.title">Four specialist areas. One GMC platform.</h2>
+          <p class="sectionText" data-home-i18n="gateway.lead">Go directly to the part of GMC that best matches your objective.</p>
+        </div>
+
+        <div class="gatewayGrid">
+          <article class="gatewayCard">
+            <div>
+              <span class="gatewayTag" data-home-i18n="gateway.consultancy.tag">Advisory</span>
+              <h2 data-home-i18n="gateway.consultancy.title">Consultancy &amp; Football Services</h2>
+              <p data-home-i18n="gateway.consultancy.text">Strategic advisory, football agency support and cross-border business guidance for professionals, clubs, athletes and international operators.</p>
+            </div>
+            <div>
+              <a class="gatewayBtn" href="services.html" data-home-i18n="gateway.consultancy.cta">Explore Consultancy</a>
+              <div class="gatewayMeta" data-home-i18n="gateway.consultancy.meta">Advisory · Football · International Support</div>
+            </div>
+          </article>
+
+          <article class="gatewayCard">
+            <div>
+              <span class="gatewayTag" data-home-i18n="gateway.finance.tag">Finance</span>
+              <h2 data-home-i18n="gateway.finance.title">Global Sport Finance</h2>
+              <p data-home-i18n="gateway.finance.text">Financial assessment, planning tools and international financial support for athletes, professionals, families and internationally mobile clients.</p>
+            </div>
+            <div>
+              <a class="gatewayBtn" href="/finance/index.html" data-home-i18n="gateway.finance.cta">Explore Global Sport Finance</a>
+              <div class="gatewayMeta" data-home-i18n="gateway.finance.meta">Planning · Tools · Financial Guidance</div>
+            </div>
+          </article>
+
+          <article class="gatewayCard">
+            <div>
+              <span class="gatewayTag" data-home-i18n="gateway.dealtrack.tag">Contract Intelligence</span>
+              <h2 data-home-i18n="gateway.dealtrack.title">DealTrack Pro</h2>
+              <p data-home-i18n="gateway.dealtrack.text">Contract intelligence for professional football agents and agencies, with commission tracking, invoice schedules and management reporting.</p>
+            </div>
+            <div>
+              <a class="gatewayBtn" href="/dealtrack-pro/" data-home-i18n="gateway.dealtrack.cta">Explore DealTrack Pro</a>
+              <div class="gatewayMeta" data-home-i18n="gateway.dealtrack.meta">Contracts · Commissions · Invoices · Reporting</div>
+            </div>
+          </article>
+
+          <article class="gatewayCard centerCard">
+            <div>
+              <span class="gatewayTag" data-home-i18n="gateway.academy.tag">Education</span>
+              <h2 data-home-i18n="gateway.academy.title">Agent Academy</h2>
+              <p data-home-i18n="gateway.academy.text">Specialist FIFA Football Agent Exam education with structured learning, quizzes, mock examinations and multilingual exam preparation resources.</p>
+            </div>
+            <div>
+              <a class="gatewayBtn" href="/agent-academy/" data-home-i18n="gateway.academy.cta">Explore Agent Academy</a>
+              <div class="gatewayMeta" data-home-i18n="gateway.academy.meta">FIFA Exam · Learning · Mock Exams</div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="ecosystemBox">
+          <p class="sectionKicker" data-home-i18n="ecosystem.kicker">One Connected GMC Ecosystem</p>
+          <h2 data-home-i18n="ecosystem.title">Different specialist needs. One international point of reference.</h2>
+          <p data-home-i18n="ecosystem.text">GMC connects advisory, financial planning, football contract intelligence and FIFA Football Agent Exam education within one group, allowing clients and partners to access the specialist area they need without losing the benefit of a wider cross-border perspective.</p>
         </div>
       </div>
     </section>
@@ -706,62 +862,41 @@
     <section class="section">
       <div class="container">
         <div class="sectionHeader">
-          <p class="sectionKicker" data-i18n="gateway.kicker">Choose Your Path</p>
-          <h2 class="sectionTitle" data-i18n="gateway.title">Enter the area most relevant to your objectives.</h2>
-          <p class="sectionText" data-i18n="gateway.lead">
-            Each entry point has been structured around a specific type of user need, while keeping the same premium standard, visual consistency and strategic positioning across the group.
-          </p>
+          <p class="sectionKicker" data-home-i18n="audience.kicker">Who We Support</p>
+          <h2 class="sectionTitle" data-home-i18n="audience.title">Built for people and organisations operating across sport, business and borders.</h2>
         </div>
 
-        <div class="gatewayGrid">
-          <article class="gatewayCard">
-            <div>
-              <span class="gatewayTag" data-i18n="gateway.consultancy.tag">Advisory</span>
-              <h2 data-i18n="gateway.consultancy.title">Consultancy Services &amp; Football Agency</h2>
-              <p data-i18n="gateway.consultancy.text">
-                Strategic advisory, football agency support, representation services and cross-border business guidance for professionals, clubs, athletes and international operators.
-              </p>
-            </div>
-            <div>
-              <a class="gatewayBtn" href="services.html" data-i18n="gateway.consultancy.cta">Enter Consultancy</a>
-              <div class="gatewayMeta" data-i18n="gateway.consultancy.meta">Advisory · Agency · International Support</div>
-            </div>
-          </article>
+        <div class="audienceGrid">
+          <div class="audienceCard" data-home-i18n="audience.players">Players &amp; Athletes</div>
+          <div class="audienceCard" data-home-i18n="audience.agents">Agents &amp; Agencies</div>
+          <div class="audienceCard" data-home-i18n="audience.clubs">Clubs &amp; Partners</div>
+          <div class="audienceCard" data-home-i18n="audience.business">Businesses &amp; International Professionals</div>
+        </div>
 
-          <article class="gatewayCard">
-            <div>
-              <span class="gatewayTag" data-i18n="gateway.finance.tag">Finance</span>
-              <h2 data-i18n="gateway.finance.title">Global Sport Finance</h2>
-              <p data-i18n="gateway.finance.text">
-                Banking access, multi-currency support, international payments, FX solutions and prepaid card infrastructure tailored to sport, business and global mobility.
-              </p>
-            </div>
-            <div>
-              <a class="gatewayBtn" href="finance.html" data-i18n="gateway.finance.cta">Enter Finance</a>
-              <div class="gatewayMeta" data-i18n="gateway.finance.meta">Accounts · Cards · Payments · FX</div>
-            </div>
-          </article>
-
-          <article class="gatewayCard centerCard">
-            <div>
-              <span class="gatewayTag" data-i18n="gateway.academy.tag">Learning</span>
-              <h2 data-i18n="gateway.academy.title">Academy &amp; Learning</h2>
-              <p data-i18n="gateway.academy.text">
-                Professional education, FIFA Football Agent exam preparation, mock exams, revision tools and premium digital learning resources designed for serious candidates and professionals.
-              </p>
-            </div>
-            <div>
-              <a class="gatewayBtn" href="/agent-academy/" data-i18n="gateway.academy.cta">Enter Academy</a>
-              <div class="gatewayMeta" data-i18n="gateway.academy.meta">Exam Prep · E-learning · Digital Resources</div>
-            </div>
-          </article>
+        <div class="positionStrip">
+          <span class="positionPill" data-home-i18n="audience.language">English · French · Spanish</span>
+          <span class="positionPill" data-home-i18n="audience.crossborder">International &amp; Cross-Border</span>
+          <span class="positionPill" data-home-i18n="audience.sport">Sport · Finance · Business</span>
         </div>
       </div>
     </section>
 
-    <div class="cred-strip" data-i18n="cred.strip">
-      Commercial and contractual consulting · Partner onboarding · Global Management Consultancy Limited
-    </div>
+    <section class="section">
+      <div class="container">
+        <div class="finalCta">
+          <div>
+            <h2 data-home-i18n="cta.title">Not sure which GMC area is right for you?</h2>
+            <p data-home-i18n="cta.text">Speak with us and we will help direct you to the most relevant service or platform.</p>
+          </div>
+          <div class="finalCtaActions">
+            <a class="btn primary" href="contact.html" data-home-i18n="cta.contact">Contact GMC</a>
+            <a class="btn secondary" href="partner-enquiry.html" data-home-i18n="cta.partner">Partner Enquiry</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="cred-strip" data-home-i18n="cred.strip">Global Management Consultancy Limited · Advisory · Finance · Contract Intelligence · FIFA Football Agent Exam Education</div>
   </main>
 
   <footer class="site-footer">
@@ -795,6 +930,84 @@
     </div>
   </footer>
 
+
+  <script>
+    const GMC_HOME_I18N = {
+      en: {
+        "hero.kicker":"Global Management Consultancy Limited",
+        "hero.title":"Global expertise for sport, finance and international business.",
+        "hero.lead":"One international platform connecting strategic consultancy, Global Sport Finance, football contract intelligence and specialist FIFA Football Agent Exam education.",
+        "hero.cta1":"Explore GMC","hero.cta2":"Contact Us",
+        "hero.stat1Label":"Advisory","hero.stat1Value":"Consultancy & Football Services",
+        "hero.stat2Label":"Finance & Technology","hero.stat2Value":"Global Sport Finance · DealTrack Pro",
+        "hero.stat3Label":"Education","hero.stat3Value":"FIFA Football Agent Exam Education",
+        "panel.kicker":"GMC Platform","panel.title":"Four specialist areas. One connected international platform.",
+        "panel.text":"Choose the area that matches your objective while benefiting from the wider experience and international perspective of Global Management Consultancy Limited.",
+        "panel.feature1":"Consultancy & Football Services","panel.feature2":"Global Sport Finance","panel.feature3":"DealTrack Pro","panel.feature4":"Agent Academy — FIFA Football Agent Exam Education",
+        "gateway.kicker":"Choose Your Path","gateway.title":"Four specialist areas. One GMC platform.","gateway.lead":"Go directly to the part of GMC that best matches your objective.",
+        "gateway.consultancy.tag":"Advisory","gateway.consultancy.title":"Consultancy & Football Services","gateway.consultancy.text":"Strategic advisory, football agency support and cross-border business guidance for professionals, clubs, athletes and international operators.","gateway.consultancy.cta":"Explore Consultancy","gateway.consultancy.meta":"Advisory · Football · International Support",
+        "gateway.finance.tag":"Finance","gateway.finance.title":"Global Sport Finance","gateway.finance.text":"Financial assessment, planning tools and international financial support for athletes, professionals, families and internationally mobile clients.","gateway.finance.cta":"Explore Global Sport Finance","gateway.finance.meta":"Planning · Tools · Financial Guidance",
+        "gateway.dealtrack.tag":"Contract Intelligence","gateway.dealtrack.title":"DealTrack Pro","gateway.dealtrack.text":"Contract intelligence for professional football agents and agencies, with commission tracking, invoice schedules and management reporting.","gateway.dealtrack.cta":"Explore DealTrack Pro","gateway.dealtrack.meta":"Contracts · Commissions · Invoices · Reporting",
+        "gateway.academy.tag":"Education","gateway.academy.title":"Agent Academy","gateway.academy.text":"Specialist FIFA Football Agent Exam education with structured learning, quizzes, mock examinations and multilingual exam preparation resources.","gateway.academy.cta":"Explore Agent Academy","gateway.academy.meta":"FIFA Exam · Learning · Mock Exams",
+        "ecosystem.kicker":"One Connected GMC Ecosystem","ecosystem.title":"Different specialist needs. One international point of reference.","ecosystem.text":"GMC connects advisory, financial planning, football contract intelligence and FIFA Football Agent Exam education within one group, allowing clients and partners to access the specialist area they need without losing the benefit of a wider cross-border perspective.",
+        "audience.kicker":"Who We Support","audience.title":"Built for people and organisations operating across sport, business and borders.","audience.players":"Players & Athletes","audience.agents":"Agents & Agencies","audience.clubs":"Clubs & Partners","audience.business":"Businesses & International Professionals","audience.language":"English · French · Spanish","audience.crossborder":"International & Cross-Border","audience.sport":"Sport · Finance · Business",
+        "cta.title":"Not sure which GMC area is right for you?","cta.text":"Speak with us and we will help direct you to the most relevant service or platform.","cta.contact":"Contact GMC","cta.partner":"Partner Enquiry",
+        "cred.strip":"Global Management Consultancy Limited · Advisory · Finance · Contract Intelligence · FIFA Football Agent Exam Education"
+      },
+      fr: {
+        "hero.kicker":"Global Management Consultancy Limited",
+        "hero.title":"Une expertise mondiale au service du sport, de la finance et des affaires internationales.",
+        "hero.lead":"Une plateforme internationale réunissant conseil stratégique, Global Sport Finance, intelligence contractuelle du football et formation spécialisée à l’examen d’Agent de Football de la FIFA.",
+        "hero.cta1":"Découvrir GMC","hero.cta2":"Nous contacter",
+        "hero.stat1Label":"Conseil","hero.stat1Value":"Conseil & Services Football",
+        "hero.stat2Label":"Finance & Technologie","hero.stat2Value":"Global Sport Finance · DealTrack Pro",
+        "hero.stat3Label":"Formation","hero.stat3Value":"Formation à l’examen d’Agent de Football de la FIFA",
+        "panel.kicker":"Plateforme GMC","panel.title":"Quatre domaines spécialisés. Une seule plateforme internationale.",
+        "panel.text":"Choisissez l’espace correspondant à votre objectif tout en bénéficiant de l’expérience et de la perspective internationale de Global Management Consultancy Limited.",
+        "panel.feature1":"Conseil & Services Football","panel.feature2":"Global Sport Finance","panel.feature3":"DealTrack Pro","panel.feature4":"Agent Academy — Formation à l’examen d’Agent de Football de la FIFA",
+        "gateway.kicker":"Choisissez votre parcours","gateway.title":"Quatre domaines spécialisés. Une seule plateforme GMC.","gateway.lead":"Accédez directement à l’espace GMC qui correspond le mieux à votre objectif.",
+        "gateway.consultancy.tag":"Conseil","gateway.consultancy.title":"Conseil & Services Football","gateway.consultancy.text":"Conseil stratégique, accompagnement d’agence de football et soutien aux activités internationales pour professionnels, clubs, athlètes et opérateurs internationaux.","gateway.consultancy.cta":"Découvrir le Conseil","gateway.consultancy.meta":"Conseil · Football · International",
+        "gateway.finance.tag":"Finance","gateway.finance.title":"Global Sport Finance","gateway.finance.text":"Évaluation financière, outils de planification et accompagnement financier international pour athlètes, professionnels, familles et clients mobiles à l’international.","gateway.finance.cta":"Découvrir Global Sport Finance","gateway.finance.meta":"Planification · Outils · Accompagnement financier",
+        "gateway.dealtrack.tag":"Intelligence contractuelle","gateway.dealtrack.title":"DealTrack Pro","gateway.dealtrack.text":"Intelligence contractuelle pour agents et agences de football professionnels, avec suivi des commissions, échéanciers de facturation et reporting de gestion.","gateway.dealtrack.cta":"Découvrir DealTrack Pro","gateway.dealtrack.meta":"Contrats · Commissions · Factures · Reporting",
+        "gateway.academy.tag":"Formation","gateway.academy.title":"Agent Academy","gateway.academy.text":"Formation spécialisée à l’examen d’Agent de Football de la FIFA avec apprentissage structuré, quiz, examens blancs et ressources multilingues.","gateway.academy.cta":"Découvrir Agent Academy","gateway.academy.meta":"Examen FIFA · Formation · Examens blancs",
+        "ecosystem.kicker":"Un écosystème GMC connecté","ecosystem.title":"Des besoins spécialisés différents. Un seul point de référence international.","ecosystem.text":"GMC réunit conseil, planification financière, intelligence contractuelle du football et formation à l’examen d’Agent de Football de la FIFA au sein d’un même groupe, tout en conservant une vision internationale et transfrontalière.",
+        "audience.kicker":"À qui nous nous adressons","audience.title":"Conçu pour les personnes et organisations actives dans le sport, les affaires et à l’international.","audience.players":"Joueurs & Athlètes","audience.agents":"Agents & Agences","audience.clubs":"Clubs & Partenaires","audience.business":"Entreprises & Professionnels internationaux","audience.language":"Anglais · Français · Espagnol","audience.crossborder":"International & Transfrontalier","audience.sport":"Sport · Finance · Entreprise",
+        "cta.title":"Vous ne savez pas quel espace GMC vous convient ?","cta.text":"Contactez-nous et nous vous orienterons vers le service ou la plateforme la plus adaptée.","cta.contact":"Contacter GMC","cta.partner":"Demande de partenariat",
+        "cred.strip":"Global Management Consultancy Limited · Conseil · Finance · Intelligence contractuelle · Formation à l’examen d’Agent de Football de la FIFA"
+      },
+      es: {
+        "hero.kicker":"Global Management Consultancy Limited",
+        "hero.title":"Experiencia global para el deporte, las finanzas y los negocios internacionales.",
+        "hero.lead":"Una plataforma internacional que conecta consultoría estratégica, Global Sport Finance, inteligencia contractual del fútbol y formación especializada para el examen de Agente de Fútbol de la FIFA.",
+        "hero.cta1":"Explorar GMC","hero.cta2":"Contactar",
+        "hero.stat1Label":"Consultoría","hero.stat1Value":"Consultoría & Servicios de Fútbol",
+        "hero.stat2Label":"Finanzas & Tecnología","hero.stat2Value":"Global Sport Finance · DealTrack Pro",
+        "hero.stat3Label":"Formación","hero.stat3Value":"Formación para el examen de Agente de Fútbol de la FIFA",
+        "panel.kicker":"Plataforma GMC","panel.title":"Cuatro áreas especializadas. Una plataforma internacional conectada.",
+        "panel.text":"Elija el área que corresponda a su objetivo y benefíciese de la experiencia y perspectiva internacional de Global Management Consultancy Limited.",
+        "panel.feature1":"Consultoría & Servicios de Fútbol","panel.feature2":"Global Sport Finance","panel.feature3":"DealTrack Pro","panel.feature4":"Agent Academy — Formación para el examen de Agente de Fútbol de la FIFA",
+        "gateway.kicker":"Elija su camino","gateway.title":"Cuatro áreas especializadas. Una plataforma GMC.","gateway.lead":"Acceda directamente al área de GMC que mejor se adapte a su objetivo.",
+        "gateway.consultancy.tag":"Consultoría","gateway.consultancy.title":"Consultoría & Servicios de Fútbol","gateway.consultancy.text":"Consultoría estratégica, apoyo para agencias de fútbol y orientación empresarial transfronteriza para profesionales, clubes, deportistas y operadores internacionales.","gateway.consultancy.cta":"Explorar Consultoría","gateway.consultancy.meta":"Consultoría · Fútbol · Apoyo internacional",
+        "gateway.finance.tag":"Finanzas","gateway.finance.title":"Global Sport Finance","gateway.finance.text":"Evaluación financiera, herramientas de planificación y apoyo financiero internacional para deportistas, profesionales, familias y clientes con movilidad internacional.","gateway.finance.cta":"Explorar Global Sport Finance","gateway.finance.meta":"Planificación · Herramientas · Orientación financiera",
+        "gateway.dealtrack.tag":"Inteligencia contractual","gateway.dealtrack.title":"DealTrack Pro","gateway.dealtrack.text":"Inteligencia contractual para agentes y agencias de fútbol profesionales, con seguimiento de comisiones, calendarios de facturación e informes de gestión.","gateway.dealtrack.cta":"Explorar DealTrack Pro","gateway.dealtrack.meta":"Contratos · Comisiones · Facturas · Informes",
+        "gateway.academy.tag":"Formación","gateway.academy.title":"Agent Academy","gateway.academy.text":"Formación especializada para el examen de Agente de Fútbol de la FIFA, con aprendizaje estructurado, cuestionarios, simulacros y recursos multilingües.","gateway.academy.cta":"Explorar Agent Academy","gateway.academy.meta":"Examen FIFA · Formación · Simulacros",
+        "ecosystem.kicker":"Un ecosistema GMC conectado","ecosystem.title":"Necesidades especializadas distintas. Un único punto de referencia internacional.","ecosystem.text":"GMC conecta consultoría, planificación financiera, inteligencia contractual del fútbol y formación para el examen de Agente de Fútbol de la FIFA dentro de un mismo grupo, manteniendo una perspectiva internacional y transfronteriza.",
+        "audience.kicker":"A quién apoyamos","audience.title":"Diseñado para personas y organizaciones que operan en el deporte, los negocios y a través de fronteras.","audience.players":"Jugadores & Deportistas","audience.agents":"Agentes & Agencias","audience.clubs":"Clubes & Socios","audience.business":"Empresas & Profesionales internacionales","audience.language":"Inglés · Francés · Español","audience.crossborder":"Internacional & Transfronterizo","audience.sport":"Deporte · Finanzas · Negocios",
+        "cta.title":"¿No sabe qué área de GMC es la adecuada para usted?","cta.text":"Póngase en contacto con nosotros y le orientaremos hacia el servicio o la plataforma más adecuada.","cta.contact":"Contactar con GMC","cta.partner":"Consulta de colaboración",
+        "cred.strip":"Global Management Consultancy Limited · Consultoría · Finanzas · Inteligencia contractual · Formación para el examen de Agente de Fútbol de la FIFA"
+      }
+    };
+
+    function applyGmcHomeLanguage(lang) {
+      const safeLang = GMC_HOME_I18N[lang] ? lang : "en";
+      document.querySelectorAll("[data-home-i18n]").forEach((el) => {
+        const key = el.getAttribute("data-home-i18n");
+        const value = GMC_HOME_I18N[safeLang]?.[key] ?? GMC_HOME_I18N.en?.[key];
+        if (value) el.textContent = value;
+      });
+    }
+  </script>
+
   <script src="assets/js/i18n.js"></script>
   <script>
     document.getElementById("year").textContent = new Date().getFullYear();
@@ -810,15 +1023,16 @@
 
         if (typeof window.setLanguage === "function") {
           window.setLanguage(lang);
-        } else {
-          window.location.reload();
         }
+        applyGmcHomeLanguage(lang);
       });
     }
 
+    const initialLang = localStorage.getItem("lang") || "en";
     if (typeof window.setLanguage === "function") {
-      window.setLanguage(localStorage.getItem("lang") || "en");
+      window.setLanguage(initialLang);
     }
+    applyGmcHomeLanguage(initialLang);
   </script>
 </body>
 </html>
