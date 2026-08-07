@@ -177,6 +177,48 @@
       line-height: 1.65;
     }
 
+    .plan-status {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 14px 16px;
+      margin: 0 0 24px;
+      border: 1px solid rgba(212, 175, 55, 0.22);
+      border-radius: 16px;
+      background: rgba(212, 175, 55, 0.055);
+    }
+
+    .plan-status-label {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .plan-status-name {
+      color: var(--gold-2);
+      font-weight: 900;
+    }
+
+    .plan-status-usage {
+      color: var(--text);
+      font-size: 13px;
+      font-weight: 800;
+      text-align: right;
+    }
+
+    @media (max-width: 560px) {
+      .plan-status {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+      .plan-status-usage { text-align: left; }
+    }
+
     .form-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -480,6 +522,14 @@
         Upload your signed agreement and DealTrack Pro will automatically extract key information, payment schedules and contractual deadlines.
       </p>
 
+      <div class="plan-status" aria-live="polite">
+        <div>
+          <span class="plan-status-label" data-i18n="planLabel">DealTrack Pro Plan</span>
+          <div id="planStatusName" class="plan-status-name" data-i18n="planLoading">Loading plan...</div>
+        </div>
+        <div id="planStatusUsage" class="plan-status-usage">—</div>
+      </div>
+
       <form id="uploadForm">
         <div class="form-grid">
           <div class="field">
@@ -621,6 +671,11 @@
   {
     "en": {
       "brandTagline": "Contract Intelligence for Football Agents",
+      "planLabel": "DealTrack Pro Plan",
+      "planLoading": "Loading plan...",
+      "planUnlimited": "Unlimited contracts",
+      "planUsage": "{used} of {limit} contracts used",
+      "planUnavailable": "Plan information unavailable",
       "backPortfolio": "← Back to Portfolio",
       "eyebrow": "Contract Upload",
       "pageTitle": "Add a New Contract",
@@ -661,6 +716,11 @@
 
     "fr": {
       "brandTagline": "Intelligence contractuelle pour agents de football",
+      "planLabel": "Forfait DealTrack Pro",
+      "planLoading": "Chargement du forfait...",
+      "planUnlimited": "Contrats illimités",
+      "planUsage": "{used} contrat(s) utilisé(s) sur {limit}",
+      "planUnavailable": "Informations du forfait indisponibles",
       "backPortfolio": "← Retour au portefeuille",
       "eyebrow": "Importation du contrat",
       "pageTitle": "Ajouter un nouveau contrat",
@@ -701,6 +761,11 @@
 
     "es": {
       "brandTagline": "Inteligencia contractual para agentes de fútbol",
+      "planLabel": "Plan DealTrack Pro",
+      "planLoading": "Cargando plan...",
+      "planUnlimited": "Contratos ilimitados",
+      "planUsage": "{used} de {limit} contratos utilizados",
+      "planUnavailable": "Información del plan no disponible",
       "backPortfolio": "← Volver a la cartera",
       "eyebrow": "Carga de contrato",
       "pageTitle": "Añadir un nuevo contrato",
@@ -754,6 +819,7 @@
 
     let selectedFiles = [];
     let currentUser = null;
+    let currentPlanUsage = null;
 
     function t(key) {
       return (
@@ -761,6 +827,52 @@
         I18N.en?.[key] ||
         key
       );
+    }
+
+    function template(text, values = {}) {
+      return String(text || "").replace(/\{(\w+)\}/g, (_, key) =>
+        values[key] ?? `{${key}}`
+      );
+    }
+
+    async function loadPlanUsage(db) {
+      const { data, error } = await db.rpc("get_my_dealtrack_plan_usage");
+
+      if (error) {
+        console.warn("DealTrack Pro plan usage could not be loaded:", error);
+        return null;
+      }
+
+      const usage = Array.isArray(data) ? data[0] : data;
+      return usage?.agency_id ? usage : null;
+    }
+
+    function renderPlanUsage() {
+      const nameEl = document.getElementById("planStatusName");
+      const usageEl = document.getElementById("planStatusUsage");
+      if (!nameEl || !usageEl) return;
+
+      if (!currentPlanUsage) {
+        nameEl.textContent = t("planUnavailable");
+        usageEl.textContent = "—";
+        return;
+      }
+
+      const planName =
+        currentPlanUsage.plan_name ||
+        currentPlanUsage.subscription_plan ||
+        "—";
+
+      nameEl.textContent = `${planName} Plan`;
+
+      if (currentPlanUsage.effective_limit == null) {
+        usageEl.textContent = t("planUnlimited");
+      } else {
+        usageEl.textContent = template(t("planUsage"), {
+          used: Number(currentPlanUsage.contracts_used || 0),
+          limit: Number(currentPlanUsage.effective_limit || 0)
+        });
+      }
     }
 
     function applyTranslations() {
@@ -798,6 +910,8 @@
 
       document.title =
         "DealTrack Pro — " + t("pageTitle");
+
+      renderPlanUsage();
     }
 
     function setStatus(message, type = "info") {
@@ -1041,6 +1155,8 @@
         }
 
         currentUser = user;
+        currentPlanUsage = await loadPlanUsage(db);
+        renderPlanUsage();
 
         const uploadZone =
           document.getElementById("uploadZone");
