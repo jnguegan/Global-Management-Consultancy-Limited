@@ -44,6 +44,7 @@ window.GSF_INSIGHTS = [
     number: "003",
     date: "2026-07-23",
     icon: "€",
+    flyer: "/assets/images/financial-insights/5-million-earned.png",
     en: {
       title: "€5 Million Earned — How Much Will You Keep?",
       card: "Taxes, lifestyle inflation and poor investments can erode wealth. Turn earnings into retained capital and productive assets.",
@@ -120,6 +121,7 @@ window.GSF_INSIGHTS = [
     number: "001",
     date: "2026-07-21",
     icon: "⌂",
+    flyer: "/assets/images/financial-insights/high-rent-or-home-ownership.jpg",
     en: {
       title: "High Rent or Home Ownership?",
       card: "Home ownership, when well planned and financed, can build equity and long-term value, while high rent offers flexibility but no asset.",
