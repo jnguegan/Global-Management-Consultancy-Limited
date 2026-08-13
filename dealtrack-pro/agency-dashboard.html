@@ -1998,7 +1998,13 @@
         annualRevenue = recurringPercentage + oneOffPercentage;
         lifetimeRevenue = (recurringPercentage * years) + oneOffPercentage;
       } else if (method === "fixed" && fixedAmount !== null) {
-        annualRevenue = fixedCommission;
+        /*
+         * A fixed fee is a lifetime/contract amount unless its recorded
+         * instalment schedule tells us which reporting year it belongs to.
+         * Keep annual revenue unavailable until applyInstalmentMetrics()
+         * can replace it with the actual due-date schedule.
+         */
+        annualRevenue = null;
         lifetimeRevenue = fixedCommission;
       } else if (method === "mixed" && percentage !== null && fixedAmount !== null && years !== null) {
         annualRevenue = recurringPercentage + oneOffPercentage + fixedCommission;
@@ -2242,7 +2248,11 @@
         "lifetimeRevenue"
       );
 
-      const instalmentTotals = getUpcomingInstalmentTotalsByCurrency();
+      /*
+       * Forecast Invoices is a snapshot of the NEXT outstanding invoice
+       * opportunity per contract. Do not add later years into today's KPI.
+       */
+      const instalmentTotals = getNextInstalmentTotalsByCurrency();
       const invoiceTotals = instalmentTotals.size
         ? Object.fromEntries(instalmentTotals)
         : groupTotalsByCurrency(dashboardRows, "invoiceForecast");
@@ -2687,6 +2697,19 @@
 
       return [...nextByContract.values()]
         .sort((a, b) => a.dueDate.localeCompare(b.dueDate));
+    }
+
+    function getNextInstalmentTotalsByCurrency() {
+      const totals = new Map();
+
+      getNextInstalmentGroupPerContract().forEach((group) => {
+        totals.set(
+          group.currency,
+          (totals.get(group.currency) || 0) + group.amount
+        );
+      });
+
+      return totals;
     }
 
     function renderInvoiceCalendar() {
@@ -3793,7 +3816,7 @@
       } = await db.auth.getUser();
 
       if (userError || !user) {
-        window.location.href = "/agent-academy/login.html";
+        window.location.href = "/dealtrack-pro/login.html";
         return;
       }
 
