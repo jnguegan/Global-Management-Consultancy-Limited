@@ -1018,6 +1018,7 @@
 "singleRepresentationValue": "Single Representation",
 "commercialCalculation": "Revenue Calculation Summary",
 "commercialValueUnavailable": "The commercial value cannot yet be calculated because the salary amount, salary frequency or commission rate is missing.",
+"fixedScheduleRequired": "A fixed commission has been recorded, but its instalment schedule is not yet available. Lifetime revenue can be shown, but annual revenue and invoice timing require the recorded payment schedule.",
 "sectionInvoiceForecast": "Invoice Forecast",
 "invoiceForecastSubtitle": "Potential invoices identified from the recorded commission structure. Confirm contractual triggers and dates before issuing an invoice.",
 "invoicePlayerSide": "Player-Side Invoice",
@@ -1116,6 +1117,7 @@
 "singleRepresentationValue": "Représentation simple",
 "commercialCalculation": "Résumé du calcul des revenus",
 "commercialValueUnavailable": "La valeur commerciale ne peut pas encore être calculée, car le salaire, la fréquence salariale ou le taux de commission est manquant.",
+"fixedScheduleRequired": "Une commission fixe est enregistrée, mais son échéancier n’est pas encore disponible. Le revenu total peut être affiché, mais le revenu annuel et le calendrier de facturation nécessitent l’échéancier de paiement enregistré.",
 "sectionInvoiceForecast": "Prévision de facturation",
 "invoiceForecastSubtitle": "Factures potentielles identifiées à partir de la structure de commission enregistrée. Confirmez les déclencheurs et les dates contractuels avant d’émettre une facture.",
 "invoicePlayerSide": "Facture côté joueur",
@@ -1214,6 +1216,7 @@
 "singleRepresentationValue": "Representación única",
 "commercialCalculation": "Resumen del cálculo de ingresos",
 "commercialValueUnavailable": "El valor comercial todavía no puede calcularse porque falta el salario, la frecuencia salarial o el porcentaje de comisión.",
+"fixedScheduleRequired": "Se ha registrado una comisión fija, pero su calendario de cuotas todavía no está disponible. Puede mostrarse el ingreso total, pero el ingreso anual y las fechas de facturación requieren el calendario de pagos registrado.",
 "sectionInvoiceForecast": "Previsión de facturación",
 "invoiceForecastSubtitle": "Facturas potenciales identificadas a partir de la estructura de comisión registrada. Confirme los desencadenantes y las fechas contractuales antes de emitir una factura.",
 "invoicePlayerSide": "Factura de representación del jugador",
@@ -1878,6 +1881,110 @@ function renderCommercialValue(data) {
       ? fixedAmount * fixedMultiplier
       : 0;
 
+  /*
+   * IMPORTANT:
+   * A fixed commission amount is a total contractual amount unless a
+   * recorded instalment schedule tells us when the revenue falls due.
+   * Never present the whole fixed fee as "annual revenue".
+   */
+  if (
+    method === "fixed" &&
+    fixedAmount !== null &&
+    !instalmentMetrics
+  ) {
+    const termText =
+      contractYears !== null
+        ? t("overContractTerm").replace("{years}", contractYears)
+        : t("na");
+
+    return `
+      <section class="premium-card commercial-value-card">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">06</div>
+            <h2 class="section-title">
+              ${t("sectionCommercialValue")}
+            </h2>
+          </div>
+        </div>
+
+        <p class="muted">
+          ${t("commercialValueSubtitle")}
+        </p>
+
+        <div class="commercial-value-headline">
+          <span class="commercial-value-label">
+            ${t("expectedAnnualRevenue")}
+          </span>
+
+          <div class="commercial-value-annual">
+            ${t("na")}
+          </div>
+
+          <div class="commercial-value-period">
+            ${new Date().getFullYear()}
+          </div>
+        </div>
+
+        <div class="commercial-total-box">
+          <span class="commercial-value-label">
+            ${t("expectedContractRevenue")}
+          </span>
+
+          <div class="commercial-total-value">
+            ${formatMoneyValue(
+              fixedCommission,
+              currency
+            )}
+          </div>
+
+          <div class="commercial-value-period">
+            ${termText}
+          </div>
+        </div>
+
+        <div class="commercial-calculation">
+          <h4>${t("commercialCalculation")}</h4>
+
+          <div class="commercial-calculation-grid">
+            <div>
+              <span>${t("representationType")}</span>
+              <strong>
+                ${isDual
+                  ? t("dualRepresentationValue")
+                  : t("singleRepresentationValue")}
+              </strong>
+            </div>
+
+            <div>
+              <span>${t("labelCommissionType")}</span>
+              <strong>${safeValue(data.commission_method || data.commission_type)}</strong>
+            </div>
+
+            <div>
+              <span>${t("expectedAnnualRevenue")}</span>
+              <strong>${t("na")}</strong>
+            </div>
+
+            <div>
+              <span>${t("expectedContractRevenue")}</span>
+              <strong>
+                ${formatMoneyValue(
+                  fixedCommission,
+                  currency
+                )}
+              </strong>
+            </div>
+          </div>
+
+          <p class="commercial-note">
+            ${t("fixedScheduleRequired")}
+          </p>
+        </div>
+      </section>
+    `;
+  }
+
   let totalAnnualRevenue = null;
   let totalContractRevenue = null;
 
@@ -1892,12 +1999,6 @@ function renderCommercialValue(data) {
     totalContractRevenue =
       recurringPercentage * contractYears +
       oneOffPercentage;
-  } else if (
-    method === "fixed" &&
-    fixedAmount !== null
-  ) {
-    totalAnnualRevenue = fixedCommission;
-    totalContractRevenue = fixedCommission;
   } else if (
     method === "mixed" &&
     commissionRate !== null &&
@@ -2566,7 +2667,7 @@ function renderInvoiceForecast(data) {
       const { data: { user }, error: userError } = await db.auth.getUser();
 
       if (userError || !user) {
-        window.location.href = "/agent-academy/login.html";
+        window.location.href = "/dealtrack-pro/login.html";
         return;
       }
 
@@ -2578,7 +2679,7 @@ function renderInvoiceForecast(data) {
       if (logoutBtn) {
         logoutBtn.addEventListener("click", async () => {
           await db.auth.signOut();
-          window.location.href = "/agent-academy/login.html";
+          window.location.href = "/dealtrack-pro/login.html";
         });
       }
 
