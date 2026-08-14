@@ -675,6 +675,55 @@
   line-height: 1.6;
 }
 
+
+
+    .calculation-formula {
+      margin-top: 14px;
+      padding: 14px 16px;
+      border: 1px solid rgba(88,166,255,0.18);
+      border-radius: 14px;
+      background: rgba(47,140,255,0.055);
+      color: var(--text);
+      line-height: 1.55;
+      font-size: 0.92rem;
+      word-break: break-word;
+    }
+
+    .calculation-formula strong {
+      color: var(--gold-2);
+    }
+
+    .audit-schedule {
+      margin-top: 16px;
+      overflow-x: auto;
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 15px;
+    }
+
+    .audit-schedule table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 720px;
+    }
+
+    .audit-schedule th,
+    .audit-schedule td {
+      padding: 11px 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      text-align: left;
+      vertical-align: top;
+      font-size: 0.84rem;
+    }
+
+    .audit-schedule th {
+      color: var(--muted);
+      font-size: 0.72rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      background: rgba(255,255,255,0.025);
+    }
+
+    .audit-schedule tr:last-child td { border-bottom: 0; }
 @media (max-width: 620px) {
   .commercial-calculation-grid {
     grid-template-columns: 1fr;
@@ -1017,6 +1066,41 @@
 "dualRepresentationValue": "Dual Representation",
 "singleRepresentationValue": "Single Representation",
 "commercialCalculation": "Revenue Calculation Summary",
+"calculationBasisTitle": "Commission Calculation Basis",
+"calculationMethod": "Calculation Method",
+"contractualSchedule": "Contractual payment schedule",
+"salaryInput": "Salary Input",
+"annualisationRule": "Annualisation Rule",
+"annualisedSalary": "Annualised Salary",
+"commissionBasisLabel": "Commission Basis",
+"commissionableOneOffs": "Commissionable One-Offs",
+"commissionRateLabel": "Commission Rate",
+"representationMultiplier": "Representation Multiplier",
+"contractTermLabel": "Contract Term",
+"formulaLabel": "Formula",
+"paymentScheduleTitle": "Contractual Payment Schedule",
+"instalmentNumber": "Instalment",
+"feeSide": "Fee Side",
+"dueDate": "Due Date",
+"payerLabel": "Payer",
+"sourceLabel": "Source / Notes",
+"currentYearRevenue": "Current-Year Revenue",
+"nextInvoiceLabel": "Next Invoice",
+"noOneOffs": "None included",
+"basicSalaryBasis": "Basic salary",
+"customBasis": "Custom contractual basis",
+"guaranteedRemuneration": "Guaranteed remuneration",
+"totalGrossRemuneration": "Total gross remuneration",
+"salaryPlusSigningBonus": "Salary + signing-on fee",
+"weeklyRule": "weekly salary × 52",
+"monthlyRule": "monthly salary × 12",
+"fortnightlyRule": "fortnightly salary × 26",
+"annualRule": "annual salary × 1",
+"notApplicable": "Not applicable",
+"fixedFeeMethod": "Fixed contractual fee",
+"percentageMethod": "Percentage of contractual remuneration",
+"mixedMethod": "Mixed percentage + fixed fee",
+"auditNote": "This calculation trail shows the recorded inputs and assumptions used by DealTrack Pro. It should be checked against the signed contractual documents before an invoice is issued.",
 "commercialValueUnavailable": "The commercial value cannot yet be calculated because the salary amount, salary frequency or commission rate is missing.",
 "fixedScheduleRequired": "A fixed commission has been recorded, but its instalment schedule is not yet available. Lifetime revenue can be shown, but annual revenue and invoice timing require the recorded payment schedule.",
 "sectionInvoiceForecast": "Invoice Forecast",
@@ -1116,6 +1200,41 @@
 "dualRepresentationValue": "Double représentation",
 "singleRepresentationValue": "Représentation simple",
 "commercialCalculation": "Résumé du calcul des revenus",
+"calculationBasisTitle": "Base de calcul de la commission",
+"calculationMethod": "Méthode de calcul",
+"contractualSchedule": "Échéancier contractuel",
+"salaryInput": "Salaire de référence",
+"annualisationRule": "Règle d’annualisation",
+"annualisedSalary": "Salaire annualisé",
+"commissionBasisLabel": "Base de commission",
+"commissionableOneOffs": "Éléments ponctuels commissionnables",
+"commissionRateLabel": "Taux de commission",
+"representationMultiplier": "Multiplicateur de représentation",
+"contractTermLabel": "Durée du contrat",
+"formulaLabel": "Formule",
+"paymentScheduleTitle": "Échéancier contractuel de paiement",
+"instalmentNumber": "Échéance",
+"feeSide": "Côté de la commission",
+"dueDate": "Date d’échéance",
+"payerLabel": "Payeur",
+"sourceLabel": "Source / Notes",
+"currentYearRevenue": "Revenu de l’année en cours",
+"nextInvoiceLabel": "Prochaine facture",
+"noOneOffs": "Aucun élément inclus",
+"basicSalaryBasis": "Salaire de base",
+"customBasis": "Base contractuelle personnalisée",
+"guaranteedRemuneration": "Rémunération garantie",
+"totalGrossRemuneration": "Rémunération brute totale",
+"salaryPlusSigningBonus": "Salaire + prime à la signature",
+"weeklyRule": "salaire hebdomadaire × 52",
+"monthlyRule": "salaire mensuel × 12",
+"fortnightlyRule": "salaire bimensuel × 26",
+"annualRule": "salaire annuel × 1",
+"notApplicable": "Sans objet",
+"fixedFeeMethod": "Commission contractuelle fixe",
+"percentageMethod": "Pourcentage de la rémunération contractuelle",
+"mixedMethod": "Pourcentage + commission fixe",
+"auditNote": "Cette piste de calcul présente les données et hypothèses enregistrées utilisées par DealTrack Pro. Elle doit être vérifiée avec les documents contractuels signés avant émission d’une facture.",
 "commercialValueUnavailable": "La valeur commerciale ne peut pas encore être calculée, car le salaire, la fréquence salariale ou le taux de commission est manquant.",
 "fixedScheduleRequired": "Une commission fixe est enregistrée, mais son échéancier n’est pas encore disponible. Le revenu total peut être affiché, mais le revenu annuel et le calendrier de facturation nécessitent l’échéancier de paiement enregistré.",
 "sectionInvoiceForecast": "Prévision de facturation",
@@ -1215,6 +1334,41 @@
 "dualRepresentationValue": "Representación dual",
 "singleRepresentationValue": "Representación única",
 "commercialCalculation": "Resumen del cálculo de ingresos",
+"calculationBasisTitle": "Base de cálculo de la comisión",
+"calculationMethod": "Método de cálculo",
+"contractualSchedule": "Calendario contractual de pagos",
+"salaryInput": "Salario de referencia",
+"annualisationRule": "Regla de anualización",
+"annualisedSalary": "Salario anualizado",
+"commissionBasisLabel": "Base de comisión",
+"commissionableOneOffs": "Conceptos únicos comisionables",
+"commissionRateLabel": "Porcentaje de comisión",
+"representationMultiplier": "Multiplicador de representación",
+"contractTermLabel": "Duración del contrato",
+"formulaLabel": "Fórmula",
+"paymentScheduleTitle": "Calendario contractual de pagos",
+"instalmentNumber": "Cuota",
+"feeSide": "Lado de la comisión",
+"dueDate": "Fecha de vencimiento",
+"payerLabel": "Pagador",
+"sourceLabel": "Fuente / Notas",
+"currentYearRevenue": "Ingresos del año actual",
+"nextInvoiceLabel": "Próxima factura",
+"noOneOffs": "Ninguno incluido",
+"basicSalaryBasis": "Salario base",
+"customBasis": "Base contractual personalizada",
+"guaranteedRemuneration": "Remuneración garantizada",
+"totalGrossRemuneration": "Remuneración bruta total",
+"salaryPlusSigningBonus": "Salario + prima de fichaje",
+"weeklyRule": "salario semanal × 52",
+"monthlyRule": "salario mensual × 12",
+"fortnightlyRule": "salario quincenal × 26",
+"annualRule": "salario anual × 1",
+"notApplicable": "No aplica",
+"fixedFeeMethod": "Comisión contractual fija",
+"percentageMethod": "Porcentaje de la remuneración contractual",
+"mixedMethod": "Porcentaje + comisión fija",
+"auditNote": "Esta pista de cálculo muestra los datos e hipótesis registrados que utiliza DealTrack Pro. Debe comprobarse con los documentos contractuales firmados antes de emitir una factura.",
 "commercialValueUnavailable": "El valor comercial todavía no puede calcularse porque falta el salario, la frecuencia salarial o el porcentaje de comisión.",
 "fixedScheduleRequired": "Se ha registrado una comisión fija, pero su calendario de cuotas todavía no está disponible. Puede mostrarse el ingreso total, pero el ingreso anual y las fechas de facturación requieren el calendario de pagos registrado.",
 "sectionInvoiceForecast": "Previsión de facturación",
@@ -1654,6 +1808,76 @@ function getCommissionBasis(data, annualSalary) {
   };
 }
 
+
+function getAnnualisationRule(frequency) {
+  const value = normaliseFrequency(frequency);
+  if (["weekly", "week", "hebdomadaire", "semanal"].includes(value)) return { multiplier: 52, label: t("weeklyRule") };
+  if (["monthly", "month", "mensuel", "mensuelle", "mensual"].includes(value)) return { multiplier: 12, label: t("monthlyRule") };
+  if (["fortnightly", "biweekly", "quinzaine", "quincenal"].includes(value)) return { multiplier: 26, label: t("fortnightlyRule") };
+  if (["yearly", "annual", "annually", "year", "annuel", "annuelle", "anual"].includes(value)) return { multiplier: 1, label: t("annualRule") };
+  return { multiplier: null, label: t("na") };
+}
+
+function getCommissionBasisDisplay(data) {
+  const basis = String(data.commission_basis || "basic_salary").trim().toLowerCase();
+  const labels = {
+    basic_salary: t("basicSalaryBasis"),
+    salary_plus_signing_bonus: t("salaryPlusSigningBonus"),
+    guaranteed_remuneration: t("guaranteedRemuneration"),
+    total_gross_remuneration: t("totalGrossRemuneration"),
+    custom: t("customBasis")
+  };
+  return labels[basis] || safeValue(data.commission_basis || t("basicSalaryBasis"));
+}
+
+function getCommissionMethodDisplay(method) {
+  if (method === "fixed") return t("fixedFeeMethod");
+  if (method === "percentage") return t("percentageMethod");
+  if (method === "mixed") return t("mixedMethod");
+  return safeValue(method);
+}
+
+function getCommissionableOneOffDisplay(data, currency) {
+  const parts = [];
+  const signing = toNumber(data.signing_bonus);
+  const guaranteed = toNumber(data.guaranteed_bonus);
+  const other = toNumber(data.other_commissionable_income);
+  if (signing !== null && Boolean(data.signing_bonus_commissionable)) parts.push(`${formatMoneyValue(signing, currency)} — signing-on`);
+  if (guaranteed !== null && Boolean(data.guaranteed_bonus_commissionable)) parts.push(`${formatMoneyValue(guaranteed, currency)} — guaranteed bonus`);
+  if (other !== null && Boolean(data.other_income_commissionable)) parts.push(`${formatMoneyValue(other, currency)} — other income`);
+  return parts.length ? parts.join("; ") : t("noOneOffs");
+}
+
+function renderInstalmentAuditTable(metrics) {
+  if (!metrics?.items?.length) return "";
+  const rows = metrics.items
+    .slice()
+    .sort((a,b) => String(a.due_date || "").localeCompare(String(b.due_date || "")))
+    .map((item, index) => `
+      <tr>
+        <td>${safeValue(item.instalment_number || index + 1)}</td>
+        <td>${safeValue(item.fee_side)}</td>
+        <td><strong>${formatMoneyValue(item.amount, item.currency || metrics.currency)}</strong></td>
+        <td>${safeValue(item.due_date)}</td>
+        <td>${safeValue(item.payer)}</td>
+        <td>${safeValue(item.notes || item.condition_notes)}</td>
+      </tr>`).join("");
+  return `
+    <div class="audit-schedule">
+      <table>
+        <thead><tr>
+          <th>${t("instalmentNumber")}</th>
+          <th>${t("feeSide")}</th>
+          <th>${t("invoiceAmount")}</th>
+          <th>${t("dueDate")}</th>
+          <th>${t("payerLabel")}</th>
+          <th>${t("sourceLabel")}</th>
+        </tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>`;
+}
+
 function getInstalmentMetrics(data) {
   const items = currentContractInstalments.filter((item) => {
     const status = String(item.invoice_status || "").toLowerCase();
@@ -1815,8 +2039,17 @@ function renderCommercialValue(data) {
             </div>
           </div>
 
+          <div class="calculation-formula">
+            <strong>${t("calculationMethod")}:</strong> ${t("contractualSchedule")}<br>
+            <strong>${t("currentYearRevenue")}:</strong> ${formatMoneyValue(instalmentMetrics.annualRevenue, instalmentMetrics.currency)}<br>
+            <strong>${t("nextInvoiceLabel")}:</strong> ${instalmentMetrics.nextDueDate ? `${formatMoneyValue(instalmentMetrics.nextInvoiceAmount, instalmentMetrics.currency)} — ${instalmentMetrics.nextDueDate}` : t("na")}
+          </div>
+
+          <h4 style="margin-top:18px;">${t("paymentScheduleTitle")}</h4>
+          ${renderInstalmentAuditTable(instalmentMetrics)}
+
           <p class="commercial-note">
-            Revenue is calculated from the recorded commission instalment schedule.
+            ${t("auditNote")}
           </p>
         </div>
       </section>
@@ -2097,43 +2330,68 @@ function renderCommercialValue(data) {
 
         <div class="commercial-calculation-grid">
           <div>
-            <span>${t("annualSalaryBasis")}</span>
-            <strong>
-              ${formatMoneyValue(
-                basis.total,
-                currency
-              )}
-            </strong>
+            <span>${t("calculationMethod")}</span>
+            <strong>${getCommissionMethodDisplay(method)}</strong>
           </div>
-
           <div>
-            <span>${t("labelCommissionType")}</span>
-            <strong>${method}</strong>
+            <span>${t("salaryInput")}</span>
+            <strong>${formatMoneyValue(data.salary, data.salary_currency || currency)} ${safeValue(data.salary_frequency)}</strong>
           </div>
-
+          <div>
+            <span>${t("annualisationRule")}</span>
+            <strong>${getAnnualisationRule(data.salary_frequency).label}</strong>
+          </div>
+          <div>
+            <span>${t("annualisedSalary")}</span>
+            <strong>${formatMoneyValue(annualSalary, data.salary_currency || currency)}</strong>
+          </div>
+          <div>
+            <span>${t("commissionBasisLabel")}</span>
+            <strong>${getCommissionBasisDisplay(data)}</strong>
+          </div>
+          <div>
+            <span>${t("commissionableOneOffs")}</span>
+            <strong>${getCommissionableOneOffDisplay(data, currency)}</strong>
+          </div>
+          <div>
+            <span>${t("annualSalaryBasis")}</span>
+            <strong>${formatMoneyValue(basis.total, currency)}</strong>
+          </div>
+          <div>
+            <span>${t("commissionRateLabel")}</span>
+            <strong>${commissionRate !== null ? `${commissionRate}%` : t("na")}</strong>
+          </div>
+          <div>
+            <span>${t("representationType")}</span>
+            <strong>${isDual ? t("dualRepresentationValue") : t("singleRepresentationValue")}</strong>
+          </div>
+          <div>
+            <span>${t("representationMultiplier")}</span>
+            <strong>×${percentageMultiplier}</strong>
+          </div>
+          <div>
+            <span>${t("contractTermLabel")}</span>
+            <strong>${contractYears !== null ? `${contractYears} years` : t("na")}</strong>
+          </div>
           <div>
             <span>${t("expectedAnnualRevenue")}</span>
-            <strong>
-              ${formatMoneyValue(
-                totalAnnualRevenue,
-                currency
-              )}
-            </strong>
+            <strong>${formatMoneyValue(totalAnnualRevenue, currency)}</strong>
           </div>
-
           <div>
             <span>${t("expectedContractRevenue")}</span>
-            <strong>
-              ${formatMoneyValue(
-                totalContractRevenue,
-                currency
-              )}
-            </strong>
+            <strong>${formatMoneyValue(totalContractRevenue, currency)}</strong>
           </div>
         </div>
 
+        <div class="calculation-formula">
+          <strong>${t("formulaLabel")}:</strong>
+          ${method === "percentage"
+            ? `${formatMoneyValue(basis.recurring, currency)} × ${commissionRate}% × ${percentageMultiplier}${basis.oneOff ? ` + one-off commission on ${formatMoneyValue(basis.oneOff, currency)}` : ""}`
+            : `${formatMoneyValue(basis.recurring, currency)} × ${commissionRate}% × ${percentageMultiplier} + ${formatMoneyValue(fixedCommission, currency)} fixed`}
+        </div>
+
         <p class="commercial-note">
-          ${t("commercialEstimateNote")}
+          ${t("auditNote")}
         </p>
       </div>
     </section>
