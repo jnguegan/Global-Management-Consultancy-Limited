@@ -1145,6 +1145,9 @@
       "labelCommissionPayer": "Commission Payer",
       "labelCommissionFrequency": "Payment Frequency",
       "labelCommissionInstalments": "Instalments",
+      "oncePerSeason": "Once per season",
+      "twicePerSeason": "Twice per season",
+      "instalmentsPerSeason": "{count} instalments per season",
       "labelDualRepresentation": "Dual Representation",
       "snapshotPlayer": "Player",
       "snapshotClub": "Club",
@@ -1279,6 +1282,9 @@
       "labelCommissionPayer": "Payeur de la commission",
       "labelCommissionFrequency": "Fréquence de paiement",
       "labelCommissionInstalments": "Échéances",
+      "oncePerSeason": "Une fois par saison",
+      "twicePerSeason": "Deux fois par saison",
+      "instalmentsPerSeason": "{count} échéances par saison",
       "labelDualRepresentation": "Double représentation",
       "snapshotPlayer": "Joueur",
       "snapshotClub": "Club",
@@ -1413,6 +1419,9 @@
       "labelCommissionPayer": "Pagador de la comisión",
       "labelCommissionFrequency": "Frecuencia de pago",
       "labelCommissionInstalments": "Cuotas",
+      "oncePerSeason": "Una vez por temporada",
+      "twicePerSeason": "Dos veces por temporada",
+      "instalmentsPerSeason": "{count} cuotas por temporada",
       "labelDualRepresentation": "Representación dual",
       "snapshotPlayer": "Jugador",
       "snapshotClub": "Club",
@@ -1876,6 +1885,256 @@ function renderInstalmentAuditTable(metrics) {
         <tbody>${rows}</tbody>
       </table>
     </div>`;
+}
+
+
+function parseAnalysisJson(data) {
+  const raw = data?.analysis_json;
+  if (!raw) return null;
+
+  if (typeof raw === "object") {
+    return raw;
+  }
+
+  if (typeof raw === "string") {
+    try {
+      return JSON.parse(raw);
+    } catch (error) {
+      console.warn("Could not parse analysis_json:", error);
+    }
+  }
+
+  return null;
+}
+
+function normaliseScheduleDate(value) {
+  if (!value) return null;
+
+  const text = String(value).trim();
+
+  // Supabase dates are normally YYYY-MM-DD. Keep them stable and avoid
+  // timezone conversion changing the displayed day.
+  if (/^\d{4}-\d{2}-\d{2}$/.test(text)) {
+    return text;
+  }
+
+  const parsed = new Date(text);
+  if (Number.isNaN(parsed.getTime())) return null;
+
+  const year = parsed.getFullYear();
+  const month = String(parsed.getMonth() + 1).padStart(2, "0");
+  const day = String(parsed.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+function inferFootballSeasonFromDate(dateValue) {
+  const date = normaliseScheduleDate(dateValue);
+  if (!date) return "";
+
+  const [yearText, monthText] = date.split("-");
+  const year = Number(yearText);
+  const month = Number(monthText);
+
+  if (!Number.isFinite(year) || !Number.isFinite(month)) return "";
+
+  const startYear = month >= 7 ? year : year - 1;
+  const endYearShort = String((startYear + 1) % 100).padStart(2, "0");
+  return `${startYear}/${endYearShort}`;
+}
+
+function extractSeasonFromNotes(notes, dueDate) {
+  const text = String(notes || "");
+  const match = text.match(/Season:\s*([0-9]{4}\/[0-9]{2,4})/i);
+  if (match?.[1]) return match[1];
+  return inferFootballSeasonFromDate(dueDate);
+}
+
+function getCommissionScheduleItems(data) {
+  const directItems = (Array.isArray(currentContractInstalments)
+    ? currentContractInstalments
+    : [])
+    .filter((item) => {
+      const status = String(item?.invoice_status || "").toLowerCase();
+      return status !== "cancelled" && Boolean(normaliseScheduleDate(item?.due_date));
+    })
+    .map((item, index) => ({
+      instalment_number: item.instalment_number || index + 1,
+      fee_side: item.fee_side || "",
+      amount: item.amount ?? null,
+      currency: item.currency || data?.commission_currency || data?.salary_currency || "GBP",
+      due_date: normaliseScheduleDate(item.due_date),
+      payer: item.payer || data?.commission_payer || "",
+      notes: item.notes || item.condition_notes || "",
+      season_label: extractSeasonFromNotes(item.notes || item.condition_notes, item.due_date),
+      instalment_percentage: null,
+      source: "commission_instalments"
+    }));
+
+  if (directItems.length) {
+    return directItems;
+  }
+
+  const analysis = parseAnalysisJson(data);
+  const obligations = Array.isArray(analysis?.payment_obligations)
+    ? analysis.payment_obligations
+    : [];
+
+  return obligations
+    .filter((item) => {
+      const type = String(item?.obligation_type || "").trim().toLowerCase();
+      return type === "agency_commission" && Boolean(normaliseScheduleDate(item?.due_date));
+    })
+    .map((item, index) => ({
+      instalment_number: index + 1,
+      fee_side: item.fee_side || "",
+      amount: item.amount ?? null,
+      currency: item.currency || data?.commission_currency || data?.salary_currency || "GBP",
+      due_date: normaliseScheduleDate(item.due_date),
+      payer: item.payer || data?.commission_payer || "",
+      notes: [
+        item.season_label ? `Season: ${item.season_label}` : null,
+        item.instalment_percentage != null ? `Instalment: ${item.instalment_percentage}%` : null,
+        item.calculation_basis ? `Basis: ${item.calculation_basis}` : null,
+        item.vat_treatment ? `VAT: ${item.vat_treatment}` : null,
+        item.source_clause ? `Clause: ${item.source_clause}` : null,
+        item.payment_protection ? `Protection: ${item.payment_protection}` : null
+      ].filter(Boolean).join(" | "),
+      season_label: item.season_label || inferFootballSeasonFromDate(item.due_date),
+      instalment_percentage: item.instalment_percentage ?? null,
+      source: "analysis_json"
+    }));
+}
+
+function getCommissionScheduleSummary(data) {
+  const items = getCommissionScheduleItems(data);
+
+  if (!items.length) {
+    return {
+      frequency: safeValue(data.commission_frequency),
+      instalments: safeValue(data.commission_instalments),
+      items: []
+    };
+  }
+
+  const datesBySeason = new Map();
+
+  for (const item of items) {
+    const season = item.season_label || inferFootballSeasonFromDate(item.due_date) || "__all__";
+    const dueDate = normaliseScheduleDate(item.due_date);
+    if (!dueDate) continue;
+
+    if (!datesBySeason.has(season)) {
+      datesBySeason.set(season, new Set());
+    }
+
+    // IMPORTANT: player-side + club-side on the same contractual date
+    // count as one payment event/date, not two instalments.
+    datesBySeason.get(season).add(dueDate);
+  }
+
+  const counts = Array.from(datesBySeason.values())
+    .map((dateSet) => dateSet.size)
+    .filter((count) => count > 0);
+
+  const instalmentsPerSeason = counts.length
+    ? Math.max(...counts)
+    : null;
+
+  let frequency = safeValue(data.commission_frequency);
+
+  if (instalmentsPerSeason === 1) {
+    frequency = t("oncePerSeason");
+  } else if (instalmentsPerSeason === 2) {
+    frequency = t("twicePerSeason");
+  } else if (instalmentsPerSeason && instalmentsPerSeason > 2) {
+    frequency = t("instalmentsPerSeason").replace("{count}", instalmentsPerSeason);
+  }
+
+  return {
+    frequency,
+    instalments:
+      instalmentsPerSeason !== null
+        ? String(instalmentsPerSeason)
+        : safeValue(data.commission_instalments),
+    items
+  };
+}
+
+function renderCommissionScheduleFromDatabase(data) {
+  const schedule = getCommissionScheduleSummary(data);
+  if (!schedule.items.length) return "";
+
+  // Collapse dual-representation duplicates into one row per season/date
+  // while retaining the fee-side information.
+  const grouped = new Map();
+
+  schedule.items.forEach((item) => {
+    const season = item.season_label || inferFootballSeasonFromDate(item.due_date) || t("na");
+    const date = normaliseScheduleDate(item.due_date);
+    if (!date) return;
+
+    const key = `${season}|${date}`;
+
+    if (!grouped.has(key)) {
+      grouped.set(key, {
+        season,
+        due_date: date,
+        percentages: new Set(),
+        feeSides: new Set(),
+        payer: item.payer || "",
+        notes: []
+      });
+    }
+
+    const row = grouped.get(key);
+
+    if (item.instalment_percentage != null) {
+      row.percentages.add(`${item.instalment_percentage}%`);
+    }
+
+    if (item.fee_side) {
+      row.feeSides.add(item.fee_side);
+    }
+
+    if (item.notes) {
+      row.notes.push(item.notes);
+    }
+  });
+
+  const rows = Array.from(grouped.values())
+    .sort((a, b) => String(a.due_date).localeCompare(String(b.due_date)))
+    .map((row, index) => `
+      <tr>
+        <td>${index + 1}</td>
+        <td>${safeValue(row.season)}</td>
+        <td>${row.percentages.size ? Array.from(row.percentages).join(" / ") : t("na")}</td>
+        <td><strong>${safeValue(row.due_date)}</strong></td>
+        <td>${row.feeSides.size ? Array.from(row.feeSides).join(" / ") : t("na")}</td>
+        <td>${safeValue(row.payer)}</td>
+      </tr>
+    `)
+    .join("");
+
+  return `
+    <div style="margin-top:18px;">
+      <div class="section-kicker">${t("paymentScheduleTitle")}</div>
+      <div class="audit-schedule">
+        <table>
+          <thead>
+            <tr>
+              <th>${t("instalmentNumber")}</th>
+              <th>${t("contractualSchedule")}</th>
+              <th>%</th>
+              <th>${t("dueDate")}</th>
+              <th>${t("feeSide")}</th>
+              <th>${t("payerLabel")}</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>
+    </div>
+  `;
 }
 
 function getInstalmentMetrics(data) {
@@ -2763,6 +3022,7 @@ function renderInvoiceForecast(data) {
 
     function renderContract(data) {
       const container = document.getElementById("contractView");
+      const commissionSchedule = getCommissionScheduleSummary(data);
 
       container.innerHTML = `
         <section class="hero">
@@ -2858,10 +3118,12 @@ function renderInvoiceForecast(data) {
                 ${renderTile("labelCommissionValue", safeValue(data.commission_value))}
                 ${renderTile("labelCommissionCurrency", safeValue(data.commission_currency))}
                 ${renderTile("labelCommissionPayer", safeValue(data.commission_payer))}
-                ${renderTile("labelCommissionFrequency", safeValue(data.commission_frequency))}
-                ${renderTile("labelCommissionInstalments", safeValue(data.commission_instalments))}
-               ${renderTile("labelDualRepresentation", yesNo(data.is_dual_representation))}
+                ${renderTile("labelCommissionFrequency", commissionSchedule.frequency)}
+                ${renderTile("labelCommissionInstalments", commissionSchedule.instalments)}
+                ${renderTile("labelDualRepresentation", yesNo(data.is_dual_representation))}
               </div>
+
+              ${renderCommissionScheduleFromDatabase(data)}
             </section>
 
             ${renderCommercialValue(data)}
