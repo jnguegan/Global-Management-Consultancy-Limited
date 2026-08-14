@@ -1006,6 +1006,10 @@
           <a id="addClauseBtn" class="btn btn-primary" href="#" data-i18n="addClauseBtn">
             ➕ Add Clause
           </a>
+
+          <button id="reanalyseContractBtn" type="button" class="btn" data-i18n="reanalyseContractBtn">
+            🔄 Re-analyse Contract
+          </button>
           <a class="btn" href="/dealtrack-pro/agency-dashboard.html" data-i18n="agencyDashboard">
             📊 Agency Dashboard
           </a>
@@ -1032,6 +1036,12 @@
       "noAgencyAssigned": "No agency assigned",
       "editContractBtn": "✏️ Edit Contract",
       "addClauseBtn": "➕ Add Clause",
+      "reanalyseContractBtn": "🔄 Re-analyse Contract",
+      "reanalyseStarting": "Re-analysing the stored contract package...",
+      "reanalyseNoDocuments": "No stored PDF documents were found for this contract.",
+      "reanalyseSuccess": "Contract re-analysis completed. Reloading the updated schedule...",
+      "reanalyseFailed": "Contract re-analysis failed.",
+      "reanalyseConfirm": "Re-analyse all stored documents for this contract?",
       "loadingEyebrow": "DealTrack Pro",
       "loadingTitle": "Loading contract...",
       "loadingSubtitle": "Please wait while the premium contract view is prepared.",
@@ -1172,6 +1182,12 @@
       "noAgencyAssigned": "Aucune agence attribuée",
       "editContractBtn": "✏️ Modifier le contrat",
       "addClauseBtn": "➕ Ajouter une clause",
+      "reanalyseContractBtn": "🔄 Réanalyser le contrat",
+      "reanalyseStarting": "Réanalyse du dossier contractuel enregistré...",
+      "reanalyseNoDocuments": "Aucun PDF enregistré n’a été trouvé pour ce contrat.",
+      "reanalyseSuccess": "Réanalyse terminée. Actualisation de l’échéancier...",
+      "reanalyseFailed": "La réanalyse du contrat a échoué.",
+      "reanalyseConfirm": "Réanalyser tous les documents enregistrés pour ce contrat ?",
       "loadingEyebrow": "DealTrack Pro",
       "loadingTitle": "Chargement du contrat...",
       "loadingSubtitle": "Veuillez patienter pendant la préparation de la vue premium du contrat.",
@@ -1312,6 +1328,12 @@
       "noAgencyAssigned": "Ninguna agencia asignada",
       "editContractBtn": "✏️ Editar contrato",
       "addClauseBtn": "➕ Añadir cláusula",
+      "reanalyseContractBtn": "🔄 Volver a analizar el contrato",
+      "reanalyseStarting": "Volviendo a analizar el expediente contractual almacenado...",
+      "reanalyseNoDocuments": "No se encontraron documentos PDF almacenados para este contrato.",
+      "reanalyseSuccess": "Nuevo análisis completado. Actualizando el calendario...",
+      "reanalyseFailed": "No se pudo volver a analizar el contrato.",
+      "reanalyseConfirm": "¿Volver a analizar todos los documentos almacenados de este contrato?",
       "loadingEyebrow": "DealTrack Pro",
       "loadingTitle": "Cargando contrato...",
       "loadingSubtitle": "Espere mientras se prepara la vista premium del contrato.",
@@ -3263,6 +3285,108 @@ function renderInvoiceForecast(data) {
       `;
     }
 
+
+    async function reanalyseStoredContract(db, contractId) {
+      const button = document.getElementById("reanalyseContractBtn");
+      if (!button || !currentUser || !contractId) return;
+
+      if (!window.confirm(t("reanalyseConfirm"))) return;
+
+      const originalText = button.textContent;
+      button.disabled = true;
+      button.textContent = t("reanalyseStarting");
+
+      try {
+        /*
+          Upload-contract stores every PDF under:
+          <user_id>/<contract_id>/<timestamp>-<index>-<filename>
+
+          Re-analysis lists that exact folder and sends the stored package
+          back to the existing analyse-contract Edge Function. No dates,
+          percentages, fee splits or player-specific rules are hard-coded.
+        */
+        const STORAGE_BUCKET = "dealtrack-contracts";
+        const folderPath = `${currentUser.id}/${contractId}`;
+
+        const { data: storedFiles, error: listError } = await db.storage
+          .from(STORAGE_BUCKET)
+          .list(folderPath, {
+            limit: 100,
+            sortBy: { column: "name", order: "asc" }
+          });
+
+        if (listError) {
+          throw listError;
+        }
+
+        const pdfFiles = (Array.isArray(storedFiles) ? storedFiles : [])
+          .filter((item) => item?.name && !item.name.endsWith("/"))
+          .filter((item) => String(item.name).toLowerCase().endsWith(".pdf"));
+
+        if (!pdfFiles.length) {
+          alert(t("reanalyseNoDocuments"));
+          return;
+        }
+
+        const documents = pdfFiles.map((item) => {
+          const storedName = String(item.name);
+          const originalName = storedName.replace(/^\d+-\d+-/, "");
+          const metadata = item.metadata || {};
+
+          return {
+            storage_bucket: STORAGE_BUCKET,
+            storage_path: `${folderPath}/${storedName}`,
+            original_file_name: originalName || storedName,
+            mime_type: metadata.mimetype || metadata.contentType || "application/pdf",
+            file_size: metadata.size || null
+          };
+        });
+
+        console.log("DealTrack re-analysis package:", documents);
+
+        const { data: analysisResponse, error: analysisError } =
+          await db.functions.invoke("analyse-contract", {
+            body: {
+              contract_id: contractId,
+              documents,
+              language: currentLang
+            }
+          });
+
+        if (analysisError) {
+          throw analysisError;
+        }
+
+        if (analysisResponse?.success === false) {
+          throw new Error(
+            analysisResponse?.error || t("reanalyseFailed")
+          );
+        }
+
+        console.log("DealTrack re-analysis response:", analysisResponse);
+
+        button.textContent = t("reanalyseSuccess");
+
+        // Reload only after the Edge Function has finished so the page
+        // fetches freshly-written commission_instalments rows.
+        window.setTimeout(() => {
+          window.location.reload();
+        }, 900);
+      } catch (error) {
+        console.error("DealTrack contract re-analysis failed:", error);
+        alert(
+          `${t("reanalyseFailed")} ${error?.message || ""}`.trim()
+        );
+      } finally {
+        window.setTimeout(() => {
+          if (button && document.body.contains(button)) {
+            button.disabled = false;
+            button.textContent = originalText || t("reanalyseContractBtn");
+          }
+        }, 1200);
+      }
+    }
+
     document.addEventListener("DOMContentLoaded", async () => {
       applyStaticTranslations();
 
@@ -3314,6 +3438,13 @@ function renderInvoiceForecast(data) {
       const editContractBtn = document.getElementById("editContractBtn");
       if (editContractBtn && id) {
         editContractBtn.href = `/dealtrack-pro/edit-contract.html?id=${id}`;
+      }
+
+      const reanalyseContractBtn = document.getElementById("reanalyseContractBtn");
+      if (reanalyseContractBtn && id) {
+        reanalyseContractBtn.addEventListener("click", () => {
+          reanalyseStoredContract(db, id);
+        });
       }
 
       if (!id) {
