@@ -1380,6 +1380,9 @@
 "saveTriggerDate": "Save date",
 "invalidTriggerDate": "Enter a valid trigger date.",
 "triggerDateSaveFailed": "Could not save the trigger date.",
+"noTriggerRequired": "No trigger required — guaranteed",
+"guaranteedDueDatePrompt": "Confirm the contractual due date (YYYY-MM-DD):",
+"guaranteedSaveFailed": "Could not save this payment as guaranteed.",
 "paymentStatusLabel": "Payment",
 "paymentPaid": "Paid",
 "paymentOutstanding": "Outstanding",
@@ -1572,6 +1575,9 @@
 "saveTriggerDate": "Enregistrer la date",
 "invalidTriggerDate": "Saisissez une date de déclenchement valide.",
 "triggerDateSaveFailed": "Impossible d’enregistrer la date du déclencheur.",
+"noTriggerRequired": "Aucun déclencheur requis — garanti",
+"guaranteedDueDatePrompt": "Confirmez la date d’échéance contractuelle (AAAA-MM-JJ) :",
+"guaranteedSaveFailed": "Impossible d’enregistrer ce paiement comme garanti.",
 "paymentStatusLabel": "Paiement",
 "paymentPaid": "Payé",
 "paymentOutstanding": "À recevoir",
@@ -1764,6 +1770,9 @@
 "saveTriggerDate": "Guardar fecha",
 "invalidTriggerDate": "Introduzca una fecha válida del evento.",
 "triggerDateSaveFailed": "No se pudo guardar la fecha del evento.",
+"noTriggerRequired": "No requiere condición — garantizado",
+"guaranteedDueDatePrompt": "Confirme la fecha de vencimiento contractual (AAAA-MM-DD):",
+"guaranteedSaveFailed": "No se pudo guardar este pago como garantizado.",
 "paymentStatusLabel": "Pago",
 "paymentPaid": "Pagado",
 "paymentOutstanding": "Pendiente de cobro",
@@ -2954,6 +2963,100 @@ function revealRelativeTriggerDateInput(button) {
   }
 }
 
+function inferContractualDateFromText(value) {
+  const text = String(value || "").trim();
+  const exact = normaliseResolverDate(text);
+  if (exact) return exact;
+
+  const months = {
+    january: 1, february: 2, march: 3, april: 4, may: 5, june: 6,
+    july: 7, august: 8, september: 9, october: 10, november: 11, december: 12,
+    janvier: 1, fevrier: 2, février: 2, mars: 3, avril: 4, mai: 5, juin: 6,
+    juillet: 7, aout: 8, août: 8, septembre: 9, octobre: 10, novembre: 11, decembre: 12, décembre: 12,
+    enero: 1, febrero: 2, marzo: 3, abril: 4, mayo: 5, junio: 6,
+    julio: 7, agosto: 8, septiembre: 9, octubre: 10, noviembre: 11, diciembre: 12
+  };
+  const monthNames = Object.keys(months).sort((a, b) => b.length - a.length).join("|");
+  const match = text.toLowerCase().match(new RegExp(`\\b(\\d{1,2})(?:st|nd|rd|th)?\\s+(${monthNames})\\s+(\\d{4})\\b`, "i"));
+  if (!match) return null;
+  const day = Number(match[1]);
+  const month = months[match[2].toLowerCase()];
+  const year = Number(match[3]);
+  if (!day || !month || !year) return null;
+  const candidate = `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+  return normaliseResolverDate(candidate);
+}
+
+async function setNoTriggerRequired(analysisIndex, instalmentId, button) {
+  const analysis = parseContractAnalysis(currentContract);
+  const obligations = Array.isArray(analysis?.payment_obligations)
+    ? analysis.payment_obligations
+    : [];
+  const hasAnalysisIndex = analysisIndex !== null && analysisIndex !== undefined && Number(analysisIndex) >= 0;
+  const obligation = hasAnalysisIndex ? obligations[Number(analysisIndex)] : null;
+  const storedRow = instalmentId
+    ? currentContractInstalments.find((item) => String(item?.id) === String(instalmentId))
+    : null;
+  const target = obligation || storedRow;
+  if (!target || !storedRow || !currentDb || !currentContract?.id) {
+    alert(t("triggerNeedsStoredRow"));
+    return;
+  }
+
+  const suggestedDate =
+    normaliseResolverDate(target.due_date) ||
+    inferContractualDateFromText(target.due_date_rule) ||
+    inferContractualDateFromText(target.date_source_text) ||
+    inferContractualDateFromText(target.condition_notes) ||
+    "";
+  const enteredDate = window.prompt(t("guaranteedDueDatePrompt"), suggestedDate);
+  if (enteredDate === null) return;
+  const dueDate = normaliseResolverDate(enteredDate);
+  if (!dueDate) {
+    alert(t("invalidTriggerDate"));
+    return;
+  }
+
+  const original = button?.textContent || "";
+  if (button) {
+    button.disabled = true;
+    button.textContent = t("triggerSaving");
+  }
+
+  const payload = {
+    conditional: false,
+    trigger_status: "guaranteed",
+    trigger_date: null,
+    trigger_confirmed_at: new Date().toISOString(),
+    trigger_confirmed_by: currentUser?.id || null,
+    trigger_note: "No trigger required; contractual due date confirmed by user.",
+    due_date: dueDate,
+    due_date_type: "fixed_date",
+    due_date_confirmed: true
+  };
+
+  const { data: savedRows, error } = await currentDb
+    .from("commission_instalments")
+    .update(payload)
+    .eq("id", storedRow.id)
+    .eq("contract_id", currentContract.id)
+    .select("id, conditional, trigger_status, trigger_date, due_date, due_date_type, due_date_confirmed");
+
+  if (error || !Array.isArray(savedRows) || savedRows.length !== 1) {
+    console.error("Guaranteed payment save failed:", error);
+    alert(`${t("guaranteedSaveFailed")} ${error?.message || "The database did not authorise the update."}`.trim());
+    if (button) {
+      button.disabled = false;
+      button.textContent = original;
+    }
+    return;
+  }
+
+  Object.assign(storedRow, payload);
+  if (obligation) Object.assign(obligation, payload);
+  renderContract(currentContract);
+}
+
 async function saveRelativeTriggerDate(analysisIndex, instalmentId, button) {
   const editor = button?.closest(".trigger-date-editor");
   const input = editor?.querySelector("input[type='date']");
@@ -3064,7 +3167,7 @@ function renderTriggerControl(item) {
       ? Number(item.analysis_index)
       : null;
     const instalmentId = item.id ? String(item.id).replace(/'/g, "") : "";
-    return `<span class="trigger-badge pending">${t("triggerDateRequired")}</span><div class="trigger-actions"><button type="button" class="trigger-btn confirm" onclick="revealRelativeTriggerDateInput(this)">${t("enterTriggerDate")}</button><button type="button" class="trigger-btn">${t("triggerNotYet")}</button></div><div class="trigger-date-editor" hidden><input type="date" aria-label="${t("triggerDateLabel")}"><button type="button" class="trigger-btn confirm" onclick="saveRelativeTriggerDate(${analysisIndex === null ? "null" : analysisIndex}, '${instalmentId}', this)">${t("saveTriggerDate")}</button></div>`;
+    return `<span class="trigger-badge pending">${t("triggerDateRequired")}</span><div class="trigger-actions"><button type="button" class="trigger-btn confirm" onclick="revealRelativeTriggerDateInput(this)">${t("enterTriggerDate")}</button><button type="button" class="trigger-btn">${t("triggerNotYet")}</button><button type="button" class="trigger-btn confirm" onclick="setNoTriggerRequired(${analysisIndex === null ? "null" : analysisIndex}, '${instalmentId}', this)">${t("noTriggerRequired")}</button></div><div class="trigger-date-editor" hidden><input type="date" aria-label="${t("triggerDateLabel")}"><button type="button" class="trigger-btn confirm" onclick="saveRelativeTriggerDate(${analysisIndex === null ? "null" : analysisIndex}, '${instalmentId}', this)">${t("saveTriggerDate")}</button></div>`;
   }
 
   if (!item?.conditional) {
@@ -3082,7 +3185,8 @@ function renderTriggerControl(item) {
     return `${badge}<div class="trigger-actions"><button type="button" class="trigger-btn" onclick="setConditionalTriggerStatus('${item.id}', 'pending', this)">${t("triggerNotYet")}</button></div>`;
   }
 
-  return `${badge}<div class="trigger-actions"><button type="button" class="trigger-btn confirm" onclick="setConditionalTriggerStatus('${item.id}', 'met', this)">${t("triggerYes")}</button><button type="button" class="trigger-btn" onclick="setConditionalTriggerStatus('${item.id}', 'pending', this)">${t("triggerNotYet")}</button></div>`;
+  const analysisIndex = item.analysis_index !== null && item.analysis_index !== undefined ? Number(item.analysis_index) : null;
+  return `${badge}<div class="trigger-actions"><button type="button" class="trigger-btn confirm" onclick="setConditionalTriggerStatus('${item.id}', 'met', this)">${t("triggerYes")}</button><button type="button" class="trigger-btn" onclick="setConditionalTriggerStatus('${item.id}', 'pending', this)">${t("triggerNotYet")}</button><button type="button" class="trigger-btn confirm" onclick="setNoTriggerRequired(${analysisIndex === null ? "null" : analysisIndex}, '${item.id}', this)">${t("noTriggerRequired")}</button></div>`;
 }
 
 async function setInstalmentPaymentStatus(instalmentId, markPaid, button) {
