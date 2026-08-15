@@ -2550,10 +2550,11 @@ function buildCommissionScheduleFromAnalysis(data) {
       const type = String(item?.obligation_type || "").trim().toLowerCase();
       const dueDateType = String(item?.due_date_type || "").trim().toLowerCase();
       const hasExactDate = Boolean(normaliseResolverDate(item?.due_date));
-      const hasRelativeRule =
-        dueDateType === "relative_to_event" &&
-        Boolean(String(item?.due_date_rule || item?.due_date_event || "").trim());
-      return type === "agency_commission" && (hasExactDate || hasRelativeRule);
+      const hasRelativeRule = Boolean(
+        String(item?.due_date_rule || item?.due_date_event || item?.trigger_event || "").trim()
+      );
+      const hasStatedAmount = resolverNumber(item?.amount) !== null;
+      return type === "agency_commission" && (hasExactDate || hasRelativeRule || hasStatedAmount);
     })
     .map(({ item, analysisIndex }, index) => ({
       source: "analysis_json",
@@ -2565,10 +2566,14 @@ function buildCommissionScheduleFromAnalysis(data) {
       amount: resolverNumber(item.amount),
       currency: item.currency || data?.commission_currency || data?.salary_currency || null,
       due_date: normaliseResolverDate(item.due_date),
-      due_date_type: item.due_date_type || (item.due_date ? "fixed_date" : "unresolved"),
+      due_date_type:
+        item.due_date_type === "relative_to_event" ||
+        (!item.due_date && Boolean(item.due_date_rule || item.due_date_event || item.trigger_event))
+          ? "relative_to_event"
+          : (item.due_date_type || (item.due_date ? "fixed_date" : "unresolved")),
       due_date_event: item.due_date_event || null,
       due_date_offset_days: resolverNumber(item.due_date_offset_days),
-      due_date_rule: item.due_date_rule || null,
+      due_date_rule: item.due_date_rule || item.trigger_event || item.condition_notes || null,
       trigger_date: normaliseResolverDate(item.trigger_date),
       payer: item.payer || data?.commission_payer || null,
       recipient: item.recipient || data?.commission_recipient || null,
@@ -3225,10 +3230,10 @@ function resolveCommission(data) {
   let source = "contracts";
 
   if (detailedRows.length > 0) {
-    const relativeAnalysisRows = analysisRows.filter(
-      (item) => item.due_date_type === "relative_to_event"
+    const supplementalAnalysisRows = analysisRows.filter(
+      (item) => item.due_date_type === "relative_to_event" || !item.due_date
     );
-    schedule = [...detailedRows, ...relativeAnalysisRows];
+    schedule = [...detailedRows, ...supplementalAnalysisRows];
     source = "commission_instalments";
   } else if (analysisRows.length > 0) {
     schedule = analysisRows;
