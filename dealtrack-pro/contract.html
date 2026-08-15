@@ -2140,7 +2140,7 @@ function getCommissionStructureComponents(data) {
     : [];
 
   if (recordedComponents.length) {
-    return recordedComponents.map((item, index) => ({
+    const components = recordedComponents.map((item, index) => ({
       component_reference: item.component_reference || `component-${index + 1}`,
       component_type: item.component_type || "other",
       fee_side: item.fee_side || null,
@@ -2154,6 +2154,27 @@ function getCommissionStructureComponents(data) {
       applicable_period: item.applicable_period || null,
       evidence: item.evidence || null
     }));
+
+    // Cross-check component values against the independently extracted summary
+    // fields. This prevents a percentage rate such as 10 from being rendered as
+    // a EUR 10 fixed fee while preserving multi-component structures for review.
+    const fixedComponents = components.filter((item) => item.component_type === "fixed");
+    const percentageComponents = components.filter((item) => item.component_type === "percentage");
+    const confirmedFixedTotal = resolverNumber(analysis?.club_services_fee);
+    const confirmedPercentageRate =
+      resolverNumber(data?.commission_percentage) ??
+      resolverNumber(analysis?.commission_percentage);
+
+    if (fixedComponents.length === 1 && confirmedFixedTotal !== null) {
+      fixedComponents[0].fixed_amount = confirmedFixedTotal;
+      fixedComponents[0].percentage_rate = null;
+    }
+    if (percentageComponents.length === 1 && confirmedPercentageRate !== null) {
+      percentageComponents[0].percentage_rate = confirmedPercentageRate;
+      percentageComponents[0].fixed_amount = null;
+    }
+
+    return components;
   }
 
   const fixedAmount =
@@ -4200,7 +4221,37 @@ function renderInvoiceForecast(data) {
           });
 
         if (analysisError) {
-          throw analysisError;
+          /*
+            A long analysis can finish and save successfully just after the
+            browser/Supabase HTTP connection closes. Verify the persisted
+            contract status before reporting a failure to the user.
+          */
+          const { data: statusRecord } = await db
+            .from("contracts")
+            .select("analysis_status")
+            .eq("id", contractId)
+            .eq("user_id", currentUser.id)
+            .maybeSingle();
+
+          const persistedStatus = String(statusRecord?.analysis_status || "")
+            .trim()
+            .toLowerCase();
+
+          if (["review_required", "analysed", "analyzed", "completed", "complete"].includes(persistedStatus)) {
+            button.textContent = t("reanalyseSuccess");
+            window.setTimeout(() => window.location.reload(), 500);
+            return;
+          }
+
+          let detailedMessage = analysisError?.message || t("reanalyseFailed");
+          try {
+            const errorBody = await analysisError?.context?.clone?.().json?.();
+            if (errorBody?.error) detailedMessage = errorBody.error;
+          } catch {
+            // The connection may already be closed; retain the available message.
+          }
+
+          throw new Error(detailedMessage);
         }
 
         if (analysisResponse?.success === false) {
