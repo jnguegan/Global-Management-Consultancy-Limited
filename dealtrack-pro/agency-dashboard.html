@@ -1393,6 +1393,7 @@
       "contractsAtRisk": "{value} contract(s)",
       "datesConfirmed": "{value}% confirmed",
       "overdueCount": "{value} overdue",
+      "overdueInvoice": "Overdue",
       "mixKicker": "Revenue Mix",
       "mixTitle": "Contract currency distribution",
       "mixSubtitle": "Annual revenue and contract count grouped by original contract currency.",
@@ -1521,6 +1522,7 @@
       "contractsAtRisk": "{value} contrat(s)",
       "datesConfirmed": "{value}% confirmées",
       "overdueCount": "{value} en retard",
+      "overdueInvoice": "En retard",
       "mixKicker": "Répartition des revenus",
       "mixTitle": "Répartition par devise contractuelle",
       "mixSubtitle": "Revenus annuels et nombre de contrats regroupés selon leur devise d’origine.",
@@ -1647,6 +1649,7 @@
       "contractsAtRisk": "{value} contrato(s)",
       "datesConfirmed": "{value}% confirmadas",
       "overdueCount": "{value} vencidas",
+      "overdueInvoice": "Vencida",
       "mixKicker": "Composición de ingresos",
       "mixTitle": "Distribución por moneda contractual",
       "mixSubtitle": "Ingresos anuales y número de contratos agrupados por su moneda original.",
@@ -2732,6 +2735,21 @@
       return null;
     }
 
+    function getAnalysisObligationLifetime(contract) {
+      const analysis = parseDashboardAnalysis(contract);
+      const obligations = Array.isArray(analysis?.payment_obligations)
+        ? analysis.payment_obligations
+        : [];
+
+      return obligations.reduce((sum, item) => {
+        if (String(item?.obligation_type || "").trim().toLowerCase() !== "agency_commission") return sum;
+        if (String(item?.invoice_status || "").trim().toLowerCase() === "cancelled") return sum;
+        const status = String(item?.trigger_status || "").trim().toLowerCase();
+        if (["failed", "not_met", "not-met", "expired"].includes(status)) return sum;
+        return sum + (toNumber(item?.amount) || 0);
+      }, 0);
+    }
+
     function applyInstalmentMetrics(row) {
       const items = getDashboardContractInstalments(row.contract);
 
@@ -2759,9 +2777,15 @@
       const instalmentCurrency =
         currencies.length === 1 ? currencies[0] : row.currency;
 
-      const lifetimeRevenue = usableItems.reduce(
+      const scheduleLifetimeRevenue = usableItems.reduce(
         (sum, item) => sum + (resolveDashboardInstalmentAmount(row.contract, item) || 0),
         0
+      );
+      const analysisLifetimeRevenue = getAnalysisObligationLifetime(row.contract);
+      const lifetimeRevenue = Math.max(
+        scheduleLifetimeRevenue,
+        analysisLifetimeRevenue,
+        Number(row.lifetimeRevenue) || 0
       );
 
       // Annual revenue includes exact dates and trigger-based obligations
@@ -2860,6 +2884,43 @@
       return totals;
     }
 
+    function getOverdueInstalmentGroups() {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const groups = new Map();
+
+      allContracts.forEach((contract) => {
+        getDashboardContractInstalments(contract).forEach((item) => {
+          if (!item?.due_date) return;
+          const status = String(item.invoice_status || "").toLowerCase();
+          if (["paid", "cancelled"].includes(status)) return;
+          const dueDate = new Date(`${item.due_date}T00:00:00`);
+          if (Number.isNaN(dueDate.getTime()) || dueDate >= today) return;
+
+          const currency = normaliseCurrencyCode(
+            item.currency || contract.commission_currency || getCurrency(contract)
+          );
+          const key = `${contract.id}|${item.due_date}|${currency}`;
+          if (!groups.has(key)) {
+            groups.set(key, {
+              contract,
+              contractId: contract.id,
+              dueDate: item.due_date,
+              currency,
+              amount: 0,
+              instalments: [],
+              overdue: true
+            });
+          }
+          const group = groups.get(key);
+          group.amount += resolveDashboardInstalmentAmount(contract, item) || 0;
+          group.instalments.push(item);
+        });
+      });
+
+      return [...groups.values()].sort((a, b) => a.dueDate.localeCompare(b.dueDate));
+    }
+
     function getNextInstalmentGroupPerContract() {
       const groups = getUpcomingInstalmentGroups();
       const nextByContract = new Map();
@@ -2896,8 +2957,10 @@
 
     function renderInvoiceCalendar() {
       const container = document.getElementById("invoiceCalendar");
-      const instalmentGroups =
-        getNextInstalmentGroupPerContract().slice(0, 6);
+      const instalmentGroups = [
+        ...getOverdueInstalmentGroups(),
+        ...getNextInstalmentGroupPerContract()
+      ].slice(0, 6);
 
       if (instalmentGroups.length) {
         const locale = currentLang === "fr" ? "fr-FR" : currentLang === "es" ? "es-ES" : "en-GB";
@@ -2918,7 +2981,7 @@
             <div class="invoice-calendar-item">
               <div>
                 <strong>${escapeHtml(group.contract.player_name || t("notRecorded"))}</strong>
-                <span>${escapeHtml(dateText)}${sideText ? ` · ${escapeHtml(sideText)}` : ""}</span>
+                <span>${group.overdue ? `<strong style="color:var(--danger)">${escapeHtml(t("overdueInvoice"))}</strong> · ` : ""}${escapeHtml(dateText)}${sideText ? ` · ${escapeHtml(sideText)}` : ""}</span>
               </div>
               <div class="invoice-calendar-value">
                 ${escapeHtml(formatMoney(group.amount, group.currency))}
