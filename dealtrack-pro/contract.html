@@ -755,16 +755,74 @@
 
     .schedule-row-hidden { display: none; }
 
-    .schedule-detail-row { display: none; }
-    .schedule-detail-row.is-open { display: table-row; }
-    .schedule-detail-cell {
-      padding: 14px 16px !important;
-      color: var(--muted);
-      background: rgba(47,140,255,0.035);
-      line-height: 1.55;
+    /* Floating payment-details popover: keeps the compact schedule from expanding vertically. */
+    .schedule-popover {
+      position: fixed;
+      z-index: 9999;
+      width: min(440px, calc(100vw - 24px));
+      max-height: min(430px, calc(100vh - 24px));
+      overflow: auto;
+      padding: 0;
+      border: 1px solid rgba(88,166,255,0.30);
+      border-radius: 14px;
+      background: rgba(10,25,49,0.98);
+      box-shadow: 0 18px 52px rgba(0,0,0,0.42);
+      color: var(--text);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(4px);
+      transition: opacity .14s ease, transform .14s ease, visibility .14s ease;
+      backdrop-filter: blur(14px);
     }
 
-    .schedule-detail-cell strong { color: var(--gold-2); }
+    .schedule-popover.is-open {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .schedule-popover-header {
+      position: sticky;
+      top: 0;
+      padding: 13px 15px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      background: rgba(15,34,63,0.98);
+      color: var(--gold-2);
+      font-size: .82rem;
+      font-weight: 900;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+
+    .schedule-popover-body {
+      padding: 13px 15px 15px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .schedule-popover-field {
+      display: grid;
+      grid-template-columns: 125px minmax(0, 1fr);
+      gap: 10px;
+      align-items: start;
+      padding-bottom: 9px;
+      border-bottom: 1px solid rgba(255,255,255,0.055);
+    }
+
+    .schedule-popover-field:last-child { border-bottom: 0; padding-bottom: 0; }
+    .schedule-popover-label {
+      color: var(--muted);
+      font-size: .70rem;
+      font-weight: 900;
+      letter-spacing: .045em;
+      text-transform: uppercase;
+    }
+    .schedule-popover-value {
+      color: var(--text);
+      font-size: .82rem;
+      line-height: 1.48;
+      overflow-wrap: anywhere;
+    }
 
     .details-btn {
       appearance: none;
@@ -1219,6 +1277,12 @@
 "sourceLabel": "Source / Notes",
 "seasonLabel": "Season",
 "detailsLabel": "Details",
+"paymentDetailsTitle": "Payment details",
+"clauseLabel": "Clause",
+"protectionLabel": "Protection / Conditions",
+"vatLabel": "VAT treatment",
+"notesLabel": "Notes",
+"allocationLabel": "Allocation",
 "showAllPayments": "Show all payments",
 "showLessPayments": "Show less",
 "estimatedFromKnownTerms": "Estimated from recorded contractual terms",
@@ -1371,6 +1435,12 @@
 "sourceLabel": "Source / Notes",
 "seasonLabel": "Saison",
 "detailsLabel": "Détails",
+"paymentDetailsTitle": "Détails du paiement",
+"clauseLabel": "Clause",
+"protectionLabel": "Protection / Conditions",
+"vatLabel": "Traitement TVA",
+"notesLabel": "Notes",
+"allocationLabel": "Répartition",
 "showAllPayments": "Afficher tous les paiements",
 "showLessPayments": "Réduire",
 "estimatedFromKnownTerms": "Estimation à partir des conditions contractuelles enregistrées",
@@ -1523,6 +1593,12 @@
 "sourceLabel": "Fuente / Notas",
 "seasonLabel": "Temporada",
 "detailsLabel": "Detalles",
+"paymentDetailsTitle": "Detalles del pago",
+"clauseLabel": "Cláusula",
+"protectionLabel": "Protección / Condiciones",
+"vatLabel": "Tratamiento del IVA",
+"notesLabel": "Notas",
+"allocationLabel": "Distribución",
 "showAllPayments": "Mostrar todos los pagos",
 "showLessPayments": "Mostrar menos",
 "estimatedFromKnownTerms": "Estimado a partir de las condiciones contractuales registradas",
@@ -2298,15 +2374,146 @@ function enrichScheduleAmounts(data, scheduleItems) {
   });
 }
 
-function scheduleDetailText(item) {
-  const parts = [];
-  if (item.source_document) parts.push(`<strong>${t("sourceLabel")}:</strong> ${safeValue(item.source_document)}`);
-  if (item.source_clause) parts.push(`<strong>Clause:</strong> ${safeValue(item.source_clause)}`);
-  if (item.payment_protection) parts.push(`<strong>Protection:</strong> ${safeValue(item.payment_protection)}`);
-  if (item.vat_treatment) parts.push(`<strong>VAT:</strong> ${safeValue(item.vat_treatment)}`);
-  if (item.notes || item.condition_notes) parts.push(`<strong>${t("detailsLabel")}:</strong> ${safeValue(item.notes || item.condition_notes)}`);
-  return parts.length ? parts.join("<br>") : t("na");
+function scheduleDetailFields(item, resolvedCurrency) {
+  const fields = [];
+  const add = (label, value) => {
+    if (value !== null && value !== undefined && String(value).trim() !== "") {
+      fields.push({ label, value: String(value) });
+    }
+  };
+
+  add(t("sourceLabel"), item.source_document);
+  add(t("clauseLabel"), item.source_clause);
+  add(t("calculationBasisTitle"), item.calculation_basis);
+  add(t("feeSide"), item.fee_side);
+  if (item.instalment_percentage !== null && item.instalment_percentage !== undefined) {
+    add(t("allocationLabel"), `${item.instalment_percentage}%`);
+  }
+  add(t("dueDate"), item.due_date);
+  add(t("payerLabel"), item.payer);
+  if (item.amount !== null && item.amount !== undefined) {
+    add(t("invoiceAmount"), formatMoneyValue(item.amount, item.currency || resolvedCurrency));
+  }
+  add(t("protectionLabel"), item.payment_protection || item.condition_notes);
+  add(t("vatLabel"), item.vat_treatment);
+  add(t("notesLabel"), item.notes);
+  return fields;
 }
+
+window.__dealtrackScheduleDetails = window.__dealtrackScheduleDetails || {};
+let schedulePopoverHideTimer = null;
+let schedulePopoverAnchor = null;
+
+function ensureSchedulePopover() {
+  let popover = document.getElementById("dealtrackSchedulePopover");
+  if (popover) return popover;
+
+  popover = document.createElement("div");
+  popover.id = "dealtrackSchedulePopover";
+  popover.className = "schedule-popover";
+  popover.setAttribute("role", "dialog");
+  popover.setAttribute("aria-hidden", "true");
+  popover.addEventListener("mouseenter", () => clearTimeout(schedulePopoverHideTimer));
+  popover.addEventListener("mouseleave", () => scheduleSchedulePopoverHide());
+  document.body.appendChild(popover);
+  return popover;
+}
+
+function positionSchedulePopover(anchor, popover) {
+  const rect = anchor.getBoundingClientRect();
+  const gap = 10;
+  const margin = 12;
+
+  // Measure after content is rendered but before it is shown.
+  popover.style.left = `${margin}px`;
+  popover.style.top = `${margin}px`;
+  const box = popover.getBoundingClientRect();
+
+  let left = rect.right + gap;
+  if (left + box.width > window.innerWidth - margin) {
+    left = rect.left - box.width - gap;
+  }
+  if (left < margin) {
+    left = Math.min(Math.max(margin, rect.left), window.innerWidth - box.width - margin);
+  }
+
+  let top = rect.top + (rect.height / 2) - (box.height / 2);
+  top = Math.max(margin, Math.min(top, window.innerHeight - box.height - margin));
+
+  popover.style.left = `${Math.round(left)}px`;
+  popover.style.top = `${Math.round(top)}px`;
+}
+
+function showSchedulePopover(anchor, detailId) {
+  clearTimeout(schedulePopoverHideTimer);
+  const fields = window.__dealtrackScheduleDetails?.[detailId] || [];
+  const popover = ensureSchedulePopover();
+  schedulePopoverAnchor = anchor;
+
+  const body = fields.length
+    ? fields.map((field) => `
+        <div class="schedule-popover-field">
+          <div class="schedule-popover-label">${safeValue(field.label)}</div>
+          <div class="schedule-popover-value">${safeValue(field.value)}</div>
+        </div>`).join("")
+    : `<div class="schedule-popover-value">${safeValue(t("na"))}</div>`;
+
+  popover.innerHTML = `
+    <div class="schedule-popover-header">${safeValue(t("paymentDetailsTitle"))}</div>
+    <div class="schedule-popover-body">${body}</div>`;
+  popover.classList.add("is-open");
+  popover.setAttribute("aria-hidden", "false");
+  anchor.setAttribute("aria-expanded", "true");
+  positionSchedulePopover(anchor, popover);
+}
+
+function hideSchedulePopover() {
+  clearTimeout(schedulePopoverHideTimer);
+  const popover = document.getElementById("dealtrackSchedulePopover");
+  if (popover) {
+    popover.classList.remove("is-open");
+    popover.setAttribute("aria-hidden", "true");
+  }
+  if (schedulePopoverAnchor) schedulePopoverAnchor.setAttribute("aria-expanded", "false");
+  schedulePopoverAnchor = null;
+}
+
+function scheduleSchedulePopoverHide() {
+  clearTimeout(schedulePopoverHideTimer);
+  schedulePopoverHideTimer = setTimeout(hideSchedulePopover, 140);
+}
+
+function toggleSchedulePopover(anchor, detailId, event) {
+  if (event) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+  const popover = ensureSchedulePopover();
+  const sameAnchor = schedulePopoverAnchor === anchor && popover.classList.contains("is-open");
+  if (sameAnchor) hideSchedulePopover();
+  else showSchedulePopover(anchor, detailId);
+}
+
+document.addEventListener("click", (event) => {
+  const popover = document.getElementById("dealtrackSchedulePopover");
+  if (!popover || !popover.classList.contains("is-open")) return;
+  if (popover.contains(event.target) || event.target.closest(".details-btn")) return;
+  hideSchedulePopover();
+});
+
+window.addEventListener("scroll", () => {
+  if (schedulePopoverAnchor) {
+    const popover = document.getElementById("dealtrackSchedulePopover");
+    if (popover?.classList.contains("is-open")) positionSchedulePopover(schedulePopoverAnchor, popover);
+  }
+}, true);
+
+window.addEventListener("resize", () => {
+  if (schedulePopoverAnchor) {
+    const popover = document.getElementById("dealtrackSchedulePopover");
+    if (popover?.classList.contains("is-open")) positionSchedulePopover(schedulePopoverAnchor, popover);
+  }
+});
 
 function toggleScheduleRows(tableId, button) {
   const table = document.getElementById(tableId);
@@ -2315,11 +2522,6 @@ function toggleScheduleRows(tableId, button) {
   const expanding = Array.from(rows).some((row) => row.classList.contains("schedule-row-hidden"));
   rows.forEach((row) => row.classList.toggle("schedule-row-hidden", !expanding));
   if (button) button.textContent = expanding ? t("showLessPayments") : t("showAllPayments");
-}
-
-function toggleScheduleDetail(detailId) {
-  const row = document.getElementById(detailId);
-  if (row) row.classList.toggle("is-open");
 }
 
 function getDistinctPaymentEvents(scheduleItems) {
@@ -2501,6 +2703,8 @@ function renderResolvedCommissionSchedule(data) {
       ? `<span class="amount-known ${item.amount_estimated ? "amount-estimated" : ""}">${formatMoneyValue(item.amount, item.currency || resolved.currency)}</span>`
       : t("na");
 
+    window.__dealtrackScheduleDetails[detailId] = scheduleDetailFields(item, resolved.currency);
+
     return `
       <tr class="${extraClass}">
         <td>${index + 1}</td>
@@ -2510,10 +2714,12 @@ function renderResolvedCommissionSchedule(data) {
         <td>${item.instalment_percentage !== null && item.instalment_percentage !== undefined ? `${item.instalment_percentage}%` : t("na")}</td>
         <td>${amountHtml}</td>
         <td>${safeValue(item.payer)}</td>
-        <td><button type="button" class="details-btn" onclick="toggleScheduleDetail('${detailId}')">${t("detailsLabel")}</button></td>
-      </tr>
-      <tr id="${detailId}" class="schedule-detail-row ${extraClass}">
-        <td colspan="8" class="schedule-detail-cell">${scheduleDetailText(item)}</td>
+        <td><button type="button" class="details-btn" aria-haspopup="dialog" aria-expanded="false"
+          onmouseenter="showSchedulePopover(this, '${detailId}')"
+          onmouseleave="scheduleSchedulePopoverHide()"
+          onfocus="showSchedulePopover(this, '${detailId}')"
+          onblur="scheduleSchedulePopoverHide()"
+          onclick="toggleSchedulePopover(this, '${detailId}', event)">${t("detailsLabel")}</button></td>
       </tr>
     `;
   }).join("");
