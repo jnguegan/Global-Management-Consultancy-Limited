@@ -1412,6 +1412,22 @@
       "reportPreparedBy": "Prepared by",
       "reportUserEmail": "User email",
       "reportConfidential": "Strictly Confidential — Internal Management Report",
+      "reportPeriod": "Reporting period",
+      "reportRevenueYear": "2026 Revenue",
+      "reportExecutiveSummary": "Executive dashboard",
+      "reportUpcomingInvoices": "2026 Invoice Calendar",
+      "reportRenewalOutlook": "Contract Renewal Outlook",
+      "reportDueDate": "Forecast Invoice Date",
+      "reportFeeSide": "Fee Side",
+      "reportPayer": "Payer",
+      "reportAmount": "Forecast Amount",
+      "reportDaysRemaining": "Days Remaining",
+      "reportEndDate": "Contract End Date",
+      "reportOutstanding": "Outstanding",
+      "reportGuaranteed": "Guaranteed",
+      "reportConditional": "Conditional — Pending",
+      "reportNoInvoices": "No outstanding invoice opportunities recorded.",
+      "reportNoRenewals": "No contracts expire within the next 12 months.",
       "reportGenerated": "Management report downloaded successfully.",
       "reportUnavailable": "The report could not be created. Please refresh and try again.",
       "heroEyebrow": "Agency Dashboard",
@@ -1539,6 +1555,22 @@
       "reportTitle": "Rapport de gestion de l’agence DealTrack Pro",
       "reportPrepared": "Préparé le",
       "reportConfidential": "Strictement confidentiel — Rapport de gestion interne",
+      "reportPeriod": "Période du rapport",
+      "reportRevenueYear": "Revenus 2026",
+      "reportExecutiveSummary": "Tableau de bord exécutif",
+      "reportUpcomingInvoices": "Calendrier des factures 2026",
+      "reportRenewalOutlook": "Perspectives de renouvellement des contrats",
+      "reportDueDate": "Date prévisionnelle de facturation",
+      "reportFeeSide": "Côté des honoraires",
+      "reportPayer": "Payeur",
+      "reportAmount": "Montant prévisionnel",
+      "reportDaysRemaining": "Jours restants",
+      "reportEndDate": "Date de fin du contrat",
+      "reportOutstanding": "En attente",
+      "reportGuaranteed": "Garanti",
+      "reportConditional": "Conditionnel — En attente",
+      "reportNoInvoices": "Aucune opportunité de facturation en attente enregistrée.",
+      "reportNoRenewals": "Aucun contrat n’expire au cours des 12 prochains mois.",
       "reportGenerated": "Le rapport de gestion a été téléchargé.",
       "reportUnavailable": "Le rapport n’a pas pu être créé. Actualisez la page et réessayez.",
       "heroEyebrow": "Tableau de bord de l’agence",
@@ -1668,6 +1700,22 @@
       "reportPreparedBy": "Preparado por",
       "reportUserEmail": "Correo del usuario",
       "reportConfidential": "Estrictamente confidencial — Informe de gestión interno",
+      "reportPeriod": "Período del informe",
+      "reportRevenueYear": "Ingresos 2026",
+      "reportExecutiveSummary": "Panel ejecutivo",
+      "reportUpcomingInvoices": "Calendario de facturas 2026",
+      "reportRenewalOutlook": "Perspectiva de renovación de contratos",
+      "reportDueDate": "Fecha prevista de facturación",
+      "reportFeeSide": "Lado de honorarios",
+      "reportPayer": "Pagador",
+      "reportAmount": "Importe previsto",
+      "reportDaysRemaining": "Días restantes",
+      "reportEndDate": "Fecha de fin del contrato",
+      "reportOutstanding": "Pendiente",
+      "reportGuaranteed": "Garantizado",
+      "reportConditional": "Condicional — Pendiente",
+      "reportNoInvoices": "No hay oportunidades de facturación pendientes registradas.",
+      "reportNoRenewals": "Ningún contrato vence durante los próximos 12 meses.",
       "reportGenerated": "El informe de gestión se ha descargado.",
       "reportUnavailable": "No se pudo crear el informe. Actualice la página e inténtelo de nuevo.",
       "heroEyebrow": "Panel de la agencia",
@@ -3082,15 +3130,30 @@
         prepared: t("reportPrepared"),
         confidential: t("reportConfidential"),
         active: t("kpiActive"),
-        annual: t("kpiAnnual"),
+        annual: t("reportRevenueYear"),
         lifetime: t("kpiLifetime"),
         invoices: t("kpiInvoices"),
         player: t("player"),
         club: t("club"),
-        annualRevenue: t("annualRevenue"),
+        annualRevenue: t("reportRevenueYear"),
         lifetimeRevenue: t("lifetimeRevenue"),
         invoiceForecast: t("invoiceForecast"),
-        status: t("status")
+        status: t("status"),
+        period: t("reportPeriod"),
+        executiveSummary: t("reportExecutiveSummary"),
+        upcomingInvoices: t("reportUpcomingInvoices"),
+        renewalOutlook: t("reportRenewalOutlook"),
+        dueDate: t("reportDueDate"),
+        feeSide: t("reportFeeSide"),
+        payer: t("reportPayer"),
+        amount: t("reportAmount"),
+        daysRemaining: t("reportDaysRemaining"),
+        endDate: t("reportEndDate"),
+        outstanding: t("reportOutstanding"),
+        guaranteed: t("reportGuaranteed"),
+        conditional: t("reportConditional"),
+        noInvoices: t("reportNoInvoices"),
+        noRenewals: t("reportNoRenewals")
       };
     }
 
@@ -3388,18 +3451,57 @@
         doc.text(`Prepared for: ${preparedFor}`, 190, 28);
         doc.text(confidentiality, 190, 33);
 
-        let y = 44;
+        let y = 43;
 
         const scheduledContractCount = dashboardRows.filter(
           (row) => row.usesInstalmentSchedule
         ).length;
 
+        const reportYear = 2026;
+        const invoiceGroups = [
+          ...getOverdueInstalmentGroups(),
+          ...getUpcomingInstalmentGroups()
+        ].filter((group) => String(group.dueDate || "").startsWith(`${reportYear}-`));
+        const renewalRowsForReport = dashboardRows
+          .map((row) => ({ ...row, daysRemaining: getDaysRemaining(row.contract) }))
+          .filter((row) => row.daysRemaining !== null && row.daysRemaining >= 0 && row.daysRemaining <= 365)
+          .sort((a, b) => a.daysRemaining - b.daysRemaining);
+        const overdueGroups = getOverdueInstalmentGroups();
+
         doc.setTextColor(20, 28, 45);
         doc.setFont("helvetica", "bold");
         doc.setFontSize(12);
-        doc.text(`${labels.active}: ${dashboardRows.filter(
+        doc.text(labels.executiveSummary, 15, y);
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(8.5);
+        doc.text(`${labels.period}: 01 January–31 December ${reportYear}`, 190, y);
+
+        const activeContracts = dashboardRows.filter(
           (row) => row.state.key !== "expired"
-        ).length}`, 15, y);
+        ).length;
+        doc.autoTable({
+          startY: y + 4,
+          body: [[
+            `${labels.active}\n${activeContracts}`,
+            `${labels.invoices}\n${invoiceGroups.length}`,
+            `${labels.renewalOutlook}\n${renewalRowsForReport.length}`,
+            `${t("overdueInvoice")}\n${overdueGroups.length}`
+          ]],
+          theme: "grid",
+          styles: {
+            fontSize: 9,
+            cellPadding: 3.5,
+            fontStyle: "bold",
+            textColor: [20, 28, 45]
+          },
+          columnStyles: {
+            0: { fillColor: [238, 243, 249] },
+            1: { fillColor: [238, 243, 249] },
+            2: { fillColor: [255, 247, 222] },
+            3: { fillColor: overdueGroups.length ? [255, 231, 231] : [238, 243, 249] }
+          },
+          margin: { left: 15, right: 15 }
+        });
 
         const currencyLines = DASHBOARD_CURRENCIES.map((currency) => [
           currency,
@@ -3409,7 +3511,7 @@
         ]);
 
         doc.autoTable({
-          startY: y + 6,
+          startY: doc.lastAutoTable.finalY + 5,
           head: [[
             "",
             labels.annual,
@@ -3467,6 +3569,126 @@
             fillColor: [212, 175, 55],
             textColor: [9, 17, 31]
           },
+          margin: { left: 15, right: 15 }
+        });
+
+        // Page 2: management invoice calendar and renewal outlook. This uses
+        // the same instalment records as the live dashboard, preserving due
+        // dates, fee sides, payers and payment/trigger state.
+        doc.addPage("a4", "landscape");
+        doc.setFillColor(3, 14, 35);
+        doc.rect(0, 0, 297, 25, "F");
+        doc.setTextColor(240, 200, 90);
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(10);
+        doc.text("DEALTRACK PRO", 15, 10);
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(17);
+        doc.text(labels.upcomingInvoices, 15, 19);
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(8.5);
+        doc.text(`${labels.period}: 01 January–31 December ${reportYear}`, 190, 17);
+
+        const reportLocale = currentLang === "fr" ? "fr-FR" : currentLang === "es" ? "es-ES" : "en-GB";
+        const invoiceReportRows = invoiceGroups
+          .slice()
+          .sort((a, b) => String(a.dueDate).localeCompare(String(b.dueDate)))
+          .map((group) => {
+            const sides = [...new Set(
+              group.instalments
+                .map((item) => resolveDashboardFeeSide(group.contract, item))
+                .filter(Boolean)
+            )].join(" + ");
+            const payers = [...new Set(
+              group.instalments
+                .map((item) => item.payer)
+                .filter(Boolean)
+            )].join(" / ") || group.contract.commission_payer || t("notRecorded");
+            const conditional = group.instalments.some((item) =>
+              Boolean(item.conditional) && String(item.trigger_status || "").toLowerCase() !== "met"
+            );
+            const guaranteed = group.instalments.every((item) =>
+              !item.conditional || ["guaranteed", "met"].includes(String(item.trigger_status || "").toLowerCase())
+            );
+            const status = group.overdue
+              ? t("overdueInvoice")
+              : conditional
+                ? labels.conditional
+                : guaranteed
+                  ? `${labels.guaranteed} — ${labels.outstanding}`
+                  : labels.outstanding;
+            const dueDate = new Intl.DateTimeFormat(reportLocale, {
+              day: "2-digit",
+              month: "short",
+              year: "numeric"
+            }).format(new Date(`${group.dueDate}T00:00:00`));
+
+            return [
+              group.contract.player_name || t("notRecorded"),
+              group.contract.club_name || t("notRecorded"),
+              dueDate,
+              sides || t("notRecorded"),
+              payers,
+              formatMoney(group.amount, group.currency),
+              status
+            ];
+          });
+
+        doc.autoTable({
+          startY: 31,
+          head: [[
+            labels.player,
+            labels.club,
+            labels.dueDate,
+            labels.feeSide,
+            labels.payer,
+            labels.amount,
+            labels.status
+          ]],
+          body: invoiceReportRows.length
+            ? invoiceReportRows
+            : [[labels.noInvoices, "", "", "", "", "", ""]],
+          theme: "striped",
+          styles: { fontSize: 7.7, cellPadding: 2.6, overflow: "linebreak" },
+          headStyles: { fillColor: [20, 50, 92], textColor: [255, 255, 255] },
+          columnStyles: {
+            0: { cellWidth: 29 },
+            1: { cellWidth: 42 },
+            2: { cellWidth: 28 },
+            3: { cellWidth: 29 },
+            4: { cellWidth: 50 },
+            5: { cellWidth: 25, fontStyle: "bold" },
+            6: { cellWidth: 34 }
+          },
+          margin: { left: 15, right: 15 }
+        });
+
+        let renewalStartY = doc.lastAutoTable.finalY + 9;
+        if (renewalStartY > 155) {
+          doc.addPage("a4", "landscape");
+          renewalStartY = 25;
+        }
+        doc.setTextColor(20, 28, 45);
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(12);
+        doc.text(labels.renewalOutlook, 15, renewalStartY);
+
+        const renewalReportRows = renewalRowsForReport.map((row) => [
+          row.contract.player_name || t("notRecorded"),
+          row.contract.club_name || t("notRecorded"),
+          row.contract.end_date || t("notRecorded"),
+          String(row.daysRemaining),
+          row.state.label
+        ]);
+        doc.autoTable({
+          startY: renewalStartY + 4,
+          head: [[labels.player, labels.club, labels.endDate, labels.daysRemaining, labels.status]],
+          body: renewalReportRows.length
+            ? renewalReportRows
+            : [[labels.noRenewals, "", "", "", ""]],
+          theme: "grid",
+          styles: { fontSize: 8, cellPadding: 2.6 },
+          headStyles: { fillColor: [212, 175, 55], textColor: [9, 17, 31] },
           margin: { left: 15, right: 15 }
         });
 
