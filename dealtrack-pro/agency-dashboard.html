@@ -2537,6 +2537,138 @@
       `).join("");
     }
 
+    function dashboardSeasonFromDate(dueDate) {
+      if (!dueDate) return null;
+      const date = new Date(`${dueDate}T00:00:00`);
+      if (Number.isNaN(date.getTime())) return null;
+
+      const year = date.getFullYear();
+      const startYear = date.getMonth() >= 6 ? year : year - 1;
+      return `${startYear}/${String(startYear + 1).slice(-2)}`;
+    }
+
+    function extractDashboardInstalmentPercentage(item) {
+      const explicit = toNumber(
+        item?.instalment_percentage ??
+        item?.allocation_percentage ??
+        item?.payment_percentage
+      );
+      if (explicit !== null) return explicit;
+
+      const text = [
+        item?.notes,
+        item?.condition_notes,
+        item?.description,
+        item?.calculation_basis
+      ].filter(Boolean).join(" ");
+
+      const patterns = [
+        /instalment(?:\s+allocation)?\s+(?:is\s+)?([0-9]+(?:\.[0-9]+)?)%/i,
+        /([0-9]+(?:\.[0-9]+)?)%\s+(?:seasonal\s+)?instalment/i,
+        /payable\s+([0-9]+(?:\.[0-9]+)?)%/i,
+        /([0-9]+(?:\.[0-9]+)?)%\s+on\s+/i
+      ];
+
+      for (const pattern of patterns) {
+        const match = text.match(pattern);
+        if (match) {
+          const value = toNumber(match[1]);
+          if (value !== null) return value;
+        }
+      }
+
+      return null;
+    }
+
+    function getDashboardSeasonBounds(item) {
+      const label = String(
+        item?.season_label ||
+        dashboardSeasonFromDate(item?.due_date) ||
+        ""
+      );
+      const match = label.match(/(\d{4})\/(\d{2,4})/);
+      if (!match) return null;
+
+      const startYear = Number(match[1]);
+      if (!Number.isFinite(startYear)) return null;
+
+      return {
+        start: new Date(`${startYear}-07-01T00:00:00`),
+        end: new Date(`${startYear + 1}-06-30T00:00:00`)
+      };
+    }
+
+    function dashboardDaysInclusive(start, end) {
+      const day = 24 * 60 * 60 * 1000;
+      return Math.floor((end - start) / day) + 1;
+    }
+
+    function getDashboardSeasonProration(contract, item) {
+      const bounds = getDashboardSeasonBounds(item);
+      if (!bounds) return 1;
+
+      const contractStartText =
+        contract?.playing_contract_start_date || contract?.start_date;
+      const contractEndText =
+        contract?.playing_contract_end_date || contract?.end_date;
+
+      const contractStart = contractStartText
+        ? new Date(`${contractStartText}T00:00:00`)
+        : bounds.start;
+      const contractEnd = contractEndText
+        ? new Date(`${contractEndText}T00:00:00`)
+        : bounds.end;
+
+      const overlapStart = contractStart > bounds.start ? contractStart : bounds.start;
+      const overlapEnd = contractEnd < bounds.end ? contractEnd : bounds.end;
+      if (overlapEnd < overlapStart) return 0;
+
+      const seasonDays = dashboardDaysInclusive(bounds.start, bounds.end);
+      const activeDays = dashboardDaysInclusive(overlapStart, overlapEnd);
+      return seasonDays > 0 ? activeDays / seasonDays : 1;
+    }
+
+    function resolveGrossPayerCommissionRate(contract) {
+      const method = normaliseCommissionMethod(contract);
+      if (method !== "percentage" && method !== "mixed") return null;
+
+      return toNumber(
+        contract?.commission_percentage ??
+        contract?.commission_value
+      );
+    }
+
+    function resolveDashboardInstalmentAmount(contract, item) {
+      const recorded = toNumber(item?.amount);
+      const method = normaliseCommissionMethod(contract);
+
+      // Preserve a genuine recorded amount. A zero/missing amount on a
+      // percentage commission schedule is treated as not yet calculated so
+      // the dashboard can derive the gross payer obligation dynamically.
+      if (recorded !== null && (recorded !== 0 || method !== "percentage")) {
+        return recorded;
+      }
+
+      const annualSalary = calculateAnnualSalary(
+        contract?.salary,
+        contract?.salary_frequency
+      );
+      const rate = resolveGrossPayerCommissionRate(contract);
+      const allocation = extractDashboardInstalmentPercentage(item);
+
+      if (annualSalary === null || rate === null || allocation === null) {
+        return recorded;
+      }
+
+      const proratedSalary =
+        annualSalary * getDashboardSeasonProration(contract, item);
+
+      // Gross payer rule: calculate the full contractual commission payable
+      // by the payer to the agency. Do NOT reduce for any downstream partner
+      // or subcontract revenue share.
+      return proratedSalary * (rate / 100) * (allocation / 100);
+    }
+
     function applyInstalmentMetrics(row) {
       const items = commissionInstalments.filter(
         (item) => String(item.contract_id) === String(row.contract.id)
@@ -2567,7 +2699,7 @@
         currencies.length === 1 ? currencies[0] : row.currency;
 
       const lifetimeRevenue = usableItems.reduce(
-        (sum, item) => sum + (toNumber(item.amount) || 0),
+        (sum, item) => sum + (resolveDashboardInstalmentAmount(row.contract, item) || 0),
         0
       );
 
@@ -2579,7 +2711,7 @@
         if (Number.isNaN(dueDate.getTime())) return sum;
 
         return dueDate.getFullYear() === reportingYear
-          ? sum + (toNumber(item.amount) || 0)
+          ? sum + (resolveDashboardInstalmentAmount(row.contract, item) || 0)
           : sum;
       }, 0);
 
@@ -2610,7 +2742,7 @@
         ? futureItems
             .filter((item) => item.due_date === nextDueDate)
             .reduce(
-              (sum, item) => sum + (toNumber(item.amount) || 0),
+              (sum, item) => sum + (resolveDashboardInstalmentAmount(row.contract, item) || 0),
               0
             )
         : 0;
@@ -2663,7 +2795,7 @@
         }
 
         const group = groups.get(key);
-        group.amount += toNumber(item.amount) || 0;
+        group.amount += resolveDashboardInstalmentAmount(contract, item) || 0;
         group.instalments.push(item);
       });
 
