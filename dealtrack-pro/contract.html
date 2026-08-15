@@ -950,6 +950,58 @@
   }
 }
     
+    /* Master contract details: full-width horizontal layout */
+    .master-details-stack {
+      display: grid;
+      gap: 22px;
+    }
+
+    .master-grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .master-grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .master-pair {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 22px;
+      align-items: stretch;
+    }
+
+    .master-details-stack .data-tile {
+      min-width: 0;
+    }
+
+    .master-details-stack .tile-value {
+      word-break: normal;
+      overflow-wrap: anywhere;
+    }
+
+    @media (max-width: 1050px) {
+      .master-grid-4 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .master-grid-3 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 760px) {
+      .master-grid-3,
+      .master-grid-4,
+      .master-pair {
+        grid-template-columns: 1fr;
+      }
+    }
+
     .status-box {
       padding: 18px 20px;
       border-radius: 18px;
@@ -3312,40 +3364,40 @@ function renderInvoiceForecast(data) {
           </div>
         </section>
 
-        <div class="layout">
-          <div class="stack">
-           <section class="premium-card">
-  <div class="section-head">
-    <div>
-      <div class="section-kicker">01</div>
-      <h2 class="section-title">${t("sectionClub")}</h2>
-    </div>
-  </div>
-  <div class="grid">
-    ${renderTile("labelClubName", safeValue(data.club_name))}
-    ${renderTile("labelClubLeague", safeValue(data.club_league))}
-    ${renderTile("labelClubCountry", safeValue(data.club_country))}
-  </div>
-</section>
-
-            <section class="premium-card">
-              <div class="section-head">
-                <div>
-                  <div class="section-kicker">02</div>
-                  <h2 class="section-title">${t("sectionAgent")}</h2>
-                </div>
+        <div class="master-details-stack">
+          <section class="premium-card">
+            <div class="section-head">
+              <div>
+                <div class="section-kicker">01</div>
+                <h2 class="section-title">${t("sectionClub")}</h2>
               </div>
-              <div class="grid">
-                ${renderTile("labelAgentName", safeValue(data.agent_name))}
-                ${renderTile("labelAgentEmail", safeValue(data.agent_email))}
-                ${renderTile("labelAgentLicence", safeValue(data.agent_licence_number))}
-                ${renderTile("labelAgencyName", safeValue(data.agency_name))}
-                ${renderTile("labelAgentCountry", safeValue(data.agent_country))}
-                ${renderTile("labelAgentFederation", safeValue(data.agent_federation))}
-                ${renderTile("labelLicensedAgent", yesNo(data.is_licensed_agent))}
-              </div>
-            </section>
+            </div>
+            <div class="master-grid-3">
+              ${renderTile("labelClubName", safeValue(data.club_name))}
+              ${renderTile("labelClubLeague", safeValue(data.club_league))}
+              ${renderTile("labelClubCountry", safeValue(data.club_country))}
+            </div>
+          </section>
 
+          <section class="premium-card">
+            <div class="section-head">
+              <div>
+                <div class="section-kicker">02</div>
+                <h2 class="section-title">${t("sectionAgent")}</h2>
+              </div>
+            </div>
+            <div class="master-grid-4">
+              ${renderTile("labelAgentName", safeValue(data.agent_name))}
+              ${renderTile("labelAgentEmail", safeValue(data.agent_email))}
+              ${renderTile("labelAgentLicence", safeValue(data.agent_licence_number))}
+              ${renderTile("labelAgencyName", safeValue(data.agency_name))}
+              ${renderTile("labelAgentCountry", safeValue(data.agent_country))}
+              ${renderTile("labelAgentFederation", safeValue(data.agent_federation))}
+              ${renderTile("labelLicensedAgent", yesNo(data.is_licensed_agent))}
+            </div>
+          </section>
+
+          <div class="master-pair">
             <section class="premium-card">
               <div class="section-head">
                 <div>
@@ -3364,9 +3416,7 @@ function renderInvoiceForecast(data) {
                 )}
               </div>
             </section>
-          </div>
 
-          <div class="stack">
             <section class="premium-card">
               <div class="section-head">
                 <div>
@@ -3374,67 +3424,67 @@ function renderInvoiceForecast(data) {
                   <h2 class="section-title">${t("sectionSalary")}</h2>
                 </div>
               </div>
-              <div class="grid">
+              <div class="master-grid-3">
                 ${renderTile("labelSalaryAmount", safeValue(data.salary))}
                 ${renderTile("labelSalaryCurrency", safeValue(data.salary_currency))}
                 ${renderTile("labelSalaryFrequency", safeValue(data.salary_frequency))}
               </div>
             </section>
-
-            <section class="premium-card">
-              <div class="section-head">
-                <div>
-                  <div class="section-kicker">05</div>
-                  <h2 class="section-title">${t("sectionCommission")}</h2>
-                </div>
-              </div>
-              <div class="grid">
-                ${renderTile("labelCommissionType", safeValue(data.commission_type))}
-                ${renderTile("labelCommissionValue", safeValue(data.commission_value))}
-                ${renderTile("labelCommissionCurrency", safeValue(data.commission_currency))}
-                ${renderTile("labelCommissionPayer", safeValue(data.commission_payer))}
-                ${renderTile("labelCommissionFrequency", safeValue(resolvedCommission.payment_frequency))}
-                ${renderTile("labelCommissionInstalments", safeValue(resolvedCommission.instalments_per_period))}
-                ${renderTile("labelDualRepresentation", yesNo(resolvedCommission.dual_representation))}
-                ${renderTile("resolverSource", resolverSourceLabel(resolvedCommission.source))}
-              </div>
-
-              ${renderResolvedCommissionSchedule(data)}
-            </section>
-
-            ${renderCommercialValue(data)}
-
-            ${renderInvoiceForecast(data)}
-            
-             <section class="premium-card summary-card">
-              <div class="summary-top">
-                <h2>${t("sectionSnapshot")}</h2>
-                <p>${t("sectionSnapshotText")}</p>
-              </div>
-              <div class="summary-list">
-                <div class="summary-row">
-                  <div class="left">${t("snapshotPlayer")}</div>
-                  <div class="right">${data.player_name || t("na")}</div>
-                </div>
-                <div class="summary-row">
-                  <div class="left">${t("snapshotClub")}</div>
-                  <div class="right">${data.club_name || t("na")}</div>
-                </div>
-                <div class="summary-row">
-                  <div class="left">${t("snapshotAgent")}</div>
-                  <div class="right">${data.agent_name || t("na")}</div>
-                </div>
-                <div class="summary-row">
-                  <div class="left">${t("snapshotPayer")}</div>
-                  <div class="right">${data.commission_payer || t("na")}</div>
-                </div>
-                <div class="summary-row">
-                  <div class="left">${t("snapshotDual")}</div>
-                  <div class="right">${yesNo(data.is_dual_representation)}</div>
-                </div>
-              </div>
-            </section>
           </div>
+
+          <section class="premium-card">
+            <div class="section-head">
+              <div>
+                <div class="section-kicker">05</div>
+                <h2 class="section-title">${t("sectionCommission")}</h2>
+              </div>
+            </div>
+            <div class="master-grid-4">
+              ${renderTile("labelCommissionType", safeValue(data.commission_type))}
+              ${renderTile("labelCommissionValue", safeValue(data.commission_value))}
+              ${renderTile("labelCommissionCurrency", safeValue(data.commission_currency))}
+              ${renderTile("labelCommissionPayer", safeValue(data.commission_payer))}
+              ${renderTile("labelCommissionFrequency", safeValue(resolvedCommission.payment_frequency))}
+              ${renderTile("labelCommissionInstalments", safeValue(resolvedCommission.instalments_per_period))}
+              ${renderTile("labelDualRepresentation", yesNo(resolvedCommission.dual_representation))}
+              ${renderTile("resolverSource", resolverSourceLabel(resolvedCommission.source))}
+            </div>
+
+            ${renderResolvedCommissionSchedule(data)}
+          </section>
+
+          ${renderCommercialValue(data)}
+
+          ${renderInvoiceForecast(data)}
+
+          <section class="premium-card summary-card">
+            <div class="summary-top">
+              <h2>${t("sectionSnapshot")}</h2>
+              <p>${t("sectionSnapshotText")}</p>
+            </div>
+            <div class="summary-list">
+              <div class="summary-row">
+                <div class="left">${t("snapshotPlayer")}</div>
+                <div class="right">${data.player_name || t("na")}</div>
+              </div>
+              <div class="summary-row">
+                <div class="left">${t("snapshotClub")}</div>
+                <div class="right">${data.club_name || t("na")}</div>
+              </div>
+              <div class="summary-row">
+                <div class="left">${t("snapshotAgent")}</div>
+                <div class="right">${data.agent_name || t("na")}</div>
+              </div>
+              <div class="summary-row">
+                <div class="left">${t("snapshotPayer")}</div>
+                <div class="right">${data.commission_payer || t("na")}</div>
+              </div>
+              <div class="summary-row">
+                <div class="left">${t("snapshotDual")}</div>
+                <div class="right">${yesNo(data.is_dual_representation)}</div>
+              </div>
+            </div>
+          </section>
         </div>
       `;
     }
