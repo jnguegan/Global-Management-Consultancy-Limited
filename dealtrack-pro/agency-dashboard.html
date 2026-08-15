@@ -2669,10 +2669,52 @@
       return proratedSalary * (rate / 100) * (allocation / 100);
     }
 
-    function applyInstalmentMetrics(row) {
-      const items = commissionInstalments.filter(
-        (item) => String(item.contract_id) === String(row.contract.id)
+    function parseDashboardAnalysis(contract) {
+      const raw = contract?.analysis_json || contract?.analysis_result || null;
+      if (!raw) return null;
+      if (typeof raw === "object") return raw;
+      try { return JSON.parse(raw); } catch { return null; }
+    }
+
+    function getDashboardContractInstalments(contract) {
+      const stored = commissionInstalments.filter(
+        (item) => String(item.contract_id) === String(contract.id)
       );
+      if (stored.length) return stored;
+
+      const analysis = parseDashboardAnalysis(contract);
+      const obligations = Array.isArray(analysis?.payment_obligations)
+        ? analysis.payment_obligations
+        : [];
+
+      return obligations
+        .filter((item) => String(item?.obligation_type || "").trim().toLowerCase() === "agency_commission")
+        .map((item, index) => ({
+          ...item,
+          contract_id: contract.id,
+          instalment_number: item.instalment_number || index + 1,
+          invoice_status: item.invoice_status || "review_required",
+          trigger_status: item.trigger_status || (item.conditional ? "pending" : "guaranteed")
+        }));
+    }
+
+    function dashboardReportingDate(contract, item) {
+      if (item?.due_date) return item.due_date;
+      if (item?.trigger_date) return item.trigger_date;
+      if (String(item?.due_date_type || "").toLowerCase() !== "relative_to_event") return null;
+
+      const eventText = String(
+        item?.due_date_event || item?.due_date_rule || item?.condition_notes || ""
+      ).toLowerCase();
+
+      if (/registration|signing|execution|commencement|transfer|employment start|contract start/.test(eventText)) {
+        return contract.playing_contract_start_date || contract.start_date || null;
+      }
+      return null;
+    }
+
+    function applyInstalmentMetrics(row) {
+      const items = getDashboardContractInstalments(row.contract);
 
       if (!items.length) return row;
 
@@ -2703,11 +2745,13 @@
         0
       );
 
-      // Annual revenue means instalments falling due in the reporting year.
+      // Annual revenue includes exact dates and trigger-based obligations
+      // attributable to the current contractual/reporting year.
       const annualRevenue = usableItems.reduce((sum, item) => {
-        if (!item.due_date) return sum;
+        const reportingDate = dashboardReportingDate(row.contract, item);
+        if (!reportingDate) return sum;
 
-        const dueDate = new Date(`${item.due_date}T00:00:00`);
+        const dueDate = new Date(`${reportingDate}T00:00:00`);
         if (Number.isNaN(dueDate.getTime())) return sum;
 
         return dueDate.getFullYear() === reportingYear
@@ -2715,37 +2759,24 @@
           : sum;
       }, 0);
 
-      /*
-       * The snapshot must show the NEXT invoice date only,
-       * not the total of every future unpaid instalment.
-       *
-       * Club-side and player-side instalments that share the
-       * same next due date are grouped together.
+      /* Invoice Forecast is the total current-year contractual invoice
+       * opportunity, including overdue/unpaid and trigger-based amounts.
+       * Paid items remain visible in revenue but are excluded from forecast.
        */
-      const futureItems = usableItems
+      const forecastItems = usableItems
         .filter((item) => {
-          if (!item.due_date) return false;
-
           const status = String(item.invoice_status || "").toLowerCase();
           if (["paid", "cancelled"].includes(status)) return false;
+          const reportingDate = dashboardReportingDate(row.contract, item);
+          if (!reportingDate) return false;
+          const dueDate = new Date(`${reportingDate}T00:00:00`);
+          return !Number.isNaN(dueDate.getTime()) && dueDate.getFullYear() === reportingYear;
+        });
 
-          const dueDate = new Date(`${item.due_date}T00:00:00`);
-          return !Number.isNaN(dueDate.getTime()) && dueDate >= today;
-        })
-        .sort((a, b) =>
-          String(a.due_date).localeCompare(String(b.due_date))
-        );
-
-      const nextDueDate = futureItems[0]?.due_date || null;
-
-      const futureForecast = nextDueDate
-        ? futureItems
-            .filter((item) => item.due_date === nextDueDate)
-            .reduce(
-              (sum, item) => sum + (resolveDashboardInstalmentAmount(row.contract, item) || 0),
-              0
-            )
-        : 0;
+      const futureForecast = forecastItems.reduce(
+        (sum, item) => sum + (resolveDashboardInstalmentAmount(row.contract, item) || 0),
+        0
+      );
 
       return {
         ...row,
