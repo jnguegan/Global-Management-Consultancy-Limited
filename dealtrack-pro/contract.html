@@ -441,6 +441,14 @@
       font-weight: 600;
     }
 
+    .muted-line {
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 650;
+      line-height: 1.35;
+    }
+
     .summary-card {
       padding: 0;
       overflow: hidden;
@@ -1390,6 +1398,10 @@
       "labelSalaryCurrency": "Salary Currency",
       "labelCommissionType": "Commission Type",
       "labelCommissionValue": "Commission Value",
+      "labelFixedCommissionAmount": "Fixed Fee Component",
+      "labelPercentageCommissionRate": "Salary-based Commission Rate",
+      "labelEstimatedAnnualPercentage": "Estimated Annual Percentage Fee",
+      "labelCommissionPayers": "Recorded Payer(s)",
       "labelCommissionCurrency": "Commission Currency",
       "labelCommissionPayer": "Commission Payer",
       "labelCommissionFrequency": "Payment Frequency",
@@ -1562,6 +1574,10 @@
       "labelSalaryCurrency": "Devise du salaire",
       "labelCommissionType": "Type de commission",
       "labelCommissionValue": "Valeur de la commission",
+      "labelFixedCommissionAmount": "Composante forfaitaire",
+      "labelPercentageCommissionRate": "Taux de commission sur salaire",
+      "labelEstimatedAnnualPercentage": "Commission annuelle estimée en pourcentage",
+      "labelCommissionPayers": "Payeur(s) enregistré(s)",
       "labelCommissionCurrency": "Devise de la commission",
       "labelCommissionPayer": "Payeur de la commission",
       "labelCommissionFrequency": "Fréquence de paiement",
@@ -1734,6 +1750,10 @@
       "labelSalaryCurrency": "Moneda salarial",
       "labelCommissionType": "Tipo de comisión",
       "labelCommissionValue": "Valor de la comisión",
+      "labelFixedCommissionAmount": "Componente fija",
+      "labelPercentageCommissionRate": "Porcentaje de comisión sobre salario",
+      "labelEstimatedAnnualPercentage": "Comisión porcentual anual estimada",
+      "labelCommissionPayers": "Pagador(es) registrado(s)",
       "labelCommissionCurrency": "Moneda de la comisión",
       "labelCommissionPayer": "Pagador de la comisión",
       "labelCommissionFrequency": "Frecuencia de pago",
@@ -1902,6 +1922,19 @@ function calculateAnnualSalary(
   const frequency =
     normaliseFrequency(salaryFrequency);
 
+  // Contracts may state a non-standard number of salary payments per year,
+  // for example "Monthly, paid 14 times per contractual year".
+  const explicitPaymentCount = frequency.match(
+    /(\d+(?:\.\d+)?)\s*(?:times|payments|instalments|installments|fois|versements|veces|pagos)/i
+  );
+
+  if (explicitPaymentCount) {
+    const multiplier = Number(explicitPaymentCount[1]);
+    if (Number.isFinite(multiplier) && multiplier > 0) {
+      return salary * multiplier;
+    }
+  }
+
   const frequencyMultipliers = {
     weekly: 52,
     week: 52,
@@ -2063,21 +2096,24 @@ function normaliseCommissionMethod(data) {
     ""
   ).trim().toLowerCase();
 
-  if (
+  const mentionsPercentage =
     explicit === "percentage" ||
     explicit.includes("percentage") ||
-    explicit.includes("%")
-  ) return "percentage";
+    explicit.includes("%");
 
-  if (
+  const mentionsFixed =
     explicit === "fixed" ||
-    explicit.includes("fixed")
-  ) return "fixed";
+    explicit.includes("fixed");
 
   if (
     explicit === "mixed" ||
-    explicit.includes("mixed")
+    explicit.includes("mixed") ||
+    (mentionsFixed && mentionsPercentage)
   ) return "mixed";
+
+  if (mentionsPercentage) return "percentage";
+
+  if (mentionsFixed) return "fixed";
 
   if (
     toNumber(data.commission_percentage) !== null &&
@@ -2088,6 +2124,130 @@ function normaliseCommissionMethod(data) {
   if (toNumber(data.commission_percentage) !== null) return "percentage";
 
   return "unknown";
+}
+
+function getCommissionStructureComponents(data) {
+  const analysis = parseContractAnalysis(data) || {};
+  const method = normaliseCommissionMethod(data);
+  const defaultCurrency =
+    data?.commission_currency ||
+    analysis?.commission_currency ||
+    data?.salary_currency ||
+    "EUR";
+
+  const recordedComponents = Array.isArray(analysis?.commission_components)
+    ? analysis.commission_components.filter((item) => item && typeof item === "object")
+    : [];
+
+  if (recordedComponents.length) {
+    return recordedComponents.map((item, index) => ({
+      component_reference: item.component_reference || `component-${index + 1}`,
+      component_type: item.component_type || "other",
+      fee_side: item.fee_side || null,
+      classification_method: item.classification_method || "review_required",
+      payer: item.payer || null,
+      recipient: item.recipient || null,
+      fixed_amount: resolverNumber(item.fixed_amount),
+      percentage_rate: resolverNumber(item.percentage_rate),
+      calculation_basis: item.calculation_basis || null,
+      currency: item.currency || defaultCurrency,
+      applicable_period: item.applicable_period || null,
+      evidence: item.evidence || null
+    }));
+  }
+
+  const fixedAmount =
+    resolverNumber(analysis?.club_services_fee) ??
+    resolverNumber(data?.fixed_commission_amount) ??
+    (["fixed", "mixed"].includes(method)
+      ? resolverNumber(data?.commission_value)
+      : null);
+
+  const percentageRate =
+    resolverNumber(data?.commission_percentage) ??
+    resolverNumber(analysis?.commission_percentage) ??
+    (["percentage", "mixed"].includes(method) && fixedAmount === null
+      ? resolverNumber(data?.commission_value)
+      : null);
+
+  const legacyComponents = [];
+  if (fixedAmount !== null) {
+    legacyComponents.push({
+      component_reference: "fixed-fee",
+      component_type: "fixed",
+      fee_side: analysis?.club_services_fee !== null && analysis?.club_services_fee !== undefined
+        ? "club-side"
+        : null,
+      classification_method: "review_required",
+      payer: data?.commission_payer || null,
+      fixed_amount: fixedAmount,
+      percentage_rate: null,
+      calculation_basis: null,
+      currency: defaultCurrency,
+      applicable_period: null,
+      evidence: null
+    });
+  }
+  if (percentageRate !== null) {
+    legacyComponents.push({
+      component_reference: "percentage-fee",
+      component_type: "percentage",
+      fee_side: null,
+      classification_method: "review_required",
+      payer: null,
+      fixed_amount: null,
+      percentage_rate: percentageRate,
+      calculation_basis: analysis?.commission_basis || data?.commission_basis || "basic salary",
+      currency: defaultCurrency,
+      applicable_period: null,
+      evidence: null
+    });
+  }
+  return legacyComponents;
+}
+
+function renderCommissionComponentTiles(data) {
+  const components = getCommissionStructureComponents(data);
+  if (!components.length) {
+    return `<div class="data-tile"><span class="tile-label">${t("labelCommissionValue")}</span><div class="tile-value">${t("na")}</div></div>`;
+  }
+
+  const analysis = parseContractAnalysis(data) || {};
+  const annualSalary = calculateAnnualSalary(
+    data?.salary ?? data?.gross_salary ?? analysis?.gross_salary,
+    data?.salary_frequency ?? analysis?.salary_frequency
+  );
+
+  const typeLabels = {
+    fixed: t("labelFixedCommissionAmount"),
+    percentage: t("labelPercentageCommissionRate"),
+    formula: t("labelCommissionType"),
+    bonus: t("labelCommissionType"),
+    collaboration: t("labelCommissionType"),
+    other: t("labelCommissionValue")
+  };
+
+  return components.map((item, index) => {
+    const label = typeLabels[item.component_type] || t("labelCommissionValue");
+    const side = item.fee_side ? ` · ${safeValue(item.fee_side)}` : "";
+    const payer = item.payer ? `<div class="muted-line">${t("payerLabel")}: ${safeValue(item.payer)}</div>` : "";
+    const basis = item.calculation_basis ? `<div class="muted-line">${safeValue(item.calculation_basis)}</div>` : "";
+    let primaryValue = t("na");
+    let estimate = "";
+
+    if (item.component_type === "fixed" && item.fixed_amount !== null) {
+      primaryValue = formatMoneyValue(item.fixed_amount, item.currency);
+    } else if (item.component_type === "percentage" && item.percentage_rate !== null) {
+      primaryValue = `${item.percentage_rate}%`;
+      if (annualSalary !== null) {
+        estimate = `<div class="muted-line">${t("labelEstimatedAnnualPercentage")}: ${formatMoneyValue(annualSalary * (item.percentage_rate / 100), item.currency)}</div>`;
+      }
+    } else if (item.calculation_basis) {
+      primaryValue = safeValue(item.calculation_basis);
+    }
+
+    return `<div class="data-tile"><span class="tile-label">${label}${side}</span><div class="tile-value">${primaryValue}${basis}${estimate}${payer}</div></div>`;
+  }).join("");
 }
 
 function getCommissionBasis(data, annualSalary) {
@@ -3925,9 +4085,7 @@ function renderInvoiceForecast(data) {
             </div>
             <div class="master-grid-4">
               ${renderTile("labelCommissionType", safeValue(data.commission_type))}
-              ${renderTile("labelCommissionValue", safeValue(data.commission_value))}
-              ${renderTile("labelCommissionCurrency", safeValue(data.commission_currency))}
-              ${renderTile("labelCommissionPayer", safeValue(data.commission_payer))}
+              ${renderCommissionComponentTiles(data)}
               ${renderTile("labelCommissionFrequency", safeValue(resolvedCommission.payment_frequency))}
               ${renderTile("labelCommissionInstalments", safeValue(resolvedCommission.instalments_per_period))}
               ${renderTile("labelDualRepresentation", yesNo(resolvedCommission.dual_representation))}
