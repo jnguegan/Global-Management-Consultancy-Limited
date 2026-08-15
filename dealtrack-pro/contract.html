@@ -2160,7 +2160,12 @@ function getCommissionStructureComponents(data) {
     // a EUR 10 fixed fee while preserving multi-component structures for review.
     const fixedComponents = components.filter((item) => item.component_type === "fixed");
     const percentageComponents = components.filter((item) => item.component_type === "percentage");
-    const confirmedFixedTotal = resolverNumber(analysis?.club_services_fee);
+    const confirmedFixedTotal =
+      resolverNumber(data?.fixed_commission_amount) ??
+      (["fixed", "mixed"].includes(method)
+        ? resolverNumber(data?.commission_value)
+        : null) ??
+      resolverNumber(analysis?.club_services_fee);
     const confirmedPercentageRate =
       resolverNumber(data?.commission_percentage) ??
       resolverNumber(analysis?.commission_percentage);
@@ -2178,11 +2183,11 @@ function getCommissionStructureComponents(data) {
   }
 
   const fixedAmount =
-    resolverNumber(analysis?.club_services_fee) ??
     resolverNumber(data?.fixed_commission_amount) ??
     (["fixed", "mixed"].includes(method)
       ? resolverNumber(data?.commission_value)
-      : null);
+      : null) ??
+    resolverNumber(analysis?.club_services_fee);
 
   const percentageRate =
     resolverNumber(data?.commission_percentage) ??
