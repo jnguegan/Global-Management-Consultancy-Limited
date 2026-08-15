@@ -2456,62 +2456,57 @@ function extractContractualAmountFromText(item) {
 }
 
 function resolveConditionalFlag(item) {
-  if (item?.conditional === false || item?.conditional === 0) return false;
-  if (!item?.conditional) return false;
+  const storedFlag = String(item?.conditional ?? "").trim().toLowerCase();
 
-  // Some analyses were marking every row in a contract as conditional.
-  // Only retain that classification when the row itself contains a real
-  // contractual trigger. Protection wording (e.g. payment survives player
-  // departure) is not a condition precedent to payment.
-  const triggerText = [
-    item?.condition_notes,
-    item?.trigger_note,
-    item?.calculation_basis,
-    item?.notes
-  ].filter(Boolean).join(" ").toLowerCase();
+  // The structured row is the source of truth. Do not downgrade a stored
+  // conditional payment to guaranteed merely because its notes use wording
+  // that is not covered by a narrow phrase-matching list.
+  if (["true", "1", "yes", "conditional"].includes(storedFlag)) return true;
+  if (["false", "0", "no", "guaranteed"].includes(storedFlag)) return false;
 
-  if (!triggerText) return false;
-
-  const triggerPatterns = [
-    /full\s+registration/,
-    /upon\s+(?:the\s+)?(?:full\s+)?registration/,
-    /subject\s+to\s+(?:the\s+)?(?:full\s+)?registration/,
-    /conditional\s+(?:upon|on|to)/,
-    /condition\s+precedent/,
-    /trigger\s+(?:event|condition)/,
-    /provided\s+that/,
-    /only\s+(?:payable|due)\s+if/,
-    /becomes?\s+(?:payable|due)\s+(?:upon|when)/,
-    /subject\s+to\s+(?:promotion|appearance|qualification|registration)/
-  ];
-
-  return triggerPatterns.some((pattern) => pattern.test(triggerText));
+  // Older rows may have a trigger status but no explicit conditional flag.
+  const storedStatus = String(item?.trigger_status || "").trim().toLowerCase();
+  return ["pending", "met", "confirmed", "satisfied", "fulfilled", "failed", "not_met", "not-met"].includes(storedStatus);
 }
 
 function calculateScheduleItemAmount(data, item) {
   const allocation = extractInstalmentPercentage(item);
   const method = normaliseCommissionMethod(data);
   const annualSalary = calculateAnnualSalary(data?.salary, data?.salary_frequency);
+  const feeSide = String(item?.fee_side || "").trim().toLowerCase();
+  const isClubSide = /club/.test(feeSide);
+  const isPlayerSide = /player/.test(feeSide);
   const rate =
     resolverNumber(data?.commission_percentage) ??
     (method === "percentage" || method === "mixed"
       ? resolverNumber(data?.commission_value)
       : null);
 
+  const recorded = resolverNumber(item?.amount);
+  const statedAmount = extractContractualAmountFromText(item);
+
   /*
-   * INVOICE PRINCIPLE:
-   * DealTrack Pro shows the gross commission payable by the contractual payer
-   * to the agency. A subcontract / partner split is a separate downstream
-   * accounting exercise and must never reduce the payer-facing invoice amount.
-   *
-   * Therefore, for percentage-based commissions we calculate each payment from
-   * the master contractual commission rate and the instalment allocation rather
-   * than trusting a stored row amount that may have been netted for a partner split.
+   * Club-side service fees are fixed contractual amounts and must never be
+   * replaced by the player's salary-percentage calculation. This preserves
+   * amounts such as EUR 115,000 and EUR 100,000 exactly as recorded.
    */
-  if (annualSalary !== null && rate !== null && allocation !== null) {
+  if (isClubSide) {
+    if (recorded !== null) return { amount: recorded, estimated: false, allocation };
+    if (statedAmount !== null) return { amount: statedAmount, estimated: false, allocation };
+    return { amount: null, estimated: false, allocation };
+  }
+
+  /*
+   * Player-side remuneration is calculated from the recorded basic salary and
+   * commission rate (10% for this contract), then split only when the row has a
+   * contractual instalment allocation.
+   */
+  if (isPlayerSide && annualSalary !== null && rate !== null) {
     const proratedSalary = annualSalary * getSeasonProration(data, item);
     const grossCommissionForSide = proratedSalary * (rate / 100);
-    const amount = grossCommissionForSide * (allocation / 100);
+    const amount = allocation !== null
+      ? grossCommissionForSide * (allocation / 100)
+      : grossCommissionForSide;
 
     return {
       amount,
@@ -2520,9 +2515,8 @@ function calculateScheduleItemAmount(data, item) {
     };
   }
 
-  // Fixed fees or schedules without enough percentage inputs may use the
-  // explicitly recorded contractual amount.
-  const recorded = resolverNumber(item?.amount);
+  // For legacy rows without a recognised fee-side label, preserve an explicit
+  // contractual amount before attempting any derived percentage calculation.
   if (recorded !== null) {
     return { amount: recorded, estimated: false, allocation };
   }
@@ -2530,9 +2524,17 @@ function calculateScheduleItemAmount(data, item) {
   // Conditional contractual amounts must remain visible even while their
   // trigger is pending. If the structured row did not persist the amount,
   // recover an amount stated in that row's contractual analysis text.
-  const statedAmount = extractContractualAmountFromText(item);
   if (statedAmount !== null) {
     return { amount: statedAmount, estimated: false, allocation };
+  }
+
+  if (annualSalary !== null && rate !== null && allocation !== null) {
+    const proratedSalary = annualSalary * getSeasonProration(data, item);
+    return {
+      amount: proratedSalary * (rate / 100) * (allocation / 100),
+      estimated: true,
+      allocation
+    };
   }
 
   return { amount: null, estimated: false, allocation };
