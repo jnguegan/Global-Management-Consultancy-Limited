@@ -2782,7 +2782,8 @@
         0
       );
       const analysisLifetimeRevenue = getAnalysisObligationLifetime(row.contract);
-      const lifetimeRevenue = Math.max(
+      const persistedLifetimeRevenue = toNumber(row.contract.calculated_lifetime_revenue);
+      const lifetimeRevenue = persistedLifetimeRevenue ?? Math.max(
         scheduleLifetimeRevenue,
         analysisLifetimeRevenue,
         Number(row.lifetimeRevenue) || 0
@@ -2790,7 +2791,7 @@
 
       // Annual revenue includes exact dates and trigger-based obligations
       // attributable to the current contractual/reporting year.
-      const annualRevenue = usableItems.reduce((sum, item) => {
+      const scheduleAnnualRevenue = usableItems.reduce((sum, item) => {
         const reportingDate = dashboardReportingDate(row.contract, item);
         if (!reportingDate) return sum;
 
@@ -2801,6 +2802,7 @@
           ? sum + (resolveDashboardInstalmentAmount(row.contract, item) || 0)
           : sum;
       }, 0);
+      const annualRevenue = toNumber(row.contract.calculated_annual_revenue) ?? scheduleAnnualRevenue;
 
       /* Invoice Forecast is the total current-year contractual invoice
        * opportunity, including overdue/unpaid and trigger-based amounts.
@@ -2816,14 +2818,15 @@
           return !Number.isNaN(dueDate.getTime()) && dueDate.getFullYear() === reportingYear;
         });
 
-      const futureForecast = forecastItems.reduce(
+      const scheduleForecast = forecastItems.reduce(
         (sum, item) => sum + (resolveDashboardInstalmentAmount(row.contract, item) || 0),
         0
       );
+      const futureForecast = toNumber(row.contract.calculated_invoice_forecast) ?? scheduleForecast;
 
       return {
         ...row,
-        currency: instalmentCurrency,
+        currency: normaliseCurrencyCode(row.contract.calculated_revenue_currency) || instalmentCurrency,
         annualRevenue,
         lifetimeRevenue,
         invoiceForecast: futureForecast,
