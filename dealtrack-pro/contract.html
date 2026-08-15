@@ -1461,6 +1461,7 @@
       "labelFixedCommissionAmount": "Fixed Fee Component",
       "labelPercentageCommissionRate": "Salary-based Commission Rate",
       "labelEstimatedAnnualPercentage": "Estimated Annual Percentage Fee",
+      "labelCombinedAnnualCommission": "Combined Annual Commission",
       "labelCommissionPayers": "Recorded Payer(s)",
       "labelCommissionCurrency": "Commission Currency",
       "labelCommissionPayer": "Commission Payer",
@@ -1656,6 +1657,7 @@
       "labelFixedCommissionAmount": "Composante forfaitaire",
       "labelPercentageCommissionRate": "Taux de commission sur salaire",
       "labelEstimatedAnnualPercentage": "Commission annuelle estimée en pourcentage",
+      "labelCombinedAnnualCommission": "Commission annuelle totale",
       "labelCommissionPayers": "Payeur(s) enregistré(s)",
       "labelCommissionCurrency": "Devise de la commission",
       "labelCommissionPayer": "Payeur de la commission",
@@ -1851,6 +1853,7 @@
       "labelFixedCommissionAmount": "Componente fija",
       "labelPercentageCommissionRate": "Porcentaje de comisión sobre salario",
       "labelEstimatedAnnualPercentage": "Comisión porcentual anual estimada",
+      "labelCombinedAnnualCommission": "Comisión anual combinada",
       "labelCommissionPayers": "Pagador(es) registrado(s)",
       "labelCommissionCurrency": "Moneda de la comisión",
       "labelCommissionPayer": "Pagador de la comisión",
@@ -2330,7 +2333,7 @@ function getCommissionStructureComponents(data) {
   return legacyComponents;
 }
 
-function renderCommissionComponentTiles(data) {
+function renderCommissionComponentTiles(data, resolvedCommission = null) {
   const components = getCommissionStructureComponents(data);
   if (!components.length) {
     return `<div class="data-tile"><span class="tile-label">${t("labelCommissionValue")}</span><div class="tile-value">${t("na")}</div></div>`;
@@ -2350,6 +2353,53 @@ function renderCommissionComponentTiles(data) {
     collaboration: t("labelCommissionType"),
     other: t("labelCommissionValue")
   };
+
+  // Some dual-representation analyses record one percentage definition even
+  // though the detailed contractual schedule correctly contains separate
+  // club-side and player-side entitlements. Reconcile the summary against that
+  // authoritative schedule so the card never hides one side of the mandate.
+  const percentageComponents = components.filter(
+    (item) => item.component_type === "percentage" && item.percentage_rate !== null
+  );
+  const schedule = Array.isArray(resolvedCommission?.schedule)
+    ? resolvedCommission.schedule
+    : [];
+  const percentageScheduleRows = schedule.filter((item) => {
+    const side = String(resolveScheduleFeeSide(item, data) || "").toLowerCase();
+    return side === "club-side" || side === "player-side";
+  });
+  const recordedSides = [...new Set(
+    percentageScheduleRows.map((item) => String(resolveScheduleFeeSide(item, data)).toLowerCase())
+  )];
+
+  if (
+    percentageComponents.length === 1 &&
+    recordedSides.includes("club-side") &&
+    recordedSides.includes("player-side")
+  ) {
+    const component = percentageComponents[0];
+    const currency = component.currency || resolvedCommission?.currency || data?.salary_currency || "GBP";
+    const rowsBySide = ["club-side", "player-side"].map((side) => {
+      const matchingRows = percentageScheduleRows.filter(
+        (item) => String(resolveScheduleFeeSide(item, data)).toLowerCase() === side
+      );
+      const scheduledTotal = matchingRows.reduce((sum, item) => sum + (resolverNumber(item.amount) || 0), 0);
+      const estimatedAmount = scheduledTotal > 0
+        ? scheduledTotal
+        : (annualSalary !== null ? annualSalary * (component.percentage_rate / 100) : null);
+      const sideLabel = side === "club-side" ? t("clubSide") : t("playerSide");
+      return `<div class="muted-line"><strong>${sideLabel}:</strong> ${component.percentage_rate}%${estimatedAmount !== null ? ` — ${formatMoneyValue(estimatedAmount, currency)}` : ""}</div>`;
+    }).join("");
+    const combinedTotal = percentageScheduleRows.reduce(
+      (sum, item) => sum + (resolverNumber(item.amount) || 0),
+      0
+    );
+    const combined = combinedTotal > 0
+      ? `<div class="muted-line"><strong>${t("labelCombinedAnnualCommission")}:</strong> ${formatMoneyValue(combinedTotal, currency)}</div>`
+      : "";
+
+    return `<div class="data-tile"><span class="tile-label">${t("labelPercentageCommissionRate")}</span><div class="tile-value">${rowsBySide}${combined}</div></div>`;
+  }
 
   return components.map((item, index) => {
     const label = typeLabels[item.component_type] || t("labelCommissionValue");
@@ -4647,7 +4697,7 @@ function renderInvoiceForecast(data) {
             </div>
             <div class="master-grid-4">
               ${renderTile("labelCommissionType", safeValue(data.commission_type))}
-              ${renderCommissionComponentTiles(data)}
+              ${renderCommissionComponentTiles(data, resolvedCommission)}
               ${renderTile("labelCommissionFrequency", safeValue(resolvedCommission.payment_frequency))}
               ${renderTile("labelCommissionInstalments", safeValue(resolvedCommission.instalments_per_period))}
               ${renderTile("labelDualRepresentation", yesNo(resolvedCommission.dual_representation))}
