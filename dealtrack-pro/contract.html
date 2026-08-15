@@ -3519,6 +3519,34 @@ function getInstalmentMetrics(data) {
   };
 }
 
+let persistedRevenueSignature = null;
+async function persistReconciledRevenueMetrics(data, metrics) {
+  if (!currentDb || !currentUser?.id || !data?.id || !metrics) return;
+  const payload = {
+    calculated_annual_revenue: metrics.annualRevenue,
+    calculated_lifetime_revenue: metrics.lifetimeRevenue,
+    calculated_invoice_forecast: metrics.annualRevenue,
+    calculated_revenue_currency: metrics.currency,
+    calculated_revenue_at: new Date().toISOString()
+  };
+  const signature = [data.id, metrics.annualRevenue, metrics.lifetimeRevenue, metrics.currency].join("|");
+  if (signature === persistedRevenueSignature) return;
+  persistedRevenueSignature = signature;
+
+  const { error } = await currentDb
+    .from("contracts")
+    .update(payload)
+    .eq("id", data.id)
+    .eq("user_id", currentUser.id);
+  if (error) {
+    persistedRevenueSignature = null;
+    console.warn("Could not persist reconciled revenue metrics:", error);
+    return;
+  }
+  Object.assign(data, payload);
+  if (currentContract?.id === data.id) Object.assign(currentContract, payload);
+}
+
 function renderCommercialValue(data) {
   const instalmentMetrics = getInstalmentMetrics(data);
 
@@ -4271,6 +4299,8 @@ function renderInvoiceForecast(data) {
     function renderContract(data) {
       const container = document.getElementById("contractView");
       const resolvedCommission = resolveCommission(data);
+      const reconciledMetrics = getInstalmentMetrics(data);
+      if (reconciledMetrics) void persistReconciledRevenueMetrics(data, reconciledMetrics);
 
       container.innerHTML = `
         <section class="hero">
