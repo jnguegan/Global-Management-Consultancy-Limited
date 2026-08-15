@@ -2974,7 +2974,7 @@ async function saveRelativeTriggerDate(analysisIndex, instalmentId, button) {
   }
 
   if (storedRow) {
-    const { error: rowError } = await currentDb
+    const { data: savedRows, error: rowError } = await currentDb
       .from("commission_instalments")
       .update({
         trigger_date: triggerDate,
@@ -2985,10 +2985,11 @@ async function saveRelativeTriggerDate(analysisIndex, instalmentId, button) {
         due_date_confirmed: Boolean(calculatedDueDate)
       })
       .eq("id", storedRow.id)
-      .eq("contract_id", currentContract.id);
-    if (rowError) {
+      .eq("contract_id", currentContract.id)
+      .select("id, trigger_date, due_date, due_date_confirmed, trigger_status");
+    if (rowError || !Array.isArray(savedRows) || savedRows.length !== 1) {
       console.error("Relative trigger row save failed:", rowError);
-      alert(`${t("triggerDateSaveFailed")} ${rowError.message || ""}`.trim());
+      alert(`${t("triggerDateSaveFailed")} ${rowError?.message || "The database did not authorise the update."}`.trim());
       button.disabled = false;
       button.textContent = originalText;
       return;
