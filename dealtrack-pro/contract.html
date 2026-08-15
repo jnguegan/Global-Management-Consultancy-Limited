@@ -724,6 +724,77 @@
     }
 
     .audit-schedule tr:last-child td { border-bottom: 0; }
+
+    /* Compact spreadsheet-style schedules */
+    .schedule-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 12px 0 10px;
+      flex-wrap: wrap;
+    }
+
+    .schedule-count {
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+
+    .schedule-toggle {
+      appearance: none;
+      border: 1px solid rgba(88,166,255,0.22);
+      border-radius: 10px;
+      padding: 8px 12px;
+      color: var(--text);
+      background: rgba(47,140,255,0.07);
+      cursor: pointer;
+      font-weight: 800;
+      font-size: 0.78rem;
+    }
+
+    .schedule-row-hidden { display: none; }
+
+    .schedule-detail-row { display: none; }
+    .schedule-detail-row.is-open { display: table-row; }
+    .schedule-detail-cell {
+      padding: 14px 16px !important;
+      color: var(--muted);
+      background: rgba(47,140,255,0.035);
+      line-height: 1.55;
+    }
+
+    .schedule-detail-cell strong { color: var(--gold-2); }
+
+    .details-btn {
+      appearance: none;
+      border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 9px;
+      padding: 6px 9px;
+      background: rgba(255,255,255,0.035);
+      color: var(--text);
+      cursor: pointer;
+      font-size: 0.76rem;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .amount-known { color: var(--gold-2); font-weight: 900; }
+    .amount-estimated::after {
+      content: " *";
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .compact-forecast-table td,
+    .compact-forecast-table th {
+      white-space: nowrap;
+    }
+
+    .compact-forecast-table td.payer-cell {
+      white-space: normal;
+      min-width: 220px;
+    }
 @media (max-width: 620px) {
   .commercial-calculation-grid {
     grid-template-columns: 1fr;
@@ -1094,6 +1165,12 @@
 "dueDate": "Due Date",
 "payerLabel": "Payer",
 "sourceLabel": "Source / Notes",
+"seasonLabel": "Season",
+"detailsLabel": "Details",
+"showAllPayments": "Show all payments",
+"showLessPayments": "Show less",
+"estimatedFromKnownTerms": "Estimated from recorded contractual terms",
+"knownSalaryOnlyNote": "Calculated from the recorded salary and commission terms. Commissionable one-offs not recorded in DealTrack Pro are excluded.",
 "currentYearRevenue": "Current-Year Revenue",
 "nextInvoiceLabel": "Next Invoice",
 "noOneOffs": "None included",
@@ -1156,15 +1233,9 @@
       "labelCommissionFrequency": "Payment Frequency",
       "labelCommissionInstalments": "Instalments",
       "resolverSource": "Calculation Source",
-      "labelPaymentsPerPeriod": "Payments per Contractual Period",
-      "labelTotalPaymentEvents": "Total Payment Events",
-      "labelFirstDueDate": "First Recorded Due Date",
-      "oncePerSeason": "Once per season",
-      "twicePerSeason": "Twice per season",
-      "instalmentsPerSeason": "{count} payments per season",
       "resolverDetailedSchedule": "Detailed contractual schedule",
       "resolverAnalysisFallback": "Structured contract analysis",
-      "resolverContractFallback": "Contract database record",
+      "resolverContractFallback": "Contract summary fields",
       "resolverReviewRequired": "Requires review",
       "resolverScheduleRecorded": "{count} contractual payment event(s)",
       "labelDualRepresentation": "Dual Representation",
@@ -1246,6 +1317,12 @@
 "dueDate": "Date d’échéance",
 "payerLabel": "Payeur",
 "sourceLabel": "Source / Notes",
+"seasonLabel": "Saison",
+"detailsLabel": "Détails",
+"showAllPayments": "Afficher tous les paiements",
+"showLessPayments": "Réduire",
+"estimatedFromKnownTerms": "Estimation à partir des conditions contractuelles enregistrées",
+"knownSalaryOnlyNote": "Calculé à partir du salaire et des conditions de commission enregistrés. Les éléments ponctuels commissionnables non enregistrés dans DealTrack Pro sont exclus.",
 "currentYearRevenue": "Revenu de l’année en cours",
 "nextInvoiceLabel": "Prochaine facture",
 "noOneOffs": "Aucun élément inclus",
@@ -1308,15 +1385,9 @@
       "labelCommissionFrequency": "Fréquence de paiement",
       "labelCommissionInstalments": "Échéances",
       "resolverSource": "Source du calcul",
-      "labelPaymentsPerPeriod": "Paiements par période contractuelle",
-      "labelTotalPaymentEvents": "Nombre total d’échéances",
-      "labelFirstDueDate": "Première échéance enregistrée",
-      "oncePerSeason": "Une fois par saison",
-      "twicePerSeason": "Deux fois par saison",
-      "instalmentsPerSeason": "{count} paiements par saison",
       "resolverDetailedSchedule": "Échéancier contractuel détaillé",
       "resolverAnalysisFallback": "Analyse contractuelle structurée",
-      "resolverContractFallback": "Enregistrement du contrat en base",
+      "resolverContractFallback": "Champs récapitulatifs du contrat",
       "resolverReviewRequired": "Vérification requise",
       "resolverScheduleRecorded": "{count} événement(s) de paiement contractuel",
       "labelDualRepresentation": "Double représentation",
@@ -1398,6 +1469,12 @@
 "dueDate": "Fecha de vencimiento",
 "payerLabel": "Pagador",
 "sourceLabel": "Fuente / Notas",
+"seasonLabel": "Temporada",
+"detailsLabel": "Detalles",
+"showAllPayments": "Mostrar todos los pagos",
+"showLessPayments": "Mostrar menos",
+"estimatedFromKnownTerms": "Estimado a partir de las condiciones contractuales registradas",
+"knownSalaryOnlyNote": "Calculado a partir del salario y las condiciones de comisión registrados. Se excluyen los conceptos únicos comisionables no registrados en DealTrack Pro.",
 "currentYearRevenue": "Ingresos del año actual",
 "nextInvoiceLabel": "Próxima factura",
 "noOneOffs": "Ninguno incluido",
@@ -1460,15 +1537,9 @@
       "labelCommissionFrequency": "Frecuencia de pago",
       "labelCommissionInstalments": "Cuotas",
       "resolverSource": "Fuente del cálculo",
-      "labelPaymentsPerPeriod": "Pagos por período contractual",
-      "labelTotalPaymentEvents": "Total de eventos de pago",
-      "labelFirstDueDate": "Primera fecha de pago registrada",
-      "oncePerSeason": "Una vez por temporada",
-      "twicePerSeason": "Dos veces por temporada",
-      "instalmentsPerSeason": "{count} pagos por temporada",
       "resolverDetailedSchedule": "Calendario contractual detallado",
       "resolverAnalysisFallback": "Análisis contractual estructurado",
-      "resolverContractFallback": "Registro del contrato en la base de datos",
+      "resolverContractFallback": "Campos resumen del contrato",
       "resolverReviewRequired": "Requiere revisión",
       "resolverScheduleRecorded": "{count} evento(s) de pago contractual",
       "labelDualRepresentation": "Representación dual",
@@ -2071,6 +2142,134 @@ function buildCommissionScheduleFromAnalysis(data) {
     }));
 }
 
+function extractInstalmentPercentage(item) {
+  const explicit = resolverNumber(item?.instalment_percentage);
+  if (explicit !== null) return explicit;
+
+  const text = [item?.notes, item?.condition_notes]
+    .filter(Boolean)
+    .join(" ");
+
+  const patterns = [
+    /instalment(?:\s+allocation)?\s+(?:is\s+)?([0-9]+(?:\.[0-9]+)?)%/i,
+    /([0-9]+(?:\.[0-9]+)?)%\s+(?:seasonal\s+)?instalment/i,
+    /payable\s+([0-9]+(?:\.[0-9]+)?)%/i,
+    /([0-9]+(?:\.[0-9]+)?)%\s+on\s+/i
+  ];
+
+  for (const pattern of patterns) {
+    const match = text.match(pattern);
+    if (match) {
+      const value = resolverNumber(match[1]);
+      if (value !== null) return value;
+    }
+  }
+
+  return null;
+}
+
+function getSeasonBounds(seasonLabel, dueDate) {
+  const label = String(seasonLabel || resolverSeasonFromDate(dueDate) || "");
+  const match = label.match(/(\d{4})\/(\d{2,4})/);
+  if (!match) return null;
+
+  const startYear = Number(match[1]);
+  if (!Number.isFinite(startYear)) return null;
+
+  return {
+    start: new Date(`${startYear}-07-01T00:00:00`),
+    end: new Date(`${startYear + 1}-06-30T00:00:00`)
+  };
+}
+
+function daysInclusive(start, end) {
+  const day = 24 * 60 * 60 * 1000;
+  return Math.floor((end - start) / day) + 1;
+}
+
+function getSeasonProration(data, item) {
+  const bounds = getSeasonBounds(item?.season_label, item?.due_date);
+  if (!bounds) return 1;
+
+  const contractStartText = data?.playing_contract_start_date || data?.start_date;
+  const contractEndText = data?.playing_contract_end_date || data?.end_date;
+  const contractStart = contractStartText ? new Date(`${contractStartText}T00:00:00`) : bounds.start;
+  const contractEnd = contractEndText ? new Date(`${contractEndText}T00:00:00`) : bounds.end;
+
+  const overlapStart = contractStart > bounds.start ? contractStart : bounds.start;
+  const overlapEnd = contractEnd < bounds.end ? contractEnd : bounds.end;
+  if (overlapEnd < overlapStart) return 0;
+
+  const seasonDays = daysInclusive(bounds.start, bounds.end);
+  const activeDays = daysInclusive(overlapStart, overlapEnd);
+  return seasonDays > 0 ? activeDays / seasonDays : 1;
+}
+
+function calculateScheduleItemAmount(data, item) {
+  const recorded = resolverNumber(item?.amount);
+  if (recorded !== null) {
+    return { amount: recorded, estimated: false, allocation: extractInstalmentPercentage(item) };
+  }
+
+  const annualSalary = calculateAnnualSalary(data?.salary, data?.salary_frequency);
+  const rate = resolverNumber(data?.commission_percentage) ?? resolverNumber(data?.commission_value);
+  if (annualSalary === null || rate === null) {
+    return { amount: null, estimated: false, allocation: extractInstalmentPercentage(item) };
+  }
+
+  const allocation = extractInstalmentPercentage(item);
+  if (allocation === null) {
+    return { amount: null, estimated: false, allocation: null };
+  }
+
+  const proratedSalary = annualSalary * getSeasonProration(data, item);
+  const commissionForSide = proratedSalary * (rate / 100);
+  const amount = commissionForSide * (allocation / 100);
+
+  return {
+    amount,
+    estimated: true,
+    allocation
+  };
+}
+
+function enrichScheduleAmounts(data, scheduleItems) {
+  return scheduleItems.map((item) => {
+    const calculated = calculateScheduleItemAmount(data, item);
+    return {
+      ...item,
+      amount: calculated.amount,
+      amount_estimated: calculated.estimated,
+      instalment_percentage:
+        item.instalment_percentage ?? calculated.allocation
+    };
+  });
+}
+
+function scheduleDetailText(item) {
+  const parts = [];
+  if (item.source_document) parts.push(`<strong>${t("sourceLabel")}:</strong> ${safeValue(item.source_document)}`);
+  if (item.source_clause) parts.push(`<strong>Clause:</strong> ${safeValue(item.source_clause)}`);
+  if (item.payment_protection) parts.push(`<strong>Protection:</strong> ${safeValue(item.payment_protection)}`);
+  if (item.vat_treatment) parts.push(`<strong>VAT:</strong> ${safeValue(item.vat_treatment)}`);
+  if (item.notes || item.condition_notes) parts.push(`<strong>${t("detailsLabel")}:</strong> ${safeValue(item.notes || item.condition_notes)}`);
+  return parts.length ? parts.join("<br>") : t("na");
+}
+
+function toggleScheduleRows(tableId, button) {
+  const table = document.getElementById(tableId);
+  if (!table) return;
+  const rows = table.querySelectorAll(".schedule-row-extra");
+  const expanding = Array.from(rows).some((row) => row.classList.contains("schedule-row-hidden"));
+  rows.forEach((row) => row.classList.toggle("schedule-row-hidden", !expanding));
+  if (button) button.textContent = expanding ? t("showLessPayments") : t("showAllPayments");
+}
+
+function toggleScheduleDetail(detailId) {
+  const row = document.getElementById(detailId);
+  if (row) row.classList.toggle("is-open");
+}
+
 function getDistinctPaymentEvents(scheduleItems) {
   const events = new Map();
 
@@ -2173,20 +2372,8 @@ function resolveCommission(data) {
     source = "analysis_json";
   }
 
-  /*
-    Derive schedule behaviour independently from the contracts summary
-    fields. The database fields remain authoritative for what was actually
-    recorded, while the detailed schedule enriches the display.
-  */
-  const schedulePattern = inferPaymentPattern(
-    schedule,
-    {
-      ...data,
-      commission_frequency: null,
-      commission_instalments: null
-    }
-  );
-
+  schedule = enrichScheduleAmounts(data, schedule);
+  const pattern = inferPaymentPattern(schedule, data);
   const analysis = parseContractAnalysis(data);
 
   const method =
@@ -2212,37 +2399,8 @@ function resolveCommission(data) {
     schedule.find((item) => item.calculation_basis)?.calculation_basis ||
     null;
 
-  const recordedFrequency =
-    String(data?.commission_frequency || "").trim() || null;
-
-  const recordedTotalEvents =
-    resolverNumber(data?.commission_instalments);
-
-  const firstRecordedDueDate =
-    normaliseResolverDate(data?.commission_due_date) ||
-    schedulePattern.payment_events?.[0]?.due_date ||
-    null;
-
-  const paymentsPerPeriod =
-    schedule.length > 0
-      ? schedulePattern.instalments
-      : null;
-
-  const totalPaymentEvents =
-    recordedTotalEvents ??
-    (
-      schedulePattern.payment_events?.length
-        ? schedulePattern.payment_events.length
-        : null
-    );
-
   const warnings = [];
-
-  if (
-    !schedule.length &&
-    !recordedFrequency &&
-    recordedTotalEvents === null
-  ) {
+  if (!schedule.length && !data?.commission_frequency && !data?.commission_instalments) {
     warnings.push(t("resolverReviewRequired"));
   }
 
@@ -2252,47 +2410,22 @@ function resolveCommission(data) {
     rate,
     fixed_amount: fixedAmount,
     basis,
-    payer:
-      data?.commission_payer ||
-      analysis?.commission_payer ||
-      null,
-    recipient:
-      data?.commission_recipient ||
-      analysis?.commission_recipient ||
-      null,
-    currency:
-      data?.commission_currency ||
-      analysis?.commission_currency ||
-      data?.salary_currency ||
-      "GBP",
+    payer: data?.commission_payer || analysis?.commission_payer || null,
+    recipient: data?.commission_recipient || analysis?.commission_recipient || null,
+    currency: data?.commission_currency || analysis?.commission_currency || data?.salary_currency || "GBP",
     dual_representation: Boolean(
       data?.is_dual_representation ??
       data?.dual_representation ??
       analysis?.dual_representation
     ),
-
-    /*
-      Keep these concepts separate:
-      payment_frequency = wording recorded in the contracts table first;
-      payments_per_period = derived from actual distinct payment dates;
-      total_payment_events = total obligations over the contract term.
-    */
-    payment_frequency:
-      recordedFrequency ||
-      schedulePattern.frequency ||
-      null,
-    payments_per_period: paymentsPerPeriod,
-    total_payment_events: totalPaymentEvents,
-    first_due_date: firstRecordedDueDate,
-
-    // Backward-compatible alias used by existing invoice code.
-    instalments_per_period: paymentsPerPeriod,
-
-    payment_events: schedulePattern.payment_events,
+    payment_frequency: pattern.frequency,
+    instalments_per_period: pattern.instalments,
+    payment_events: pattern.payment_events,
     schedule,
     warnings
   };
 }
+
 function resolverSourceLabel(source) {
   if (source === "commission_instalments") return t("resolverDetailedSchedule");
   if (source === "analysis_json") return t("resolverAnalysisFallback");
@@ -2301,21 +2434,34 @@ function resolverSourceLabel(source) {
 
 function renderResolvedCommissionSchedule(data) {
   const resolved = resolveCommission(data);
-  if (!resolved.payment_events.length) return "";
+  if (!resolved.schedule.length) return "";
 
-  const rows = resolved.payment_events.map((event, index) => {
-    const percentages = Array.from(event.percentages);
-    const feeSides = Array.from(event.fee_sides);
-    const payers = Array.from(event.payers);
+  const tableId = `contract-schedule-${String(data.id || "record").replace(/[^a-zA-Z0-9_-]/g, "")}`;
+  const visibleLimit = 6;
+  const sorted = resolved.schedule
+    .slice()
+    .sort((a, b) => String(a.due_date || "").localeCompare(String(b.due_date || "")) || Number(a.instalment_number || 0) - Number(b.instalment_number || 0));
+
+  const rows = sorted.map((item, index) => {
+    const detailId = `${tableId}-detail-${index}`;
+    const extraClass = index >= visibleLimit ? "schedule-row-extra schedule-row-hidden" : "";
+    const amountHtml = item.amount !== null && item.amount !== undefined
+      ? `<span class="amount-known ${item.amount_estimated ? "amount-estimated" : ""}">${formatMoneyValue(item.amount, item.currency || resolved.currency)}</span>`
+      : t("na");
 
     return `
-      <tr>
+      <tr class="${extraClass}">
         <td>${index + 1}</td>
-        <td>${safeValue(event.season_label)}</td>
-        <td>${percentages.length ? percentages.map((value) => `${value}%`).join(" / ") : t("na")}</td>
-        <td><strong>${safeValue(event.due_date)}</strong></td>
-        <td>${feeSides.length ? feeSides.join(" / ") : t("na")}</td>
-        <td>${payers.length ? payers.join(" / ") : t("na")}</td>
+        <td>${safeValue(item.season_label || resolverSeasonFromDate(item.due_date))}</td>
+        <td>${safeValue(item.fee_side)}</td>
+        <td><strong>${safeValue(item.due_date)}</strong></td>
+        <td>${item.instalment_percentage !== null && item.instalment_percentage !== undefined ? `${item.instalment_percentage}%` : t("na")}</td>
+        <td>${amountHtml}</td>
+        <td>${safeValue(item.payer)}</td>
+        <td><button type="button" class="details-btn" onclick="toggleScheduleDetail('${detailId}')">${t("detailsLabel")}</button></td>
+      </tr>
+      <tr id="${detailId}" class="schedule-detail-row ${extraClass}">
+        <td colspan="8" class="schedule-detail-cell">${scheduleDetailText(item)}</td>
       </tr>
     `;
   }).join("");
@@ -2323,21 +2469,28 @@ function renderResolvedCommissionSchedule(data) {
   return `
     <div style="margin-top:18px;">
       <div class="section-kicker">${t("paymentScheduleTitle")}</div>
+      <div class="schedule-toolbar">
+        <div class="schedule-count">${sorted.length} ${t("resolverScheduleRecorded").replace("{count}", "").trim()}</div>
+        ${sorted.length > visibleLimit ? `<button type="button" class="schedule-toggle" onclick="toggleScheduleRows('${tableId}', this)">${t("showAllPayments")}</button>` : ""}
+      </div>
       <div class="audit-schedule">
-        <table>
+        <table id="${tableId}" class="compact-forecast-table">
           <thead>
             <tr>
-              <th>${t("instalmentNumber")}</th>
-              <th>${t("contractualSchedule")}</th>
-              <th>%</th>
-              <th>${t("dueDate")}</th>
+              <th>#</th>
+              <th>${t("seasonLabel")}</th>
               <th>${t("feeSide")}</th>
+              <th>${t("dueDate")}</th>
+              <th>%</th>
+              <th>${t("invoiceAmount")}</th>
               <th>${t("payerLabel")}</th>
+              <th>${t("detailsLabel")}</th>
             </tr>
           </thead>
           <tbody>${rows}</tbody>
         </table>
       </div>
+      <p class="commercial-note">* ${t("estimatedFromKnownTerms")}. ${t("knownSalaryOnlyNote")}</p>
     </div>
   `;
 }
@@ -2510,8 +2663,7 @@ function renderCommercialValue(data) {
             <strong>${t("nextInvoiceLabel")}:</strong> ${instalmentMetrics.nextDueDate ? `${formatMoneyValue(instalmentMetrics.nextInvoiceAmount, instalmentMetrics.currency)} — ${instalmentMetrics.nextDueDate}` : t("na")}
           </div>
 
-          <h4 style="margin-top:18px;">${t("paymentScheduleTitle")}</h4>
-          ${renderInstalmentAuditTable(instalmentMetrics)}
+          <p class="commercial-note">* ${t("estimatedFromKnownTerms")}. ${t("knownSalaryOnlyNote")}</p>
 
           <p class="commercial-note">
             ${t("auditNote")}
@@ -2963,158 +3115,75 @@ function renderInvoiceForecast(data) {
 
     instalmentMetrics.items.forEach((item) => {
       if (!item.due_date) return;
-
       const status = String(item.invoice_status || "").toLowerCase();
       if (["paid", "cancelled"].includes(status)) return;
-
       const dueDate = new Date(`${item.due_date}T00:00:00`);
       if (Number.isNaN(dueDate.getTime()) || dueDate < today) return;
 
       const key = item.due_date;
-
       if (!futureGroups.has(key)) {
         futureGroups.set(key, {
           dueDate: item.due_date,
           amount: 0,
-          currency:
-            item.currency ||
-            instalmentMetrics.currency,
+          currency: item.currency || instalmentMetrics.currency,
           items: []
         });
       }
-
       const group = futureGroups.get(key);
       group.amount += toNumber(item.amount) || 0;
       group.items.push(item);
     });
 
-    const groups = [...futureGroups.values()]
-      .sort((a, b) => a.dueDate.localeCompare(b.dueDate));
+    const groups = [...futureGroups.values()].sort((a, b) => a.dueDate.localeCompare(b.dueDate));
 
     if (!groups.length) {
       return `
         <section class="premium-card invoice-forecast-card">
-          <div class="section-head">
-            <div>
-              <div class="section-kicker">07</div>
-              <h2 class="section-title">
-                ${t("sectionInvoiceForecast")}
-              </h2>
-            </div>
-          </div>
-
-          <div class="commercial-warning">
-            ${t("no")} ${t("invoiceStatusForecast")}
-          </div>
-        </section>
-      `;
+          <div class="section-head"><div><div class="section-kicker">07</div><h2 class="section-title">${t("sectionInvoiceForecast")}</h2></div></div>
+          <div class="commercial-warning">${t("no")} ${t("invoiceStatusForecast")}</div>
+        </section>`;
     }
+
+    const tableId = `invoice-forecast-${String(data.id || "record").replace(/[^a-zA-Z0-9_-]/g, "")}`;
+    const visibleLimit = 6;
+    const rows = groups.map((group, index) => {
+      const sides = [...new Set(group.items.map((item) => item.fee_side).filter(Boolean))].join(" + ");
+      const payers = [...new Set(group.items.map((item) => item.payer).filter(Boolean))].join(" / ");
+      const extraClass = index >= visibleLimit ? "schedule-row-extra schedule-row-hidden" : "";
+      return `
+        <tr class="${extraClass}">
+          <td>${index + 1}</td>
+          <td><strong>${formatDateValue(group.dueDate)}</strong></td>
+          <td>${safeValue(sides)}</td>
+          <td><span class="amount-known">${formatMoneyValue(group.amount, group.currency)}</span></td>
+          <td class="payer-cell">${safeValue(payers)}</td>
+          <td>${group.items.some((item) => item.conditional) ? t("invoiceReviewRequired") : t("invoiceStatusForecast")}</td>
+        </tr>`;
+    }).join("");
 
     return `
       <section class="premium-card invoice-forecast-card">
-        <div class="section-head">
-          <div>
-            <div class="section-kicker">07</div>
-            <h2 class="section-title">
-              ${t("sectionInvoiceForecast")}
-            </h2>
-          </div>
+        <div class="section-head"><div><div class="section-kicker">07</div><h2 class="section-title">${t("sectionInvoiceForecast")}</h2></div></div>
+        <p class="muted">${t("invoiceForecastSubtitle")}</p>
+        <div class="schedule-toolbar">
+          <div class="schedule-count">${groups.length} ${t("sectionInvoiceForecast")}</div>
+          ${groups.length > visibleLimit ? `<button type="button" class="schedule-toggle" onclick="toggleScheduleRows('${tableId}', this)">${t("showAllPayments")}</button>` : ""}
         </div>
-
-        <p class="muted">
-          ${t("invoiceForecastSubtitle")}
-        </p>
-
-        <div class="invoice-opportunities">
-          ${groups.map((group, index) => {
-            const sideNames = group.items
-              .map((item) => item.fee_side)
-              .filter(Boolean)
-              .join(" + ");
-
-            const payers = [
-              ...new Set(
-                group.items
-                  .map((item) => item.payer)
-                  .filter(Boolean)
-              )
-            ].join(" / ");
-
-            return `
-              <div class="invoice-opportunity">
-                <div class="invoice-opportunity-head">
-                  <div class="invoice-opportunity-title">
-                    ${index === 0
-                      ? t("sectionInvoiceForecast")
-                      : t("forecast")}
-                  </div>
-
-                  <div class="invoice-status">
-                    ${group.items
-                      .map((item) => item.invoice_status)
-                      .filter(Boolean)
-                      .join(" / ") || t("invoiceStatusForecast")}
-                  </div>
-                </div>
-
-                <div class="invoice-amount-box">
-                  <span class="invoice-amount-label">
-                    ${t("invoiceAmount")}
-                  </span>
-
-                  <div class="invoice-amount-value">
-                    ${formatMoneyValue(
-                      group.amount,
-                      group.currency
-                    )}
-                  </div>
-                </div>
-
-                <div class="invoice-details-grid">
-                  <div class="invoice-detail">
-                    <span>${t("invoiceClient")}</span>
-                    <strong>${safeValue(data.player_name)}</strong>
-                  </div>
-
-                  <div class="invoice-detail">
-                    <span>${t("invoicePayer")}</span>
-                    <strong>${payers || t("na")}</strong>
-                  </div>
-
-                  <div class="invoice-detail">
-                    <span>${t("invoiceType")}</span>
-                    <strong>${sideNames || t("annualCommissionInvoice")}</strong>
-                  </div>
-
-                  <div class="invoice-detail">
-                    <span>${t("paymentDueDate")}</span>
-                    <strong>${formatDateValue(group.dueDate)}</strong>
-                  </div>
-
-                  <div class="invoice-detail">
-                    <span>${t("invoiceInstalments")}</span>
-                    <strong>${group.items.length}</strong>
-                  </div>
-
-                  <div class="invoice-detail">
-                    <span>${t("invoiceStatus")}</span>
-                    <strong>
-                      ${group.items.some((item) => item.conditional)
-                        ? t("invoiceReviewRequired")
-                        : t("invoiceStatusForecast")}
-                    </strong>
-                  </div>
-                </div>
-              </div>
-            `;
-          }).join("")}
+        <div class="audit-schedule">
+          <table id="${tableId}" class="compact-forecast-table">
+            <thead><tr>
+              <th>#</th>
+              <th>${t("paymentDueDate")}</th>
+              <th>${t("invoiceType")}</th>
+              <th>${t("invoiceAmount")}</th>
+              <th>${t("invoicePayer")}</th>
+              <th>${t("invoiceStatus")}</th>
+            </tr></thead>
+            <tbody>${rows}</tbody>
+          </table>
         </div>
-
-        <p class="invoice-forecast-note">
-          ${t("invoiceForecastNote")}
-        </p>
-      </section>
-    `;
+        <p class="invoice-forecast-note">${t("invoiceForecastNote")}</p>
+      </section>`;
   }
 
   const annualSalary =
@@ -3233,11 +3302,8 @@ function renderInvoiceForecast(data) {
       container.innerHTML = `
         <section class="hero">
           <div class="eyebrow">${t("heroEyebrow")}</div>
-          <h1>${safeValue(data.contract_type)}</h1>
-          <p>
-            ${safeValue(data.player_name)}
-            ${data.club_name ? ` · ${safeValue(data.club_name)}` : ""}
-          </p>
+          <h1>${safeValue(data.contract_type || data.player_name)}</h1>
+          <p>${safeValue(data.player_name)}${data.club_name ? ` · ${safeValue(data.club_name)}` : ""}</p>
 
           <div class="hero-meta">
             <div class="meta-pill"><strong>${t("metaStatus")}:</strong> ${safeValue(data.status || "active")}</div>
@@ -3324,57 +3390,13 @@ function renderInvoiceForecast(data) {
               </div>
               <div class="grid">
                 ${renderTile("labelCommissionType", safeValue(data.commission_type))}
-                ${renderTile(
-                  "labelCommissionValue",
-                  safeValue(
-                    data.commission_percentage ??
-                    data.commission_value
-                  )
-                )}
+                ${renderTile("labelCommissionValue", safeValue(data.commission_value))}
                 ${renderTile("labelCommissionCurrency", safeValue(data.commission_currency))}
                 ${renderTile("labelCommissionPayer", safeValue(data.commission_payer))}
-
-                <!-- Direct database value: do not replace valid recorded wording. -->
-                ${renderTile(
-                  "labelCommissionFrequency",
-                  safeValue(
-                    data.commission_frequency ||
-                    resolvedCommission.payment_frequency
-                  )
-                )}
-
-                <!-- Derived only from actual detailed payment dates when available. -->
-                ${renderTile(
-                  "labelPaymentsPerPeriod",
-                  safeValue(resolvedCommission.payments_per_period)
-                )}
-
-                <!-- Total obligation/event count over the entire contract term. -->
-                ${renderTile(
-                  "labelTotalPaymentEvents",
-                  safeValue(
-                    data.commission_instalments ??
-                    resolvedCommission.total_payment_events
-                  )
-                )}
-
-                ${renderTile(
-                  "labelFirstDueDate",
-                  safeValue(
-                    data.commission_due_date ||
-                    resolvedCommission.first_due_date
-                  )
-                )}
-
-                ${renderTile(
-                  "labelDualRepresentation",
-                  yesNo(resolvedCommission.dual_representation)
-                )}
-
-                ${renderTile(
-                  "resolverSource",
-                  resolverSourceLabel(resolvedCommission.source)
-                )}
+                ${renderTile("labelCommissionFrequency", safeValue(resolvedCommission.payment_frequency))}
+                ${renderTile("labelCommissionInstalments", safeValue(resolvedCommission.instalments_per_period))}
+                ${renderTile("labelDualRepresentation", yesNo(resolvedCommission.dual_representation))}
+                ${renderTile("resolverSource", resolverSourceLabel(resolvedCommission.source))}
               </div>
 
               ${renderResolvedCommissionSchedule(data)}
@@ -3598,23 +3620,6 @@ function renderInvoiceForecast(data) {
       }
 
       currentContract = data;
-
-      console.log("DealTrack contract row loaded:", {
-        id: data.id,
-        contract_type: data.contract_type,
-        player_name: data.player_name,
-        club_name: data.club_name,
-        salary: data.salary,
-        salary_frequency: data.salary_frequency,
-        salary_currency: data.salary_currency,
-        commission_type: data.commission_type,
-        commission_value: data.commission_value,
-        commission_percentage: data.commission_percentage,
-        commission_frequency: data.commission_frequency,
-        commission_instalments: data.commission_instalments,
-        commission_due_date: data.commission_due_date
-      });
-
       currentContractInstalments = [];
 
       const directInstalments = await db
