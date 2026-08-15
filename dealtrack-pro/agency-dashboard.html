@@ -3409,6 +3409,16 @@
           format: "a4"
         });
 
+        // Keep PDF typography deterministic across browsers and PDF viewers.
+        // jsPDF/AutoTable can otherwise carry a stale text-spacing state from
+        // a previous draw operation, which makes headings and table text look
+        // artificially spread out in some viewers.
+        const resetPdfTypography = () => {
+          doc.setCharSpace(0);
+          doc.setLineHeightFactor(1.15);
+        };
+        resetPdfTypography();
+
         const labels = getPdfLanguageLabels();
         const now = new Date();
 
@@ -3540,8 +3550,12 @@
             2: { fillColor: [255, 247, 222] },
             3: { fillColor: overdueGroups.length ? [255, 231, 231] : [238, 243, 249] }
           },
-          margin: { left: 15, right: 15 }
+          margin: { left: 15, right: 15 },
+          willDrawCell: resetPdfTypography,
+          didDrawCell: resetPdfTypography
         });
+
+        resetPdfTypography();
 
         const currencyLines = DASHBOARD_CURRENCIES.map((currency) => [
           currency,
@@ -3571,8 +3585,12 @@
           columnStyles: {
             0: { fontStyle: "bold" }
           },
-          margin: { left: 15, right: 15 }
+          margin: { left: 15, right: 15 },
+          willDrawCell: resetPdfTypography,
+          didDrawCell: resetPdfTypography
         });
+
+        resetPdfTypography();
 
         const tableRows = dashboardRows.map((row) => {
           const paidRevenue = paid2026ByContract.get(String(row.contract.id)) || 0;
@@ -3611,12 +3629,17 @@
             fillColor: [212, 175, 55],
             textColor: [9, 17, 31]
           },
-          margin: { left: 15, right: 15 }
+          margin: { left: 15, right: 15 },
+          willDrawCell: resetPdfTypography,
+          didDrawCell: resetPdfTypography
         });
+
+        resetPdfTypography();
 
         // Page 2: printable dashboard charts. Currency series remain separate
         // so the report never adds EUR and GBP together without conversion.
         doc.addPage("a4", "landscape");
+        resetPdfTypography();
         doc.setFillColor(3, 14, 35);
         doc.rect(0, 0, 297, 25, "F");
         doc.setTextColor(240, 200, 90);
@@ -3760,6 +3783,7 @@
         // the recognised 2026 total is composed and prevents paid revenue from
         // disappearing from management's view.
         doc.addPage("a4", "landscape");
+        resetPdfTypography();
         doc.setFillColor(3, 14, 35);
         doc.rect(0, 0, 297, 25, "F");
         doc.setTextColor(240, 200, 90);
@@ -3888,8 +3912,12 @@
             4: { cellWidth: 34 },
             5: { cellWidth: 31, fontStyle: "bold" }
           },
-          margin: { left: 15, right: 15 }
+          margin: { left: 15, right: 15 },
+          willDrawCell: resetPdfTypography,
+          didDrawCell: resetPdfTypography
         });
+
+        resetPdfTypography();
 
         const reconciliationRows = DASHBOARD_CURRENCIES
           .filter((currency) => (annualTotals[currency] || 0) > 0)
@@ -3911,13 +3939,18 @@
           styles: { fontSize: 9, cellPadding: 3 },
           headStyles: { fillColor: [212, 175, 55], textColor: [9, 17, 31] },
           columnStyles: { 0: { fontStyle: "bold" }, 3: { fontStyle: "bold" } },
-          margin: { left: 15, right: 15 }
+          margin: { left: 15, right: 15 },
+          willDrawCell: resetPdfTypography,
+          didDrawCell: resetPdfTypography
         });
+
+        resetPdfTypography();
 
         // Page 4: management invoice calendar and renewal outlook. This uses
         // the same instalment records as the live dashboard, preserving due
         // dates, fee sides, payers and payment/trigger state.
         doc.addPage("a4", "landscape");
+        resetPdfTypography();
         doc.setFillColor(3, 14, 35);
         doc.rect(0, 0, 297, 25, "F");
         doc.setTextColor(240, 200, 90);
@@ -4002,12 +4035,17 @@
             5: { cellWidth: 25, fontStyle: "bold" },
             6: { cellWidth: 34 }
           },
-          margin: { left: 15, right: 15 }
+          margin: { left: 15, right: 15 },
+          willDrawCell: resetPdfTypography,
+          didDrawCell: resetPdfTypography
         });
+
+        resetPdfTypography();
 
         let renewalStartY = doc.lastAutoTable.finalY + 9;
         if (renewalStartY > 155) {
           doc.addPage("a4", "landscape");
+          resetPdfTypography();
           renewalStartY = 25;
         }
         doc.setTextColor(20, 28, 45);
@@ -4031,13 +4069,18 @@
           theme: "grid",
           styles: { fontSize: 8, cellPadding: 2.6 },
           headStyles: { fillColor: [212, 175, 55], textColor: [9, 17, 31] },
-          margin: { left: 15, right: 15 }
+          margin: { left: 15, right: 15 },
+          willDrawCell: resetPdfTypography,
+          didDrawCell: resetPdfTypography
         });
+
+        resetPdfTypography();
 
         const pageCount = doc.internal.getNumberOfPages();
 
         for (let page = 1; page <= pageCount; page += 1) {
           doc.setPage(page);
+          resetPdfTypography();
           doc.setFontSize(8);
           doc.setTextColor(100, 110, 125);
           doc.text(
