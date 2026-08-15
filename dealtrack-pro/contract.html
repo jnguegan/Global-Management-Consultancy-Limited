@@ -2507,7 +2507,12 @@ function buildCommissionScheduleFromRows(data) {
     : [])
     .filter((item) => {
       const status = String(item?.invoice_status || "").trim().toLowerCase();
-      return status !== "cancelled" && Boolean(normaliseResolverDate(item?.due_date));
+      const dueType = String(item?.due_date_type || "").trim().toLowerCase();
+      return status !== "cancelled" && (
+        Boolean(normaliseResolverDate(item?.due_date)) ||
+        dueType === "relative_to_event" ||
+        dueType === "unresolved"
+      );
     })
     .map((item, index) => ({
       source: "commission_instalments",
@@ -2518,6 +2523,14 @@ function buildCommissionScheduleFromRows(data) {
       amount: resolverNumber(item.amount),
       currency: item.currency || data?.commission_currency || data?.salary_currency || null,
       due_date: normaliseResolverDate(item.due_date),
+      component_reference: item.component_reference || null,
+      component_type: item.component_type || null,
+      classification_method: item.classification_method || null,
+      due_date_type: item.due_date_type || (item.due_date ? "fixed_date" : "unresolved"),
+      due_date_event: item.due_date_event || null,
+      due_date_offset_days: resolverNumber(item.due_date_offset_days),
+      due_date_rule: item.due_date_rule || null,
+      trigger_date: normaliseResolverDate(item.trigger_date),
       payer: item.payer || data?.commission_payer || null,
       recipient: item.recipient || data?.commission_recipient || null,
       conditional: item.conditional ?? null,
@@ -2529,12 +2542,14 @@ function buildCommissionScheduleFromRows(data) {
       condition_notes: item.condition_notes || null,
       notes: item.notes || null,
       season_label: resolverSeasonFromNotes(item.notes || item.condition_notes, item.due_date),
-      instalment_percentage: null,
-      calculation_basis: null,
-      vat_treatment: null,
-      source_document: null,
-      source_clause: null,
-      payment_protection: null
+      instalment_percentage: resolverNumber(item.instalment_percentage),
+      calculation_basis: item.calculation_basis || null,
+      vat_treatment: item.vat_treatment || null,
+      source_document: item.source_document || null,
+      source_clause: item.source_clause || null,
+      date_source_text: item.date_source_text || null,
+      amount_source_text: item.amount_source_text || null,
+      payment_protection: item.payment_protection || null
     }));
 }
 
@@ -2562,6 +2577,9 @@ function buildCommissionScheduleFromAnalysis(data) {
       analysis_index: analysisIndex,
       contract_id: data?.id || null,
       instalment_number: index + 1,
+      component_reference: item.component_reference || null,
+      component_type: item.component_type || null,
+      classification_method: item.classification_method || null,
       fee_side: item.fee_side || null,
       amount: resolverNumber(item.amount),
       currency: item.currency || data?.commission_currency || data?.salary_currency || null,
@@ -2882,7 +2900,7 @@ function revealRelativeTriggerDateInput(button) {
   }
 }
 
-async function saveRelativeTriggerDate(analysisIndex, button) {
+async function saveRelativeTriggerDate(analysisIndex, instalmentId, button) {
   const editor = button?.closest(".trigger-date-editor");
   const input = editor?.querySelector("input[type='date']");
   const triggerDate = normaliseResolverDate(input?.value);
@@ -2895,8 +2913,13 @@ async function saveRelativeTriggerDate(analysisIndex, button) {
   const obligations = Array.isArray(analysis?.payment_obligations)
     ? analysis.payment_obligations
     : [];
-  const obligation = obligations[Number(analysisIndex)];
-  if (!obligation || !currentDb || !currentContract?.id || !currentUser?.id) {
+  const hasAnalysisIndex = analysisIndex !== null && analysisIndex !== undefined && Number(analysisIndex) >= 0;
+  const obligation = hasAnalysisIndex ? obligations[Number(analysisIndex)] : null;
+  const storedRow = instalmentId
+    ? currentContractInstalments.find((item) => String(item?.id) === String(instalmentId))
+    : null;
+  const target = obligation || storedRow;
+  if (!target || !currentDb || !currentContract?.id || !currentUser?.id) {
     alert(t("triggerDateSaveFailed"));
     return;
   }
@@ -2905,18 +2928,41 @@ async function saveRelativeTriggerDate(analysisIndex, button) {
   button.disabled = true;
   button.textContent = t("triggerSaving");
 
-  obligation.trigger_date = triggerDate;
-  obligation.trigger_status = "met";
-  obligation.trigger_confirmed_at = new Date().toISOString();
-  obligation.trigger_confirmed_by = currentUser.id;
+  const confirmedAt = new Date().toISOString();
+  target.trigger_date = triggerDate;
+  target.trigger_status = "met";
+  target.trigger_confirmed_at = confirmedAt;
+  target.trigger_confirmed_by = currentUser.id;
 
   const calculatedDueDate = addContractualDays(
     triggerDate,
-    obligation.due_date_offset_days
+    target.due_date_offset_days
   );
   if (calculatedDueDate) {
-    obligation.due_date = calculatedDueDate;
-    obligation.due_date_confirmed = true;
+    target.due_date = calculatedDueDate;
+    target.due_date_confirmed = true;
+  }
+
+  if (storedRow) {
+    const { error: rowError } = await currentDb
+      .from("commission_instalments")
+      .update({
+        trigger_date: triggerDate,
+        trigger_status: "met",
+        trigger_confirmed_at: confirmedAt,
+        trigger_confirmed_by: currentUser.id,
+        due_date: calculatedDueDate,
+        due_date_confirmed: Boolean(calculatedDueDate)
+      })
+      .eq("id", storedRow.id)
+      .eq("contract_id", currentContract.id);
+    if (rowError) {
+      console.error("Relative trigger row save failed:", rowError);
+      alert(`${t("triggerDateSaveFailed")} ${rowError.message || ""}`.trim());
+      button.disabled = false;
+      button.textContent = originalText;
+      return;
+    }
   }
 
   const payload = {};
@@ -2927,11 +2973,13 @@ async function saveRelativeTriggerDate(analysisIndex, button) {
     payload.analysis_result = analysis;
   }
 
-  const { error } = await currentDb
-    .from("contracts")
-    .update(payload)
-    .eq("id", currentContract.id)
-    .eq("user_id", currentUser.id);
+  const { error } = Object.keys(payload).length
+    ? await currentDb
+        .from("contracts")
+        .update(payload)
+        .eq("id", currentContract.id)
+        .eq("user_id", currentUser.id)
+    : { error: null };
 
   if (error) {
     console.error("Relative trigger date save failed:", error);
@@ -2952,12 +3000,16 @@ async function saveRelativeTriggerDate(analysisIndex, button) {
 }
 
 function renderTriggerControl(item) {
-  if (item?.due_date_type === "relative_to_event" && item?.analysis_index !== null && item?.analysis_index !== undefined) {
+  if (item?.due_date_type === "relative_to_event") {
     if (item.trigger_date) {
       return `<span class="trigger-badge met">${t("triggerConditionalMet")}</span><div class="trigger-actions"><span class="trigger-btn" style="cursor:default">${t("triggerDateLabel")}: ${safeValue(item.trigger_date)}</span></div>`;
     }
 
-    return `<span class="trigger-badge pending">${t("triggerDateRequired")}</span><div class="trigger-actions"><button type="button" class="trigger-btn confirm" onclick="revealRelativeTriggerDateInput(this)">${t("enterTriggerDate")}</button><button type="button" class="trigger-btn">${t("triggerNotYet")}</button></div><div class="trigger-date-editor" hidden><input type="date" aria-label="${t("triggerDateLabel")}"><button type="button" class="trigger-btn confirm" onclick="saveRelativeTriggerDate(${Number(item.analysis_index)}, this)">${t("saveTriggerDate")}</button></div>`;
+    const analysisIndex = item.analysis_index !== null && item.analysis_index !== undefined
+      ? Number(item.analysis_index)
+      : null;
+    const instalmentId = item.id ? String(item.id).replace(/'/g, "") : "";
+    return `<span class="trigger-badge pending">${t("triggerDateRequired")}</span><div class="trigger-actions"><button type="button" class="trigger-btn confirm" onclick="revealRelativeTriggerDateInput(this)">${t("enterTriggerDate")}</button><button type="button" class="trigger-btn">${t("triggerNotYet")}</button></div><div class="trigger-date-editor" hidden><input type="date" aria-label="${t("triggerDateLabel")}"><button type="button" class="trigger-btn confirm" onclick="saveRelativeTriggerDate(${analysisIndex === null ? "null" : analysisIndex}, '${instalmentId}', this)">${t("saveTriggerDate")}</button></div>`;
   }
 
   if (!item?.conditional) {
@@ -3231,7 +3283,14 @@ function resolveCommission(data) {
 
   if (detailedRows.length > 0) {
     const supplementalAnalysisRows = analysisRows.filter(
-      (item) => item.due_date_type === "relative_to_event" || !item.due_date
+      (item) => {
+        if (!(item.due_date_type === "relative_to_event" || !item.due_date)) return false;
+        return !detailedRows.some((stored) =>
+          String(stored.component_reference || "") === String(item.component_reference || "") &&
+          resolverNumber(stored.amount) === resolverNumber(item.amount) &&
+          String(stored.due_date_rule || "") === String(item.due_date_rule || "")
+        );
+      }
     );
     schedule = [...detailedRows, ...supplementalAnalysisRows];
     source = "commission_instalments";
