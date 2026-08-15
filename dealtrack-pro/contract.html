@@ -2803,6 +2803,37 @@ function calculateScheduleItemAmount(data, item) {
 
   const recorded = resolverNumber(item?.amount);
   const statedAmount = extractContractualAmountFromText(item);
+  const percentageEvidence = String(
+    item?.component_type || item?.component_reference || item?.calculation_basis || ""
+  ).toLowerCase();
+  const salaryPercentageComponent =
+    percentageEvidence === "percentage" ||
+    /percentage|salary|basic_salary|basic salary/.test(percentageEvidence) ||
+    method === "percentage";
+
+  /*
+   * Percentage components on either fee side use the same contractual salary
+   * basis. For a one-year mandate expressed as a percentage of annual basic
+   * salary, use the full annual salary; do not day-prorate one side only.
+   */
+  if (salaryPercentageComponent && annualSalary !== null && rate !== null) {
+    const startText = data?.playing_contract_start_date || data?.start_date;
+    const endText = data?.playing_contract_end_date || data?.end_date;
+    const start = startText ? new Date(`${startText}T00:00:00Z`) : null;
+    const end = endText ? new Date(`${endText}T00:00:00Z`) : null;
+    const contractDays = start && end && !Number.isNaN(start.getTime()) && !Number.isNaN(end.getTime())
+      ? Math.floor((end.getTime() - start.getTime()) / 86400000) + 1
+      : null;
+    const salaryBasis = contractDays !== null && contractDays <= 366
+      ? annualSalary
+      : annualSalary * getSeasonProration(data, item);
+    const grossCommissionForSide = salaryBasis * (rate / 100);
+    return {
+      amount: allocation !== null ? grossCommissionForSide * (allocation / 100) : grossCommissionForSide,
+      estimated: true,
+      allocation
+    };
+  }
 
   /*
    * Club-side service fees are fixed contractual amounts and must never be
