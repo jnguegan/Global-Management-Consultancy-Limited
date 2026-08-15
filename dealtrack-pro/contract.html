@@ -2420,6 +2420,74 @@ function getSeasonProration(data, item) {
   return seasonDays > 0 ? activeDays / seasonDays : 1;
 }
 
+function extractContractualAmountFromText(item) {
+  const text = [
+    item?.calculation_basis,
+    item?.condition_notes,
+    item?.trigger_note,
+    item?.notes
+  ].filter(Boolean).join(" | ");
+
+  if (!text) return null;
+
+  // Prefer amounts explicitly attached to amount / fee / payment wording.
+  const contextualPatterns = [
+    /(?:amount|fee|payment|instalment|installment|commission)[^€£$\d]{0,40}(?:EUR|GBP|USD|€|£|\$)\s*([0-9][0-9.,]*)/i,
+    /(?:EUR|GBP|USD|€|£|\$)\s*([0-9][0-9.,]*)[^.]{0,50}(?:amount|fee|payment|instalment|installment|commission)/i
+  ];
+
+  for (const pattern of contextualPatterns) {
+    const match = text.match(pattern);
+    if (match) {
+      const value = resolverNumber(match[1]);
+      if (value !== null && value > 0) return value;
+    }
+  }
+
+  // Fallback: a currency-marked amount is still safer than treating a
+  // contractually stated conditional payment as zero / not recorded.
+  const currencyMatch = text.match(/(?:EUR|GBP|USD|€|£|\$)\s*([0-9][0-9.,]*)/i);
+  if (currencyMatch) {
+    const value = resolverNumber(currencyMatch[1]);
+    if (value !== null && value > 0) return value;
+  }
+
+  return null;
+}
+
+function resolveConditionalFlag(item) {
+  if (item?.conditional === false || item?.conditional === 0) return false;
+  if (!item?.conditional) return false;
+
+  // Some analyses were marking every row in a contract as conditional.
+  // Only retain that classification when the row itself contains a real
+  // contractual trigger. Protection wording (e.g. payment survives player
+  // departure) is not a condition precedent to payment.
+  const triggerText = [
+    item?.condition_notes,
+    item?.trigger_note,
+    item?.calculation_basis,
+    item?.notes
+  ].filter(Boolean).join(" ").toLowerCase();
+
+  if (!triggerText) return false;
+
+  const triggerPatterns = [
+    /full\s+registration/,
+    /upon\s+(?:the\s+)?(?:full\s+)?registration/,
+    /subject\s+to\s+(?:the\s+)?(?:full\s+)?registration/,
+    /conditional\s+(?:upon|on|to)/,
+    /condition\s+precedent/,
+    /trigger\s+(?:event|condition)/,
+    /provided\s+that/,
+    /only\s+(?:payable|due)\s+if/,
+    /becomes?\s+(?:payable|due)\s+(?:upon|when)/,
+    /subject\s+to\s+(?:promotion|appearance|qualification|registration)/
+  ];
+
+  return triggerPatterns.some((pattern) => pattern.test(triggerText));
+}
+
 function calculateScheduleItemAmount(data, item) {
   const allocation = extractInstalmentPercentage(item);
   const method = normaliseCommissionMethod(data);
@@ -2459,6 +2527,14 @@ function calculateScheduleItemAmount(data, item) {
     return { amount: recorded, estimated: false, allocation };
   }
 
+  // Conditional contractual amounts must remain visible even while their
+  // trigger is pending. If the structured row did not persist the amount,
+  // recover an amount stated in that row's contractual analysis text.
+  const statedAmount = extractContractualAmountFromText(item);
+  if (statedAmount !== null) {
+    return { amount: statedAmount, estimated: false, allocation };
+  }
+
   return { amount: null, estimated: false, allocation };
 }
 
@@ -2467,8 +2543,14 @@ function enrichScheduleAmounts(data, scheduleItems) {
     const calculated = calculateScheduleItemAmount(data, item);
     return {
       ...item,
+      // Preserve the amount whether guaranteed or conditional. Trigger status
+      // controls certainty / invoice readiness; it must not erase value.
       amount: calculated.amount,
       amount_estimated: calculated.estimated,
+      conditional: resolveConditionalFlag(item),
+      trigger_status: resolveConditionalFlag(item)
+        ? (item.trigger_status || "pending")
+        : "guaranteed",
       instalment_percentage:
         item.instalment_percentage ?? calculated.allocation
     };
