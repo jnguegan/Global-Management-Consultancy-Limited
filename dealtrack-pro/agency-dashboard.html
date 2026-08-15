@@ -2648,13 +2648,13 @@
     function resolveDashboardInstalmentAmount(contract, item) {
       const recorded = toNumber(item?.amount);
       const method = normaliseCommissionMethod(contract);
-
-      // Preserve a genuine recorded amount. A zero/missing amount on a
-      // percentage commission schedule is treated as not yet calculated so
-      // the dashboard can derive the gross payer obligation dynamically.
-      if (recorded !== null && (recorded !== 0 || method !== "percentage")) {
-        return recorded;
-      }
+      const percentageEvidence = String(
+        item?.component_type || item?.component_reference || item?.calculation_basis || ""
+      ).toLowerCase();
+      const salaryPercentageComponent =
+        percentageEvidence === "percentage" ||
+        /percentage|salary|basic_salary|basic salary/.test(percentageEvidence) ||
+        method === "percentage";
 
       const annualSalary = calculateAnnualSalary(
         contract?.salary,
@@ -2662,6 +2662,27 @@
       );
       const rate = resolveGrossPayerCommissionRate(contract);
       const allocation = extractDashboardInstalmentPercentage(item);
+
+      if (salaryPercentageComponent && annualSalary !== null && rate !== null && allocation !== null) {
+        const startText = contract?.playing_contract_start_date || contract?.start_date;
+        const endText = contract?.playing_contract_end_date || contract?.end_date;
+        const start = startText ? new Date(`${startText}T00:00:00`) : null;
+        const end = endText ? new Date(`${endText}T00:00:00`) : null;
+        const contractDays = start && end && !Number.isNaN(start.getTime()) && !Number.isNaN(end.getTime())
+          ? Math.floor((end.getTime() - start.getTime()) / 86400000) + 1
+          : null;
+        const salaryBasis = contractDays !== null && contractDays <= 366
+          ? annualSalary
+          : annualSalary * getDashboardSeasonProration(contract, item);
+        return salaryBasis * (rate / 100) * (allocation / 100);
+      }
+
+      // Preserve a genuine recorded amount. A zero/missing amount on a
+      // percentage commission schedule is treated as not yet calculated so
+      // the dashboard can derive the gross payer obligation dynamically.
+      if (recorded !== null && (recorded !== 0 || method !== "percentage")) {
+        return recorded;
+      }
 
       if (annualSalary === null || rate === null || allocation === null) {
         return recorded;
