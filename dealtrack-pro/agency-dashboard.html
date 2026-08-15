@@ -1416,6 +1416,12 @@
       "reportRevenueYear": "2026 Revenue",
       "reportExecutiveSummary": "Executive dashboard",
       "reportUpcomingInvoices": "2026 Invoice Calendar",
+      "reportRevenueBreakdown": "2026 Revenue Breakdown",
+      "reportRevenueBreakdownNote": "Reconciliation of paid revenue and outstanding 2026 invoice opportunities.",
+      "reportPaid": "Paid",
+      "reportPaidRevenue": "Paid Revenue",
+      "reportOutstandingRevenue": "Outstanding Revenue",
+      "reportTotalRevenue": "Total 2026 Revenue",
       "reportRenewalOutlook": "Contract Renewal Outlook",
       "reportDueDate": "Forecast Invoice Date",
       "reportFeeSide": "Fee Side",
@@ -1559,6 +1565,12 @@
       "reportRevenueYear": "Revenus 2026",
       "reportExecutiveSummary": "Tableau de bord exécutif",
       "reportUpcomingInvoices": "Calendrier des factures 2026",
+      "reportRevenueBreakdown": "Ventilation des revenus 2026",
+      "reportRevenueBreakdownNote": "Rapprochement des revenus encaissés et des factures 2026 restant à émettre.",
+      "reportPaid": "Payé",
+      "reportPaidRevenue": "Revenus encaissés",
+      "reportOutstandingRevenue": "Revenus en attente",
+      "reportTotalRevenue": "Total des revenus 2026",
       "reportRenewalOutlook": "Perspectives de renouvellement des contrats",
       "reportDueDate": "Date prévisionnelle de facturation",
       "reportFeeSide": "Côté des honoraires",
@@ -1704,6 +1716,12 @@
       "reportRevenueYear": "Ingresos 2026",
       "reportExecutiveSummary": "Panel ejecutivo",
       "reportUpcomingInvoices": "Calendario de facturas 2026",
+      "reportRevenueBreakdown": "Desglose de ingresos 2026",
+      "reportRevenueBreakdownNote": "Conciliación de ingresos cobrados y oportunidades de facturación pendientes de 2026.",
+      "reportPaid": "Pagado",
+      "reportPaidRevenue": "Ingresos cobrados",
+      "reportOutstandingRevenue": "Ingresos pendientes",
+      "reportTotalRevenue": "Ingresos totales de 2026",
       "reportRenewalOutlook": "Perspectiva de renovación de contratos",
       "reportDueDate": "Fecha prevista de facturación",
       "reportFeeSide": "Lado de honorarios",
@@ -3142,6 +3160,12 @@
         period: t("reportPeriod"),
         executiveSummary: t("reportExecutiveSummary"),
         upcomingInvoices: t("reportUpcomingInvoices"),
+        revenueBreakdown: t("reportRevenueBreakdown"),
+        revenueBreakdownNote: t("reportRevenueBreakdownNote"),
+        paid: t("reportPaid"),
+        paidRevenue: t("reportPaidRevenue"),
+        outstandingRevenue: t("reportOutstandingRevenue"),
+        totalRevenue: t("reportTotalRevenue"),
         renewalOutlook: t("reportRenewalOutlook"),
         dueDate: t("reportDueDate"),
         feeSide: t("reportFeeSide"),
@@ -3467,6 +3491,22 @@
           .filter((row) => row.daysRemaining !== null && row.daysRemaining >= 0 && row.daysRemaining <= 365)
           .sort((a, b) => a.daysRemaining - b.daysRemaining);
         const overdueGroups = getOverdueInstalmentGroups();
+        const paid2026ByContract = new Map();
+        commissionInstalments.forEach((item) => {
+          const status = String(item.invoice_status || "").toLowerCase();
+          if (!["paid", "settled", "received"].includes(status)) return;
+          const contract = allContracts.find(
+            (candidate) => String(candidate.id) === String(item.contract_id)
+          );
+          if (!contract) return;
+          const reportingDate = dashboardReportingDate(contract, item);
+          if (!reportingDate || !String(reportingDate).startsWith(`${reportYear}-`)) return;
+          paid2026ByContract.set(
+            String(contract.id),
+            (paid2026ByContract.get(String(contract.id)) || 0) +
+              (resolveDashboardInstalmentAmount(contract, item) || 0)
+          );
+        });
 
         doc.setTextColor(20, 28, 45);
         doc.setFont("helvetica", "bold");
@@ -3534,20 +3574,21 @@
           margin: { left: 15, right: 15 }
         });
 
-        const tableRows = dashboardRows.map((row) => [
-          row.contract.player_name || t("notRecorded"),
-          row.contract.club_name || t("notRecorded"),
-          row.valid
-            ? formatMoney(row.annualRevenue, row.currency)
-            : t("notRecorded"),
-          row.valid
-            ? formatMoney(row.lifetimeRevenue, row.currency)
-            : t("notRecorded"),
-          row.valid
-            ? formatMoney(row.invoiceForecast, row.currency)
-            : t("notRecorded"),
-          row.state.label
-        ]);
+        const tableRows = dashboardRows.map((row) => {
+          const paidRevenue = paid2026ByContract.get(String(row.contract.id)) || 0;
+          const outstandingRevenue = row.valid
+            ? Math.max(0, row.annualRevenue - paidRevenue)
+            : null;
+          return [
+            row.contract.player_name || t("notRecorded"),
+            row.contract.club_name || t("notRecorded"),
+            row.valid ? formatMoney(row.annualRevenue, row.currency) : t("notRecorded"),
+            row.valid ? formatMoney(paidRevenue, row.currency) : t("notRecorded"),
+            row.valid ? formatMoney(outstandingRevenue, row.currency) : t("notRecorded"),
+            row.valid ? formatMoney(row.lifetimeRevenue, row.currency) : t("notRecorded"),
+            row.state.label
+          ];
+        });
 
         doc.autoTable({
           startY: doc.lastAutoTable.finalY + 10,
@@ -3555,15 +3596,16 @@
             labels.player,
             labels.club,
             labels.annualRevenue,
+            labels.paidRevenue,
+            labels.outstandingRevenue,
             labels.lifetimeRevenue,
-            labels.invoiceForecast,
             labels.status
           ]],
           body: tableRows,
           theme: "striped",
           styles: {
-            fontSize: 8.5,
-            cellPadding: 3
+            fontSize: 7.7,
+            cellPadding: 2.6
           },
           headStyles: {
             fillColor: [212, 175, 55],
@@ -3572,7 +3614,307 @@
           margin: { left: 15, right: 15 }
         });
 
-        // Page 2: management invoice calendar and renewal outlook. This uses
+        // Page 2: printable dashboard charts. Currency series remain separate
+        // so the report never adds EUR and GBP together without conversion.
+        doc.addPage("a4", "landscape");
+        doc.setFillColor(3, 14, 35);
+        doc.rect(0, 0, 297, 25, "F");
+        doc.setTextColor(240, 200, 90);
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(10);
+        doc.text("DEALTRACK PRO", 15, 10);
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(17);
+        doc.text(`2026 ${t("revenueTitle")}`, 15, 19);
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(8.5);
+        doc.text(`${labels.period}: 01 January–31 December ${reportYear}`, 190, 17);
+
+        const chartGroups = DASHBOARD_CURRENCIES.map((currency) => ({
+          currency,
+          rows: dashboardRows
+            .filter((row) => row.valid && row.currency === currency && row.annualRevenue > 0)
+            .sort((a, b) => b.annualRevenue - a.annualRevenue)
+        })).filter((group) => group.rows.length);
+        let chartY = 34;
+        chartGroups.forEach((group) => {
+          const maximum = Math.max(...group.rows.map((row) => row.annualRevenue), 1);
+          doc.setTextColor(212, 175, 55);
+          doc.setFont("helvetica", "bold");
+          doc.setFontSize(9);
+          doc.text(`${group.currency} — ${labels.annualRevenue}`, 18, chartY);
+          chartY += 6;
+          group.rows.forEach((row) => {
+            const width = Math.max(2, (row.annualRevenue / maximum) * 105);
+            doc.setTextColor(30, 42, 60);
+            doc.setFont("helvetica", "normal");
+            doc.setFontSize(7.7);
+            const player = String(row.contract.player_name || t("notRecorded"));
+            doc.text(player.length > 27 ? `${player.slice(0, 26)}…` : player, 18, chartY + 3.2);
+            doc.setFillColor(225, 232, 241);
+            doc.roundedRect(72, chartY, 105, 4.6, 2, 2, "F");
+            doc.setFillColor(37, 184, 224);
+            doc.roundedRect(72, chartY, width, 4.6, 2, 2, "F");
+            doc.setTextColor(20, 28, 45);
+            doc.setFont("helvetica", "bold");
+            doc.text(formatMoney(row.annualRevenue, group.currency), 193, chartY + 3.4, { align: "right" });
+            chartY += 8.1;
+          });
+          chartY += 3;
+        });
+
+        const health = calculateAgencyHealth();
+        doc.setFillColor(245, 248, 252);
+        doc.roundedRect(205, 34, 77, 70, 3, 3, "F");
+        doc.setTextColor(20, 28, 45);
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(11);
+        doc.text(t("chartHealthTitle"), 211, 43);
+        const managementMetrics = [
+          [t("healthDataComplete"), `${health.completeness}%`],
+          [t("healthInvoiceReady"), `${health.invoiceReadiness}%`],
+          [t("healthExpiryExposure"), String(renewalRowsForReport.length)],
+          [t("healthOverdueRisk"), String(overdueGroups.length)]
+        ];
+        let metricY = 54;
+        managementMetrics.forEach(([label, value]) => {
+          doc.setFont("helvetica", "normal");
+          doc.setFontSize(7.5);
+          doc.setTextColor(75, 88, 105);
+          doc.text(label, 211, metricY);
+          doc.setFont("helvetica", "bold");
+          doc.setFontSize(9.5);
+          doc.setTextColor(20, 28, 45);
+          doc.text(value, 276, metricY, { align: "right" });
+          metricY += 12.5;
+        });
+
+        // Cash-flow planning chart: monthly expected invoice inflows, with a
+        // separate horizontal track for each original contract currency.
+        const cashFlowMonths = Array.from({ length: 12 }, (_, month) => month);
+        const cashFlowSeries = DASHBOARD_CURRENCIES.map((currency) => ({
+          currency,
+          values: cashFlowMonths.map((month) => commissionInstalments.reduce((sum, item) => {
+            const status = String(item.invoice_status || "pending").toLowerCase();
+            if (status === "cancelled") return sum;
+            const contract = allContracts.find(
+              (candidate) => String(candidate.id) === String(item.contract_id)
+            );
+            if (!contract) return sum;
+            const reportingDate = dashboardReportingDate(contract, item);
+            if (!reportingDate || !String(reportingDate).startsWith(`${reportYear}-`)) return sum;
+            const due = new Date(`${reportingDate}T00:00:00`);
+            const itemCurrency = normaliseCurrencyCode(
+              item.currency || contract.commission_currency || getCurrency(contract)
+            );
+            return itemCurrency === currency && due.getUTCMonth() === month
+              ? sum + (resolveDashboardInstalmentAmount(contract, item) || 0)
+              : sum;
+          }, 0))
+        })).filter((series) => series.values.some((value) => value > 0));
+        const cashTop = 122;
+        doc.setTextColor(20, 28, 45);
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(11);
+        doc.text(currentLang === "fr" ? "Planification des flux de trésorerie 2026" : currentLang === "es" ? "Planificación de flujo de caja 2026" : "2026 Cash-Flow Planning", 18, cashTop);
+        const monthFormatter = new Intl.DateTimeFormat(
+          currentLang === "fr" ? "fr-FR" : currentLang === "es" ? "es-ES" : "en-GB",
+          { month: "short" }
+        );
+        const gridLeft = 42;
+        const gridTop = cashTop + 10;
+        const gridWidth = 230;
+        const cellWidth = gridWidth / 12;
+        cashFlowMonths.forEach((month) => {
+          doc.setTextColor(90, 102, 118);
+          doc.setFont("helvetica", "normal");
+          doc.setFontSize(6.8);
+          doc.text(monthFormatter.format(new Date(Date.UTC(reportYear, month, 1))), gridLeft + month * cellWidth + cellWidth / 2, gridTop - 2, { align: "center" });
+        });
+        cashFlowSeries.forEach((series, seriesIndex) => {
+          const rowY = gridTop + seriesIndex * 17;
+          const seriesMax = Math.max(...series.values, 1);
+          doc.setTextColor(20, 28, 45);
+          doc.setFont("helvetica", "bold");
+          doc.setFontSize(8);
+          doc.text(series.currency, 18, rowY + 7);
+          series.values.forEach((value, month) => {
+            const x = gridLeft + month * cellWidth;
+            doc.setDrawColor(222, 229, 238);
+            doc.setFillColor(247, 249, 252);
+            doc.rect(x, rowY, cellWidth - 1, 12, "FD");
+            if (value > 0) {
+              const intensity = Math.max(0.28, value / seriesMax);
+              doc.setFillColor(37, Math.round(150 + 34 * intensity), 224);
+              doc.rect(x, rowY + 12 - 9 * intensity, cellWidth - 1, 9 * intensity, "F");
+              doc.setTextColor(20, 28, 45);
+              doc.setFont("helvetica", "bold");
+              doc.setFontSize(5.8);
+              doc.text(formatMoney(value, series.currency), x + (cellWidth - 1) / 2, rowY + 6.5, { align: "center" });
+            }
+          });
+        });
+
+        // Page 3: full 2026 revenue bridge, including paid items. Forecast
+        // tables intentionally exclude paid invoices; this page explains how
+        // the recognised 2026 total is composed and prevents paid revenue from
+        // disappearing from management's view.
+        doc.addPage("a4", "landscape");
+        doc.setFillColor(3, 14, 35);
+        doc.rect(0, 0, 297, 25, "F");
+        doc.setTextColor(240, 200, 90);
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(10);
+        doc.text("DEALTRACK PRO", 15, 10);
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(17);
+        doc.text(labels.revenueBreakdown, 15, 19);
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(8.5);
+        doc.text(`${labels.period}: 01 January–31 December ${reportYear}`, 190, 17);
+
+        const contractByIdForReport = new Map(
+          allContracts.map((contract) => [String(contract.id), contract])
+        );
+        const revenueGroups = new Map();
+        commissionInstalments.forEach((item) => {
+          const invoiceStatus = String(item.invoice_status || "pending").toLowerCase();
+          if (invoiceStatus === "cancelled") return;
+          const contract = contractByIdForReport.get(String(item.contract_id));
+          if (!contract) return;
+          const reportingDate = dashboardReportingDate(contract, item);
+          if (!reportingDate || !String(reportingDate).startsWith(`${reportYear}-`)) return;
+          const currency = normaliseCurrencyCode(
+            item.currency || contract.commission_currency || getCurrency(contract)
+          );
+          const paymentState = ["paid", "settled", "received"].includes(invoiceStatus)
+            ? "paid"
+            : "outstanding";
+          const key = `${contract.id}|${reportingDate}|${currency}|${paymentState}`;
+          if (!revenueGroups.has(key)) {
+            revenueGroups.set(key, {
+              contract,
+              date: reportingDate,
+              currency,
+              paymentState,
+              amount: 0,
+              instalments: []
+            });
+          }
+          const group = revenueGroups.get(key);
+          group.amount += resolveDashboardInstalmentAmount(contract, item) || 0;
+          group.instalments.push(item);
+        });
+
+        const revenueBreakdownGroups = [...revenueGroups.values()].sort(
+          (a, b) => String(a.date).localeCompare(String(b.date)) ||
+            String(a.contract.player_name || "").localeCompare(String(b.contract.player_name || ""))
+        );
+        const recognisedByCurrency = new Map();
+        const paidByCurrency = new Map();
+        revenueBreakdownGroups.forEach((group) => {
+          recognisedByCurrency.set(
+            group.currency,
+            (recognisedByCurrency.get(group.currency) || 0) + group.amount
+          );
+          if (group.paymentState === "paid") {
+            paidByCurrency.set(
+              group.currency,
+              (paidByCurrency.get(group.currency) || 0) + group.amount
+            );
+          }
+        });
+
+        // If a contract-level 2026 recognised value exceeds the detailed rows,
+        // disclose the difference instead of silently losing it from the bridge.
+        DASHBOARD_CURRENCIES.forEach((currency) => {
+          const recorded = recognisedByCurrency.get(currency) || 0;
+          const canonical = annualTotals[currency] || 0;
+          const difference = canonical - recorded;
+          if (difference > 0.005) {
+            revenueBreakdownGroups.push({
+              contract: { player_name: labels.outstanding, club_name: t("notRecorded") },
+              date: "",
+              currency,
+              paymentState: "outstanding",
+              amount: difference,
+              instalments: []
+            });
+          }
+        });
+
+        const revenueBreakdownRows = revenueBreakdownGroups.map((group) => {
+          const sides = [...new Set(
+            group.instalments
+              .map((item) => resolveDashboardFeeSide(group.contract, item))
+              .filter(Boolean)
+          )].join(" + ");
+          const status = group.paymentState === "paid"
+            ? labels.paid
+            : labels.outstanding;
+          return [
+            group.contract.player_name || t("notRecorded"),
+            group.contract.club_name || t("notRecorded"),
+            group.date || t("datePending"),
+            sides || t("notRecorded"),
+            status,
+            formatMoney(group.amount, group.currency)
+          ];
+        });
+
+        doc.setTextColor(20, 28, 45);
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(8.5);
+        doc.text(labels.revenueBreakdownNote, 15, 31);
+        doc.autoTable({
+          startY: 35,
+          head: [[
+            labels.player,
+            labels.club,
+            labels.dueDate,
+            labels.feeSide,
+            labels.status,
+            labels.amount
+          ]],
+          body: revenueBreakdownRows,
+          theme: "striped",
+          styles: { fontSize: 8, cellPadding: 2.7 },
+          headStyles: { fillColor: [20, 50, 92], textColor: [255, 255, 255] },
+          columnStyles: {
+            0: { cellWidth: 34 },
+            1: { cellWidth: 52 },
+            2: { cellWidth: 32 },
+            3: { cellWidth: 36 },
+            4: { cellWidth: 34 },
+            5: { cellWidth: 31, fontStyle: "bold" }
+          },
+          margin: { left: 15, right: 15 }
+        });
+
+        const reconciliationRows = DASHBOARD_CURRENCIES
+          .filter((currency) => (annualTotals[currency] || 0) > 0)
+          .map((currency) => {
+            const paid = paidByCurrency.get(currency) || 0;
+            const total = annualTotals[currency] || 0;
+            return [
+              currency,
+              formatMoney(paid, currency),
+              formatMoney(Math.max(0, total - paid), currency),
+              formatMoney(total, currency)
+            ];
+          });
+        doc.autoTable({
+          startY: doc.lastAutoTable.finalY + 7,
+          head: [["", labels.paidRevenue, labels.outstandingRevenue, labels.totalRevenue]],
+          body: reconciliationRows,
+          theme: "grid",
+          styles: { fontSize: 9, cellPadding: 3 },
+          headStyles: { fillColor: [212, 175, 55], textColor: [9, 17, 31] },
+          columnStyles: { 0: { fontStyle: "bold" }, 3: { fontStyle: "bold" } },
+          margin: { left: 15, right: 15 }
+        });
+
+        // Page 4: management invoice calendar and renewal outlook. This uses
         // the same instalment records as the live dashboard, preserving due
         // dates, fee sides, payers and payment/trigger state.
         doc.addPage("a4", "landscape");
