@@ -897,12 +897,42 @@
 
     .compact-forecast-table td,
     .compact-forecast-table th {
-      white-space: nowrap;
+      white-space: normal;
+      overflow-wrap: anywhere;
+      padding: 8px 7px;
+      font-size: 0.76rem;
     }
 
     .compact-forecast-table td.payer-cell {
       white-space: normal;
-      min-width: 220px;
+      min-width: 0;
+    }
+
+    .audit-schedule .compact-forecast-table {
+      width: 100%;
+      min-width: 0;
+      table-layout: fixed;
+    }
+
+    .contractual-schedule-table th:nth-child(1) { width: 3%; }
+    .contractual-schedule-table th:nth-child(2) { width: 8%; }
+    .contractual-schedule-table th:nth-child(3) { width: 8%; }
+    .contractual-schedule-table th:nth-child(4) { width: 20%; }
+    .contractual-schedule-table th:nth-child(5) { width: 7%; }
+    .contractual-schedule-table th:nth-child(6) { width: 13%; }
+    .contractual-schedule-table th:nth-child(7) { width: 16%; }
+    .contractual-schedule-table th:nth-child(8) { width: 18%; }
+    .contractual-schedule-table th:nth-child(9) { width: 7%; }
+
+    .compact-forecast-table .trigger-cell {
+      min-width: 0;
+    }
+
+    .compact-forecast-table .trigger-badge,
+    .compact-forecast-table .trigger-btn,
+    .compact-forecast-table .details-btn {
+      font-size: 0.64rem;
+      padding: 4px 6px;
     }
 @media (max-width: 620px) {
   .commercial-calculation-grid {
@@ -3406,7 +3436,7 @@ function renderResolvedCommissionSchedule(data) {
         ${sorted.length > visibleLimit ? `<button type="button" class="schedule-toggle" onclick="toggleScheduleRows('${tableId}', this)">${t("showAllPayments")}</button>` : ""}
       </div>
       <div class="audit-schedule">
-        <table id="${tableId}" class="compact-forecast-table">
+        <table id="${tableId}" class="compact-forecast-table contractual-schedule-table">
           <thead>
             <tr>
               <th>#</th>
@@ -3441,8 +3471,15 @@ function getInstalmentMetrics(data) {
   const currency = items.find((item) => item.currency)?.currency || getCurrencyCode(data);
   const sumItems = (list) => list.reduce((sum, item) => sum + (toNumber(item.amount) || 0), 0);
   const inYear = (item) => {
-    if (!item.due_date) return false;
-    const dueDate = new Date(`${item.due_date}T00:00:00`);
+    let reportingDate = item.due_date || item.trigger_date || null;
+    if (!reportingDate && item.due_date_type === "relative_to_event") {
+      const eventText = String(item.due_date_event || item.due_date_rule || item.condition_notes || "").toLowerCase();
+      if (/registration|signing|execution|commencement|transfer|employment start|contract start/.test(eventText)) {
+        reportingDate = data.playing_contract_start_date || data.start_date || null;
+      }
+    }
+    if (!reportingDate) return false;
+    const dueDate = new Date(`${reportingDate}T00:00:00`);
     return !Number.isNaN(dueDate.getTime()) && dueDate.getFullYear() === reportingYear;
   };
 
@@ -3464,7 +3501,7 @@ function getInstalmentMetrics(data) {
       const status = String(item.invoice_status || "").toLowerCase();
       if (status === "paid") return false;
       const dueDate = new Date(`${item.due_date}T00:00:00`);
-      return !Number.isNaN(dueDate.getTime()) && dueDate >= today;
+      return !Number.isNaN(dueDate.getTime());
     })
     .sort((a, b) => String(a.due_date).localeCompare(String(b.due_date)));
 
@@ -4046,16 +4083,17 @@ function renderInvoiceForecast(data) {
     today.setHours(0, 0, 0, 0);
 
     instalmentMetrics.items.forEach((item) => {
-      if (!item.due_date) return;
       const status = String(item.invoice_status || "").toLowerCase();
-      if (["paid", "cancelled"].includes(status)) return;
-      const dueDate = new Date(`${item.due_date}T00:00:00`);
-      if (Number.isNaN(dueDate.getTime()) || dueDate < today) return;
+      if (status === "cancelled") return;
+      const isRelativePending = !item.due_date && item.due_date_type === "relative_to_event";
+      if (!item.due_date && !isRelativePending) return;
+      const dueDate = item.due_date ? new Date(`${item.due_date}T00:00:00`) : null;
+      if (dueDate && Number.isNaN(dueDate.getTime())) return;
 
-      const key = item.due_date;
+      const key = item.due_date || `pending:${item.component_reference || item.instalment_number || "relative"}`;
       if (!futureGroups.has(key)) {
         futureGroups.set(key, {
-          dueDate: item.due_date,
+          dueDate: item.due_date || null,
           amount: 0,
           currency: item.currency || instalmentMetrics.currency,
           items: []
@@ -4066,7 +4104,9 @@ function renderInvoiceForecast(data) {
       group.items.push(item);
     });
 
-    const groups = [...futureGroups.values()].sort((a, b) => a.dueDate.localeCompare(b.dueDate));
+    const groups = [...futureGroups.values()].sort((a, b) =>
+      String(a.dueDate || "").localeCompare(String(b.dueDate || ""))
+    );
 
     if (!groups.length) {
       return `
