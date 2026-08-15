@@ -2334,31 +2334,45 @@ function getSeasonProration(data, item) {
 }
 
 function calculateScheduleItemAmount(data, item) {
+  const allocation = extractInstalmentPercentage(item);
+  const method = normaliseCommissionMethod(data);
+  const annualSalary = calculateAnnualSalary(data?.salary, data?.salary_frequency);
+  const rate =
+    resolverNumber(data?.commission_percentage) ??
+    (method === "percentage" || method === "mixed"
+      ? resolverNumber(data?.commission_value)
+      : null);
+
+  /*
+   * INVOICE PRINCIPLE:
+   * DealTrack Pro shows the gross commission payable by the contractual payer
+   * to the agency. A subcontract / partner split is a separate downstream
+   * accounting exercise and must never reduce the payer-facing invoice amount.
+   *
+   * Therefore, for percentage-based commissions we calculate each payment from
+   * the master contractual commission rate and the instalment allocation rather
+   * than trusting a stored row amount that may have been netted for a partner split.
+   */
+  if (annualSalary !== null && rate !== null && allocation !== null) {
+    const proratedSalary = annualSalary * getSeasonProration(data, item);
+    const grossCommissionForSide = proratedSalary * (rate / 100);
+    const amount = grossCommissionForSide * (allocation / 100);
+
+    return {
+      amount,
+      estimated: true,
+      allocation
+    };
+  }
+
+  // Fixed fees or schedules without enough percentage inputs may use the
+  // explicitly recorded contractual amount.
   const recorded = resolverNumber(item?.amount);
   if (recorded !== null) {
-    return { amount: recorded, estimated: false, allocation: extractInstalmentPercentage(item) };
+    return { amount: recorded, estimated: false, allocation };
   }
 
-  const annualSalary = calculateAnnualSalary(data?.salary, data?.salary_frequency);
-  const rate = resolverNumber(data?.commission_percentage) ?? resolverNumber(data?.commission_value);
-  if (annualSalary === null || rate === null) {
-    return { amount: null, estimated: false, allocation: extractInstalmentPercentage(item) };
-  }
-
-  const allocation = extractInstalmentPercentage(item);
-  if (allocation === null) {
-    return { amount: null, estimated: false, allocation: null };
-  }
-
-  const proratedSalary = annualSalary * getSeasonProration(data, item);
-  const commissionForSide = proratedSalary * (rate / 100);
-  const amount = commissionForSide * (allocation / 100);
-
-  return {
-    amount,
-    estimated: true,
-    allocation
-  };
+  return { amount: null, estimated: false, allocation };
 }
 
 function enrichScheduleAmounts(data, scheduleItems) {
