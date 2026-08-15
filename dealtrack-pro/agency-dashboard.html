@@ -1917,9 +1917,13 @@
         contract.commission_method || contract.commission_type || ""
       ).trim().toLowerCase();
 
-      if (explicit === "percentage" || explicit.includes("percentage") || explicit.includes("%")) return "percentage";
-      if (explicit === "fixed" || explicit.includes("fixed")) return "fixed";
-      if (explicit === "mixed" || explicit.includes("mixed")) return "mixed";
+      const mentionsPercentage =
+        explicit === "percentage" || explicit.includes("percentage") || explicit.includes("%");
+      const mentionsFixed = explicit === "fixed" || explicit.includes("fixed");
+
+      if (explicit === "mixed" || explicit.includes("mixed") || (mentionsFixed && mentionsPercentage)) return "mixed";
+      if (mentionsPercentage) return "percentage";
+      if (mentionsFixed) return "fixed";
 
       const percentage = toNumber(contract.commission_percentage);
       const fixed = toNumber(contract.fixed_commission_amount);
@@ -2720,6 +2724,29 @@
       return [...stored, ...supplemental];
     }
 
+    function resolveDashboardFeeSide(contract, item) {
+      const explicitSide = String(item?.fee_side || "").trim().toLowerCase();
+      const componentType = String(item?.component_type || "").trim().toLowerCase();
+      const basisText = String(
+        item?.component_reference ||
+        item?.calculation_basis ||
+        item?.amount_source_text ||
+        item?.notes ||
+        item?.condition_notes ||
+        ""
+      ).toLowerCase();
+      const salaryPercentageItem =
+        componentType === "percentage" ||
+        /percentage-fee|salary-percentage/.test(basisText) ||
+        (/salary/.test(basisText) && (/%|percent|percentage|basic_salary|basic salary/.test(basisText)));
+
+      if (salaryPercentageItem && normaliseCommissionMethod(contract) === "mixed") {
+        return "player-side";
+      }
+      if (explicitSide) return explicitSide;
+      return salaryPercentageItem ? "player-side" : "";
+    }
+
     function dashboardReportingDate(contract, item) {
       if (item?.due_date) return item.due_date;
       if (item?.trigger_date) return item.trigger_date;
@@ -2976,7 +3003,7 @@
           }).format(new Date(`${group.dueDate}T00:00:00`));
 
           const sideText = group.instalments
-            .map((item) => String(item.fee_side || "").trim())
+            .map((item) => resolveDashboardFeeSide(group.contract, item))
             .filter(Boolean)
             .join(" + ");
 
