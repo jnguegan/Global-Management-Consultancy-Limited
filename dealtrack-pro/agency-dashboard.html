@@ -2680,14 +2680,13 @@
       const stored = commissionInstalments.filter(
         (item) => String(item.contract_id) === String(contract.id)
       );
-      if (stored.length) return stored;
 
       const analysis = parseDashboardAnalysis(contract);
       const obligations = Array.isArray(analysis?.payment_obligations)
         ? analysis.payment_obligations
         : [];
 
-      return obligations
+      const analysed = obligations
         .filter((item) => String(item?.obligation_type || "").trim().toLowerCase() === "agency_commission")
         .map((item, index) => ({
           ...item,
@@ -2696,6 +2695,26 @@
           invoice_status: item.invoice_status || "review_required",
           trigger_status: item.trigger_status || (item.conditional ? "pending" : "guaranteed")
         }));
+
+      if (!stored.length) return analysed;
+
+      const samePayment = (left, right) => {
+        const sameCore =
+          String(left?.fee_side || "").toLowerCase() === String(right?.fee_side || "").toLowerCase() &&
+          toNumber(left?.amount) === toNumber(right?.amount) &&
+          String(left?.currency || "").toUpperCase() === String(right?.currency || "").toUpperCase();
+        if (!sameCore) return false;
+        if (left?.due_date || right?.due_date) {
+          return String(left?.due_date || "") === String(right?.due_date || "");
+        }
+        return String(left?.due_date_rule || "") === String(right?.due_date_rule || "");
+      };
+
+      const supplemental = analysed.filter(
+        (analysedItem) => !stored.some((storedItem) => samePayment(storedItem, analysedItem))
+      );
+
+      return [...stored, ...supplemental];
     }
 
     function dashboardReportingDate(contract, item) {
