@@ -876,6 +876,17 @@
     }
     .trigger-btn.confirm { border-color:rgba(34,197,94,.28); background:rgba(34,197,94,.08); }
     .trigger-btn:disabled { opacity:.45; cursor:not-allowed; }
+    .trigger-date-editor { display:flex; gap:6px; align-items:center; margin-top:7px; flex-wrap:wrap; }
+    .trigger-date-editor[hidden] { display:none; }
+    .trigger-date-editor input[type="date"] {
+      min-height:32px;
+      padding:4px 7px;
+      border:1px solid rgba(255,255,255,.16);
+      border-radius:8px;
+      color:var(--text);
+      background:rgba(255,255,255,.06);
+      color-scheme:dark;
+    }
 
     .amount-known { color: var(--gold-2); font-weight: 900; }
     .amount-estimated::after {
@@ -1334,6 +1345,14 @@
 "triggerSaving": "Saving...",
 "triggerSaveFailed": "Could not update the trigger status.",
 "triggerNeedsStoredRow": "Re-analyse this contract to save trigger status.",
+"triggerDateRequired": "Trigger date required",
+"enterTriggerDate": "Yes — enter date",
+"saveTriggerDate": "Save date",
+"invalidTriggerDate": "Enter a valid trigger date.",
+"triggerDateSaveFailed": "Could not save the trigger date.",
+"dueDateRuleLabel": "Due-date rule",
+"triggerDateLabel": "Trigger date",
+"relativeTiming": "Trigger-based",
 "guaranteedRevenueLabel": "Guaranteed / confirmed revenue",
 "conditionalPendingRevenueLabel": "Conditional revenue pending",
 "potentialRevenueLabel": "Potential total revenue",
@@ -1510,6 +1529,14 @@
 "triggerSaving": "Enregistrement...",
 "triggerSaveFailed": "Impossible de mettre à jour le statut du déclencheur.",
 "triggerNeedsStoredRow": "Réanalysez ce contrat pour enregistrer le statut du déclencheur.",
+"triggerDateRequired": "Date du déclencheur requise",
+"enterTriggerDate": "Oui — saisir la date",
+"saveTriggerDate": "Enregistrer la date",
+"invalidTriggerDate": "Saisissez une date de déclenchement valide.",
+"triggerDateSaveFailed": "Impossible d’enregistrer la date du déclencheur.",
+"dueDateRuleLabel": "Règle d’échéance",
+"triggerDateLabel": "Date du déclencheur",
+"relativeTiming": "Selon déclencheur",
 "guaranteedRevenueLabel": "Revenus garantis / confirmés",
 "conditionalPendingRevenueLabel": "Revenus conditionnels en attente",
 "potentialRevenueLabel": "Revenus potentiels totaux",
@@ -1686,6 +1713,14 @@
 "triggerSaving": "Guardando...",
 "triggerSaveFailed": "No se pudo actualizar el estado de la condición.",
 "triggerNeedsStoredRow": "Vuelva a analizar este contrato para guardar el estado de la condición.",
+"triggerDateRequired": "Se requiere la fecha del evento",
+"enterTriggerDate": "Sí — introducir fecha",
+"saveTriggerDate": "Guardar fecha",
+"invalidTriggerDate": "Introduzca una fecha válida del evento.",
+"triggerDateSaveFailed": "No se pudo guardar la fecha del evento.",
+"dueDateRuleLabel": "Regla de vencimiento",
+"triggerDateLabel": "Fecha del evento",
+"relativeTiming": "Según evento",
 "guaranteedRevenueLabel": "Ingresos garantizados / confirmados",
 "conditionalPendingRevenueLabel": "Ingresos condicionales pendientes",
 "potentialRevenueLabel": "Ingresos potenciales totales",
@@ -2510,19 +2545,31 @@ function buildCommissionScheduleFromAnalysis(data) {
     : [];
 
   return obligations
-    .filter((item) => {
+    .map((item, analysisIndex) => ({ item, analysisIndex }))
+    .filter(({ item }) => {
       const type = String(item?.obligation_type || "").trim().toLowerCase();
-      return type === "agency_commission" && Boolean(normaliseResolverDate(item?.due_date));
+      const dueDateType = String(item?.due_date_type || "").trim().toLowerCase();
+      const hasExactDate = Boolean(normaliseResolverDate(item?.due_date));
+      const hasRelativeRule =
+        dueDateType === "relative_to_event" &&
+        Boolean(String(item?.due_date_rule || item?.due_date_event || "").trim());
+      return type === "agency_commission" && (hasExactDate || hasRelativeRule);
     })
-    .map((item, index) => ({
+    .map(({ item, analysisIndex }, index) => ({
       source: "analysis_json",
       id: null,
+      analysis_index: analysisIndex,
       contract_id: data?.id || null,
       instalment_number: index + 1,
       fee_side: item.fee_side || null,
       amount: resolverNumber(item.amount),
       currency: item.currency || data?.commission_currency || data?.salary_currency || null,
       due_date: normaliseResolverDate(item.due_date),
+      due_date_type: item.due_date_type || (item.due_date ? "fixed_date" : "unresolved"),
+      due_date_event: item.due_date_event || null,
+      due_date_offset_days: resolverNumber(item.due_date_offset_days),
+      due_date_rule: item.due_date_rule || null,
+      trigger_date: normaliseResolverDate(item.trigger_date),
       payer: item.payer || data?.commission_payer || null,
       recipient: item.recipient || data?.commission_recipient || null,
       conditional: item.conditional ?? null,
@@ -2814,7 +2861,100 @@ async function setConditionalTriggerStatus(instalmentId, nextStatus, button) {
   renderContract(currentContract);
 }
 
+function addContractualDays(dateText, offsetDays) {
+  const date = new Date(`${dateText}T00:00:00Z`);
+  const offset = resolverNumber(offsetDays);
+  if (Number.isNaN(date.getTime()) || offset === null) return null;
+  date.setUTCDate(date.getUTCDate() + offset);
+  return date.toISOString().slice(0, 10);
+}
+
+function revealRelativeTriggerDateInput(button) {
+  const editor = button?.closest(".trigger-cell")?.querySelector(".trigger-date-editor");
+  if (editor) {
+    editor.hidden = false;
+    editor.querySelector("input[type='date']")?.focus();
+  }
+}
+
+async function saveRelativeTriggerDate(analysisIndex, button) {
+  const editor = button?.closest(".trigger-date-editor");
+  const input = editor?.querySelector("input[type='date']");
+  const triggerDate = normaliseResolverDate(input?.value);
+  if (!triggerDate) {
+    alert(t("invalidTriggerDate"));
+    return;
+  }
+
+  const analysis = parseContractAnalysis(currentContract);
+  const obligations = Array.isArray(analysis?.payment_obligations)
+    ? analysis.payment_obligations
+    : [];
+  const obligation = obligations[Number(analysisIndex)];
+  if (!obligation || !currentDb || !currentContract?.id || !currentUser?.id) {
+    alert(t("triggerDateSaveFailed"));
+    return;
+  }
+
+  const originalText = button.textContent;
+  button.disabled = true;
+  button.textContent = t("triggerSaving");
+
+  obligation.trigger_date = triggerDate;
+  obligation.trigger_status = "met";
+  obligation.trigger_confirmed_at = new Date().toISOString();
+  obligation.trigger_confirmed_by = currentUser.id;
+
+  const calculatedDueDate = addContractualDays(
+    triggerDate,
+    obligation.due_date_offset_days
+  );
+  if (calculatedDueDate) {
+    obligation.due_date = calculatedDueDate;
+    obligation.due_date_confirmed = true;
+  }
+
+  const payload = {};
+  if (Object.prototype.hasOwnProperty.call(currentContract, "analysis_json")) {
+    payload.analysis_json = analysis;
+  }
+  if (Object.prototype.hasOwnProperty.call(currentContract, "analysis_result")) {
+    payload.analysis_result = analysis;
+  }
+
+  const { error } = await currentDb
+    .from("contracts")
+    .update(payload)
+    .eq("id", currentContract.id)
+    .eq("user_id", currentUser.id);
+
+  if (error) {
+    console.error("Relative trigger date save failed:", error);
+    alert(`${t("triggerDateSaveFailed")} ${error.message || ""}`.trim());
+    button.disabled = false;
+    button.textContent = originalText;
+    return;
+  }
+
+  if (Object.prototype.hasOwnProperty.call(currentContract, "analysis_json")) {
+    currentContract.analysis_json = analysis;
+  }
+  if (Object.prototype.hasOwnProperty.call(currentContract, "analysis_result")) {
+    currentContract.analysis_result = analysis;
+  }
+
+  renderContract(currentContract);
+}
+
 function renderTriggerControl(item) {
+  if (item?.due_date_type === "relative_to_event" && item?.analysis_index !== null && item?.analysis_index !== undefined) {
+    if (item.trigger_date) {
+      return `<span class="trigger-badge met">${t("triggerConditionalMet")}</span><div class="trigger-actions"><span class="trigger-btn" style="cursor:default">${t("triggerDateLabel")}: ${safeValue(item.trigger_date)}</span></div>`;
+    }
+
+    return `<span class="trigger-badge pending">${t("triggerDateRequired")}</span><div class="trigger-actions"><button type="button" class="trigger-btn confirm" onclick="revealRelativeTriggerDateInput(this)">${t("enterTriggerDate")}</button><button type="button" class="trigger-btn">${t("triggerNotYet")}</button></div><div class="trigger-date-editor" hidden><input type="date" aria-label="${t("triggerDateLabel")}"><button type="button" class="trigger-btn confirm" onclick="saveRelativeTriggerDate(${Number(item.analysis_index)}, this)">${t("saveTriggerDate")}</button></div>`;
+  }
+
   if (!item?.conditional) {
     return `<span class="trigger-badge">${t("triggerGuaranteed")}</span>`;
   }
@@ -2849,6 +2989,9 @@ function scheduleDetailFields(item, resolvedCurrency) {
     add(t("allocationLabel"), `${item.instalment_percentage}%`);
   }
   add(t("dueDate"), item.due_date);
+  add(t("dueDateRuleLabel"), item.due_date_rule);
+  add(t("triggerLabel"), item.due_date_event);
+  add(t("triggerDateLabel"), item.trigger_date);
   add(t("payerLabel"), item.payer);
   add(t("triggerLabel"), triggerStatusLabel(item));
   if (item.conditional) add(t("protectionLabel"), item.condition_notes || item.payment_protection);
@@ -3082,7 +3225,10 @@ function resolveCommission(data) {
   let source = "contracts";
 
   if (detailedRows.length > 0) {
-    schedule = detailedRows;
+    const relativeAnalysisRows = analysisRows.filter(
+      (item) => item.due_date_type === "relative_to_event"
+    );
+    schedule = [...detailedRows, ...relativeAnalysisRows];
     source = "commission_instalments";
   } else if (analysisRows.length > 0) {
     schedule = analysisRows;
@@ -3171,9 +3317,9 @@ function renderResolvedCommissionSchedule(data) {
     return `
       <tr class="${extraClass}">
         <td>${index + 1}</td>
-        <td>${safeValue(item.season_label || resolverSeasonFromDate(item.due_date))}</td>
+        <td>${safeValue(item.season_label || resolverSeasonFromDate(item.due_date) || (item.due_date_type === "relative_to_event" ? t("relativeTiming") : null))}</td>
         <td>${safeValue(item.fee_side)}</td>
-        <td><strong>${safeValue(item.due_date)}</strong></td>
+        <td><strong>${safeValue(item.due_date || item.due_date_rule)}</strong></td>
         <td>${item.instalment_percentage !== null && item.instalment_percentage !== undefined ? `${item.instalment_percentage}%` : t("na")}</td>
         <td>${amountHtml}</td>
         <td>${safeValue(item.payer)}</td>
