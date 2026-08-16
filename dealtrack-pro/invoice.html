@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>DealTrack Pro - Invoice</title>
+  <title>BS Group Entertainment Sports - Invoice</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="/agent-academy/js/supabase-client.js"></script>
   <style>
@@ -21,7 +21,7 @@
       .paper-wrap{overflow:visible;padding:0}
       .paper{box-shadow:none;margin:0;width:auto;height:auto;min-height:0;padding:0;font-size:12px;line-height:1.35;overflow:visible;break-after:avoid;page-break-after:avoid}
       .invoice-head{gap:22px;padding-bottom:15px;border-bottom-width:2px}
-      .invoice-logo{width:152px;height:102px;object-fit:contain}
+      .invoice-logo{width:190px;height:135px;object-fit:contain;object-position:center}
       .seller{max-width:390px;font-size:10.5px}.seller h2{font-size:14px;margin-bottom:5px}.seller p,.bill p{margin:2px 0}
       .title-row{gap:20px;margin:21px 0}.invoice-title{font-size:36px}.meta{min-width:245px}.meta div{padding:4px 0}
       .bill{gap:26px;margin-bottom:21px}
@@ -86,8 +86,17 @@ function lockIfNeeded(){const locked=invoice?.status!=='draft';$('draftState').t
 async function saveDraft(){const v=values();if(!v.agency_id||!v.buyer_name||!v.service_description)throw new Error('Payer and service description are required.');let r;if(invoice?.id)r=await db.from('dealtrack_invoices').update(v).eq('id',invoice.id).select().single();else r=await db.from('dealtrack_invoices').insert({...v,created_by:user.id,status:'draft'}).select().single();if(r.error)throw r.error;invoice=r.data;history.replaceState({},'',`?invoice_id=${invoice.id}`);lockIfNeeded();show('Draft invoice saved.','success');return invoice}
 async function finalise(){if(!confirm('Finalise and lock this invoice?'))return;await saveDraft();const r=await db.rpc('finalise_dealtrack_invoice',{p_invoice_id:invoice.id});if(r.error)throw r.error;invoice=r.data;fill(invoice);lockIfNeeded();show(`Invoice ${invoice.invoice_number} finalised. You may now print or save it as PDF.`,'success')}
 async function voidInvoice(){const reason=prompt('Reason for voiding this invoice:');if(!reason)return;const r=await db.rpc('void_dealtrack_invoice',{p_invoice_id:invoice.id,p_reason:reason});if(r.error)throw r.error;invoice=r.data;lockIfNeeded();show('Invoice voided.','success')}
+function printInvoice(){
+  const previousTitle=document.title;
+  const number=(invoice?.invoice_number||$('invoice_number').value||'DRAFT').trim();
+  const customer=(invoice?.buyer_name||$('buyer_name').value||'Customer').trim();
+  const safe=value=>value.replace(/[\\/:*?"<>|]+/g,'-').replace(/\s+/g,' ').trim();
+  document.title=`${safe(number)} - ${safe(customer)}`;
+  window.addEventListener('afterprint',()=>{document.title=previousTitle},{once:true});
+  window.print();
+}
 document.addEventListener('DOMContentLoaded',async()=>{try{db=window.supabaseClient||window.sb;if(!db)throw new Error('Supabase client is unavailable.');const u=await db.auth.getUser();user=u.data?.user;if(!user){location.href='/dealtrack-pro/login.html';return}agency=await context();if(!agency?.agency_id)throw new Error('No agency is assigned to this login.');const p=new URLSearchParams(location.search);if(p.get('invoice_id'))await loadExisting(p.get('invoice_id'));else await loadNew(p);document.querySelectorAll('input,textarea,select').forEach(x=>x.addEventListener('input',preview));$('currency').addEventListener('change',preview);show('Review and edit the draft before finalising.','success')}catch(e){console.error(e);show(e.message||String(e),'error')}});
-$('saveBtn').addEventListener('click',()=>saveDraft().catch(e=>show(e.message,'error')));$('finaliseBtn').addEventListener('click',()=>finalise().catch(e=>show(e.message,'error')));$('printBtn').addEventListener('click',()=>window.print());$('voidBtn').addEventListener('click',()=>voidInvoice().catch(e=>show(e.message,'error')));document.querySelectorAll('[data-lang]').forEach(b=>b.addEventListener('click',()=>{lang=b.dataset.lang;localStorage.setItem('lang',lang);applyLang()}));applyLang();
+$('saveBtn').addEventListener('click',()=>saveDraft().catch(e=>show(e.message,'error')));$('finaliseBtn').addEventListener('click',()=>finalise().catch(e=>show(e.message,'error')));$('printBtn').addEventListener('click',printInvoice);$('voidBtn').addEventListener('click',()=>voidInvoice().catch(e=>show(e.message,'error')));document.querySelectorAll('[data-lang]').forEach(b=>b.addEventListener('click',()=>{lang=b.dataset.lang;localStorage.setItem('lang',lang);applyLang()}));applyLang();
 </script>
 </body>
 </html>
