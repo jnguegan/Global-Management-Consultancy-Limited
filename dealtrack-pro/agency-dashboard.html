@@ -1024,6 +1024,10 @@
           <a class="btn" href="/dealtrack-pro/agency-settings.html" data-i18n="agencySettings">
             ⚙ Agency Settings
           </a>
+
+          <a id="platformAdminBtn" class="btn" href="/dealtrack-pro/platform-admin.html" hidden>
+            🛡 Platform Admin
+          </a>
         </div>
       </div>
     </header>
@@ -2215,6 +2219,21 @@
 
       const usage = Array.isArray(data) ? data[0] : data;
       return usage?.agency_id ? usage : null;
+    }
+
+    async function renderPlatformAdminAccess(db) {
+      const button = document.getElementById("platformAdminBtn");
+      if (!button) return;
+
+      const { data, error } = await db.rpc("get_my_platform_access");
+      if (error) {
+        console.warn("Platform administrator access could not be checked:", error);
+        button.hidden = true;
+        return;
+      }
+
+      const access = Array.isArray(data) ? data[0] : data;
+      button.hidden = !access?.is_platform_admin;
     }
 
     function renderPlanUsage() {
@@ -4726,6 +4745,7 @@
       currentUser = user;
       currentAgency = await loadAgencyContext(db, user);
       currentPlanUsage = await loadPlanUsage(db);
+      await renderPlatformAdminAccess(db);
       renderIdentityBar();
       renderPlanUsage();
 
