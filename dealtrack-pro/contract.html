@@ -1441,6 +1441,10 @@
 "invoiceBasisAnnual": "Annual commission entitlement",
     "annualCommissionInvoice": "Annual Commission Invoice",
 "invoiceForecastNote": "This is a forecast based on the recorded contract terms. Confirm the contractual invoice trigger, billing entity, taxes and payment deadline before issuing the invoice.",
+"generateInvoice": "Generate invoice",
+"invoiceAlreadyIssued": "Invoiced",
+"openInvoice": "Open invoice",
+"invoiceRequiresStoredPayment": "Re-analyse to generate",
       "sectionSnapshot": "Commercial Snapshot",
       "sectionSnapshotText": "A premium summary of the commercial foundations currently recorded for this mandate.",
       "labelClubName": "Club Name",
@@ -1637,6 +1641,10 @@
 "invoiceBasisAnnual": "Droit annuel à commission",
     "annualCommissionInvoice": "Facture annuelle de commission",
 "invoiceForecastNote": "Cette prévision est basée sur les conditions contractuelles enregistrées. Confirmez le déclencheur de facturation, l’entité facturante, les taxes et la date limite de paiement avant d’émettre la facture.",
+"generateInvoice": "Générer la facture",
+"invoiceAlreadyIssued": "Facturée",
+"openInvoice": "Ouvrir la facture",
+"invoiceRequiresStoredPayment": "Réanalyser pour générer",
       "sectionSnapshot": "Synthèse commerciale",
       "sectionSnapshotText": "Une synthèse premium des fondements commerciaux actuellement enregistrés pour ce mandat.",
       "labelClubName": "Nom du club",
@@ -1833,6 +1841,10 @@
 "invoiceBasisAnnual": "Derecho anual a comisión",
     "invoiceBasisAnnual": "Derecho anual a comisión",
 "invoiceForecastNote": "Esta previsión se basa en las condiciones contractuales registradas. Confirme el desencadenante de facturación, la entidad facturante, los impuestos y la fecha límite de pago antes de emitir una factura.",
+"generateInvoice": "Generar factura",
+"invoiceAlreadyIssued": "Facturada",
+"openInvoice": "Abrir factura",
+"invoiceRequiresStoredPayment": "Volver a analizar para generar",
       "sectionSnapshot": "Resumen comercial",
       "sectionSnapshotText": "Un resumen premium de las bases comerciales actualmente registradas para este mandato.",
       "labelClubName": "Nombre del club",
@@ -2354,10 +2366,8 @@ function renderCommissionComponentTiles(data, resolvedCommission = null) {
     other: t("labelCommissionValue")
   };
 
-  // Some dual-representation analyses record one percentage definition even
-  // though the detailed contractual schedule correctly contains separate
-  // club-side and player-side entitlements. Reconcile the summary against that
-  // authoritative schedule so the card never hides one side of the mandate.
+  // Reconcile the summary against the detailed schedule when one percentage
+  // definition represents separate club-side and player-side entitlements.
   const percentageComponents = components.filter(
     (item) => item.component_type === "percentage" && item.percentage_rate !== null
   );
@@ -2652,6 +2662,7 @@ function buildCommissionScheduleFromRows(data) {
       trigger_confirmed_by: item.trigger_confirmed_by || null,
       trigger_note: item.trigger_note || null,
       invoice_status: item.invoice_status || null,
+      invoice_id: item.invoice_id || null,
       condition_notes: item.condition_notes || null,
       notes: item.notes || null,
       season_label: resolverSeasonFromNotes(item.notes || item.condition_notes, item.due_date),
@@ -2714,6 +2725,7 @@ function buildCommissionScheduleFromAnalysis(data) {
       trigger_confirmed_by: item.trigger_confirmed_by || null,
       trigger_note: item.trigger_note || null,
       invoice_status: item.invoice_status || null,
+      invoice_id: item.invoice_id || null,
       condition_notes: item.condition_notes || item.trigger_event || null,
       notes: item.description || null,
       season_label: item.season_label || resolverSeasonFromDate(item.due_date),
@@ -2861,11 +2873,8 @@ function calculateScheduleItemAmount(data, item) {
     /percentage|salary|basic_salary|basic salary/.test(percentageEvidence) ||
     method === "percentage";
 
-  /*
-   * Percentage components on either fee side use the same contractual salary
-   * basis. For a one-year mandate expressed as a percentage of annual basic
-   * salary, use the full annual salary; do not day-prorate one side only.
-   */
+  // A salary-percentage component uses the full annual salary for a one-year
+  // mandate. Do not day-prorate only one representation side.
   if (salaryPercentageComponent && annualSalary !== null && rate !== null) {
     const startText = data?.playing_contract_start_date || data?.start_date;
     const endText = data?.playing_contract_end_date || data?.end_date;
@@ -3682,8 +3691,6 @@ function resolveScheduleFeeSide(item, data = currentContract) {
     (/salary/.test(basisText) && (/%|percent|percentage|basic_salary|basic salary/.test(basisText)));
   const mixedCommission = normaliseCommissionMethod(data) === "mixed";
 
-  // In a mixed structure, a salary-percentage component is the player-side
-  // component when the separate fixed-fee component is club-side.
   if (salaryPercentageItem && mixedCommission) return "player-side";
   if (explicitSide) return explicitSide;
   return salaryPercentageItem ? "player-side" : "not recorded";
@@ -4408,6 +4415,28 @@ function formatDateValue(dateValue) {
   ).format(new Date(`${dateValue}T00:00:00`));
 }
 
+function renderInvoiceGenerationAction(group, contractId) {
+  const items = Array.isArray(group?.items) ? group.items : [];
+  const invoiceStatuses = items.map((item) => String(item?.invoice_status || "").toLowerCase());
+  const invoiceId = items.map((item) => item?.invoice_id).find(Boolean);
+  if (invoiceId) {
+    return `<a class="trigger-btn confirm" href="/dealtrack-pro/invoice.html?invoice_id=${encodeURIComponent(invoiceId)}">${t("openInvoice")}</a>`;
+  }
+
+  const issuedStatuses = ["invoiced", "paid", "settled", "received"];
+  if (invoiceStatuses.length && invoiceStatuses.every((status) => issuedStatuses.includes(status))) {
+    return `<span class="trigger-badge met">${t("invoiceAlreadyIssued")}</span>`;
+  }
+
+  const storedIds = items.map((item) => item?.id).filter(Boolean);
+  if (!storedIds.length || storedIds.length !== items.length) {
+    return `<span class="trigger-badge pending">${t("invoiceRequiresStoredPayment")}</span>`;
+  }
+
+  const href = `/dealtrack-pro/invoice.html?contract_id=${encodeURIComponent(contractId || "")}&instalments=${encodeURIComponent(storedIds.join(","))}`;
+  return `<a class="trigger-btn confirm" href="${href}">${t("generateInvoice")}</a>`;
+}
+
 function renderInvoiceForecast(data) {
   const instalmentMetrics = getInstalmentMetrics(data);
 
@@ -4464,6 +4493,7 @@ function renderInvoiceForecast(data) {
           <td><span class="amount-known">${formatMoneyValue(group.amount, group.currency)}</span></td>
           <td class="payer-cell">${safeValue(payers)}</td>
           <td>${group.items.some((item) => item.conditional && normaliseTriggerStatus(item) === "pending") ? t("triggerConditionalPending") : group.items.some((item) => item.conditional && normaliseTriggerStatus(item) === "met") ? t("triggerConditionalMet") : t("invoiceStatusForecast")}</td>
+          <td>${renderInvoiceGenerationAction(group, data.id)}</td>
         </tr>`;
     }).join("");
 
@@ -4484,6 +4514,7 @@ function renderInvoiceForecast(data) {
               <th>${t("invoiceAmount")}</th>
               <th>${t("invoicePayer")}</th>
               <th>${t("invoiceStatus")}</th>
+              <th>${t("invoiceReady")}</th>
             </tr></thead>
             <tbody>${rows}</tbody>
           </table>
