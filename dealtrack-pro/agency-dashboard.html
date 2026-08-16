@@ -4729,10 +4729,16 @@
       renderIdentityBar();
       renderPlanUsage();
 
+      if (!currentAgency?.agency_id) {
+        console.error("No active agency context is assigned to this user.");
+        showError();
+        return;
+      }
+
       const { data, error } = await db
         .from("contracts")
         .select("*")
-        .eq("user_id", user.id)
+        .eq("agency_id", currentAgency.agency_id)
         .order("created_at", { ascending: false });
 
       if (error) {
