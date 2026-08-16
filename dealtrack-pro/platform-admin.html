@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>DealTrack Pro — Platform Administration</title>
+  <script src="/agent-academy/js/supabase-client.js"></script>
+  <script src="/agent-academy/js/auth.js"></script>
+  <script src="/agent-academy/js/guard.js"></script>
+  <style>
+    :root{--bg:#11151d;--panel:#1a2230;--line:#344054;--gold:#f4c542;--blue:#49bff2;--text:#f6f7f9;--muted:#aeb8c7;--green:#65d6a1;--red:#ff8f8f}
+    *{box-sizing:border-box}body{margin:0;background:linear-gradient(140deg,#10151e,#172235);color:var(--text);font:15px/1.45 Inter,Arial,sans-serif}
+    main{max-width:1280px;margin:auto;padding:24px}.top{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:24px}.brand{font-size:23px;font-weight:800}.brand span,h1,h2{color:var(--gold)}
+    a,button{color:inherit}.btn{display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--line);border-radius:11px;padding:10px 14px;background:#222c3a;font-weight:700;text-decoration:none;cursor:pointer}.btn.primary{background:var(--blue);color:#07131a}.btn.gold{background:var(--gold);color:#231d07}
+    .notice{padding:13px 16px;border:1px solid var(--line);border-radius:12px;margin:14px 0;background:#17202d}.notice.error{border-color:#913e4a;color:#ffd9dd}.notice.success{border-color:#287354;color:#d9ffed}
+    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.panel{background:rgba(26,34,48,.96);border:1px solid var(--line);border-radius:18px;padding:20px}.wide{grid-column:1/-1}
+    h1{font-size:30px;margin:0 0 5px}h2{font-size:18px;margin:0 0 15px}.muted{color:var(--muted)}form{display:grid;gap:11px}.row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+    label{font-size:12px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:800}input,select,textarea{width:100%;margin-top:5px;border:1px solid var(--line);border-radius:9px;padding:11px;background:#101721;color:var(--text)}textarea{min-height:80px;resize:vertical}
+    table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:11px 8px;border-bottom:1px solid var(--line)}th{font-size:11px;text-transform:uppercase;color:var(--muted)}.pill{display:inline-block;padding:4px 8px;border-radius:999px;background:#213c33;color:var(--green);font-size:12px;font-weight:800}
+    @media(max-width:800px){.grid,.row{grid-template-columns:1fr}.wide{grid-column:auto}.top{align-items:flex-start;flex-direction:column}.panel{overflow:auto}}
+  </style>
+</head>
+<body>
+<main>
+  <div class="top">
+    <div><div class="brand">DealTrack <span>Pro</span></div><h1>Platform Administration</h1><div id="identity" class="muted">Checking administrator access…</div></div>
+    <a class="btn" href="/dealtrack-pro/agency-dashboard.html">← Agency Dashboard</a>
+  </div>
+  <div id="notice" class="notice" hidden></div>
+  <section id="adminApp" class="grid" hidden>
+    <article class="panel">
+      <h2>Create partner agency</h2>
+      <form id="agencyForm">
+        <div><label>Agency name<input id="agencyName" required></label></div>
+        <div><label>Legal name<input id="agencyLegalName"></label></div>
+        <div class="row"><label>URL slug<input id="agencySlug" placeholder="partner-agency"></label><label>Parent agency<select id="parentAgency"><option value="">None</option></select></label></div>
+        <button class="btn gold" type="submit">Create agency</button>
+      </form>
+    </article>
+    <article class="panel">
+      <h2>Create academy</h2>
+      <form id="academyForm">
+        <label>Owning agency<select id="academyAgency" required></select></label>
+        <label>Academy name<input id="academyName" required></label>
+        <div class="row"><label>Legal name<input id="academyLegalName"></label><label>Country<input id="academyCountry"></label></div>
+        <button class="btn gold" type="submit">Create academy</button>
+      </form>
+    </article>
+    <article class="panel">
+      <h2>Invite or assign agency user</h2>
+      <form id="memberForm">
+        <label>Agency<select id="memberAgency" required></select></label>
+        <label>Email address<input id="memberEmail" type="email" required></label>
+        <label>Agency role<select id="memberRole"><option value="administrator">Administrator</option><option value="owner">Owner</option><option value="account_manager">Account manager</option><option value="finance">Finance</option><option value="viewer">Viewer</option></select></label>
+        <button class="btn primary" type="submit">Assign role / prepare invitation</button>
+        <div class="muted">Existing users are activated immediately. New users are recorded as invited; the secure invitation function sends their sign-in email.</div>
+      </form>
+    </article>
+    <article class="panel">
+      <h2>Contract partnership split</h2>
+      <form id="splitForm">
+        <label>Contract ID<input id="splitContract" required placeholder="Contract UUID"></label>
+        <label>Beneficiary agency<select id="splitAgency" required></select></label>
+        <div class="row"><label>Split type<select id="splitType"><option value="percentage">Percentage</option><option value="fixed_amount">Fixed amount</option></select></label><label>Value<input id="splitValue" type="number" min="0" step="0.0001" required></label></div>
+        <div class="row"><label>Currency<input id="splitCurrency" maxlength="3" placeholder="EUR"></label><label>Invoice responsibility<select id="splitInvoice"><option value="lead_agency">Lead agency</option><option value="beneficiary_agency">Beneficiary agency</option><option value="shared">Shared</option></select></label></div>
+        <label>Description<textarea id="splitDescription" placeholder="Commercial basis and any special conditions"></textarea></label>
+        <button class="btn primary" type="submit">Save partnership split</button>
+      </form>
+    </article>
+    <article class="panel wide">
+      <h2>Agencies</h2>
+      <table><thead><tr><th>Name</th><th>Legal name</th><th>Status</th><th>ID</th></tr></thead><tbody id="agencyRows"></tbody></table>
+    </article>
+  </section>
+</main>
+<script>
+  let db; let user; let agencies=[];
+  const el=id=>document.getElementById(id);
+  const show=(message,type='success')=>{const n=el('notice');n.textContent=message;n.className=`notice ${type}`;n.hidden=false;};
+  const escapeHtml=value=>String(value??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+  async function rpc(name,args={}){const {data,error}=await db.rpc(name,args);if(error)throw error;return data;}
+  function fillAgencies(){
+    const options=agencies.map(a=>`<option value="${escapeHtml(a.id)}">${escapeHtml(a.legal_name||a.name)}</option>`).join('');
+    el('academyAgency').innerHTML=options;el('memberAgency').innerHTML=options;el('splitAgency').innerHTML=options;
+    el('parentAgency').innerHTML='<option value="">None</option>'+options;
+    el('agencyRows').innerHTML=agencies.map(a=>`<tr><td>${escapeHtml(a.name)}</td><td>${escapeHtml(a.legal_name||'—')}</td><td><span class="pill">${escapeHtml(a.status||'active')}</span></td><td>${escapeHtml(a.id)}</td></tr>`).join('');
+  }
+  async function refresh(){agencies=await rpc('admin_list_agencies');fillAgencies();}
+  document.addEventListener('DOMContentLoaded',async()=>{
+    db=window.supabaseClient||window.sb;if(!db){show('Supabase client is unavailable.','error');return;}
+    const result=await db.auth.getUser();user=result.data?.user;if(!user){location.href='/dealtrack-pro/login.html';return;}
+    el('identity').textContent=`${user.email} — platform administrator`;
+    try{
+      const access=await rpc('get_my_platform_access');const row=Array.isArray(access)?access[0]:access;
+      if(!row?.is_platform_admin)throw new Error('This account does not have platform-administrator access.');
+      el('adminApp').hidden=false;await refresh();
+    }catch(error){show(error.message||'Administrator access could not be verified.','error');return;}
+    el('agencyForm').addEventListener('submit',async e=>{e.preventDefault();try{await rpc('admin_create_agency',{p_name:el('agencyName').value,p_legal_name:el('agencyLegalName').value||null,p_slug:el('agencySlug').value||null,p_parent_agency_id:el('parentAgency').value||null});e.target.reset();await refresh();show('Agency created.');}catch(error){show(error.message,'error');}});
+    el('academyForm').addEventListener('submit',async e=>{e.preventDefault();try{await rpc('admin_create_academy',{p_agency_id:el('academyAgency').value,p_name:el('academyName').value,p_legal_name:el('academyLegalName').value||null,p_country:el('academyCountry').value||null});e.target.reset();show('Academy created.');}catch(error){show(error.message,'error');}});
+    el('memberForm').addEventListener('submit',async e=>{e.preventDefault();try{
+      const agencyId=el('memberAgency').value,email=el('memberEmail').value,role=el('memberRole').value;
+      await rpc('admin_upsert_membership',{p_agency_id:agencyId,p_email:email,p_role:role});
+      const {error}=await db.functions.invoke('admin-invite-user',{body:{agency_id:agencyId,email,role,redirect_to:`${location.origin}/dealtrack-pro/login.html`}});
+      if(error) throw new Error(`The role was saved, but the invitation email could not be sent: ${error.message}`);
+      e.target.reset();show('Role saved and invitation email sent.');
+    }catch(error){show(error.message,'error');}});
+    el('splitForm').addEventListener('submit',async e=>{e.preventDefault();try{await rpc('admin_create_revenue_split',{p_contract_id:el('splitContract').value,p_beneficiary_agency_id:el('splitAgency').value,p_split_type:el('splitType').value,p_split_value:Number(el('splitValue').value),p_currency:el('splitCurrency').value||null,p_invoice_responsibility:el('splitInvoice').value,p_description:el('splitDescription').value||null});show('Partnership split saved.');}catch(error){show(error.message,'error');}});
+  });
+</script>
+</body>
+</html>
