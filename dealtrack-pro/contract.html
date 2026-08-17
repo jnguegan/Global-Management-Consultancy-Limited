@@ -3772,11 +3772,24 @@ function getInstalmentMetrics(data) {
   if (!items.length) return null;
 
   const reportingYear = new Date().getFullYear();
+  const reportingYearStart = new Date(reportingYear, 0, 1);
+  const reportingYearEnd = new Date(reportingYear, 11, 31, 23, 59, 59, 999);
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
   const currency = items.find((item) => item.currency)?.currency || getCurrencyCode(data);
   const sumItems = (list) => list.reduce((sum, item) => sum + (toNumber(item.amount) || 0), 0);
+  const isOpenReceivable = (item) => {
+    const status = String(
+      item?.payment_record_status ||
+      item?.payment_status ||
+      item?.invoice_status ||
+      ""
+    ).trim().toLowerCase();
+    if (["paid", "settled", "received", "cancelled", "canceled"].includes(status)) return false;
+    if (item?.is_paid === true || item?.paid_at || item?.payment_received_date) return false;
+    return true;
+  };
   const inYear = (item) => {
     let reportingDate = item.due_date || item.trigger_date || null;
     if (!reportingDate && item.due_date_type === "relative_to_event") {
@@ -3787,7 +3800,9 @@ function getInstalmentMetrics(data) {
     }
     if (!reportingDate) return false;
     const dueDate = new Date(`${reportingDate}T00:00:00`);
-    return !Number.isNaN(dueDate.getTime()) && dueDate.getFullYear() === reportingYear;
+    if (Number.isNaN(dueDate.getTime())) return false;
+    return dueDate.getFullYear() === reportingYear ||
+      (dueDate < reportingYearStart && isOpenReceivable(item));
   };
 
   const confirmedItems = items.filter(isConfirmedRevenueItem);
@@ -3801,8 +3816,7 @@ function getInstalmentMetrics(data) {
   const annualRevenue = sumItems(annualItems);
   const invoiceForecast = sumItems(
     annualItems.filter((item) => {
-      const status = String(item.invoice_status || "pending").trim().toLowerCase();
-      return !["paid", "settled", "received", "cancelled"].includes(status);
+      return isOpenReceivable(item);
     })
   );
   const guaranteedAnnualRevenue = sumItems(annualItems.filter(isConfirmedRevenueItem));
@@ -3811,10 +3825,9 @@ function getInstalmentMetrics(data) {
   const futureItems = items
     .filter((item) => {
       if (!item.due_date) return false;
-      const status = String(item.invoice_status || "").toLowerCase();
-      if (status === "paid") return false;
+      if (!isOpenReceivable(item)) return false;
       const dueDate = new Date(`${item.due_date}T00:00:00`);
-      return !Number.isNaN(dueDate.getTime());
+      return !Number.isNaN(dueDate.getTime()) && dueDate <= reportingYearEnd;
     })
     .sort((a, b) => String(a.due_date).localeCompare(String(b.due_date)));
 
