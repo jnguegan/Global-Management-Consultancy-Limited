@@ -10,6 +10,7 @@
   <title>DealTrack Pro — Contract Portfolio</title>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <script src="/agent-academy/js/supabase-client.js"></script>
   <script src="/agent-academy/js/auth.js"></script>
   <script src="/agent-academy/js/guard.js"></script>
@@ -467,6 +468,94 @@
       gap: 16px;
     }
 
+    .portfolio-table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+
+    .portfolio-table {
+      width: 100%;
+      min-width: 1160px;
+      border-collapse: collapse;
+      table-layout: auto;
+    }
+
+    .portfolio-table th,
+    .portfolio-table td {
+      padding: 13px 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.065);
+      text-align: left;
+      vertical-align: middle;
+    }
+
+    .portfolio-table th {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      color: var(--muted);
+      background: #121d33;
+      font-size: 0.68rem;
+      font-weight: 900;
+      letter-spacing: 0.075em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .portfolio-table tbody tr {
+      cursor: pointer;
+      transition: background 0.18s ease;
+    }
+
+    .portfolio-table tbody tr:hover,
+    .portfolio-table tbody tr:focus {
+      outline: none;
+      background: rgba(88, 166, 255, 0.075);
+    }
+
+    .portfolio-table tbody tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .table-primary {
+      display: block;
+      color: var(--text);
+      font-weight: 850;
+      line-height: 1.3;
+    }
+
+    .table-secondary {
+      display: block;
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 0.76rem;
+      line-height: 1.3;
+    }
+
+    .table-money {
+      color: var(--gold-2);
+      font-weight: 850;
+      white-space: nowrap;
+    }
+
+    .table-period,
+    .table-nowrap {
+      white-space: nowrap;
+    }
+
+    .table-view-link {
+      color: var(--blue-2);
+      font-weight: 850;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .mobile-contracts {
+      display: none;
+    }
+
     .contract-card {
       position: relative;
       overflow: hidden;
@@ -721,6 +810,34 @@
         grid-template-columns: 1fr;
       }
 
+      .portfolio-table-wrap {
+        overflow: visible;
+        border-color: #d8d8d8;
+        box-shadow: none;
+      }
+
+      .portfolio-table {
+        min-width: 0;
+        color: #111;
+        font-size: 8.5pt;
+      }
+
+      .portfolio-table th {
+        position: static;
+        color: #333;
+        background: #eee;
+      }
+
+      .portfolio-table th,
+      .portfolio-table td {
+        padding: 6px 5px;
+        border-color: #ddd;
+      }
+
+      .mobile-contracts {
+        display: none !important;
+      }
+
       .money-value,
       .commercial-metric .detail-value,
       .brand-pro,
@@ -760,6 +877,14 @@
     @media (max-width: 780px) {
       body {
         padding: 16px;
+      }
+
+      .desktop-contracts {
+        display: none;
+      }
+
+      .mobile-contracts {
+        display: grid;
       }
 
       .topbar-primary,
@@ -880,6 +1005,9 @@
           </a>
           <button id="printReportBtn" type="button" class="btn" data-i18n="printReport">
             🖨️ Print Portfolio Report
+          </button>
+          <button id="exportExcelBtn" type="button" class="btn btn-gold" data-i18n="exportExcel">
+            📊 Export to Excel
           </button>
         </div>
       </div>
@@ -1075,6 +1203,20 @@
     "oneContract": "1 contract",
     "manyContracts": "{count} contracts",
     "printReport": "🖨️ Print Portfolio Report",
+    "exportExcel": "📊 Export to Excel",
+    "tablePlayer": "Player",
+    "tableClub": "Club",
+    "tablePeriod": "Contract period",
+    "tableStatus": "Status",
+    "tableRepresentation": "Representation",
+    "tableSalary": "Annual salary",
+    "tableCommission": "Commission",
+    "tableCurrency": "Currency",
+    "tableAnnualRevenue": "Annual revenue",
+    "tableLifetimeRevenue": "Lifetime revenue",
+    "tableNextInvoice": "Next invoice",
+    "tableAction": "Action",
+    "viewContract": "View →",
     "summaryAnnualRevenue": "Total Annual Revenue",
     "summaryAnnualRevenueNote": "Projected commission per year",
     "summaryLifetimeRevenue": "Total Lifetime Revenue",
@@ -1144,6 +1286,20 @@
     "oneContract": "1 contrat",
     "manyContracts": "{count} contrats",
     "printReport": "🖨️ Imprimer le rapport du portefeuille",
+    "exportExcel": "📊 Exporter vers Excel",
+    "tablePlayer": "Joueur",
+    "tableClub": "Club",
+    "tablePeriod": "Période du contrat",
+    "tableStatus": "Statut",
+    "tableRepresentation": "Représentation",
+    "tableSalary": "Salaire annuel",
+    "tableCommission": "Commission",
+    "tableCurrency": "Devise",
+    "tableAnnualRevenue": "Revenus annuels",
+    "tableLifetimeRevenue": "Revenus sur la durée",
+    "tableNextInvoice": "Prochaine facture",
+    "tableAction": "Action",
+    "viewContract": "Voir →",
     "summaryAnnualRevenue": "Revenus annuels totaux",
     "summaryAnnualRevenueNote": "Commissions prévisionnelles par an",
     "summaryLifetimeRevenue": "Revenus totaux sur la durée",
@@ -1213,6 +1369,20 @@
     "oneContract": "1 contrato",
     "manyContracts": "{count} contratos",
     "printReport": "🖨️ Imprimir informe de cartera",
+    "exportExcel": "📊 Exportar a Excel",
+    "tablePlayer": "Jugador",
+    "tableClub": "Club",
+    "tablePeriod": "Periodo contractual",
+    "tableStatus": "Estado",
+    "tableRepresentation": "Representación",
+    "tableSalary": "Salario anual",
+    "tableCommission": "Comisión",
+    "tableCurrency": "Moneda",
+    "tableAnnualRevenue": "Ingresos anuales",
+    "tableLifetimeRevenue": "Ingresos de vigencia",
+    "tableNextInvoice": "Próxima factura",
+    "tableAction": "Acción",
+    "viewContract": "Ver →",
     "summaryAnnualRevenue": "Ingresos anuales totales",
     "summaryAnnualRevenueNote": "Comisiones previstas por año",
     "summaryLifetimeRevenue": "Ingresos totales de vigencia",
@@ -1243,6 +1413,7 @@
 
     let currentLang = localStorage.getItem("lang") || "en";
     let allContracts = [];
+    let displayedContracts = [];
     let commissionInstalments = [];
     let currentUser = null;
     let currentAgency = null;
@@ -1891,6 +2062,75 @@
       displayTotal("totalInvoiceForecast", "invoiceForecast");
     }
 
+    function getContractDisplay(contract) {
+      const state = getContractState(contract);
+      const metrics = getCommercialMetrics(contract);
+      const representation = metrics.isDual
+        ? t("dualRepresentation")
+        : t("singleRepresentation");
+      const salary = metrics.annualSalary !== null
+        ? formatMoney(metrics.annualSalary, metrics.currency)
+        : t("notRecorded");
+      const commission =
+        metrics.commissionMethod === "fixed" && metrics.fixedAmount !== null
+          ? formatMoney(metrics.fixedAmount, metrics.currency)
+          : metrics.commissionRate !== null
+            ? `${metrics.commissionRate}%`
+            : t("notRecorded");
+
+      return {
+        state,
+        metrics,
+        player: contract.player_name || t("notRecorded"),
+        club: contract.club_name || t("clubNotRecorded"),
+        representation,
+        salary,
+        commission,
+        start: formatDate(getEffectiveStartDate(contract)),
+        end: formatDate(getEffectiveEndDate(contract)),
+        annualRevenue: metrics.available
+          ? formatMoney(metrics.annualRevenue, metrics.currency)
+          : t("calculationUnavailable"),
+        lifetimeRevenue: metrics.available && metrics.lifetimeRevenue !== null
+          ? formatMoney(metrics.lifetimeRevenue, metrics.currency)
+          : t("calculationUnavailable"),
+        invoiceForecast: metrics.available
+          ? formatMoney(metrics.invoiceForecast, metrics.currency)
+          : t("calculationUnavailable")
+      };
+    }
+
+    function renderContractCard(contract) {
+      const view = getContractDisplay(contract);
+      return `
+        <a class="contract-card ${escapeHtml(view.state.key)}" href="/dealtrack-pro/contract.html?id=${encodeURIComponent(contract.id)}">
+          <div class="card-top">
+            <div>
+              <h3 class="player-name">${escapeHtml(view.player)}</h3>
+              <div class="club-name">${escapeHtml(view.club)}</div>
+              <div style="margin-top: 9px;"><span class="representation-pill">${escapeHtml(view.representation)}</span></div>
+            </div>
+            <span class="status-pill ${escapeHtml(view.state.key)}">${escapeHtml(view.state.label)}</span>
+          </div>
+          <div class="card-details">
+            <div class="detail"><span class="detail-label">${escapeHtml(t("annualSalaryLabel"))}</span><span class="detail-value">${escapeHtml(view.salary)}</span></div>
+            <div class="detail"><span class="detail-label">${escapeHtml(t("commissionRateLabel"))}</span><span class="detail-value">${escapeHtml(view.commission)}</span></div>
+            <div class="detail"><span class="detail-label">${escapeHtml(t("startLabel"))}</span><span class="detail-value">${escapeHtml(view.start)}</span></div>
+            <div class="detail"><span class="detail-label">${escapeHtml(t("endLabel"))}</span><span class="detail-value">${escapeHtml(view.end)}</span></div>
+          </div>
+          <div class="commercial-strip">
+            <div class="commercial-metric highlight"><span class="detail-label">${escapeHtml(t("annualRevenueLabel"))}</span><span class="detail-value">${escapeHtml(view.annualRevenue)}</span></div>
+            <div class="commercial-metric highlight"><span class="detail-label">${escapeHtml(t("lifetimeRevenueLabel"))}</span><span class="detail-value">${escapeHtml(view.lifetimeRevenue)}</span></div>
+            <div class="commercial-metric invoice"><span class="detail-label">${escapeHtml(t("invoiceForecastLabel"))}</span><span class="detail-value">${escapeHtml(view.invoiceForecast)}</span></div>
+          </div>
+          <div class="card-footer">
+            <span class="analysis-label">${escapeHtml(getAnalysisLabel(contract))}</span>
+            <span class="invoice-forecast-pill">${escapeHtml(t("forecastStatus"))}</span>
+            <span class="open-label">${escapeHtml(t("openContract"))}</span>
+          </div>
+        </a>`;
+    }
+
     function renderContracts(contracts) {
       const container =
         document.getElementById("contractsList");
@@ -1917,134 +2157,54 @@
         return;
       }
 
+      const tableRows = contracts.map((contract) => {
+        const view = getContractDisplay(contract);
+        const href = `/dealtrack-pro/contract.html?id=${encodeURIComponent(contract.id)}`;
+        return `
+          <tr data-contract-row data-href="${escapeHtml(href)}" tabindex="0">
+            <td><span class="table-primary">${escapeHtml(view.player)}</span><span class="table-secondary">${escapeHtml(getAnalysisLabel(contract))}</span></td>
+            <td><span class="table-primary">${escapeHtml(view.club)}</span><span class="table-secondary">${escapeHtml(contract.club_country || contract.club_league || "")}</span></td>
+            <td class="table-period"><span class="table-primary">${escapeHtml(view.start)}</span><span class="table-secondary">${escapeHtml(view.end)}</span></td>
+            <td><span class="status-pill ${escapeHtml(view.state.key)}">${escapeHtml(view.state.label)}</span></td>
+            <td>${escapeHtml(view.representation)}</td>
+            <td class="table-money">${escapeHtml(view.salary)}</td>
+            <td class="table-nowrap">${escapeHtml(view.commission)}</td>
+            <td class="table-nowrap">${escapeHtml(view.metrics.currency || "—")}</td>
+            <td class="table-money">${escapeHtml(view.annualRevenue)}</td>
+            <td class="table-money">${escapeHtml(view.lifetimeRevenue)}</td>
+            <td class="table-money">${escapeHtml(view.invoiceForecast)}</td>
+            <td><a class="table-view-link" href="${escapeHtml(href)}">${escapeHtml(t("viewContract"))}</a></td>
+          </tr>`;
+      }).join("");
+
       container.innerHTML = `
-        <div class="contracts-grid">
-          ${contracts
-            .map((contract) => {
-              const state =
-                getContractState(contract);
-
-              const playerName =
-                contract.player_name ||
-                t("notRecorded");
-
-              const clubName =
-                contract.club_name ||
-                t("clubNotRecorded");
-
-              const metrics = getCommercialMetrics(contract);
-              const representation = metrics.isDual
-                ? t("dualRepresentation")
-                : t("singleRepresentation");
-
-              const annualSalaryDisplay = metrics.annualSalary !== null
-                ? formatMoney(metrics.annualSalary, metrics.currency)
-                : t("notRecorded");
-
-              const commissionRateDisplay =
-                metrics.commissionMethod === "fixed" && metrics.fixedAmount !== null
-                  ? formatMoney(metrics.fixedAmount, metrics.currency)
-                  : metrics.commissionRate !== null
-                    ? `${metrics.commissionRate}%`
-                    : t("notRecorded");
-
-              const annualRevenueDisplay = metrics.available
-                ? formatMoney(metrics.annualRevenue, metrics.currency)
-                : t("calculationUnavailable");
-
-              const lifetimeRevenueDisplay = metrics.available && metrics.lifetimeRevenue !== null
-                ? formatMoney(metrics.lifetimeRevenue, metrics.currency)
-                : t("calculationUnavailable");
-
-              const invoiceForecastDisplay = metrics.available
-                ? formatMoney(metrics.invoiceForecast, metrics.currency)
-                : t("calculationUnavailable");
-
-              return `
-                <a
-                  class="contract-card ${escapeHtml(state.key)}"
-                  href="/dealtrack-pro/contract.html?id=${encodeURIComponent(contract.id)}"
-                >
-                  <div class="card-top">
-                    <div>
-                      <h3 class="player-name">
-                        ${escapeHtml(playerName)}
-                      </h3>
-
-                      <div class="club-name">
-                        ${escapeHtml(clubName)}
-                      </div>
-
-                      <div style="margin-top: 9px;">
-                        <span class="representation-pill">
-                          ${escapeHtml(representation)}
-                        </span>
-                      </div>
-                    </div>
-
-                    <span class="status-pill ${escapeHtml(state.key)}">
-                      ${escapeHtml(state.label)}
-                    </span>
-                  </div>
-
-                  <div class="card-details">
-                    <div class="detail">
-                      <span class="detail-label">${escapeHtml(t("annualSalaryLabel"))}</span>
-                      <span class="detail-value">${escapeHtml(annualSalaryDisplay)}</span>
-                    </div>
-
-                    <div class="detail">
-                      <span class="detail-label">${escapeHtml(t("commissionRateLabel"))}</span>
-                      <span class="detail-value">${escapeHtml(commissionRateDisplay)}</span>
-                    </div>
-
-                    <div class="detail">
-                      <span class="detail-label">${escapeHtml(t("startLabel"))}</span>
-                      <span class="detail-value">${escapeHtml(formatDate(getEffectiveStartDate(contract)))}</span>
-                    </div>
-
-                    <div class="detail">
-                      <span class="detail-label">${escapeHtml(t("endLabel"))}</span>
-                      <span class="detail-value">${escapeHtml(formatDate(getEffectiveEndDate(contract)))}</span>
-                    </div>
-                  </div>
-
-                  <div class="commercial-strip">
-                    <div class="commercial-metric highlight">
-                      <span class="detail-label">${escapeHtml(t("annualRevenueLabel"))}</span>
-                      <span class="detail-value">${escapeHtml(annualRevenueDisplay)}</span>
-                    </div>
-
-                    <div class="commercial-metric highlight">
-                      <span class="detail-label">${escapeHtml(t("lifetimeRevenueLabel"))}</span>
-                      <span class="detail-value">${escapeHtml(lifetimeRevenueDisplay)}</span>
-                    </div>
-
-                    <div class="commercial-metric invoice">
-                      <span class="detail-label">${escapeHtml(t("invoiceForecastLabel"))}</span>
-                      <span class="detail-value">${escapeHtml(invoiceForecastDisplay)}</span>
-                    </div>
-                  </div>
-
-                  <div class="card-footer">
-                    <span class="analysis-label">
-                      ${escapeHtml(getAnalysisLabel(contract))}
-                    </span>
-
-                    <span class="invoice-forecast-pill">
-                      ${escapeHtml(t("forecastStatus"))}
-                    </span>
-
-                    <span class="open-label">
-                      ${escapeHtml(t("openContract"))}
-                    </span>
-                  </div>
-                </a>
-              `;
-            })
-            .join("")}
+        <div class="desktop-contracts portfolio-table-wrap">
+          <table class="portfolio-table">
+            <thead><tr>
+              <th>${escapeHtml(t("tablePlayer"))}</th><th>${escapeHtml(t("tableClub"))}</th>
+              <th>${escapeHtml(t("tablePeriod"))}</th><th>${escapeHtml(t("tableStatus"))}</th>
+              <th>${escapeHtml(t("tableRepresentation"))}</th><th>${escapeHtml(t("tableSalary"))}</th>
+              <th>${escapeHtml(t("tableCommission"))}</th><th>${escapeHtml(t("tableCurrency"))}</th>
+              <th>${escapeHtml(t("tableAnnualRevenue"))}</th><th>${escapeHtml(t("tableLifetimeRevenue"))}</th>
+              <th>${escapeHtml(t("tableNextInvoice"))}</th><th>${escapeHtml(t("tableAction"))}</th>
+            </tr></thead>
+            <tbody>${tableRows}</tbody>
+          </table>
         </div>
-      `;
+        <div class="mobile-contracts contracts-grid">${contracts.map(renderContractCard).join("")}</div>`;
+
+      container.querySelectorAll("[data-contract-row]").forEach((row) => {
+        const openRow = () => { window.location.href = row.dataset.href; };
+        row.addEventListener("click", (event) => {
+          if (!event.target.closest("a, button")) openRow();
+        });
+        row.addEventListener("keydown", (event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            openRow();
+          }
+        });
+      });
     }
 
     function renderFilteredContracts() {
@@ -2090,7 +2250,56 @@
         }
       );
 
+      displayedContracts = filtered;
       renderContracts(filtered);
+    }
+
+    function exportPortfolioToExcel() {
+      if (!window.XLSX) {
+        window.alert("Excel export is temporarily unavailable. Please refresh the page and try again.");
+        return;
+      }
+
+      const contracts = Array.isArray(displayedContracts)
+        ? displayedContracts
+        : [];
+
+      if (!contracts.length) {
+        window.alert(t("emptyTitle"));
+        return;
+      }
+
+      const rows = contracts.map((contract) => {
+        const view = getContractDisplay(contract);
+        const metrics = view.metrics;
+        return {
+          [t("tablePlayer")]: view.player,
+          [t("tableClub")]: view.club,
+          [t("startLabel")]: getEffectiveStartDate(contract) || "",
+          [t("endLabel")]: getEffectiveEndDate(contract) || "",
+          [t("tableStatus")]: view.state.label,
+          [t("tableRepresentation")]: view.representation,
+          [t("tableSalary")]: metrics.annualSalary ?? "",
+          [t("tableCommission")]: view.commission,
+          [t("tableCurrency")]: metrics.currency || "",
+          [t("tableAnnualRevenue")]: metrics.available ? (metrics.annualRevenue ?? 0) : "",
+          [t("tableLifetimeRevenue")]: metrics.available ? (metrics.lifetimeRevenue ?? 0) : "",
+          [t("tableNextInvoice")]: metrics.available ? (metrics.invoiceForecast ?? 0) : ""
+        };
+      });
+
+      const workbook = XLSX.utils.book_new();
+      const worksheet = XLSX.utils.json_to_sheet(rows);
+      worksheet["!autofilter"] = { ref: worksheet["!ref"] };
+      worksheet["!cols"] = [
+        { wch: 24 }, { wch: 30 }, { wch: 13 }, { wch: 13 },
+        { wch: 18 }, { wch: 22 }, { wch: 16 }, { wch: 17 },
+        { wch: 10 }, { wch: 18 }, { wch: 18 }, { wch: 18 }
+      ];
+
+      XLSX.utils.book_append_sheet(workbook, worksheet, "Contract Portfolio");
+      const dateStamp = new Date().toISOString().slice(0, 10);
+      XLSX.writeFile(workbook, `DealTrack-Pro-Contract-Portfolio-${dateStamp}.xlsx`);
     }
 
     function showLoadError() {
@@ -2141,6 +2350,10 @@
         document
           .getElementById("printReportBtn")
           ?.addEventListener("click", () => window.print());
+
+        document
+          .getElementById("exportExcelBtn")
+          ?.addEventListener("click", exportPortfolioToExcel);
 
         applyTranslations();
 
