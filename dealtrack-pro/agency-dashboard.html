@@ -2886,6 +2886,18 @@
       return null;
     }
 
+    function dashboardInstalmentIsOpen(item) {
+      const status = String(
+        item?.payment_record_status ||
+        item?.payment_status ||
+        item?.invoice_status ||
+        ""
+      ).trim().toLowerCase();
+      if (["paid", "settled", "received", "cancelled", "canceled"].includes(status)) return false;
+      if (item?.is_paid === true || item?.paid_at || item?.payment_received_date) return false;
+      return true;
+    }
+
     function getAnalysisObligationLifetime(contract) {
       const analysis = parseDashboardAnalysis(contract);
       const obligations = Array.isArray(analysis?.payment_obligations)
@@ -2907,6 +2919,8 @@
       if (!items.length) return row;
 
       const reportingYear = new Date().getFullYear();
+      const reportingYearStart = new Date(reportingYear, 0, 1);
+      const reportingYearEnd = new Date(reportingYear, 11, 31, 23, 59, 59, 999);
       const today = new Date();
       today.setHours(0, 0, 0, 0);
 
@@ -2949,11 +2963,17 @@
         const dueDate = new Date(`${reportingDate}T00:00:00`);
         if (Number.isNaN(dueDate.getTime())) return sum;
 
-        return dueDate.getFullYear() === reportingYear
+        const belongsToCurrentYear = dueDate.getFullYear() === reportingYear;
+        const overdueUnpaidCarryForward = dueDate < reportingYearStart && dashboardInstalmentIsOpen(item);
+
+        return (belongsToCurrentYear || overdueUnpaidCarryForward)
           ? sum + (resolveDashboardInstalmentAmount(row.contract, item) || 0)
           : sum;
       }, 0);
-      const annualRevenue = toNumber(row.contract.calculated_annual_revenue) ?? scheduleAnnualRevenue;
+      const annualRevenue = Math.max(
+        toNumber(row.contract.calculated_annual_revenue) || 0,
+        scheduleAnnualRevenue
+      );
 
       /* Invoice Forecast is the total current-year contractual invoice
        * opportunity, including overdue/unpaid and trigger-based amounts.
@@ -2961,19 +2981,21 @@
        */
       const forecastItems = usableItems
         .filter((item) => {
-          const status = String(item.invoice_status || "").toLowerCase();
-          if (["paid", "cancelled"].includes(status)) return false;
+          if (!dashboardInstalmentIsOpen(item)) return false;
           const reportingDate = dashboardReportingDate(row.contract, item);
           if (!reportingDate) return false;
           const dueDate = new Date(`${reportingDate}T00:00:00`);
-          return !Number.isNaN(dueDate.getTime()) && dueDate.getFullYear() === reportingYear;
+          return !Number.isNaN(dueDate.getTime()) && dueDate <= reportingYearEnd;
         });
 
       const scheduleForecast = forecastItems.reduce(
         (sum, item) => sum + (resolveDashboardInstalmentAmount(row.contract, item) || 0),
         0
       );
-      const futureForecast = toNumber(row.contract.calculated_invoice_forecast) ?? scheduleForecast;
+      const futureForecast = Math.max(
+        toNumber(row.contract.calculated_invoice_forecast) || 0,
+        scheduleForecast
+      );
 
       return {
         ...row,
