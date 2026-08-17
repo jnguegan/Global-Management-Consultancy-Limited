@@ -375,6 +375,35 @@
       letter-spacing: -0.03em;
     }
 
+    .summary-value.currency-breakdown {
+      display: grid;
+      gap: 7px;
+      width: 100%;
+      font-size: 1rem;
+      letter-spacing: normal;
+    }
+
+    .currency-total-line {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      line-height: 1.25;
+    }
+
+    .currency-total-code {
+      color: var(--muted);
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+    }
+
+    .currency-total-amount {
+      color: var(--gold-2);
+      font-size: 1.12rem;
+      font-weight: 900;
+    }
+
     .summary-note {
       margin-top: 5px;
       color: var(--muted);
@@ -850,7 +879,7 @@
             ➕ Add Manually
           </a>
           <button id="printReportBtn" type="button" class="btn" data-i18n="printReport">
-            🖨️ Print Partner Report
+            🖨️ Print Portfolio Report
           </button>
         </div>
       </div>
@@ -1045,7 +1074,7 @@
     "openContract": "Open Contract →",
     "oneContract": "1 contract",
     "manyContracts": "{count} contracts",
-    "printReport": "🖨️ Print Partner Report",
+    "printReport": "🖨️ Print Portfolio Report",
     "summaryAnnualRevenue": "Total Annual Revenue",
     "summaryAnnualRevenueNote": "Projected commission per year",
     "summaryLifetimeRevenue": "Total Lifetime Revenue",
@@ -1114,7 +1143,7 @@
     "openContract": "Ouvrir le contrat →",
     "oneContract": "1 contrat",
     "manyContracts": "{count} contrats",
-    "printReport": "🖨️ Imprimer le rapport partenaires",
+    "printReport": "🖨️ Imprimer le rapport du portefeuille",
     "summaryAnnualRevenue": "Revenus annuels totaux",
     "summaryAnnualRevenueNote": "Commissions prévisionnelles par an",
     "summaryLifetimeRevenue": "Revenus totaux sur la durée",
@@ -1183,7 +1212,7 @@
     "openContract": "Abrir contrato →",
     "oneContract": "1 contrato",
     "manyContracts": "{count} contratos",
-    "printReport": "🖨️ Imprimir informe para socios",
+    "printReport": "🖨️ Imprimir informe de cartera",
     "summaryAnnualRevenue": "Ingresos anuales totales",
     "summaryAnnualRevenueNote": "Comisiones previstas por año",
     "summaryLifetimeRevenue": "Ingresos totales de vigencia",
@@ -1701,6 +1730,7 @@
       );
 
       const currencies = new Set();
+      const byCurrency = {};
       let annualRevenue = 0;
       let lifetimeRevenue = 0;
       let invoiceForecast = 0;
@@ -1710,7 +1740,20 @@
         const metrics = getCommercialMetrics(contract);
         if (!metrics.available) return;
 
-        currencies.add(metrics.currency);
+        const currency = String(metrics.currency || "GBP").trim().toUpperCase();
+        currencies.add(currency);
+
+        if (!byCurrency[currency]) {
+          byCurrency[currency] = {
+            annualRevenue: 0,
+            lifetimeRevenue: 0,
+            invoiceForecast: 0
+          };
+        }
+
+        byCurrency[currency].annualRevenue += metrics.annualRevenue || 0;
+        byCurrency[currency].lifetimeRevenue += metrics.lifetimeRevenue || 0;
+        byCurrency[currency].invoiceForecast += metrics.invoiceForecast || 0;
         annualRevenue += metrics.annualRevenue || 0;
         lifetimeRevenue += metrics.lifetimeRevenue || 0;
         invoiceForecast += metrics.invoiceForecast || 0;
@@ -1721,6 +1764,7 @@
         annualRevenue,
         lifetimeRevenue,
         invoiceForecast,
+        byCurrency,
         calculatedCount,
         currency: currencies.size === 1 ? [...currencies][0] : null,
         mixedCurrencies: currencies.size > 1
@@ -1797,26 +1841,54 @@
 
       document.getElementById("activeContracts").textContent = activeCount;
 
-      const displayTotal = (elementId, amount) => {
+      const displayTotal = (elementId, metricKey) => {
         const element = document.getElementById(elementId);
         if (!element) return;
+
+        element.classList.remove("currency-breakdown");
 
         if (!totals.calculatedCount) {
           element.textContent = t("calculationUnavailable");
           return;
         }
 
-        if (totals.mixedCurrencies) {
-          element.textContent = t("mixedCurrencies");
+        const entries = Object.entries(totals.byCurrency || {})
+          .sort(([currencyA], [currencyB]) => currencyA.localeCompare(currencyB));
+
+        if (!entries.length) {
+          element.textContent = t("calculationUnavailable");
           return;
         }
 
-        element.textContent = formatMoney(amount, totals.currency);
+        if (entries.length === 1) {
+          const [currency, values] = entries[0];
+          element.textContent = formatMoney(values[metricKey] || 0, currency);
+          return;
+        }
+
+        element.replaceChildren();
+        element.classList.add("currency-breakdown");
+
+        entries.forEach(([currency, values]) => {
+          const line = document.createElement("div");
+          line.className = "currency-total-line";
+
+          const code = document.createElement("span");
+          code.className = "currency-total-code";
+          code.textContent = currency;
+
+          const amount = document.createElement("strong");
+          amount.className = "currency-total-amount";
+          amount.textContent = formatMoney(values[metricKey] || 0, currency);
+
+          line.append(code, amount);
+          element.append(line);
+        });
       };
 
-      displayTotal("totalAnnualRevenue", totals.annualRevenue);
-      displayTotal("totalLifetimeRevenue", totals.lifetimeRevenue);
-      displayTotal("totalInvoiceForecast", totals.invoiceForecast);
+      displayTotal("totalAnnualRevenue", "annualRevenue");
+      displayTotal("totalLifetimeRevenue", "lifetimeRevenue");
+      displayTotal("totalInvoiceForecast", "invoiceForecast");
     }
 
     function renderContracts(contracts) {
