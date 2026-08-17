@@ -846,7 +846,7 @@
           <a class="btn btn-gold" href="/dealtrack-pro/upload-contract.html" data-i18n="uploadContract">
             📤 Upload Contract
           </a>
-          <a class="btn btn-primary" href="/dealtrack-pro/add-contract.html" data-i18n="addManually">
+          <a class="btn btn-primary" href="/dealtrack-pro/add-manual-deal.html" data-i18n="addManually">
             ➕ Add Manually
           </a>
           <button id="printReportBtn" type="button" class="btn" data-i18n="printReport">
@@ -1491,8 +1491,22 @@
       if (!items.length) return null;
 
       const reportingYear = new Date().getFullYear();
+      const reportingYearStart = new Date(reportingYear, 0, 1);
+      const reportingYearEnd = new Date(reportingYear, 11, 31, 23, 59, 59, 999);
       const today = new Date();
       today.setHours(0, 0, 0, 0);
+
+      const isOpenReceivable = (item) => {
+        const status = String(
+          item?.payment_record_status ||
+          item?.payment_status ||
+          item?.invoice_status ||
+          ""
+        ).trim().toLowerCase();
+        if (["paid", "settled", "received", "cancelled", "canceled"].includes(status)) return false;
+        if (item?.is_paid === true || item?.paid_at || item?.payment_received_date) return false;
+        return true;
+      };
 
       const currency =
         items.find((item) => item.currency)?.currency ||
@@ -1509,28 +1523,29 @@
         const dueDate = parseDate(item.due_date);
         if (!dueDate) return sum;
 
-        return dueDate.getFullYear() === reportingYear
+        const belongsToCurrentYear = dueDate.getFullYear() === reportingYear;
+        const overdueUnpaidCarryForward = dueDate < reportingYearStart && isOpenReceivable(item);
+
+        return (belongsToCurrentYear || overdueUnpaidCarryForward)
           ? sum + (toNumber(item.amount) || 0)
           : sum;
       }, 0);
 
-      const futureItems = items
+      const forecastItems = items
         .filter((item) => {
-          const status = String(item.invoice_status || "").toLowerCase();
-          if (status === "paid") return false;
+          if (!isOpenReceivable(item)) return false;
 
           const dueDate = parseDate(item.due_date);
-          return dueDate && dueDate >= today;
+          return dueDate && dueDate <= reportingYearEnd;
         })
         .sort((a, b) => String(a.due_date).localeCompare(String(b.due_date)));
 
-      const nextDueDate = futureItems[0]?.due_date || null;
+      const nextDueDate = forecastItems[0]?.due_date || null;
 
-      const invoiceForecast = nextDueDate
-        ? futureItems
-            .filter((item) => item.due_date === nextDueDate)
-            .reduce((sum, item) => sum + (toNumber(item.amount) || 0), 0)
-        : 0;
+      const invoiceForecast = forecastItems.reduce(
+        (sum, item) => sum + (toNumber(item.amount) || 0),
+        0
+      );
 
       return {
         available: true,
