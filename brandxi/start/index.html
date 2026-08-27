@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+
 <html lang="en">
  <head>
   <meta charset="utf-8"/>
@@ -43,7 +43,7 @@
    <p>
     Only the essentials first. BRAND XI can build the rest progressively with the player or authorised representative.
    </p>
-   <form class="grid" onsubmit="event.preventDefault();location.href='../app/player/'">
+   <form class="grid" id="brandxiStartForm">
     <section class="card span8">
      <h2>
       Player
@@ -53,37 +53,37 @@
        <label>
         First name
        </label>
-       <input placeholder="First name" required=""/>
+       <input id="first_name" name="first_name" placeholder="First name" required=""/>
       </div>
       <div class="span6">
        <label>
         Surname
        </label>
-       <input placeholder="Surname" required=""/>
+       <input id="surname" name="surname" placeholder="Surname" required=""/>
       </div>
       <div class="span6">
        <label>
         Current club
        </label>
-       <input placeholder="Club"/>
+       <input id="current_club" name="current_club" placeholder="Club"/>
       </div>
       <div class="span6">
        <label>
         Position
        </label>
-       <input placeholder="Position"/>
+       <input id="position" name="position" placeholder="Position"/>
       </div>
       <div class="span6">
        <label>
         Nationality
        </label>
-       <input placeholder="Nationality"/>
+       <input id="nationality" name="nationality" placeholder="Nationality"/>
       </div>
       <div class="span6">
        <label>
         Player communication language
        </label>
-       <select>
+       <select id="creator_role" name="creator_role">
         <option>
          English
         </option>
@@ -104,7 +104,7 @@
      <label>
       Relationship
      </label>
-     <select>
+     <select id="communication_language" name="communication_language">
       <option>
        The player
       </option>
@@ -124,7 +124,7 @@
      <label>
       Primary website language
      </label>
-     <select>
+     <select id="primary_website_language" name="primary_website_language">
       <option>
        English
       </option>
@@ -138,14 +138,76 @@
      <label>
       Additional languages
      </label>
-     <input placeholder="e.g. French, Spanish"/>
+     <input id="additional_languages" name="additional_languages" placeholder="e.g. French, Spanish"/>
      <br/>
      <br/>
+     <div id="formStatus" style="grid-column:1/-1;min-height:24px;color:#9DA5B4;font-size:14px;">
+     </div>
      <button>
       Create Brand ID &rarr;
      </button>
     </aside>
    </form>
   </main>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
+  </script>
+  <script>
+   const SUPABASE_URL = "https://ysaxtuvuzqkyfmganven.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_esfhuUEIcUJEL6z9zryRAA_FGMmUHlw";
+const supabaseClient = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_PUBLISHABLE_KEY
+);
+
+const brandForm = document.getElementById("brandxiStartForm");
+const formStatus = document.getElementById("formStatus");
+
+function createBrandId() {
+  const randomPart = crypto.randomUUID().replaceAll("-", "").slice(0, 10).toUpperCase();
+  return `BX-${randomPart}`;
+}
+
+brandForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+
+  const submitButton = brandForm.querySelector('button[type="submit"], button');
+  submitButton.disabled = true;
+  formStatus.textContent = "Creating your BRAND XI profile...";
+
+  const formData = new FormData(brandForm);
+
+  const player = {
+    brand_id: createBrandId(),
+    first_name: String(formData.get("first_name") || "").trim(),
+    surname: String(formData.get("surname") || "").trim(),
+    current_club: String(formData.get("current_club") || "").trim() || null,
+    position: String(formData.get("position") || "").trim() || null,
+    nationality: String(formData.get("nationality") || "").trim() || null,
+    communication_language: String(formData.get("communication_language") || "en"),
+    primary_website_language: String(formData.get("primary_website_language") || "en")
+  };
+
+  try {
+    const { data, error } = await supabaseClient
+      .from("brandxi_players")
+      .insert(player)
+      .select("id, brand_id")
+      .single();
+
+    if (error) {
+      throw error;
+    }
+
+    sessionStorage.setItem("brandxi_player_id", data.id);
+    sessionStorage.setItem("brandxi_brand_id", data.brand_id);
+    window.location.href = "../app/player/";
+  } catch (error) {
+    console.error("BRAND XI player creation failed:", error);
+    formStatus.textContent =
+      "We could not create the Brand ID yet. Please try again or contact BRAND XI support.";
+    submitButton.disabled = false;
+  }
+});
+  </script>
  </body>
 </html>
