@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>BRAND XI™ | Personal Brand Agent for Professional Footballers</title>
+  <meta name="description" content="BRAND XI by Global Management Consultancy Limited helps professional footballers own their identity, their digital home and their story." />
+  <link rel="icon" href="../favicon.png" type="image/png" />
+  <style>
+    :root{
+      --bx-bg:#0B0D10;--bx-soft:#11151b;--bx-panel:#171A20;--bx-panel2:#1d222b;
+      --bx-text:#FFFFFF;--bx-muted:#9DA5B4;--bx-line:rgba(255,255,255,.09);
+      --bx-blue:#245CFF;--bx-blue-soft:rgba(36,92,255,.14);--bx-platinum:#C8CDD5;
+      --shadow:0 26px 80px rgba(0,0,0,.42);--radius:28px;--container:1200px;
+    }
+    *{box-sizing:border-box} html{scroll-behavior:smooth}
+    body{margin:0;font-family:Inter,Arial,Helvetica,sans-serif;color:var(--bx-text);background:
+      radial-gradient(circle at 80% 8%,rgba(36,92,255,.15),transparent 25%),
+      radial-gradient(circle at 10% 45%,rgba(36,92,255,.06),transparent 25%),
+      linear-gradient(180deg,#080a0d 0%,var(--bx-bg) 45%,#090b0e 100%);}
+    a{color:inherit;text-decoration:none}.container{width:min(var(--container),calc(100% - 40px));margin:auto}
+    .topbar{position:sticky;top:0;z-index:50;background:rgba(11,13,16,.84);backdrop-filter:blur(18px);border-bottom:1px solid var(--bx-line)}
+    .topbar-inner{min-height:78px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+    .bx-logo{font-size:22px;font-weight:900;letter-spacing:-.04em}.bx-logo .xi{color:var(--bx-blue)}
+    .powered{display:block;margin-top:3px;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--bx-muted)}
+    nav{display:flex;align-items:center;gap:18px}nav a{font-size:14px;color:var(--bx-muted);font-weight:700}nav a:hover{color:#fff}
+    .langSelect{border:1px solid var(--bx-line);background:rgba(255,255,255,.04);color:#fff;border-radius:999px;padding:9px 12px;font-weight:800}
+    .hero{min-height:720px;display:flex;align-items:center;padding:86px 0 70px;position:relative;overflow:hidden}
+    .hero:after{content:"XI";position:absolute;right:-2vw;top:5%;font-size:min(36vw,520px);font-weight:950;letter-spacing:-.12em;color:rgba(36,92,255,.035);pointer-events:none}
+    .hero-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:54px;align-items:center;position:relative;z-index:1}
+    .eyebrow{display:inline-flex;padding:8px 13px;border:1px solid rgba(36,92,255,.32);background:var(--bx-blue-soft);border-radius:999px;color:#9bb3ff;font-size:11px;font-weight:900;letter-spacing:.13em;text-transform:uppercase}
+    h1{font-size:clamp(54px,7.5vw,104px);line-height:.88;letter-spacing:-.065em;margin:22px 0 26px;max-width:780px}
+    h1 .xi{color:var(--bx-blue)}.lead{font-size:20px;line-height:1.7;color:var(--bx-platinum);max-width:690px;margin:0 0 30px}
+    .mantra{display:flex;flex-wrap:wrap;gap:8px 18px;margin:28px 0;color:#fff;font-weight:900;font-size:14px;letter-spacing:.07em}
+    .mantra span:not(:last-child):after{content:" /";color:var(--bx-blue);margin-left:18px}
+    .actions{display:flex;gap:12px;flex-wrap:wrap}.btn{display:inline-flex;min-height:50px;padding:0 21px;align-items:center;justify-content:center;border-radius:13px;font-weight:850;border:1px solid transparent}
+    .btn.primary{background:var(--bx-blue);box-shadow:0 14px 35px rgba(36,92,255,.27)}.btn.secondary{border-color:var(--bx-line);background:rgba(255,255,255,.035)}
+    .brand-card{padding:28px;border:1px solid var(--bx-line);border-radius:32px;background:linear-gradient(160deg,rgba(36,92,255,.13),rgba(255,255,255,.025) 45%,rgba(255,255,255,.015));box-shadow:var(--shadow)}
+    .brand-card-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px}.brand-card small{color:var(--bx-muted);text-transform:uppercase;letter-spacing:.12em;font-weight:800}
+    .status{font-size:11px;color:#b8c7ff;border:1px solid rgba(36,92,255,.3);padding:7px 10px;border-radius:999px;background:var(--bx-blue-soft)}
+    .identity{padding:22px;border-radius:22px;background:rgba(0,0,0,.22);border:1px solid var(--bx-line);margin-bottom:12px}
+    .identity strong{display:block;font-size:24px;margin:7px 0}.identity p{margin:0;color:var(--bx-muted);line-height:1.6}
+    .mini-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.mini{padding:16px;border:1px solid var(--bx-line);border-radius:17px;background:rgba(255,255,255,.025)}
+    .mini b{display:block;margin-top:7px;font-size:14px}.dot{width:8px;height:8px;border-radius:50%;background:var(--bx-blue);display:inline-block;box-shadow:0 0 15px var(--bx-blue);margin-right:7px}
+    section.content{padding:78px 0}.section-head{max-width:760px;margin-bottom:34px}.section-kicker{color:#8eabff;text-transform:uppercase;letter-spacing:.13em;font-size:11px;font-weight:900}
+    h2{font-size:clamp(34px,5vw,58px);letter-spacing:-.045em;line-height:1.03;margin:12px 0 18px}.section-head p{color:var(--bx-muted);font-size:18px;line-height:1.75}
+    .three{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.pillar{padding:28px;border:1px solid var(--bx-line);border-radius:24px;background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.015))}
+    .num{color:var(--bx-blue);font-size:12px;font-weight:900;letter-spacing:.12em}.pillar h3{font-size:25px;margin:18px 0 12px}.pillar p{color:var(--bx-muted);line-height:1.7;margin:0}
+    .journey{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.step{min-height:205px;padding:22px;border-radius:21px;border:1px solid var(--bx-line);background:var(--bx-panel)}
+    .step span{font-size:11px;color:#8eabff;font-weight:900}.step h3{font-size:19px;margin:16px 0 10px}.step p{font-size:14px;color:var(--bx-muted);line-height:1.65;margin:0}
+    .language-box{padding:36px;border:1px solid rgba(36,92,255,.24);border-radius:28px;background:linear-gradient(135deg,rgba(36,92,255,.11),rgba(255,255,255,.02));display:grid;grid-template-columns:1fr auto;gap:30px;align-items:center}
+    .language-box p{color:var(--bx-muted);line-height:1.7;max-width:720px}.langs{display:flex;gap:9px}.langs b{padding:11px 14px;border:1px solid var(--bx-line);border-radius:12px;background:rgba(255,255,255,.04)}
+    .final{padding:70px 0 90px}.final-box{text-align:center;padding:58px 30px;border-radius:32px;border:1px solid rgba(36,92,255,.25);background:radial-gradient(circle at top,rgba(36,92,255,.18),transparent 50%),var(--bx-panel)}
+    .final-box p{color:var(--bx-muted);font-size:18px;line-height:1.7;max-width:700px;margin:0 auto 26px}
+    footer{border-top:1px solid var(--bx-line);padding:28px 0 36px;color:var(--bx-muted);font-size:13px}.footer-inner{display:flex;justify-content:space-between;gap:20px;align-items:center}
+    @media(max-width:900px){.hero{min-height:auto;padding-top:56px}.hero-grid,.language-box{grid-template-columns:1fr}.three{grid-template-columns:1fr}.journey{grid-template-columns:1fr 1fr}nav a{display:none}}
+    @media(max-width:600px){.container{width:calc(100% - 24px)}.topbar-inner{min-height:68px}h1{font-size:55px}.lead{font-size:17px}.mantra{display:grid;gap:9px}.mantra span:after{display:none!important}.actions .btn{width:100%}.brand-card{padding:18px;border-radius:24px}.mini-grid,.journey{grid-template-columns:1fr}.language-box{padding:25px}.langs{flex-wrap:wrap}.footer-inner{align-items:flex-start;flex-direction:column}}
+  </style>
+</head>
+<body>
+<header class="topbar">
+ <div class="container topbar-inner">
+   <a href="../index.html"><div class="bx-logo">BRAND <span class="xi">XI</span>™</div><span class="powered" data-bx="header.by">A product of Global Management Consultancy Limited</span></a>
+   <nav><a href="#why" data-bx="nav.why">Why BRAND XI</a><a href="#how" data-bx="nav.how">How it works</a><a href="#languages" data-bx="nav.lang">Languages</a>
+   <select id="langSelect" class="langSelect"><option value="en">EN</option><option value="fr">FR</option><option value="es">ES</option></select></nav>
+ </div>
+</header>
+<main>
+<section class="hero">
+ <div class="container hero-grid">
+  <div>
+   <span class="eyebrow" data-bx="hero.eyebrow">Built for professional footballers</span>
+   <h1>BRAND <span class="xi">XI</span></h1>
+   <p class="lead" data-bx="hero.lead">Your personal brand should belong to you — not to an algorithm, a social platform or a moment in your career. BRAND XI turns your identity, career and story into a digital home you own.</p>
+   <div class="mantra"><span data-bx="hero.m1">OWN YOUR IDENTITY.</span><span data-bx="hero.m2">OWN YOUR HOME.</span><span data-bx="hero.m3">OWN YOUR STORY.</span></div>
+   <div class="actions"><a class="btn primary" href="#start" data-bx="hero.cta">Create Your Brand ID →</a><a class="btn secondary" href="#how" data-bx="hero.cta2">See how it works</a></div>
+  </div>
+  <div class="brand-card">
+   <div class="brand-card-head"><small data-bx="card.label">Player Brand ID</small><span class="status"><span class="dot"></span><span data-bx="card.status">Private workspace</span></span></div>
+   <div class="identity"><small data-bx="card.identity">Identity</small><strong data-bx="card.name">Your Name. Your Brand.</strong><p data-bx="card.copy">One verified source for your career, story, media, values and digital presence.</p></div>
+   <div class="mini-grid">
+    <div class="mini"><small data-bx="card.story">Story</small><b data-bx="card.storyv">In your own voice</b></div>
+    <div class="mini"><small data-bx="card.home">Digital Home</small><b>yourname.com</b></div>
+    <div class="mini"><small data-bx="card.language">Languages</small><b>FR · EN · ES</b></div>
+    <div class="mini"><small data-bx="card.control">Control</small><b data-bx="card.controlv">Player approved</b></div>
+   </div>
+  </div>
+ </div>
+</section>
+
+<section class="content" id="why"><div class="container">
+ <div class="section-head"><span class="section-kicker" data-bx="why.kicker">Beyond social media</span><h2 data-bx="why.title">A football career is visible. A personal brand should be intentional.</h2><p data-bx="why.copy">Social platforms show moments. BRAND XI creates the permanent home behind those moments — a place for the player, the story, the career and what comes next.</p></div>
+ <div class="three">
+  <article class="pillar"><span class="num">01 / IDENTITY</span><h3 data-bx="p1.title">Own your identity</h3><p data-bx="p1.copy">Build a verified Brand ID around who you are, what you stand for, your career and your ambitions beyond football.</p></article>
+  <article class="pillar"><span class="num">02 / HOME</span><h3 data-bx="p2.title">Own your home</h3><p data-bx="p2.copy">Publish on your own domain. Your website becomes the permanent digital destination that you control.</p></article>
+  <article class="pillar"><span class="num">03 / STORY</span><h3 data-bx="p3.title">Own your story</h3><p data-bx="p3.copy">Tell the human story behind the player — in your own voice, with your own imagery and with approval before publication.</p></article>
+ </div>
+</div></section>
+
+<section class="content" id="how"><div class="container">
+ <div class="section-head"><span class="section-kicker" data-bx="how.kicker">From introduction to live brand</span><h2 data-bx="how.title">Designed around the reality of a professional footballer.</h2><p data-bx="how.copy">The player does not need to become a website manager. An authorised agent, representative or family member can start the process while the player remains at the centre of identity and approval.</p></div>
+ <div class="journey">
+  <article class="step"><span>01</span><h3 data-bx="s1.title">Representative starts</h3><p data-bx="s1.copy">Basic player, career and preferred communication details create the initial Brand ID.</p></article>
+  <article class="step"><span>02</span><h3 data-bx="s2.title">Player contributes</h3><p data-bx="s2.copy">A simple multilingual conversation gathers story, personality, ambitions and approved photography.</p></article>
+  <article class="step"><span>03</span><h3 data-bx="s3.title">BRAND XI builds</h3><p data-bx="s3.copy">Brand direction, structured content, visual presentation and a private website preview are prepared.</p></article>
+  <article class="step"><span>04</span><h3 data-bx="s4.title">Player approves</h3><p data-bx="s4.copy">Nothing personal goes live without approval. Changes can be requested before publication.</p></article>
+  <article class="step"><span>05</span><h3 data-bx="s5.title">Domain goes live</h3><p data-bx="s5.copy">The approved brand is published to the player's own domain with BRAND XI powering the experience.</p></article>
+  <article class="step"><span>06</span><h3 data-bx="s6.title">Brand evolves</h3><p data-bx="s6.copy">Transfers, achievements, new languages and new chapters can update the same persistent Brand ID.</p></article>
+ </div>
+</div></section>
+
+<section class="content" id="languages"><div class="container">
+ <div class="language-box"><div><span class="section-kicker" data-bx="lang.kicker">International by design</span><h2 data-bx="lang.title">Speak to the player in his language. Present his brand to the world.</h2><p data-bx="lang.copy">Communication language, website primary language and additional website languages are independent. A French player in England can communicate in French while publishing a French-first website with English and Spanish versions.</p></div><div class="langs"><b>EN</b><b>FR</b><b>ES</b></div></div>
+</div></section>
+
+<section class="final" id="start"><div class="container"><div class="final-box">
+ <span class="section-kicker" data-bx="final.kicker">BRAND XI™</span><h2 data-bx="final.title">Your career is one chapter. Build the brand that lasts beyond it.</h2><p data-bx="final.copy">BRAND XI is being developed by Global Management Consultancy Limited for professional footballers and their authorised representatives.</p>
+ <a class="btn primary" href="../contact.html?subject=BRAND%20XI" data-bx="final.cta">Register Interest →</a>
+</div></div></section>
+</main>
+<footer><div class="container footer-inner"><div><strong>BRAND <span style="color:#245CFF">XI</span>™</strong><br><span data-bx="footer.by">A product of Global Management Consultancy Limited</span></div><div>© <span id="year"></span> Global Management Consultancy Limited</div></div></footer>
+<script>
+const T={
+en:{},
+fr:{
+"header.by":"Un produit de Global Management Consultancy Limited","nav.why":"Pourquoi BRAND XI","nav.how":"Comment ça marche","nav.lang":"Langues",
+"hero.eyebrow":"Conçu pour les footballeurs professionnels","hero.lead":"Votre marque personnelle doit vous appartenir — pas à un algorithme, une plateforme sociale ou un moment de votre carrière. BRAND XI transforme votre identité, votre carrière et votre histoire en un espace numérique qui vous appartient.","hero.m1":"POSSÉDEZ VOTRE IDENTITÉ.","hero.m2":"POSSÉDEZ VOTRE ESPACE.","hero.m3":"POSSÉDEZ VOTRE HISTOIRE.","hero.cta":"Créer votre Brand ID →","hero.cta2":"Voir comment ça marche",
+"card.label":"Brand ID du joueur","card.status":"Espace privé","card.identity":"Identité","card.name":"Votre nom. Votre marque.","card.copy":"Une source vérifiée pour votre carrière, votre histoire, vos médias, vos valeurs et votre présence numérique.","card.story":"Histoire","card.storyv":"Avec vos propres mots","card.home":"Espace numérique","card.language":"Langues","card.control":"Contrôle","card.controlv":"Approuvé par le joueur",
+"why.kicker":"Au-delà des réseaux sociaux","why.title":"Une carrière de footballeur est visible. Une marque personnelle doit être intentionnelle.","why.copy":"Les réseaux sociaux montrent des moments. BRAND XI crée l'espace permanent derrière ces moments — pour le joueur, son histoire, sa carrière et la suite.",
+"p1.title":"Possédez votre identité","p1.copy":"Construisez un Brand ID vérifié autour de qui vous êtes, vos valeurs, votre carrière et vos ambitions au-delà du football.","p2.title":"Possédez votre espace","p2.copy":"Publiez sur votre propre domaine. Votre site devient la destination numérique permanente que vous contrôlez.","p3.title":"Possédez votre histoire","p3.copy":"Racontez l'histoire humaine derrière le joueur — avec vos mots, vos images et votre approbation avant publication.",
+"how.kicker":"De la présentation à la marque en ligne","how.title":"Conçu autour de la réalité d'un footballeur professionnel.","how.copy":"Le joueur n'a pas besoin de devenir gestionnaire de site. Un agent, représentant ou membre de la famille autorisé peut lancer le processus, tandis que le joueur reste au centre de son identité et de l'approbation.",
+"s1.title":"Le représentant commence","s1.copy":"Les informations essentielles du joueur, de sa carrière et de communication créent le Brand ID initial.","s2.title":"Le joueur contribue","s2.copy":"Une conversation multilingue simple recueille son histoire, sa personnalité, ses ambitions et ses photos approuvées.","s3.title":"BRAND XI construit","s3.copy":"La direction de marque, le contenu structuré, la présentation visuelle et un aperçu privé du site sont préparés.","s4.title":"Le joueur approuve","s4.copy":"Aucun contenu personnel n'est publié sans approbation. Des modifications peuvent être demandées.","s5.title":"Le domaine est publié","s5.copy":"La marque approuvée est publiée sur le propre domaine du joueur, propulsée par BRAND XI.","s6.title":"La marque évolue","s6.copy":"Transferts, réussites, nouvelles langues et nouveaux chapitres enrichissent le même Brand ID.",
+"lang.kicker":"International dès la conception","lang.title":"Parlez au joueur dans sa langue. Présentez sa marque au monde.","lang.copy":"La langue de communication, la langue principale du site et les langues supplémentaires sont indépendantes. Un joueur français en Angleterre peut communiquer en français tout en publiant un site d'abord en français, puis en anglais et espagnol.",
+"final.kicker":"BRAND XI™","final.title":"Votre carrière est un chapitre. Construisez la marque qui lui survivra.","final.copy":"BRAND XI est développé par Global Management Consultancy Limited pour les footballeurs professionnels et leurs représentants autorisés.","final.cta":"Manifester votre intérêt →","footer.by":"Un produit de Global Management Consultancy Limited"},
+es:{
+"header.by":"Un producto de Global Management Consultancy Limited","nav.why":"Por qué BRAND XI","nav.how":"Cómo funciona","nav.lang":"Idiomas",
+"hero.eyebrow":"Creado para futbolistas profesionales","hero.lead":"Tu marca personal debe pertenecerte a ti, no a un algoritmo, una red social o un momento de tu carrera. BRAND XI convierte tu identidad, carrera e historia en un hogar digital propio.","hero.m1":"SÉ DUEÑO DE TU IDENTIDAD.","hero.m2":"SÉ DUEÑO DE TU ESPACIO.","hero.m3":"SÉ DUEÑO DE TU HISTORIA.","hero.cta":"Crear tu Brand ID →","hero.cta2":"Ver cómo funciona",
+"card.label":"Brand ID del jugador","card.status":"Espacio privado","card.identity":"Identidad","card.name":"Tu nombre. Tu marca.","card.copy":"Una fuente verificada para tu carrera, historia, medios, valores y presencia digital.","card.story":"Historia","card.storyv":"Con tu propia voz","card.home":"Hogar digital","card.language":"Idiomas","card.control":"Control","card.controlv":"Aprobado por el jugador",
+"why.kicker":"Más allá de las redes sociales","why.title":"Una carrera futbolística es visible. Una marca personal debe ser intencional.","why.copy":"Las redes sociales muestran momentos. BRAND XI crea el hogar permanente detrás de esos momentos: un lugar para el jugador, su historia, su carrera y lo que viene después.",
+"p1.title":"Sé dueño de tu identidad","p1.copy":"Construye un Brand ID verificado alrededor de quién eres, tus valores, tu carrera y tus ambiciones más allá del fútbol.","p2.title":"Sé dueño de tu espacio","p2.copy":"Publica en tu propio dominio. Tu web se convierte en el destino digital permanente que controlas.","p3.title":"Sé dueño de tu historia","p3.copy":"Cuenta la historia humana detrás del jugador, con tus palabras, tus imágenes y tu aprobación antes de publicar.",
+"how.kicker":"De la presentación a la marca online","how.title":"Diseñado para la realidad de un futbolista profesional.","how.copy":"El jugador no necesita convertirse en administrador web. Un agente, representante o familiar autorizado puede iniciar el proceso mientras el jugador mantiene el control de su identidad y aprobación.",
+"s1.title":"El representante comienza","s1.copy":"Los datos básicos del jugador, carrera y comunicación crean el Brand ID inicial.","s2.title":"El jugador participa","s2.copy":"Una conversación multilingüe sencilla recoge historia, personalidad, ambiciones y fotografías aprobadas.","s3.title":"BRAND XI construye","s3.copy":"Se preparan la dirección de marca, el contenido estructurado, la presentación visual y una vista previa privada.","s4.title":"El jugador aprueba","s4.copy":"Nada personal se publica sin aprobación. Se pueden solicitar cambios antes de publicar.","s5.title":"El dominio se publica","s5.copy":"La marca aprobada se publica en el dominio propio del jugador con BRAND XI impulsando la experiencia.","s6.title":"La marca evoluciona","s6.copy":"Traspasos, logros, nuevos idiomas y nuevos capítulos actualizan el mismo Brand ID persistente.",
+"lang.kicker":"Internacional desde el diseño","lang.title":"Habla con el jugador en su idioma. Presenta su marca al mundo.","lang.copy":"El idioma de comunicación, el idioma principal de la web y los idiomas adicionales son independientes. Un jugador francés en Inglaterra puede comunicarse en francés y publicar una web principalmente en francés con versiones en inglés y español.",
+"final.kicker":"BRAND XI™","final.title":"Tu carrera es un capítulo. Construye la marca que perdure después.","final.copy":"BRAND XI está siendo desarrollado por Global Management Consultancy Limited para futbolistas profesionales y sus representantes autorizados.","final.cta":"Registrar interés →","footer.by":"Un producto de Global Management Consultancy Limited"}};
+const english={};document.querySelectorAll("[data-bx]").forEach(e=>english[e.dataset.bx]=e.textContent);
+function setLang(l){document.documentElement.lang=l;document.querySelectorAll("[data-bx]").forEach(e=>{const k=e.dataset.bx;e.textContent=(T[l]&&T[l][k])||english[k]||e.textContent});localStorage.setItem("brandxiLang",l)}
+const sel=document.getElementById("langSelect");sel.value=localStorage.getItem("brandxiLang")||"en";sel.onchange=e=>setLang(e.target.value);setLang(sel.value);document.getElementById("year").textContent=new Date().getFullYear();
+</script>
+</body></html>
