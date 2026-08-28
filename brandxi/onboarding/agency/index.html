@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Agency Setup | BRAND XI</title>
+<style>
+:root{--bg:#0b0d10;--text:#fff;--muted:#9da5b4;--line:rgba(255,255,255,.09);--blue:#245cff;--danger:#ff9c9c}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(circle at 80% 0,rgba(36,92,255,.18),transparent 30%),var(--bg);color:var(--text);font-family:Inter,Arial,sans-serif}
+a{color:inherit;text-decoration:none}.wrap{width:min(1180px,calc(100% - 32px));margin:auto}header{border-bottom:1px solid var(--line)}header .wrap{min-height:72px;display:flex;align-items:center;justify-content:space-between}.logo{font-size:22px;font-weight:900}.blue{color:var(--blue)}
+main{padding:54px 0 80px}.shell{width:min(720px,100%);margin:auto}.eyebrow{color:#9bb3ff;font-size:11px;font-weight:900;letter-spacing:.13em}h1{margin:12px 0;font-size:clamp(42px,7vw,64px);line-height:.98;letter-spacing:-.05em}.intro{color:var(--muted);line-height:1.65;margin-bottom:28px}
+.card{padding:30px;border:1px solid var(--line);border-radius:22px;background:rgba(255,255,255,.03)}.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.full{grid-column:1/-1}
+label{display:block;color:#c8cdd5;font-size:13px;font-weight:800;margin-bottom:8px}input,select{width:100%;padding:14px;border-radius:12px;border:1px solid var(--line);background:#0e1116;color:#fff;font-size:15px}input:focus,select:focus{outline:1px solid var(--blue);border-color:var(--blue)}
+button{width:100%;border:0;border-radius:12px;background:var(--blue);color:#fff;font-weight:850;font-size:15px;padding:15px;cursor:pointer}.status{min-height:22px;margin:12px 0 0;color:var(--muted);font-size:13px}.error{color:var(--danger)}
+.account{margin-bottom:22px;padding:13px 15px;border:1px solid var(--line);border-radius:12px;background:#0e1116;color:var(--muted);font-size:13px}.account strong{color:#fff}
+@media(max-width:650px){.grid{grid-template-columns:1fr}.card{padding:22px}}
+.languages{display:flex;gap:6px}.lang-btn{width:auto;margin:0;padding:6px 8px;border:1px solid var(--line);border-radius:7px;background:transparent;color:var(--muted);font-size:12px;font-weight:800;cursor:pointer}.lang-btn.active{color:#fff;border-color:var(--blue);background:rgba(36,92,255,.14)}.success{color:#a8ffbf}</style>
+</head>
+<body>
+<header><div class="wrap">
+<a class="logo" href="/brandxi/">BRAND <span class="blue">XI</span>&trade;</a>
+<div class="languages">
+<button class="lang-btn" type="button" data-lang="en">EN</button>
+<button class="lang-btn" type="button" data-lang="fr">FR</button>
+<button class="lang-btn" type="button" data-lang="es">ES</button>
+</div>
+</div></header>
+<main><div class="shell">
+<span class="eyebrow" data-i18n="eyebrow">AGENCY ONBOARDING</span>
+<h1><span data-i18n="title">Create your</span> <span class="blue" data-i18n="agencyProfile">agency profile.</span></h1>
+<p class="intro"><span data-i18n="intro">Set up the organisation that will manage player brands in BRAND XI.</span></p>
+
+<section class="card">
+<div class="account"><span data-i18n="account">Account:</span> <strong id="email">Checking...</strong></div>
+<form id="agencyForm">
+<div class="grid">
+<div class="full"><label for="agencyName" data-i18n="agencyName">Agency / organisation name</label><input id="agencyName" required placeholder="e.g. BS Group International"></div>
+<div><label for="country" data-i18n="country">Country / jurisdiction</label><input id="country" placeholder="e.g. United Kingdom"></div>
+<div><label for="website" data-i18n="website">Website</label><input id="website" type="url" placeholder="https://..."></div>
+<div class="full"><label for="billingEmail" data-i18n="billing">Billing email</label><input id="billingEmail" type="email" required></div>
+<div class="full"><button type="submit" data-i18n="create">Create agency profile →</button><p id="status" class="status"></p></div>
+</div>
+</form>
+</section>
+</div></main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const i18n={
+en:{eyebrow:"AGENCY ONBOARDING",title:"Create your",agencyProfile:"agency profile.",intro:"Set up the organisation that will manage player brands in BRAND XI.",account:"Account:",agencyName:"Agency / organisation name",country:"Country / jurisdiction",website:"Website",billing:"Billing email",create:"Create agency profile →",saved:"Agency details saved for the next secure setup step."},
+fr:{eyebrow:"INTÉGRATION DE L'AGENCE",title:"Créez le profil de votre",agencyProfile:"agence.",intro:"Configurez l'organisation qui gérera les marques des joueurs dans BRAND XI.",account:"Compte :",agencyName:"Nom de l'agence / organisation",country:"Pays / juridiction",website:"Site web",billing:"E-mail de facturation",create:"Créer le profil de l'agence →",saved:"Les informations de l'agence ont été enregistrées pour la prochaine étape sécurisée."},
+es:{eyebrow:"INCORPORACIÓN DE LA AGENCIA",title:"Crea el perfil de tu",agencyProfile:"agencia.",intro:"Configura la organización que gestionará las marcas de los jugadores en BRAND XI.",account:"Cuenta:",agencyName:"Nombre de la agencia / organización",country:"País / jurisdicción",website:"Sitio web",billing:"Correo de facturación",create:"Crear perfil de agencia →",saved:"Los datos de la agencia se han guardado para el siguiente paso seguro."}
+};
+let currentLang=localStorage.getItem("brandxi_language")||"en";
+function applyLanguage(l){currentLang=i18n[l]?l:"en";localStorage.setItem("brandxi_language",currentLang);document.documentElement.lang=currentLang;document.querySelectorAll("[data-i18n]").forEach(el=>{const k=el.dataset.i18n;if(i18n[currentLang][k])el.textContent=i18n[currentLang][k]});document.querySelectorAll(".lang-btn").forEach(b=>b.classList.toggle("active",b.dataset.lang===currentLang));}
+document.querySelectorAll(".lang-btn").forEach(b=>b.addEventListener("click",()=>applyLanguage(b.dataset.lang)));
+applyLanguage(currentLang);
+
+const client=window.supabase.createClient("https://ysaxtuvuzqkyfmganven.supabase.co","sb_publishable_esfhuUEIcUJEL6z9zryRAA_FGMmUHlw");
+let currentUser=null;
+const emailEl=document.getElementById("email");
+const billing=document.getElementById("billingEmail");
+const statusEl=document.getElementById("status");
+
+(async()=>{
+ const {data:{user}}=await client.auth.getUser();
+ if(!user){window.location.replace("/brandxi/login/");return;}
+ currentUser=user;
+ emailEl.textContent=user.email;
+ billing.value=user.email;
+})();
+
+document.getElementById("agencyForm").addEventListener("submit",(e)=>{
+ e.preventDefault();
+
+ /*
+  * We deliberately do not write to brandxi_agencies yet.
+  * The existing schema has no agency-user membership table, so writing now
+  * would create an agency record without a secure ownership relationship.
+  * Preserve the entered details until that membership layer is added.
+  */
+ const draft={
+   name:document.getElementById("agencyName").value.trim(),
+   country:document.getElementById("country").value.trim(),
+   website:document.getElementById("website").value.trim(),
+   billing_email:billing.value.trim()
+ };
+ sessionStorage.setItem("brandxi_agency_draft",JSON.stringify(draft));
+ statusEl.className="status success";statusEl.textContent=i18n[currentLang].saved;
+});
+</script>
+</body>
+</html>
