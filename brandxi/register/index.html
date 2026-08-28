@@ -1,4 +1,4 @@
-
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -183,7 +183,7 @@
             nav { display: none; }
             .card { padding: 22px; }
         }
-    </style>
+    .lang{background:transparent;border:1px solid var(--line);color:var(--muted);padding:6px 8px;border-radius:7px;cursor:pointer;font-weight:800}.lang.active{color:#fff;border-color:var(--blue)}</style>
 </head>
 
 <body>
@@ -195,27 +195,26 @@
 
             <nav>
                 <a href="/brandxi/">Home</a>
-                <a href="/brandxi/login/">Sign In</a>
+                <a href="/brandxi/login/" data-i18n="signin">Sign In</a><button type="button" class="lang" data-lang="en">EN</button><button type="button" class="lang" data-lang="fr">FR</button><button type="button" class="lang" data-lang="es">ES</button>
             </nav>
         </div>
     </header>
 
     <main>
         <div class="registration-shell">
-            <span class="eyebrow">BRAND XI REGISTRATION</span>
+            <span class="eyebrow" data-i18n="eyebrow">BRAND XI REGISTRATION</span>
 
             <h1>
-                Start with your <span class="blue">email.</span>
+                <span data-i18n="title">Start with your</span> <span class="blue" data-i18n="emailword">email.</span>
             </h1>
 
             <p class="intro">
-                Enter your email address first. We will use it to continue
-                securely with the correct BRAND XI account journey.
+                <span data-i18n="intro">Enter your email address first. We will use it to continue securely with the correct BRAND XI account journey.</span>
             </p>
 
             <section class="card">
                 <form id="emailForm">
-                    <label for="email">Email address</label>
+                    <label for="email" data-i18n="emailLabel">Email address</label>
 
                     <input
                         id="email"
@@ -228,26 +227,34 @@
                     >
 
                     <button id="continueButton" type="submit">
-                        Continue &rarr;
+                        <span data-i18n="continue">Continue →</span>
                     </button>
 
                     <p id="status" class="status"></p>
                 </form>
 
                 <div class="signin">
-                    Already know you have a GlobalMGM account?
-                    <a href="/brandxi/login/">Sign in &rarr;</a>
+                    <span data-i18n="existing">Already know you have a GlobalMGM account?</span>
+                    <a href="/brandxi/login/"><span data-i18n="signinArrow">Sign in →</span></a>
                 </div>
 
                 <p class="privacy">
-                    Your email is used as your GlobalMGM sign-in identity.
-                    BRAND XI product access and permissions are managed separately.
+                    <span data-i18n="privacy">Your email is used as your GlobalMGM sign-in identity. BRAND XI product access and permissions are managed separately.</span>
                 </p>
             </section>
         </div>
     </main>
 
     <script>
+        const i18n={
+            en:{signin:"Sign In",eyebrow:"BRAND XI REGISTRATION",title:"Start with your",emailword:"email.",intro:"Enter your email address first. We will use it to continue securely with the correct BRAND XI account journey.",emailLabel:"Email address",continue:"Continue →",existing:"Already know you have a GlobalMGM account?",signinArrow:"Sign in →",privacy:"Your email is used as your GlobalMGM sign-in identity. BRAND XI product access and permissions are managed separately.",error:"Please enter your email address.",loading:"Continuing..."},
+            fr:{signin:"Se connecter",eyebrow:"INSCRIPTION BRAND XI",title:"Commencez par votre",emailword:"e-mail.",intro:"Saisissez d'abord votre adresse e-mail. Nous l'utiliserons pour poursuivre en toute sécurité le parcours BRAND XI approprié.",emailLabel:"Adresse e-mail",continue:"Continuer →",existing:"Vous avez déjà un compte GlobalMGM ?",signinArrow:"Se connecter →",privacy:"Votre e-mail sert d'identifiant GlobalMGM. Les accès et autorisations BRAND XI sont gérés séparément.",error:"Veuillez saisir votre adresse e-mail.",loading:"Chargement..."},
+            es:{signin:"Iniciar sesión",eyebrow:"REGISTRO BRAND XI",title:"Empieza con tu",emailword:"correo electrónico.",intro:"Introduce primero tu correo electrónico. Lo utilizaremos para continuar de forma segura con el proceso BRAND XI adecuado.",emailLabel:"Correo electrónico",continue:"Continuar →",existing:"¿Ya tienes una cuenta GlobalMGM?",signinArrow:"Iniciar sesión →",privacy:"Tu correo se utiliza como identidad de acceso GlobalMGM. El acceso y los permisos de BRAND XI se gestionan por separado.",error:"Introduce tu correo electrónico.",loading:"Continuando..."}
+        };
+        let lang=localStorage.getItem("brandxi_language")||"en";
+        function setLang(l){lang=i18n[l]?l:"en";localStorage.setItem("brandxi_language",lang);document.documentElement.lang=lang;document.querySelectorAll("[data-i18n]").forEach(e=>e.textContent=i18n[lang][e.dataset.i18n]);document.querySelectorAll(".lang").forEach(b=>b.classList.toggle("active",b.dataset.lang===lang));}
+        document.querySelectorAll(".lang").forEach(b=>b.addEventListener("click",()=>setLang(b.dataset.lang)));setLang(lang);
+
         const emailForm = document.getElementById("emailForm");
         const emailInput = document.getElementById("email");
         const continueButton = document.getElementById("continueButton");
@@ -260,7 +267,7 @@
 
             if (!email) {
                 statusMessage.className = "status error";
-                statusMessage.textContent = "Please enter your email address.";
+                statusMessage.textContent = i18n[lang].error;
                 return;
             }
 
@@ -275,7 +282,7 @@
             sessionStorage.setItem("brandxi_registration_email", email);
 
             continueButton.disabled = true;
-            continueButton.textContent = "Continuing...";
+            continueButton.textContent = i18n[lang].loading;
 
             window.location.href = "/brandxi/register/identity/";
         });
