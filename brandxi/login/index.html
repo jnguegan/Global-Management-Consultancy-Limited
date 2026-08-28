@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <title>Sign In | BRAND XI</title>
 
     <style>
@@ -23,7 +24,11 @@
             margin: 0;
             min-height: 100vh;
             background:
-                radial-gradient(circle at 80% 0, rgba(36, 92, 255, 0.18), transparent 30%),
+                radial-gradient(
+                    circle at 80% 0,
+                    rgba(36, 92, 255, 0.18),
+                    transparent 30%
+                ),
                 var(--bg);
             color: var(--text);
             font-family: Inter, Arial, sans-serif;
@@ -169,6 +174,36 @@
             color: #a8ffbf;
         }
 
+        /*
+         * BRAND XI registration option.
+         *
+         * This takes new BRAND XI customers to the BRAND XI
+         * onboarding process.
+         *
+         * The registration process will recognise existing
+         * GlobalMGM/Supabase identities so that we do not create
+         * duplicate accounts for DealTrack Pro users.
+         */
+        .signup-option {
+            margin-top: 22px;
+            padding-top: 20px;
+            border-top: 1px solid var(--line);
+            text-align: center;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .signup-option a {
+            display: block;
+            margin-top: 8px;
+            color: #9bb3ff;
+            font-weight: 800;
+        }
+
+        .signup-option a:hover {
+            color: #ffffff;
+        }
+
         .footnote {
             margin-top: 18px;
             color: var(--muted);
@@ -189,36 +224,59 @@
 </head>
 
 <body>
+
     <header>
         <div class="wrap">
+
             <a class="logo" href="/brandxi/">
                 BRAND <span class="xi">XI</span>&trade;
             </a>
 
             <nav>
-                <a href="/brandxi/">Home</a>
-                <a href="/brandxi/players/">Find a Player</a>
-                <a href="/brandxi/start/">Create Brand ID</a>
+                <a href="/brandxi/">
+                    Home
+                </a>
+
+                <a href="/brandxi/players/">
+                    Find a Player
+                </a>
+
+                <a href="/brandxi/start/">
+                    Create Brand ID
+                </a>
             </nav>
+
         </div>
     </header>
 
     <main>
+
         <div class="login-shell">
-            <span class="eyebrow">BRAND XI ACCESS</span>
+
+            <span class="eyebrow">
+                BRAND XI ACCESS
+            </span>
 
             <h1>
-                Welcome <span class="blue">back.</span>
+                Welcome
+                <span class="blue">
+                    back.
+                </span>
             </h1>
 
             <p class="intro">
-                Sign in to access your BRAND XI workspace, player profile,
-                analytics and brand services.
+                Sign in to access your BRAND XI workspace,
+                player profile, analytics and brand services.
             </p>
 
             <section class="card">
+
                 <form id="loginForm">
-                    <label for="email">Email address</label>
+
+                    <label for="email">
+                        Email address
+                    </label>
+
                     <input
                         id="email"
                         name="email"
@@ -227,7 +285,10 @@
                         required
                     >
 
-                    <label for="password">Password</label>
+                    <label for="password">
+                        Password
+                    </label>
+
                     <input
                         id="password"
                         name="password"
@@ -236,98 +297,189 @@
                         required
                     >
 
-                    <button id="loginButton" type="submit">
+                    <button
+                        id="loginButton"
+                        type="submit"
+                    >
                         Sign in to BRAND XI &rarr;
                     </button>
 
-                    <p id="status" class="status"></p>
+                    <p
+                        id="status"
+                        class="status"
+                    ></p>
+
                 </form>
+
+                <!--
+                    New BRAND XI registration.
+
+                    Existing GlobalMGM users will eventually be
+                    recognised during onboarding rather than being
+                    given a duplicate Supabase identity.
+                -->
+
+                <div class="signup-option">
+
+                    <span>
+                        New to BRAND XI?
+                    </span>
+
+                    <a href="/brandxi/register/">
+                        Create your account &rarr;
+                    </a>
+
+                </div>
+
             </section>
 
             <p class="footnote">
                 Access is limited to authorised BRAND XI users.
             </p>
+
         </div>
+
     </main>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script
+        src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+    ></script>
 
     <script>
+
         const SUPABASE_URL =
             "https://ysaxtuvuzqkyfmganven.supabase.co";
 
         const SUPABASE_PUBLISHABLE_KEY =
             "sb_publishable_esfhuUEIcUJEL6z9zryRAA_FGMmUHlw";
 
-        const supabaseClient = window.supabase.createClient(
-            SUPABASE_URL,
-            SUPABASE_PUBLISHABLE_KEY
+        const supabaseClient =
+            window.supabase.createClient(
+                SUPABASE_URL,
+                SUPABASE_PUBLISHABLE_KEY
+            );
+
+        const loginForm =
+            document.getElementById("loginForm");
+
+        const loginButton =
+            document.getElementById("loginButton");
+
+        const statusMessage =
+            document.getElementById("status");
+
+
+        loginForm.addEventListener(
+            "submit",
+            async function (event) {
+
+                event.preventDefault();
+
+                const email =
+                    document
+                        .getElementById("email")
+                        .value
+                        .trim();
+
+                const password =
+                    document
+                        .getElementById("password")
+                        .value;
+
+
+                loginButton.disabled = true;
+
+                loginButton.textContent =
+                    "Signing in...";
+
+
+                statusMessage.className =
+                    "status";
+
+                statusMessage.textContent =
+                    "";
+
+
+                /*
+                 * BRAND XI shares the GlobalMGM Supabase
+                 * authentication project.
+                 *
+                 * Authentication establishes the user's identity.
+                 *
+                 * BRAND XI access and permissions are handled
+                 * separately by the BRAND XI application.
+                 */
+
+                const { data, error } =
+                    await supabaseClient.auth.signInWithPassword({
+                        email: email,
+                        password: password
+                    });
+
+
+                if (error) {
+
+                    console.error(
+                        "BRAND XI sign-in failed:",
+                        error
+                    );
+
+                    statusMessage.className =
+                        "status error";
+
+                    statusMessage.textContent =
+                        "We could not sign you in. Please check your email and password.";
+
+                    loginButton.disabled =
+                        false;
+
+                    loginButton.textContent =
+                        "Sign in to BRAND XI →";
+
+                    return;
+                }
+
+
+                if (!data.user) {
+
+                    statusMessage.className =
+                        "status error";
+
+                    statusMessage.textContent =
+                        "No authenticated user was returned.";
+
+                    loginButton.disabled =
+                        false;
+
+                    loginButton.textContent =
+                        "Sign in to BRAND XI →";
+
+                    return;
+                }
+
+
+                statusMessage.className =
+                    "status success";
+
+                statusMessage.textContent =
+                    "Signed in. Opening your BRAND XI workspace...";
+
+
+                /*
+                 * Next phase:
+                 *
+                 * BRAND XI will determine the user's product
+                 * membership and role before selecting the
+                 * appropriate dashboard.
+                 */
+
+                window.location.href =
+                    "/brandxi/app/player/";
+
+            }
         );
 
-        const loginForm = document.getElementById("loginForm");
-        const loginButton = document.getElementById("loginButton");
-        const statusMessage = document.getElementById("status");
-
-        loginForm.addEventListener("submit", async function (event) {
-            event.preventDefault();
-
-            const email =
-                document.getElementById("email").value.trim();
-
-            const password =
-                document.getElementById("password").value;
-
-            loginButton.disabled = true;
-            loginButton.textContent = "Signing in...";
-
-            statusMessage.className = "status";
-            statusMessage.textContent = "";
-
-            /*
-             * Important:
-             * BRAND XI currently shares the Supabase authentication project
-             * with the other GlobalMGM applications.
-             *
-             * An explicit BRAND XI sign-in replaces the existing browser
-             * Supabase session with the account entered here.
-             */
-            const { data, error } =
-                await supabaseClient.auth.signInWithPassword({
-                    email: email,
-                    password: password
-                });
-
-            if (error) {
-                console.error("BRAND XI sign-in failed:", error);
-
-                statusMessage.className = "status error";
-                statusMessage.textContent =
-                    "We could not sign you in. Please check your email and password.";
-
-                loginButton.disabled = false;
-                loginButton.textContent = "Sign in to BRAND XI →";
-
-                return;
-            }
-
-            if (!data.user) {
-                statusMessage.className = "status error";
-                statusMessage.textContent =
-                    "No authenticated user was returned.";
-
-                loginButton.disabled = false;
-                loginButton.textContent = "Sign in to BRAND XI →";
-
-                return;
-            }
-
-            statusMessage.className = "status success";
-            statusMessage.textContent =
-                "Signed in. Opening your BRAND XI workspace...";
-
-            window.location.href =
-                "/brandxi/app/player/";
-        });
     </script>
+
 </body>
 </html>
