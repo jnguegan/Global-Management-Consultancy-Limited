@@ -103,6 +103,7 @@
             font-size: 13px;
             font-weight: 800;
         }
+        .languages{display:flex;gap:6px;margin-left:auto}.lang-btn{background:transparent;border:1px solid var(--line);color:var(--muted);padding:6px 8px;border-radius:7px;cursor:pointer;font-weight:800}.lang-btn.active{color:#fff;border-color:var(--blue)}
         .warning {
             color: var(--danger);
             line-height: 1.5;
@@ -119,47 +120,127 @@
             <a class="logo" href="/brandxi/">
                 BRAND <span class="blue">XI</span>&trade;
             </a>
+            <div class="languages">
+                <button class="lang-btn" type="button" data-lang="en">EN</button>
+                <button class="lang-btn" type="button" data-lang="fr">FR</button>
+                <button class="lang-btn" type="button" data-lang="es">ES</button>
+            </div>
         </div>
     </header>
 
     <main>
         <div class="shell">
-            <span class="eyebrow">BRAND XI REGISTRATION</span>
-            <h1>Continue your <span class="blue">account.</span></h1>
+            <span class="eyebrow" data-i18n="eyebrow">BRAND XI REGISTRATION</span>
+            <h1><span data-i18n="title">Continue your</span> <span class="blue" data-i18n="account">account.</span></h1>
             <p class="intro">
-                Choose the correct path for this email address.
+                <span data-i18n="intro">Choose the correct path for this email address.</span>
             </p>
 
             <section class="card" id="content">
                 <div class="email-box">
-                    <span class="email-label">EMAIL ADDRESS</span>
+                    <span class="email-label" data-i18n="emailLabel">EMAIL ADDRESS</span>
                     <span id="emailDisplay"></span>
                 </div>
 
                 <div class="choice-grid">
                     <a class="choice" id="existingAccount" href="#">
-                        <strong>I already have a GlobalMGM account</strong>
-                        <span>
+                        <strong data-i18n="existingTitle">I already have a GlobalMGM account</strong>
+                        <span data-i18n="existingText">
                             Use your existing password. No duplicate account will be created.
                         </span>
                     </a>
 
                     <a class="choice" id="newAccount" href="#">
-                        <strong>I am new to GlobalMGM</strong>
-                        <span>
+                        <strong data-i18n="newTitle">I am new to GlobalMGM</strong>
+                        <span data-i18n="newText">
                             Continue to create a new identity and BRAND XI account.
                         </span>
                     </a>
                 </div>
 
                 <a class="back" href="/brandxi/register/">
-                    &larr; Change email address
+                    <span data-i18n="changeEmail">← Change email address</span>
                 </a>
             </section>
         </div>
     </main>
 
     <script>
+        const i18n = {
+            en: {
+                eyebrow: "BRAND XI REGISTRATION",
+                title: "Continue your",
+                account: "account.",
+                intro: "Choose the correct path for this email address.",
+                emailLabel: "EMAIL ADDRESS",
+                existingTitle: "I already have a GlobalMGM account",
+                existingText: "Use your existing password. No duplicate account will be created.",
+                newTitle: "I am new to GlobalMGM",
+                newText: "Continue to create a new identity and BRAND XI account.",
+                changeEmail: "← Change email address",
+                missing: "No registration email was found.",
+                start: "← Start registration"
+            },
+            fr: {
+                eyebrow: "INSCRIPTION BRAND XI",
+                title: "Poursuivez la création de votre",
+                account: "compte.",
+                intro: "Choisissez le parcours correspondant à cette adresse e-mail.",
+                emailLabel: "ADRESSE E-MAIL",
+                existingTitle: "J'ai déjà un compte GlobalMGM",
+                existingText: "Utilisez votre mot de passe existant. Aucun compte en double ne sera créé.",
+                newTitle: "Je suis nouveau sur GlobalMGM",
+                newText: "Continuez pour créer une nouvelle identité et un compte BRAND XI.",
+                changeEmail: "← Modifier l'adresse e-mail",
+                missing: "Aucune adresse e-mail d'inscription n'a été trouvée.",
+                start: "← Commencer l'inscription"
+            },
+            es: {
+                eyebrow: "REGISTRO BRAND XI",
+                title: "Continúa con tu",
+                account: "cuenta.",
+                intro: "Elige el proceso correcto para esta dirección de correo electrónico.",
+                emailLabel: "CORREO ELECTRÓNICO",
+                existingTitle: "Ya tengo una cuenta GlobalMGM",
+                existingText: "Utiliza tu contraseña actual. No se creará una cuenta duplicada.",
+                newTitle: "Soy nuevo en GlobalMGM",
+                newText: "Continúa para crear una nueva identidad y una cuenta BRAND XI.",
+                changeEmail: "← Cambiar correo electrónico",
+                missing: "No se encontró ningún correo electrónico de registro.",
+                start: "← Iniciar registro"
+            }
+        };
+
+        let currentLang = localStorage.getItem("brandxi_language") || "en";
+
+        function applyLanguage(lang) {
+            currentLang = i18n[lang] ? lang : "en";
+            localStorage.setItem("brandxi_language", currentLang);
+            document.documentElement.lang = currentLang;
+
+            document.querySelectorAll("[data-i18n]").forEach((el) => {
+                const key = el.dataset.i18n;
+                if (i18n[currentLang][key]) {
+                    el.textContent = i18n[currentLang][key];
+                }
+            });
+
+            document.querySelectorAll(".lang-btn").forEach((button) => {
+                button.classList.toggle(
+                    "active",
+                    button.dataset.lang === currentLang
+                );
+            });
+        }
+
+        document.querySelectorAll(".lang-btn").forEach((button) => {
+            button.addEventListener("click", () => {
+                applyLanguage(button.dataset.lang);
+            });
+        });
+
+        applyLanguage(currentLang);
+
         const email =
             sessionStorage.getItem("brandxi_registration_email");
 
@@ -168,9 +249,9 @@
 
         if (!email) {
             content.innerHTML =
-                '<p class="warning">No registration email was found.</p>' +
+                '<p class="warning">' + i18n[currentLang].missing + '</p>' +
                 '<a class="back" href="/brandxi/register/">' +
-                '&larr; Start registration</a>';
+                i18n[currentLang].start + '</a>';
         } else {
             emailDisplay.textContent = email;
 
