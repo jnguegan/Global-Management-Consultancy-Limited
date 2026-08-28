@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Continue Registration | BRAND XI</title>
+    <style>
+        :root {
+            --bg: #0b0d10;
+            --text: #fff;
+            --muted: #9da5b4;
+            --line: rgba(255,255,255,.09);
+            --blue: #245cff;
+            --danger: #ff9c9c;
+        }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background:
+                radial-gradient(circle at 80% 0, rgba(36,92,255,.18), transparent 30%),
+                var(--bg);
+            color: var(--text);
+            font-family: Inter, Arial, sans-serif;
+        }
+        a { color: inherit; text-decoration: none; }
+        .wrap { width: min(1180px, calc(100% - 32px)); margin: auto; }
+        header { border-bottom: 1px solid var(--line); }
+        header .wrap {
+            min-height: 72px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .logo { font-weight: 900; font-size: 22px; }
+        .blue { color: var(--blue); }
+        main {
+            min-height: calc(100vh - 73px);
+            display: flex;
+            align-items: center;
+            padding: 50px 0;
+        }
+        .shell { width: min(680px, 100%); margin: auto; }
+        .eyebrow {
+            color: #9bb3ff;
+            font-size: 11px;
+            font-weight: 900;
+            letter-spacing: .13em;
+        }
+        h1 {
+            margin: 12px 0;
+            font-size: clamp(40px, 7vw, 64px);
+            line-height: .98;
+            letter-spacing: -.05em;
+        }
+        .intro { color: var(--muted); line-height: 1.65; }
+        .card {
+            margin-top: 28px;
+            padding: 30px;
+            border: 1px solid var(--line);
+            border-radius: 22px;
+            background: rgba(255,255,255,.03);
+        }
+        .email-box {
+            padding: 14px 16px;
+            margin-bottom: 22px;
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            background: #0e1116;
+        }
+        .email-label {
+            display: block;
+            color: var(--muted);
+            font-size: 11px;
+            margin-bottom: 5px;
+        }
+        #emailDisplay { font-weight: 800; overflow-wrap: anywhere; }
+        .choice-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+        .choice {
+            display: block;
+            padding: 20px;
+            border: 1px solid var(--line);
+            border-radius: 14px;
+            background: #0e1116;
+            cursor: pointer;
+        }
+        .choice:hover { border-color: var(--blue); }
+        .choice strong { display: block; margin-bottom: 8px; }
+        .choice span {
+            display: block;
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.5;
+        }
+        .back {
+            display: inline-block;
+            margin-top: 20px;
+            color: #9bb3ff;
+            font-size: 13px;
+            font-weight: 800;
+        }
+        .warning {
+            color: var(--danger);
+            line-height: 1.5;
+        }
+        @media (max-width: 650px) {
+            .choice-grid { grid-template-columns: 1fr; }
+            .card { padding: 22px; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="wrap">
+            <a class="logo" href="/brandxi/">
+                BRAND <span class="blue">XI</span>&trade;
+            </a>
+        </div>
+    </header>
+
+    <main>
+        <div class="shell">
+            <span class="eyebrow">BRAND XI REGISTRATION</span>
+            <h1>Continue your <span class="blue">account.</span></h1>
+            <p class="intro">
+                Choose the correct path for this email address.
+            </p>
+
+            <section class="card" id="content">
+                <div class="email-box">
+                    <span class="email-label">EMAIL ADDRESS</span>
+                    <span id="emailDisplay"></span>
+                </div>
+
+                <div class="choice-grid">
+                    <a class="choice" id="existingAccount" href="#">
+                        <strong>I already have a GlobalMGM account</strong>
+                        <span>
+                            Use your existing password. No duplicate account will be created.
+                        </span>
+                    </a>
+
+                    <a class="choice" id="newAccount" href="#">
+                        <strong>I am new to GlobalMGM</strong>
+                        <span>
+                            Continue to create a new identity and BRAND XI account.
+                        </span>
+                    </a>
+                </div>
+
+                <a class="back" href="/brandxi/register/">
+                    &larr; Change email address
+                </a>
+            </section>
+        </div>
+    </main>
+
+    <script>
+        const email =
+            sessionStorage.getItem("brandxi_registration_email");
+
+        const content = document.getElementById("content");
+        const emailDisplay = document.getElementById("emailDisplay");
+
+        if (!email) {
+            content.innerHTML =
+                '<p class="warning">No registration email was found.</p>' +
+                '<a class="back" href="/brandxi/register/">' +
+                '&larr; Start registration</a>';
+        } else {
+            emailDisplay.textContent = email;
+
+            document.getElementById("existingAccount")
+                .addEventListener("click", function (event) {
+                    event.preventDefault();
+
+                    sessionStorage.setItem(
+                        "brandxi_identity_path",
+                        "existing"
+                    );
+
+                    window.location.href =
+                        "/brandxi/register/existing/";
+                });
+
+            document.getElementById("newAccount")
+                .addEventListener("click", function (event) {
+                    event.preventDefault();
+
+                    sessionStorage.setItem(
+                        "brandxi_identity_path",
+                        "new"
+                    );
+
+                    window.location.href =
+                        "/brandxi/register/new/";
+                });
+        }
+    </script>
+</body>
+</html>
