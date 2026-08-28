@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Find Existing Player | BRAND XI</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{--bg:#070a12;--panel:#0e1422;--panel2:#121a2b;--text:#f7f9ff;--muted:#929db2;--line:#202b40;--blue:#4c73ff;--danger:#ff7185}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,Arial,sans-serif}
+header{border-bottom:1px solid var(--line)}.wrap{max-width:1040px;margin:auto;padding:0 24px}
+header .wrap{min-height:72px;display:flex;align-items:center;gap:18px}.logo{color:#fff;text-decoration:none;font-weight:900;letter-spacing:.08em}.blue{color:var(--blue)}
+.languages{display:flex;gap:6px;margin-left:auto}.lang{border:1px solid var(--line);background:transparent;color:var(--muted);padding:7px 9px;border-radius:8px;font-weight:800;cursor:pointer}.lang.active{border-color:var(--blue);color:#fff}
+main{padding:52px 0 80px}.back{color:var(--muted);text-decoration:none;font-weight:800}.eyebrow{margin-top:34px;color:var(--blue);font-size:12px;font-weight:900;letter-spacing:.16em}
+h1{font-size:clamp(34px,5vw,54px);margin:12px 0}.lead{color:var(--muted);line-height:1.7;max-width:760px}
+.searchbox{margin-top:30px;padding:22px;border:1px solid var(--line);border-radius:18px;background:var(--panel)}
+label{display:block;font-weight:800;margin-bottom:9px}.row{display:flex;gap:10px}input{flex:1;background:#090e19;border:1px solid #2a3650;color:#fff;border-radius:10px;padding:13px 14px;font-size:16px;outline:none}
+button{border:0;border-radius:10px;background:var(--blue);color:#fff;padding:12px 18px;font-weight:900;cursor:pointer}
+.results{display:grid;gap:14px;margin-top:24px}.result{border:1px solid var(--line);border-radius:16px;padding:20px;background:linear-gradient(180deg,var(--panel2),var(--panel))}
+.result h2{margin:0 0 9px}.meta{display:flex;flex-wrap:wrap;gap:8px 16px;color:var(--muted);font-size:14px}.note{margin-top:15px;color:var(--muted)}.error{color:var(--danger)}
+@media(max-width:650px){.row{flex-direction:column}.wrap{padding:0 18px}}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+<a class="logo" href="/brandxi/">BRAND <span class="blue">XI</span>&trade;</a>
+<div class="languages"><button class="lang" data-lang="en">EN</button><button class="lang" data-lang="fr">FR</button><button class="lang" data-lang="es">ES</button></div>
+</div></header>
+<main><div class="wrap">
+<a class="back" href="/brandxi/app/agency/players/add/" data-i18n="back">← Back to Add Player</a>
+<div class="eyebrow" data-i18n="eyebrow">EXISTING BRAND XI PLAYER</div>
+<h1 data-i18n="title">Find an existing player.</h1>
+<p class="lead" data-i18n="intro">Search by exact BRAND XI Brand ID or by the player's name. This avoids creating duplicate player profiles.</p>
+
+<form id="searchForm" class="searchbox">
+<label for="term" data-i18n="label">Brand ID or player name</label>
+<div class="row">
+<input id="term" required autocomplete="off" placeholder="BX-... / Nicolas Pépé">
+<button type="submit" data-i18n="search">Search</button>
+</div>
+<div id="status" class="note"></div>
+</form>
+<div id="results" class="results"></div>
+</div></main>
+
+<script>
+const client=window.supabase.createClient(
+"https://ysaxtuvuzqkyfmganven.supabase.co",
+"sb_publishable_esfhuUEIcUJEL6z9zryRAA_FGMmUHlw"
+);
+const t={
+en:{back:"← Back to Add Player",eyebrow:"EXISTING BRAND XI PLAYER",title:"Find an existing player.",intro:"Search by exact BRAND XI Brand ID or by the player's name. This avoids creating duplicate player profiles.",label:"Brand ID or player name",search:"Search",searching:"Searching...",none:"No matching BRAND XI player was found.",error:"We could not complete the player search.",brand:"Brand ID",club:"Club",position:"Position",nationality:"Nationality",link:"Link player to agency",next:"Player found. Linking will be enabled in the next secure step."},
+fr:{back:"← Retour à Ajouter un joueur",eyebrow:"JOUEUR BRAND XI EXISTANT",title:"Rechercher un joueur existant.",intro:"Recherchez par Brand ID BRAND XI exact ou par nom du joueur afin d'éviter les profils en double.",label:"Brand ID ou nom du joueur",search:"Rechercher",searching:"Recherche...",none:"Aucun joueur BRAND XI correspondant n'a été trouvé.",error:"Impossible d'effectuer la recherche.",brand:"Brand ID",club:"Club",position:"Poste",nationality:"Nationalité",link:"Lier le joueur à l'agence",next:"Joueur trouvé. La liaison sera activée lors de la prochaine étape sécurisée."},
+es:{back:"← Volver a Añadir jugador",eyebrow:"JUGADOR BRAND XI EXISTENTE",title:"Buscar un jugador existente.",intro:"Busca por Brand ID BRAND XI exacto o por nombre para evitar perfiles duplicados.",label:"Brand ID o nombre del jugador",search:"Buscar",searching:"Buscando...",none:"No se encontró ningún jugador BRAND XI coincidente.",error:"No hemos podido completar la búsqueda.",brand:"Brand ID",club:"Club",position:"Posición",nationality:"Nacionalidad",link:"Vincular jugador a la agencia",next:"Jugador encontrado. La vinculación se habilitará en el siguiente paso seguro."}
+};
+let lang=localStorage.getItem("brandxi_language")||"en";
+function apply(l){lang=t[l]?l:"en";localStorage.setItem("brandxi_language",lang);document.documentElement.lang=lang;document.querySelectorAll("[data-i18n]").forEach(e=>{const k=e.dataset.i18n;if(t[lang][k])e.textContent=t[lang][k]});document.querySelectorAll(".lang").forEach(b=>b.classList.toggle("active",b.dataset.lang===lang))}
+document.querySelectorAll(".lang").forEach(b=>b.onclick=()=>apply(b.dataset.lang));apply(lang);
+
+function esc(v){return String(v??"—").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]))}
+async function checkAuth(){const {data:{user}}=await client.auth.getUser();if(!user)location.href="/brandxi/login/"}
+checkAuth();
+
+document.getElementById("searchForm").addEventListener("submit",async e=>{
+e.preventDefault();
+const status=document.getElementById("status"),results=document.getElementById("results"),term=document.getElementById("term").value.trim();
+status.className="note";status.textContent=t[lang].searching;results.innerHTML="";
+const {data,error}=await client.rpc("brandxi_search_players",{search_term:term});
+if(error){status.className="note error";status.textContent=t[lang].error;return}
+if(!data||!data.length){status.textContent=t[lang].none;return}
+status.textContent="";
+results.innerHTML=data.map(p=>`<article class="result">
+<h2>${esc(p.first_name)} ${esc(p.surname)}</h2>
+<div class="meta">
+<span><strong>${t[lang].brand}:</strong> ${esc(p.brand_id)}</span>
+<span><strong>${t[lang].club}:</strong> ${esc(p.current_club)}</span>
+<span><strong>${t[lang].position}:</strong> ${esc(p.position)}</span>
+<span><strong>${t[lang].nationality}:</strong> ${esc(p.nationality)}</span>
+</div>
+<p class="note">${t[lang].next}</p>
+<button type="button" disabled title="${esc(t[lang].next)}">${t[lang].link}</button>
+</article>`).join("");
+});
+</script>
+</body>
+</html>
