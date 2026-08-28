@@ -8,7 +8,7 @@
 :root{--bg:#0b0d10;--text:#fff;--muted:#9da5b4;--line:rgba(255,255,255,.09);--blue:#245cff}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(circle at 80% 0,rgba(36,92,255,.18),transparent 30%),var(--bg);color:var(--text);font-family:Inter,Arial,sans-serif}
 a{color:inherit;text-decoration:none}.wrap{width:min(1180px,calc(100% - 32px));margin:auto}header{border-bottom:1px solid var(--line)}
-header .wrap{min-height:72px;display:flex;align-items:center}.logo{font-size:22px;font-weight:900}.blue{color:var(--blue)}
+header .wrap{min-height:72px;display:flex;align-items:center;justify-content:space-between}.logo{font-size:22px;font-weight:900}.blue{color:var(--blue)}
 main{padding:54px 0 80px}.shell{width:min(760px,100%);margin:auto}.eyebrow{color:#9bb3ff;font-size:11px;font-weight:900;letter-spacing:.13em}
 h1{margin:12px 0;font-size:clamp(42px,7vw,66px);line-height:.98;letter-spacing:-.05em}.intro{color:var(--muted);line-height:1.65;margin-bottom:28px}
 .card{padding:30px;border:1px solid var(--line);border-radius:22px;background:rgba(255,255,255,.03)}
@@ -21,28 +21,35 @@ button{width:100%;margin-top:22px;border:0;border-radius:12px;background:var(--b
 .account{margin-bottom:22px;padding:13px 15px;border:1px solid var(--line);border-radius:12px;background:#0e1116;color:var(--muted);font-size:13px}
 .account strong{color:#fff}.status{margin-top:14px;color:var(--muted);font-size:13px}.error{color:#ff9c9c}
 @media(max-width:650px){.types{grid-template-columns:1fr}.card{padding:22px}}
-</style>
+.languages{display:flex;gap:6px}.lang-btn{width:auto;margin:0;padding:6px 8px;border:1px solid var(--line);border-radius:7px;background:transparent;color:var(--muted);font-size:12px;font-weight:800;cursor:pointer}.lang-btn.active{color:#fff;border-color:var(--blue);background:rgba(36,92,255,.14)}</style>
 </head>
 <body>
-<header><div class="wrap"><a class="logo" href="/brandxi/">BRAND <span class="blue">XI</span>&trade;</a></div></header>
+<header><div class="wrap">
+<a class="logo" href="/brandxi/">BRAND <span class="blue">XI</span>&trade;</a>
+<div class="languages">
+<button class="lang-btn" type="button" data-lang="en">EN</button>
+<button class="lang-btn" type="button" data-lang="fr">FR</button>
+<button class="lang-btn" type="button" data-lang="es">ES</button>
+</div>
+</div></header>
 <main><div class="shell">
-<span class="eyebrow">BRAND XI ONBOARDING</span>
-<h1>Welcome to <span class="blue">BRAND XI.</span></h1>
-<p class="intro">Your GlobalMGM identity has been verified. Now tell us how you will use BRAND XI.</p>
+<span class="eyebrow" data-i18n="eyebrow">BRAND XI ONBOARDING</span>
+<h1><span data-i18n="welcome">Welcome to</span> <span class="blue">BRAND XI.</span></h1>
+<p class="intro"><span data-i18n="intro">Your GlobalMGM identity has been verified. Now tell us how you will use BRAND XI.</span></p>
 
 <section class="card">
-<div class="account">Signed in as <strong id="email">Checking account...</strong></div>
-<h2>Choose your account type</h2>
-<p class="question">This determines the onboarding journey and workspace we prepare for you.</p>
+<div class="account"><span data-i18n="signed">Signed in as</span> <strong id="email">Checking account...</strong></div>
+<h2 data-i18n="choose">Choose your account type</h2>
+<p class="question"><span data-i18n="question">This determines the onboarding journey and workspace we prepare for you.</span></p>
 
 <form id="form">
 <div class="types">
-<div class="type"><input id="agency" name="type" type="radio" value="agency" checked><label for="agency"><strong>Football Agent / Agency</strong><span>Manage BRAND XI profiles for one or more professional players.</span></label></div>
-<div class="type"><input id="player" name="type" type="radio" value="player"><label for="player"><strong>Professional Player</strong><span>Create and manage your own personal brand.</span></label></div>
-<div class="type"><input id="representative" name="type" type="radio" value="representative"><label for="representative"><strong>Authorised Representative</strong><span>Manage a player's brand with their authority.</span></label></div>
-<div class="type"><input id="guardian" name="type" type="radio" value="guardian"><label for="guardian"><strong>Parent / Guardian</strong><span>Manage BRAND XI access for a young player.</span></label></div>
+<div class="type"><input id="agency" name="type" type="radio" value="agency" checked><label for="agency"><strong data-i18n="agencyTitle">Football Agent / Agency</strong><span><span data-i18n="agencyText">Manage BRAND XI profiles for one or more professional players.</span></span></label></div>
+<div class="type"><input id="player" name="type" type="radio" value="player"><label for="player"><strong data-i18n="playerTitle">Professional Player</strong><span><span data-i18n="playerText">Create and manage your own personal brand.</span></span></label></div>
+<div class="type"><input id="representative" name="type" type="radio" value="representative"><label for="representative"><strong data-i18n="repTitle">Authorised Representative</strong><span><span data-i18n="repText">Manage a player&#39;s brand with their authority.</span></span></label></div>
+<div class="type"><input id="guardian" name="type" type="radio" value="guardian"><label for="guardian"><strong data-i18n="guardianTitle">Parent / Guardian</strong><span><span data-i18n="guardianText">Manage BRAND XI access for a young player.</span></span></label></div>
 </div>
-<button type="submit">Continue onboarding &rarr;</button>
+<button type="submit" data-i18n="continue">Continue onboarding →</button>
 <p id="status" class="status"></p>
 </form>
 </section>
@@ -50,6 +57,16 @@ button{width:100%;margin-top:22px;border:0;border-radius:12px;background:var(--b
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+const i18n={
+en:{eyebrow:"BRAND XI ONBOARDING",welcome:"Welcome to",intro:"Your GlobalMGM identity has been verified. Now tell us how you will use BRAND XI.",signed:"Signed in as",choose:"Choose your account type",question:"This determines the onboarding journey and workspace we prepare for you.",agencyTitle:"Football Agent / Agency",agencyText:"Manage BRAND XI profiles for one or more professional players.",playerTitle:"Professional Player",playerText:"Create and manage your own personal brand.",repTitle:"Authorised Representative",repText:"Manage a player's brand with their authority.",guardianTitle:"Parent / Guardian",guardianText:"Manage BRAND XI access for a young player.",continue:"Continue onboarding →",checking:"Checking account...",next:"This onboarding route will be activated next."},
+fr:{eyebrow:"INTÉGRATION BRAND XI",welcome:"Bienvenue sur",intro:"Votre identité GlobalMGM a été vérifiée. Indiquez maintenant comment vous utiliserez BRAND XI.",signed:"Connecté en tant que",choose:"Choisissez votre type de compte",question:"Ce choix détermine le parcours d'intégration et l'espace de travail que nous préparerons pour vous.",agencyTitle:"Agent de football / Agence",agencyText:"Gérez les profils BRAND XI d'un ou plusieurs joueurs professionnels.",playerTitle:"Joueur professionnel",playerText:"Créez et gérez votre propre marque personnelle.",repTitle:"Représentant autorisé",repText:"Gérez la marque d'un joueur avec son autorisation.",guardianTitle:"Parent / Tuteur",guardianText:"Gérez l'accès BRAND XI pour un jeune joueur.",continue:"Continuer l'intégration →",checking:"Vérification du compte...",next:"Ce parcours d'intégration sera activé prochainement."},
+es:{eyebrow:"INCORPORACIÓN BRAND XI",welcome:"Bienvenido a",intro:"Tu identidad GlobalMGM ha sido verificada. Ahora indícanos cómo utilizarás BRAND XI.",signed:"Sesión iniciada como",choose:"Elige tu tipo de cuenta",question:"Esta elección determina el proceso de incorporación y el espacio de trabajo que prepararemos para ti.",agencyTitle:"Agente de fútbol / Agencia",agencyText:"Gestiona perfiles BRAND XI para uno o varios jugadores profesionales.",playerTitle:"Jugador profesional",playerText:"Crea y gestiona tu propia marca personal.",repTitle:"Representante autorizado",repText:"Gestiona la marca de un jugador con su autorización.",guardianTitle:"Padre / Tutor",guardianText:"Gestiona el acceso a BRAND XI para un jugador joven.",continue:"Continuar incorporación →",checking:"Verificando cuenta...",next:"Este proceso de incorporación se activará próximamente."}
+};
+let currentLang=localStorage.getItem("brandxi_language")||"en";
+function applyLanguage(l){currentLang=i18n[l]?l:"en";localStorage.setItem("brandxi_language",currentLang);document.documentElement.lang=currentLang;document.querySelectorAll("[data-i18n]").forEach(el=>{const k=el.dataset.i18n;if(i18n[currentLang][k])el.textContent=i18n[currentLang][k]});document.querySelectorAll(".lang-btn").forEach(b=>b.classList.toggle("active",b.dataset.lang===currentLang));}
+document.querySelectorAll(".lang-btn").forEach(b=>b.addEventListener("click",()=>applyLanguage(b.dataset.lang)));
+applyLanguage(currentLang);
+
 const client=window.supabase.createClient("https://ysaxtuvuzqkyfmganven.supabase.co","sb_publishable_esfhuUEIcUJEL6z9zryRAA_FGMmUHlw");
 const emailEl=document.getElementById("email");
 const statusEl=document.getElementById("status");
@@ -68,7 +85,7 @@ document.getElementById("form").addEventListener("submit",(e)=>{
    window.location.href="/brandxi/onboarding/agency/";
    return;
  }
- statusEl.textContent="This onboarding route will be activated next.";
+ statusEl.textContent=i18n[currentLang].next;
 });
 </script>
 </body>
