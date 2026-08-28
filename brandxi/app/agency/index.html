@@ -6,7 +6,7 @@
 <title>Agency Dashboard | BRAND XI</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-:root{--bg:#070a12;--panel:#0e1422;--panel2:#121a2b;--text:#f7f9ff;--muted:#929db2;--line:#202b40;--blue:#4c73ff;--danger:#ff7185}
+:root{--bg:#070a12;--panel:#0e1422;--panel2:#121a2b;--text:#f7f9ff;--muted:#929db2;--line:#202b40;--blue:#4c73ff;--danger:#ff7185;--green:#75e6a0}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,Arial,sans-serif}
 header{border-bottom:1px solid var(--line);background:rgba(7,10,18,.94)}
@@ -31,8 +31,15 @@ h1{font-size:clamp(34px,5vw,58px);line-height:1;margin:12px 0}
 .players-head h2{margin:0}
 .add{display:inline-block;background:var(--blue);color:#fff;text-decoration:none;font-weight:900;border-radius:10px;padding:11px 15px}
 .empty{border:1px dashed #34425e;border-radius:18px;padding:38px;text-align:center;color:var(--muted);background:rgba(14,20,34,.55)}
+.player-list{display:grid;gap:14px}
+.player-card{display:flex;align-items:center;justify-content:space-between;gap:20px;border:1px solid var(--line);border-radius:18px;padding:20px;background:linear-gradient(180deg,var(--panel2),var(--panel))}
+.player-main h3{margin:0 0 7px;font-size:20px}
+.player-meta{display:flex;flex-wrap:wrap;gap:8px 14px;color:var(--muted);font-size:14px}
+.badge{display:inline-block;padding:5px 8px;border-radius:999px;border:1px solid var(--line);font-size:12px;font-weight:800}
+.badge.active{color:var(--green)}
+.player-actions a{color:#fff;text-decoration:none;border:1px solid var(--line);padding:9px 12px;border-radius:9px;font-weight:800}
 .status{margin-top:20px;color:var(--muted)}.error{color:var(--danger)}
-@media(max-width:760px){.grid{grid-template-columns:1fr}.wrap{padding:0 18px}.players-head{align-items:flex-start;flex-direction:column}}
+@media(max-width:760px){.grid{grid-template-columns:1fr}.wrap{padding:0 18px}.players-head,.player-card{align-items:flex-start;flex-direction:column}}
 </style>
 </head>
 <body>
@@ -80,20 +87,61 @@ const SUPABASE_KEY="sb_publishable_esfhuUEIcUJEL6z9zryRAA_FGMmUHlw";
 const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
 const i18n={
-en:{signOut:"Sign out",eyebrow:"AGENCY WORKSPACE",welcome:"Welcome to",intro:"Manage your players, their personal brands and BRAND XI activity from one agency workspace.",signed:"Signed in as",role:"Role",players:"Players",playersText:"Players linked to this agency",agency:"Agency",active:"Active",agencyText:"BRAND XI agency workspace",access:"Access",accessText:"Your agency permission level",yourPlayers:"Your players",addPlayer:"+ Add player",loadingPlayers:"Loading players...",none:"No players are linked to this agency yet. Use “Add player” to begin.",noAccess:"No BRAND XI agency access was found for this account.",error:"We could not load the agency workspace."},
-fr:{signOut:"Se déconnecter",eyebrow:"ESPACE AGENCE",welcome:"Bienvenue chez",intro:"Gérez vos joueurs, leurs marques personnelles et leur activité BRAND XI depuis un seul espace agence.",signed:"Connecté en tant que",role:"Rôle",players:"Joueurs",playersText:"Joueurs liés à cette agence",agency:"Agence",active:"Actif",agencyText:"Espace agence BRAND XI",access:"Accès",accessText:"Votre niveau d'autorisation dans l'agence",yourPlayers:"Vos joueurs",addPlayer:"+ Ajouter un joueur",loadingPlayers:"Chargement des joueurs...",none:"Aucun joueur n'est encore lié à cette agence. Utilisez « Ajouter un joueur » pour commencer.",noAccess:"Aucun accès à une agence BRAND XI n'a été trouvé pour ce compte.",error:"Impossible de charger l'espace agence."},
-es:{signOut:"Cerrar sesión",eyebrow:"ESPACIO DE AGENCIA",welcome:"Bienvenido a",intro:"Gestiona tus jugadores, sus marcas personales y su actividad BRAND XI desde un único espacio de agencia.",signed:"Sesión iniciada como",role:"Rol",players:"Jugadores",playersText:"Jugadores vinculados a esta agencia",agency:"Agencia",active:"Activa",agencyText:"Espacio de agencia BRAND XI",access:"Acceso",accessText:"Tu nivel de permiso en la agencia",yourPlayers:"Tus jugadores",addPlayer:"+ Añadir jugador",loadingPlayers:"Cargando jugadores...",none:"Todavía no hay jugadores vinculados a esta agencia. Usa «Añadir jugador» para empezar.",noAccess:"No se encontró acceso a una agencia BRAND XI para esta cuenta.",error:"No hemos podido cargar el espacio de la agencia."}
+en:{signOut:"Sign out",eyebrow:"AGENCY WORKSPACE",welcome:"Welcome to",intro:"Manage your players, their personal brands and BRAND XI activity from one agency workspace.",signed:"Signed in as",role:"Role",players:"Players",playersText:"Players linked to this agency",agency:"Agency",active:"Active",agencyText:"BRAND XI agency workspace",access:"Access",accessText:"Your agency permission level",yourPlayers:"Your players",addPlayer:"+ Add player",loadingPlayers:"Loading players...",none:"No players are linked to this agency yet. Use “Add player” to begin.",noAccess:"No BRAND XI agency access was found for this account.",error:"We could not load the agency workspace.",brandId:"Brand ID",club:"Club",position:"Position",relationship:"Relationship",status:"Status",view:"View player"},
+fr:{signOut:"Se déconnecter",eyebrow:"ESPACE AGENCE",welcome:"Bienvenue chez",intro:"Gérez vos joueurs, leurs marques personnelles et leur activité BRAND XI depuis un seul espace agence.",signed:"Connecté en tant que",role:"Rôle",players:"Joueurs",playersText:"Joueurs liés à cette agence",agency:"Agence",active:"Actif",agencyText:"Espace agence BRAND XI",access:"Accès",accessText:"Votre niveau d'autorisation dans l'agence",yourPlayers:"Vos joueurs",addPlayer:"+ Ajouter un joueur",loadingPlayers:"Chargement des joueurs...",none:"Aucun joueur n'est encore lié à cette agence. Utilisez « Ajouter un joueur » pour commencer.",noAccess:"Aucun accès à une agence BRAND XI n'a été trouvé pour ce compte.",error:"Impossible de charger l'espace agence.",brandId:"Brand ID",club:"Club",position:"Poste",relationship:"Relation",status:"Statut",view:"Voir le joueur"},
+es:{signOut:"Cerrar sesión",eyebrow:"ESPACIO DE AGENCIA",welcome:"Bienvenido a",intro:"Gestiona tus jugadores, sus marcas personales y su actividad BRAND XI desde un único espacio de agencia.",signed:"Sesión iniciada como",role:"Rol",players:"Jugadores",playersText:"Jugadores vinculados a esta agencia",agency:"Agencia",active:"Activa",agencyText:"Espacio de agencia BRAND XI",access:"Acceso",accessText:"Tu nivel de permiso en la agencia",yourPlayers:"Tus jugadores",addPlayer:"+ Añadir jugador",loadingPlayers:"Cargando jugadores...",none:"Todavía no hay jugadores vinculados a esta agencia. Usa «Añadir jugador» para empezar.",noAccess:"No se encontró acceso a una agencia BRAND XI para esta cuenta.",error:"No hemos podido cargar el espacio de la agencia.",brandId:"Brand ID",club:"Club",position:"Posición",relationship:"Relación",status:"Estado",view:"Ver jugador"}
 };
 
 let currentLang=localStorage.getItem("brandxi_language")||"en";
+let loadedPlayers=[];
+
 function applyLanguage(lang){
- currentLang=i18n[lang]?lang:"en"; localStorage.setItem("brandxi_language",currentLang);
+ currentLang=i18n[lang]?lang:"en";
+ localStorage.setItem("brandxi_language",currentLang);
  document.documentElement.lang=currentLang;
- document.querySelectorAll("[data-i18n]").forEach(el=>{const k=el.dataset.i18n;if(i18n[currentLang][k])el.textContent=i18n[currentLang][k]});
+ document.querySelectorAll("[data-i18n]").forEach(el=>{
+   const k=el.dataset.i18n;
+   if(i18n[currentLang][k]) el.textContent=i18n[currentLang][k];
+ });
  document.querySelectorAll(".lang-btn").forEach(b=>b.classList.toggle("active",b.dataset.lang===currentLang));
+ if(loadedPlayers.length) renderPlayers(loadedPlayers);
 }
 document.querySelectorAll(".lang-btn").forEach(b=>b.addEventListener("click",()=>applyLanguage(b.dataset.lang)));
 applyLanguage(currentLang);
+
+function renderPlayers(rows){
+ const area=document.getElementById("playersArea");
+ document.getElementById("playerCount").textContent=rows.length;
+ if(!rows.length){
+   area.className="empty";
+   area.textContent=i18n[currentLang].none;
+   return;
+ }
+ area.className="player-list";
+ area.innerHTML=rows.map(row=>{
+   const p=row.player||{};
+   const fullName=[p.first_name,p.surname].filter(Boolean).join(" ");
+   return `<article class="player-card">
+     <div class="player-main">
+       <h3>${escapeHtml(fullName)}</h3>
+       <div class="player-meta">
+         <span><strong>${i18n[currentLang].brandId}:</strong> ${escapeHtml(p.brand_id||"—")}</span>
+         <span><strong>${i18n[currentLang].club}:</strong> ${escapeHtml(p.current_club||"—")}</span>
+         <span><strong>${i18n[currentLang].position}:</strong> ${escapeHtml(p.position||"—")}</span>
+         <span><strong>${i18n[currentLang].relationship}:</strong> ${escapeHtml(row.relationship_role||"—")}</span>
+         <span class="badge ${row.status==="active"?"active":""}">${i18n[currentLang].status}: ${escapeHtml(row.status||"—")}</span>
+       </div>
+     </div>
+     <div class="player-actions">
+       <a href="/brandxi/app/player/?id=${encodeURIComponent(p.id||"")}">${i18n[currentLang].view}</a>
+     </div>
+   </article>`;
+ }).join("");
+}
+
+function escapeHtml(value){
+ return String(value).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
+}
 
 async function loadDashboard(){
  const status=document.getElementById("status");
@@ -103,7 +151,7 @@ async function loadDashboard(){
 
  const {data:membership,error:membershipError}=await client
    .from("brandxi_agency_access")
-   .select("agency_id, role")
+   .select("agency_id,role")
    .eq("user_id",user.id)
    .limit(1)
    .maybeSingle();
@@ -123,11 +171,38 @@ async function loadDashboard(){
  if(agencyError){status.className="status error";status.textContent=i18n[currentLang].error;return;}
  document.getElementById("agencyName").textContent=agency.name;
 
- // Player-to-agency relationship will be added in the next database step.
- document.getElementById("playerCount").textContent="0";
- document.getElementById("playersArea").textContent=i18n[currentLang].none;
+ const {data:links,error:linksError}=await client
+   .from("brandxi_agency_players")
+   .select("player_id,relationship_role,status")
+   .eq("agency_id",membership.agency_id)
+   .eq("status","active");
+
+ if(linksError){status.className="status error";status.textContent=i18n[currentLang].error;return;}
+
+ if(!links.length){
+   loadedPlayers=[];
+   renderPlayers([]);
+   return;
+ }
+
+ const ids=links.map(x=>x.player_id);
+ const {data:players,error:playersError}=await client
+   .from("brandxi_players")
+   .select("id,brand_id,first_name,surname,current_club,position,nationality")
+   .in("id",ids);
+
+ if(playersError){status.className="status error";status.textContent=i18n[currentLang].error;return;}
+
+ const byId=Object.fromEntries((players||[]).map(p=>[p.id,p]));
+ loadedPlayers=links.map(link=>({...link,player:byId[link.player_id]})).filter(x=>x.player);
+ renderPlayers(loadedPlayers);
 }
-document.getElementById("signOut").addEventListener("click",async()=>{await client.auth.signOut();location.href="/brandxi/login/";});
+
+document.getElementById("signOut").addEventListener("click",async()=>{
+ await client.auth.signOut();
+ location.href="/brandxi/login/";
+});
+
 loadDashboard();
 </script>
 </body>
