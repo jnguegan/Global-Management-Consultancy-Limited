@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -8,18 +8,14 @@
     <style>
         :root {
             --bg: #0B0D10;
-            --panel: #171A20;
             --text: #FFFFFF;
             --muted: #9DA5B4;
             --line: rgba(255, 255, 255, 0.09);
             --blue: #245CFF;
             --danger: #ff9c9c;
-            --success: #a8ffbf;
         }
 
-        * {
-            box-sizing: border-box;
-        }
+        * { box-sizing: border-box; }
 
         body {
             margin: 0;
@@ -31,10 +27,7 @@
             font-family: Inter, Arial, sans-serif;
         }
 
-        a {
-            color: inherit;
-            text-decoration: none;
-        }
+        a { color: inherit; text-decoration: none; }
 
         .wrap {
             width: min(1180px, calc(100% - 32px));
@@ -59,10 +52,7 @@
             font-size: 22px;
         }
 
-        .xi,
-        .blue {
-            color: var(--blue);
-        }
+        .xi, .blue { color: var(--blue); }
 
         nav {
             display: flex;
@@ -73,11 +63,14 @@
         }
 
         main {
+            min-height: calc(100vh - 73px);
+            display: flex;
+            align-items: center;
             padding: 54px 0 80px;
         }
 
         .registration-shell {
-            width: min(760px, 100%);
+            width: min(680px, 100%);
             margin: auto;
         }
 
@@ -90,14 +83,14 @@
         }
 
         h1 {
-            margin: 12px 0 12px;
+            margin: 12px 0;
             font-size: clamp(42px, 7vw, 68px);
             letter-spacing: -0.05em;
             line-height: 0.96;
         }
 
         .intro {
-            max-width: 650px;
+            max-width: 620px;
             color: var(--muted);
             line-height: 1.65;
             margin-bottom: 28px;
@@ -111,17 +104,7 @@
             );
             border: 1px solid var(--line);
             border-radius: 22px;
-            padding: 28px;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 18px;
-        }
-
-        .full {
-            grid-column: 1 / -1;
+            padding: 30px;
         }
 
         label {
@@ -129,13 +112,12 @@
             color: #c8cdd5;
             font-size: 13px;
             font-weight: 800;
-            margin: 0 0 8px;
+            margin: 0 0 9px;
         }
 
-        input,
-        select {
+        input {
             width: 100%;
-            padding: 14px;
+            padding: 15px;
             border-radius: 12px;
             border: 1px solid var(--line);
             background: #0e1116;
@@ -143,60 +125,14 @@
             font-size: 16px;
         }
 
-        input:focus,
-        select:focus {
+        input:focus {
             outline: 1px solid var(--blue);
             border-color: var(--blue);
         }
 
-        .account-types {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-        }
-
-        .account-type {
-            position: relative;
-        }
-
-        .account-type input {
-            position: absolute;
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .account-type label {
-            height: 100%;
-            margin: 0;
-            padding: 17px;
-            border: 1px solid var(--line);
-            border-radius: 14px;
-            background: #0e1116;
-            cursor: pointer;
-        }
-
-        .account-type strong {
-            display: block;
-            color: #fff;
-            margin-bottom: 6px;
-        }
-
-        .account-type span {
-            display: block;
-            color: var(--muted);
-            font-size: 12px;
-            line-height: 1.5;
-        }
-
-        .account-type input:checked + label {
-            border-color: var(--blue);
-            background: rgba(36, 92, 255, 0.12);
-            box-shadow: inset 0 0 0 1px var(--blue);
-        }
-
         button {
             width: 100%;
-            margin-top: 4px;
+            margin-top: 16px;
             border: 0;
             border-radius: 12px;
             background: var(--blue);
@@ -214,22 +150,16 @@
 
         .status {
             min-height: 24px;
-            margin: 0;
+            margin: 14px 0 0;
             color: var(--muted);
             font-size: 14px;
             line-height: 1.5;
         }
 
-        .status.error {
-            color: var(--danger);
-        }
-
-        .status.success {
-            color: var(--success);
-        }
+        .status.error { color: var(--danger); }
 
         .signin {
-            margin-top: 22px;
+            margin-top: 20px;
             padding-top: 20px;
             border-top: 1px solid var(--line);
             text-align: center;
@@ -242,7 +172,7 @@
             font-weight: 800;
         }
 
-        .note {
+        .privacy {
             margin-top: 18px;
             color: var(--muted);
             font-size: 12px;
@@ -250,18 +180,8 @@
         }
 
         @media (max-width: 700px) {
-            nav {
-                display: none;
-            }
-
-            .grid,
-            .account-types {
-                grid-template-columns: 1fr;
-            }
-
-            .card {
-                padding: 22px;
-            }
+            nav { display: none; }
+            .card { padding: 22px; }
         }
     </style>
 </head>
@@ -285,336 +205,80 @@
             <span class="eyebrow">BRAND XI REGISTRATION</span>
 
             <h1>
-                Create your <span class="blue">account.</span>
+                Start with your <span class="blue">email.</span>
             </h1>
 
             <p class="intro">
-                Create your GlobalMGM identity for BRAND XI, or use an existing
-                GlobalMGM account to continue into BRAND XI onboarding.
+                Enter your email address first. We will use it to continue
+                securely with the correct BRAND XI account journey.
             </p>
 
             <section class="card">
-                <form id="registrationForm">
-                    <div class="grid">
-                        <div class="full">
-                            <label>How will you use BRAND XI?</label>
+                <form id="emailForm">
+                    <label for="email">Email address</label>
 
-                            <div class="account-types">
-                                <div class="account-type">
-                                    <input
-                                        id="typeAgency"
-                                        name="account_type"
-                                        type="radio"
-                                        value="agency"
-                                        checked
-                                    >
-                                    <label for="typeAgency">
-                                        <strong>Football Agent / Agency</strong>
-                                        <span>
-                                            Manage personal brands for one or more players.
-                                        </span>
-                                    </label>
-                                </div>
+                    <input
+                        id="email"
+                        name="email"
+                        type="email"
+                        autocomplete="email"
+                        placeholder="you@example.com"
+                        required
+                        autofocus
+                    >
 
-                                <div class="account-type">
-                                    <input
-                                        id="typePlayer"
-                                        name="account_type"
-                                        type="radio"
-                                        value="player"
-                                    >
-                                    <label for="typePlayer">
-                                        <strong>Professional Player</strong>
-                                        <span>
-                                            Create and manage your own personal brand.
-                                        </span>
-                                    </label>
-                                </div>
+                    <button id="continueButton" type="submit">
+                        Continue &rarr;
+                    </button>
 
-                                <div class="account-type">
-                                    <input
-                                        id="typeRepresentative"
-                                        name="account_type"
-                                        type="radio"
-                                        value="representative"
-                                    >
-                                    <label for="typeRepresentative">
-                                        <strong>Authorised Representative</strong>
-                                        <span>
-                                            Manage a player's brand with their authority.
-                                        </span>
-                                    </label>
-                                </div>
-
-                                <div class="account-type">
-                                    <input
-                                        id="typeGuardian"
-                                        name="account_type"
-                                        type="radio"
-                                        value="guardian"
-                                    >
-                                    <label for="typeGuardian">
-                                        <strong>Parent / Guardian</strong>
-                                        <span>
-                                            Manage BRAND XI access for a young player.
-                                        </span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div>
-                            <label for="firstName">First name</label>
-                            <input
-                                id="firstName"
-                                name="first_name"
-                                type="text"
-                                autocomplete="given-name"
-                                required
-                            >
-                        </div>
-
-                        <div>
-                            <label for="lastName">Last name</label>
-                            <input
-                                id="lastName"
-                                name="last_name"
-                                type="text"
-                                autocomplete="family-name"
-                                required
-                            >
-                        </div>
-
-                        <div class="full">
-                            <label for="email">Email address</label>
-                            <input
-                                id="email"
-                                name="email"
-                                type="email"
-                                autocomplete="email"
-                                required
-                            >
-                        </div>
-
-                        <div>
-                            <label for="password">Password</label>
-                            <input
-                                id="password"
-                                name="password"
-                                type="password"
-                                autocomplete="new-password"
-                                minlength="8"
-                                required
-                            >
-                        </div>
-
-                        <div>
-                            <label for="confirmPassword">Confirm password</label>
-                            <input
-                                id="confirmPassword"
-                                name="confirm_password"
-                                type="password"
-                                autocomplete="new-password"
-                                minlength="8"
-                                required
-                            >
-                        </div>
-
-                        <div class="full">
-                            <button id="registerButton" type="submit">
-                                Create BRAND XI account &rarr;
-                            </button>
-                        </div>
-
-                        <div class="full">
-                            <p id="status" class="status"></p>
-                        </div>
-                    </div>
+                    <p id="status" class="status"></p>
                 </form>
 
                 <div class="signin">
-                    Already have a GlobalMGM account?
+                    Already know you have a GlobalMGM account?
                     <a href="/brandxi/login/">Sign in &rarr;</a>
                 </div>
 
-                <p class="note">
-                    Your login identity may be shared across authorised GlobalMGM
-                    services. Access to BRAND XI, DealTrack Pro and other products
-                    remains controlled separately.
+                <p class="privacy">
+                    Your email is used as your GlobalMGM sign-in identity.
+                    BRAND XI product access and permissions are managed separately.
                 </p>
             </section>
         </div>
     </main>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
     <script>
-        const SUPABASE_URL =
-            "https://ysaxtuvuzqkyfmganven.supabase.co";
+        const emailForm = document.getElementById("emailForm");
+        const emailInput = document.getElementById("email");
+        const continueButton = document.getElementById("continueButton");
+        const statusMessage = document.getElementById("status");
 
-        const SUPABASE_PUBLISHABLE_KEY =
-            "sb_publishable_esfhuUEIcUJEL6z9zryRAA_FGMmUHlw";
+        emailForm.addEventListener("submit", function (event) {
+            event.preventDefault();
 
-        const supabaseClient = window.supabase.createClient(
-            SUPABASE_URL,
-            SUPABASE_PUBLISHABLE_KEY
-        );
+            const email = emailInput.value.trim().toLowerCase();
 
-        const registrationForm =
-            document.getElementById("registrationForm");
-
-        const registerButton =
-            document.getElementById("registerButton");
-
-        const statusMessage =
-            document.getElementById("status");
-
-        function setStatus(message, type = "") {
-            statusMessage.className =
-                type ? `status ${type}` : "status";
-
-            statusMessage.textContent = message;
-        }
-
-        function selectedAccountType() {
-            return document.querySelector(
-                'input[name="account_type"]:checked'
-            ).value;
-        }
-
-        registrationForm.addEventListener(
-            "submit",
-            async function (event) {
-                event.preventDefault();
-
-                const firstName =
-                    document.getElementById("firstName").value.trim();
-
-                const lastName =
-                    document.getElementById("lastName").value.trim();
-
-                const email =
-                    document.getElementById("email").value.trim();
-
-                const password =
-                    document.getElementById("password").value;
-
-                const confirmPassword =
-                    document.getElementById("confirmPassword").value;
-
-                const accountType =
-                    selectedAccountType();
-
-                if (password !== confirmPassword) {
-                    setStatus(
-                        "The passwords do not match.",
-                        "error"
-                    );
-                    return;
-                }
-
-                registerButton.disabled = true;
-                registerButton.textContent = "Creating account...";
-
-                setStatus("");
-
-                /*
-                 * Create the shared GlobalMGM/Supabase identity.
-                 *
-                 * BRAND XI membership and agency/player relationships
-                 * will be created separately during onboarding.
-                 */
-                const { data, error } =
-                    await supabaseClient.auth.signUp({
-                        email: email,
-                        password: password,
-                        options: {
-                            data: {
-                                first_name: firstName,
-                                last_name: lastName,
-                                brandxi_account_type: accountType
-                            },
-                            emailRedirectTo:
-                                `${window.location.origin}/brandxi/register/`
-                        }
-                    });
-
-                if (error) {
-                    console.error(
-                        "BRAND XI registration failed:",
-                        error
-                    );
-
-                    /*
-                     * An existing DealTrack Pro / GlobalMGM user should
-                     * use the existing identity rather than create a duplicate.
-                     */
-                    if (
-                        error.message &&
-                        error.message.toLowerCase().includes("already")
-                    ) {
-                        setStatus(
-                            "This email already has a GlobalMGM account. Please sign in with your existing password to activate BRAND XI.",
-                            "error"
-                        );
-                    } else {
-                        setStatus(
-                            error.message ||
-                            "We could not create the account.",
-                            "error"
-                        );
-                    }
-
-                    registerButton.disabled = false;
-                    registerButton.textContent =
-                        "Create BRAND XI account →";
-
-                    return;
-                }
-
-                if (!data.user) {
-                    setStatus(
-                        "We could not create the account.",
-                        "error"
-                    );
-
-                    registerButton.disabled = false;
-                    registerButton.textContent =
-                        "Create BRAND XI account →";
-
-                    return;
-                }
-
-                /*
-                 * Preserve the intended BRAND XI onboarding role.
-                 * This is convenience state only; final permissions will
-                 * always be enforced by Supabase/database policies.
-                 */
-                sessionStorage.setItem(
-                    "brandxi_pending_account_type",
-                    accountType
-                );
-
-                if (data.session) {
-                    setStatus(
-                        "Account created. Opening BRAND XI onboarding...",
-                        "success"
-                    );
-
-                    window.location.href =
-                        "/brandxi/onboarding/";
-                } else {
-                    setStatus(
-                        "Account created. Please check your email to verify your account, then return to BRAND XI and sign in.",
-                        "success"
-                    );
-
-                    registerButton.disabled = false;
-                    registerButton.textContent =
-                        "Create BRAND XI account →";
-                }
+            if (!email) {
+                statusMessage.className = "status error";
+                statusMessage.textContent = "Please enter your email address.";
+                return;
             }
-        );
+
+            /*
+             * Step 1 deliberately does NOT try to expose whether an email
+             * exists in Supabase. Public email enumeration is unsafe.
+             *
+             * We store the email temporarily and move to the secure identity
+             * step. That next screen will allow an existing GlobalMGM user
+             * to authenticate or a genuinely new user to create an account.
+             */
+            sessionStorage.setItem("brandxi_registration_email", email);
+
+            continueButton.disabled = true;
+            continueButton.textContent = "Continuing...";
+
+            window.location.href = "/brandxi/register/identity/";
+        });
     </script>
 </body>
 </html>
