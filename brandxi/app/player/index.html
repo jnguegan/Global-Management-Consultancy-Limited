@@ -31,8 +31,8 @@
    </div>
   </header>
   <main class="wrap">
-   <span class="eyebrow">
-    PLAYER WORKSPACE &middot; BX-000001
+   <span class="eyebrow" id="brandWorkspace">
+    PLAYER WORKSPACE
    </span>
    <h1>
     My
@@ -40,8 +40,10 @@
      Brand.
     </span>
    </h1>
-   <p>
-    Prototype dashboard &mdash; ready to connect to Supabase.
+   <p id="playerSummary">
+    Loading your BRAND XI profile...
+   </p>
+   <p id="dashboardStatus" style="color:#9DA5B4;font-size:14px;">
    </p>
    <div class="tabs">
     <a>
@@ -205,5 +207,93 @@
     </section>
    </div>
   </main>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
+  </script>
+  <script>
+   const SUPABASE_URL = "https://ysaxtuvuzqkyfmganven.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_esfhuUEIcUJEL6z9zryRAA_FGMmUHlw";
+
+const supabaseClient = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+);
+
+const brandWorkspace = document.getElementById("brandWorkspace");
+const playerSummary = document.getElementById("playerSummary");
+const dashboardStatus = document.getElementById("dashboardStatus");
+
+async function loadPlayerDashboard() {
+    const {
+        data: { user },
+        error: userError
+    } = await supabaseClient.auth.getUser();
+
+    if (userError || !user) {
+        playerSummary.textContent =
+            "Please sign in to access your BRAND XI workspace.";
+        dashboardStatus.textContent =
+            "No authenticated BRAND XI user session was found.";
+        return;
+    }
+
+    const { data: accessRows, error: accessError } = await supabaseClient
+        .from("brandxi_player_access")
+        .select("player_id, role")
+        .eq("user_id", user.id)
+        .limit(1);
+
+    if (accessError) {
+        console.error("BRAND XI access lookup failed:", accessError);
+        dashboardStatus.textContent =
+            "We could not verify access to this player workspace.";
+        return;
+    }
+
+    if (!accessRows || accessRows.length === 0) {
+        dashboardStatus.textContent =
+            "Your account is not linked to a BRAND XI player yet.";
+        return;
+    }
+
+    const access = accessRows[0];
+
+    const { data: player, error: playerError } = await supabaseClient
+        .from("brandxi_players")
+        .select(
+            "id, brand_id, first_name, surname, current_club, position, nationality"
+        )
+        .eq("id", access.player_id)
+        .single();
+
+    if (playerError || !player) {
+        console.error("BRAND XI player lookup failed:", playerError);
+        dashboardStatus.textContent =
+            "We could not load the player profile.";
+        return;
+    }
+
+    brandWorkspace.textContent =
+        `PLAYER WORKSPACE · ${player.brand_id}`;
+
+    const name =
+        `${player.first_name || ""} ${player.surname || ""}`.trim();
+
+    const details = [
+        player.current_club,
+        player.position,
+        player.nationality
+    ].filter(Boolean);
+
+    playerSummary.textContent =
+        details.length
+            ? `${name} · ${details.join(" · ")}`
+            : name;
+
+    sessionStorage.setItem("brandxi_player_id", player.id);
+    sessionStorage.setItem("brandxi_brand_id", player.brand_id);
+}
+
+loadPlayerDashboard();
+  </script>
  </body>
 </html>
