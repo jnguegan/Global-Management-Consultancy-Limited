@@ -8,7 +8,7 @@
         :root{--bg:#0b0d10;--text:#fff;--muted:#9da5b4;--line:rgba(255,255,255,.09);--blue:#245cff;--danger:#ff9c9c}
         *{box-sizing:border-box} body{margin:0;min-height:100vh;background:radial-gradient(circle at 80% 0,rgba(36,92,255,.18),transparent 30%),var(--bg);color:var(--text);font-family:Inter,Arial,sans-serif}
         a{color:inherit;text-decoration:none}.wrap{width:min(1180px,calc(100% - 32px));margin:auto}header{border-bottom:1px solid var(--line)}
-        header .wrap{min-height:72px;display:flex;align-items:center}.logo{font-weight:900;font-size:22px}.blue{color:var(--blue)}
+        header .wrap{min-height:72px;display:flex;align-items:center;justify-content:space-between}.logo{font-weight:900;font-size:22px}.blue{color:var(--blue)}
         main{min-height:calc(100vh - 73px);display:flex;align-items:center;padding:50px 0}.shell{width:min(620px,100%);margin:auto}
         .eyebrow{color:#9bb3ff;font-size:11px;font-weight:900;letter-spacing:.13em}h1{margin:12px 0;font-size:clamp(40px,7vw,62px);line-height:.98;letter-spacing:-.05em}
         .intro{color:var(--muted);line-height:1.65}.card{margin-top:28px;padding:30px;border:1px solid var(--line);border-radius:22px;background:rgba(255,255,255,.03)}
@@ -16,36 +16,53 @@
         input{width:100%;padding:15px;border-radius:12px;border:1px solid var(--line);background:#0e1116;color:#fff;font-size:16px}input:focus{outline:1px solid var(--blue);border-color:var(--blue)}
         button{width:100%;margin-top:16px;border:0;border-radius:12px;background:var(--blue);color:#fff;font-weight:850;font-size:15px;padding:15px 18px;cursor:pointer}button:disabled{opacity:.6}
         .status{min-height:24px;margin:14px 0 0;color:var(--muted);font-size:14px;line-height:1.5}.error{color:var(--danger)}.back{display:inline-block;margin-top:18px;color:#9bb3ff;font-size:13px;font-weight:800}.forgot{display:block;margin-top:12px;color:#9bb3ff;font-size:13px;font-weight:800;text-align:right}.success{color:#a8ffbf}
-    </style>
+    .languages{display:flex;gap:6px}.lang-btn{width:auto;margin:0;padding:6px 8px;border:1px solid var(--line);border-radius:7px;background:transparent;color:var(--muted);font-size:12px;font-weight:800;cursor:pointer}.lang-btn.active{color:#fff;border-color:var(--blue);background:rgba(36,92,255,.14)}</style>
 </head>
 <body>
-<header><div class="wrap"><a class="logo" href="/brandxi/">BRAND <span class="blue">XI</span>&trade;</a></div></header>
+<header><div class="wrap">
+<a class="logo" href="/brandxi/">BRAND <span class="blue">XI</span>&trade;</a>
+<div class="languages">
+<button class="lang-btn" type="button" data-lang="en">EN</button>
+<button class="lang-btn" type="button" data-lang="fr">FR</button>
+<button class="lang-btn" type="button" data-lang="es">ES</button>
+</div>
+</div></header>
 <main>
 <div class="shell">
-    <span class="eyebrow">EXISTING GLOBALMGM ACCOUNT</span>
-    <h1>Verify your <span class="blue">identity.</span></h1>
-    <p class="intro">Use the password you already use with your GlobalMGM account. We will not create another user.</p>
+    <span class="eyebrow" data-i18n="eyebrow">EXISTING GLOBALMGM ACCOUNT</span>
+    <h1><span data-i18n="title">Verify your</span> <span class="blue" data-i18n="identity">identity.</span></h1>
+    <p class="intro"><span data-i18n="intro">Use the password you already use with your GlobalMGM account. We will not create another user.</span></p>
 
     <section class="card">
         <form id="loginForm">
-            <label>Email address</label>
+            <label data-i18n="emailLabel">Email address</label>
             <div class="email" id="emailDisplay"></div>
 
-            <label for="password">Existing password</label>
+            <label for="password" data-i18n="passwordLabel">Existing password</label>
             <input id="password" type="password" autocomplete="current-password" required autofocus>
 
-            <a id="forgotPassword" class="forgot" href="#">Forgot password?</a>
+            <a id="forgotPassword" class="forgot" href="#" data-i18n="forgot">Forgot password?</a>
 
-            <button id="continueButton" type="submit">Continue to BRAND XI &rarr;</button>
+            <button id="continueButton" type="submit" data-i18n="continue">Continue to BRAND XI →</button>
             <p id="status" class="status"></p>
         </form>
-        <a class="back" href="/brandxi/register/identity/">&larr; Back</a>
+        <a class="back" href="/brandxi/register/identity/" data-i18n="back">← Back</a>
     </section>
 </div>
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+const i18n={
+en:{eyebrow:"EXISTING GLOBALMGM ACCOUNT",title:"Verify your",identity:"identity.",intro:"Use the password you already use with your GlobalMGM account. We will not create another user.",emailLabel:"Email address",passwordLabel:"Existing password",forgot:"Forgot password?",continue:"Continue to BRAND XI →",back:"← Back",sending:"Sending password reset email...",resetError:"We could not send the reset email. Please try again.",resetSent:"Password reset email sent. Please check your inbox and follow the secure reset link.",verifying:"Verifying...",verifyError:"We could not verify those credentials. Please check your password and try again.",userError:"We could not verify this account."},
+fr:{eyebrow:"COMPTE GLOBALMGM EXISTANT",title:"Vérifiez votre",identity:"identité.",intro:"Utilisez le mot de passe que vous utilisez déjà avec votre compte GlobalMGM. Nous ne créerons pas de nouvel utilisateur.",emailLabel:"Adresse e-mail",passwordLabel:"Mot de passe existant",forgot:"Mot de passe oublié ?",continue:"Continuer vers BRAND XI →",back:"← Retour",sending:"Envoi de l'e-mail de réinitialisation...",resetError:"Impossible d'envoyer l'e-mail de réinitialisation. Veuillez réessayer.",resetSent:"E-mail de réinitialisation envoyé. Consultez votre boîte de réception et suivez le lien sécurisé.",verifying:"Vérification...",verifyError:"Nous n'avons pas pu vérifier ces identifiants. Vérifiez votre mot de passe et réessayez.",userError:"Nous n'avons pas pu vérifier ce compte."},
+es:{eyebrow:"CUENTA GLOBALMGM EXISTENTE",title:"Verifica tu",identity:"identidad.",intro:"Utiliza la contraseña que ya usas con tu cuenta GlobalMGM. No crearemos otro usuario.",emailLabel:"Correo electrónico",passwordLabel:"Contraseña actual",forgot:"¿Olvidaste tu contraseña?",continue:"Continuar a BRAND XI →",back:"← Volver",sending:"Enviando correo para restablecer la contraseña...",resetError:"No hemos podido enviar el correo de restablecimiento. Inténtalo de nuevo.",resetSent:"Correo de restablecimiento enviado. Revisa tu bandeja de entrada y sigue el enlace seguro.",verifying:"Verificando...",verifyError:"No hemos podido verificar esas credenciales. Comprueba tu contraseña e inténtalo de nuevo.",userError:"No hemos podido verificar esta cuenta."}
+};
+let currentLang=localStorage.getItem("brandxi_language")||"en";
+function applyLanguage(l){currentLang=i18n[l]?l:"en";localStorage.setItem("brandxi_language",currentLang);document.documentElement.lang=currentLang;document.querySelectorAll("[data-i18n]").forEach(el=>{const k=el.dataset.i18n;if(i18n[currentLang][k])el.textContent=i18n[currentLang][k]});document.querySelectorAll(".lang-btn").forEach(b=>b.classList.toggle("active",b.dataset.lang===currentLang));}
+document.querySelectorAll(".lang-btn").forEach(b=>b.addEventListener("click",()=>applyLanguage(b.dataset.lang)));
+applyLanguage(currentLang);
+
 const SUPABASE_URL = "https://ysaxtuvuzqkyfmganven.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_esfhuUEIcUJEL6z9zryRAA_FGMmUHlw";
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
@@ -71,7 +88,7 @@ document.getElementById("forgotPassword").addEventListener("click", async (event
     }
 
     status.className = "status";
-    status.textContent = "Sending password reset email...";
+    status.textContent = i18n[currentLang].sending;
 
     const { error } = await supabaseClient.auth.resetPasswordForEmail(
         email,
@@ -83,13 +100,12 @@ document.getElementById("forgotPassword").addEventListener("click", async (event
     if (error) {
         console.error("Password reset error:", error);
         status.className = "status error";
-        status.textContent = "We could not send the reset email. Please try again.";
+        status.textContent = i18n[currentLang].resetError;
         return;
     }
 
     status.className = "status success";
-    status.textContent =
-        "Password reset email sent. Please check your inbox and follow the secure reset link.";
+    status.textContent = i18n[currentLang].resetSent;
 });
 
 form.addEventListener("submit", async (event) => {
@@ -97,7 +113,7 @@ form.addEventListener("submit", async (event) => {
     const password = document.getElementById("password").value;
 
     button.disabled = true;
-    button.textContent = "Verifying...";
+    button.textContent = i18n[currentLang].verifying;
     status.className = "status";
     status.textContent = "";
 
@@ -108,17 +124,17 @@ form.addEventListener("submit", async (event) => {
 
     if (error) {
         status.className = "status error";
-        status.textContent = "We could not verify those credentials. Please check your password and try again.";
+        status.textContent = i18n[currentLang].verifyError;
         button.disabled = false;
-        button.textContent = "Continue to BRAND XI →";
+        button.textContent = i18n[currentLang].continue;
         return;
     }
 
     if (!data.user) {
         status.className = "status error";
-        status.textContent = "We could not verify this account.";
+        status.textContent = i18n[currentLang].userError;
         button.disabled = false;
-        button.textContent = "Continue to BRAND XI →";
+        button.textContent = i18n[currentLang].continue;
         return;
     }
 
