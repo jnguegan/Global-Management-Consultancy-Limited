@@ -1,4 +1,4 @@
-
+<!DOCTYPE html>
 <html lang="en">
  <head>
   <meta charset="utf-8"/>
@@ -188,18 +188,15 @@ brandForm.addEventListener("submit", async (event) => {
   };
 
   try {
-    const { data, error } = await supabaseClient
+    const { error } = await supabaseClient
       .from("brandxi_players")
-      .insert(player)
-      .select("id, brand_id")
-      .single();
+      .insert(player);
 
     if (error) {
       throw error;
     }
 
-    sessionStorage.setItem("brandxi_player_id", data.id);
-    sessionStorage.setItem("brandxi_brand_id", data.brand_id);
+    sessionStorage.setItem("brandxi_brand_id", player.brand_id);
     window.location.href = "../app/player/";
   } catch (error) {
     console.error("BRAND XI player creation failed:", error);
