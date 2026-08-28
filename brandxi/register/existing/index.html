@@ -15,7 +15,7 @@
         label{display:block;color:#c8cdd5;font-size:13px;font-weight:800;margin:0 0 8px}.email{padding:14px 16px;margin-bottom:20px;border:1px solid var(--line);border-radius:12px;background:#0e1116;font-weight:800;overflow-wrap:anywhere}
         input{width:100%;padding:15px;border-radius:12px;border:1px solid var(--line);background:#0e1116;color:#fff;font-size:16px}input:focus{outline:1px solid var(--blue);border-color:var(--blue)}
         button{width:100%;margin-top:16px;border:0;border-radius:12px;background:var(--blue);color:#fff;font-weight:850;font-size:15px;padding:15px 18px;cursor:pointer}button:disabled{opacity:.6}
-        .status{min-height:24px;margin:14px 0 0;color:var(--muted);font-size:14px;line-height:1.5}.error{color:var(--danger)}.back{display:inline-block;margin-top:18px;color:#9bb3ff;font-size:13px;font-weight:800}
+        .status{min-height:24px;margin:14px 0 0;color:var(--muted);font-size:14px;line-height:1.5}.error{color:var(--danger)}.back{display:inline-block;margin-top:18px;color:#9bb3ff;font-size:13px;font-weight:800}.forgot{display:block;margin-top:12px;color:#9bb3ff;font-size:13px;font-weight:800;text-align:right}.success{color:#a8ffbf}
     </style>
 </head>
 <body>
@@ -33,6 +33,8 @@
 
             <label for="password">Existing password</label>
             <input id="password" type="password" autocomplete="current-password" required autofocus>
+
+            <a id="forgotPassword" class="forgot" href="#">Forgot password?</a>
 
             <button id="continueButton" type="submit">Continue to BRAND XI &rarr;</button>
             <p id="status" class="status"></p>
@@ -59,6 +61,36 @@ if (!email) {
 } else {
     display.textContent = email;
 }
+
+
+document.getElementById("forgotPassword").addEventListener("click", async (event) => {
+    event.preventDefault();
+
+    if (!email) {
+        return;
+    }
+
+    status.className = "status";
+    status.textContent = "Sending password reset email...";
+
+    const { error } = await supabaseClient.auth.resetPasswordForEmail(
+        email,
+        {
+            redirectTo: `${window.location.origin}/brandxi/reset-password/`
+        }
+    );
+
+    if (error) {
+        console.error("Password reset error:", error);
+        status.className = "status error";
+        status.textContent = "We could not send the reset email. Please try again.";
+        return;
+    }
+
+    status.className = "status success";
+    status.textContent =
+        "Password reset email sent. Please check your inbox and follow the secure reset link.";
+});
 
 form.addEventListener("submit", async (event) => {
     event.preventDefault();
