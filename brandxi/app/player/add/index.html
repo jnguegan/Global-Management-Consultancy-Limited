@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Add Player | BRAND XI</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{--bg:#070a12;--panel:#0e1422;--panel2:#121a2b;--text:#f7f9ff;--muted:#929db2;--line:#202b40;--blue:#4c73ff}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,Arial,sans-serif}
+header{border-bottom:1px solid var(--line)}.wrap{max-width:1080px;margin:auto;padding:0 24px}
+header .wrap{min-height:72px;display:flex;align-items:center;gap:18px}.logo{color:#fff;text-decoration:none;font-weight:900;letter-spacing:.08em}.blue{color:var(--blue)}
+.languages{display:flex;gap:6px;margin-left:auto}.lang{border:1px solid var(--line);background:transparent;color:var(--muted);padding:7px 9px;border-radius:8px;font-weight:800;cursor:pointer}.lang.active{border-color:var(--blue);color:#fff}
+main{padding:56px 0}.eyebrow{color:var(--blue);font-size:12px;font-weight:900;letter-spacing:.16em}h1{font-size:clamp(36px,5vw,58px);margin:12px 0 14px}.lead{color:var(--muted);line-height:1.7;max-width:720px}
+.back{display:inline-block;margin-bottom:30px;color:var(--muted);text-decoration:none;font-weight:800}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:34px}
+.card{border:1px solid var(--line);background:linear-gradient(180deg,var(--panel2),var(--panel));border-radius:20px;padding:28px;min-height:260px}
+.icon{width:48px;height:48px;border:1px solid #34425e;border-radius:14px;display:grid;place-items:center;font-size:22px;margin-bottom:22px}
+.card h2{font-size:24px;margin:0 0 10px}.card p{color:var(--muted);line-height:1.65;margin:0 0 24px}
+.action{display:inline-block;border:0;border-radius:10px;background:var(--blue);color:#fff;text-decoration:none;padding:12px 16px;font-weight:900;cursor:pointer}
+.secondary{background:transparent;border:1px solid #34425e}
+.account{margin-top:30px;border:1px solid var(--line);border-radius:14px;padding:15px 17px;color:var(--muted);background:var(--panel)}.account strong{color:#fff}
+.status{margin-top:16px;color:var(--muted)}
+@media(max-width:720px){.grid{grid-template-columns:1fr}.wrap{padding:0 18px}}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+<a class="logo" href="/brandxi/">BRAND <span class="blue">XI</span>&trade;</a>
+<div class="languages">
+<button class="lang" data-lang="en">EN</button><button class="lang" data-lang="fr">FR</button><button class="lang" data-lang="es">ES</button>
+</div>
+</div></header>
+
+<main><div class="wrap">
+<a class="back" href="/brandxi/app/agency/" data-i18n="back">← Back to agency dashboard</a>
+<div class="eyebrow" data-i18n="eyebrow">ADD PLAYER</div>
+<h1><span data-i18n="title">Add a player to</span> <span id="agencyName" class="blue">your agency</span></h1>
+<p class="lead" data-i18n="intro">Choose whether the player already has a BRAND XI identity or needs a new player profile.</p>
+
+<div class="account"><span data-i18n="signed">Signed in as</span> <strong id="email">Checking...</strong></div>
+
+<div class="grid">
+<section class="card">
+<div class="icon">XI</div>
+<h2 data-i18n="existingTitle">Existing BRAND XI player</h2>
+<p data-i18n="existingText">Find a player who already has a BRAND XI identity and request or create the appropriate agency relationship without creating a duplicate profile.</p>
+<a class="action" href="/brandxi/app/agency/players/add/existing/" data-i18n="existingAction">Find existing player →</a>
+</section>
+
+<section class="card">
+<div class="icon">+</div>
+<h2 data-i18n="newTitle">New player</h2>
+<p data-i18n="newText">Start a new BRAND XI player profile for someone who does not yet have a BRAND XI identity. The player can then complete the remaining onboarding information.</p>
+<a class="action secondary" href="/brandxi/app/agency/players/add/new/" data-i18n="newAction">Create new player →</a>
+</section>
+</div>
+<div id="status" class="status"></div>
+</div></main>
+
+<script>
+const SUPABASE_URL="https://ysaxtuvuzqkyfmganven.supabase.co";
+const SUPABASE_KEY="sb_publishable_esfhuUEIcUJEL6z9zryRAA_FGMmUHlw";
+const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+
+const t={
+en:{back:"← Back to agency dashboard",eyebrow:"ADD PLAYER",title:"Add a player to",intro:"Choose whether the player already has a BRAND XI identity or needs a new player profile.",signed:"Signed in as",existingTitle:"Existing BRAND XI player",existingText:"Find a player who already has a BRAND XI identity and request or create the appropriate agency relationship without creating a duplicate profile.",existingAction:"Find existing player →",newTitle:"New player",newText:"Start a new BRAND XI player profile for someone who does not yet have a BRAND XI identity. The player can then complete the remaining onboarding information.",newAction:"Create new player →",noAccess:"No agency access was found for this account.",error:"We could not load your agency."},
+fr:{back:"← Retour au tableau de bord de l'agence",eyebrow:"AJOUTER UN JOUEUR",title:"Ajouter un joueur à",intro:"Indiquez si le joueur possède déjà une identité BRAND XI ou s'il a besoin d'un nouveau profil.",signed:"Connecté en tant que",existingTitle:"Joueur BRAND XI existant",existingText:"Recherchez un joueur qui possède déjà une identité BRAND XI et créez la relation d'agence appropriée sans créer de profil en double.",existingAction:"Rechercher un joueur existant →",newTitle:"Nouveau joueur",newText:"Créez un nouveau profil BRAND XI pour un joueur qui ne possède pas encore d'identité BRAND XI. Il pourra ensuite compléter les informations restantes.",newAction:"Créer un nouveau joueur →",noAccess:"Aucun accès agence n'a été trouvé pour ce compte.",error:"Impossible de charger votre agence."},
+es:{back:"← Volver al panel de la agencia",eyebrow:"AÑADIR JUGADOR",title:"Añadir un jugador a",intro:"Elige si el jugador ya tiene una identidad BRAND XI o necesita un nuevo perfil.",signed:"Sesión iniciada como",existingTitle:"Jugador BRAND XI existente",existingText:"Busca a un jugador que ya tenga una identidad BRAND XI y crea la relación de agencia adecuada sin duplicar su perfil.",existingAction:"Buscar jugador existente →",newTitle:"Nuevo jugador",newText:"Crea un nuevo perfil BRAND XI para un jugador que todavía no tenga una identidad BRAND XI. Después podrá completar el resto de la información.",newAction:"Crear nuevo jugador →",noAccess:"No se encontró acceso de agencia para esta cuenta.",error:"No hemos podido cargar tu agencia."}
+};
+let lang=localStorage.getItem("brandxi_language")||"en";
+function apply(l){lang=t[l]?l:"en";localStorage.setItem("brandxi_language",lang);document.documentElement.lang=lang;document.querySelectorAll("[data-i18n]").forEach(e=>{let k=e.dataset.i18n;if(t[lang][k])e.textContent=t[lang][k]});document.querySelectorAll(".lang").forEach(b=>b.classList.toggle("active",b.dataset.lang===lang))}
+document.querySelectorAll(".lang").forEach(b=>b.onclick=()=>apply(b.dataset.lang));apply(lang);
+
+async function init(){
+ const status=document.getElementById("status");
+ const {data:{user}}=await client.auth.getUser();
+ if(!user){location.href="/brandxi/login/";return}
+ document.getElementById("email").textContent=user.email||"";
+ const {data:m,error:me}=await client.from("brandxi_agency_access").select("agency_id,role").eq("user_id",user.id).limit(1).maybeSingle();
+ if(me||!m){status.textContent=me?t[lang].error:t[lang].noAccess;return}
+ const {data:a,error:ae}=await client.from("brandxi_agencies").select("name").eq("id",m.agency_id).single();
+ if(ae){status.textContent=t[lang].error;return}
+ document.getElementById("agencyName").textContent=a.name;
+}
+init();
+</script>
+</body>
+</html>
