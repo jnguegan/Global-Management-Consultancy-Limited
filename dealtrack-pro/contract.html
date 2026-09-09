@@ -4861,7 +4861,8 @@ function renderInvoiceForecast(data) {
             body: {
               contract_id: contractId,
               documents,
-              language: currentLang
+              language: currentLang,
+              force_reanalysis: true
             }
           });
 
