@@ -1419,6 +1419,11 @@
 "mixedMethod": "Mixed percentage + fixed fee",
 "auditNote": "This calculation trail shows the recorded inputs and assumptions used by DealTrack Pro. It should be checked against the signed contractual documents before an invoice is issued.",
 "commercialValueUnavailable": "The commercial value cannot yet be calculated because the salary amount, salary frequency or commission rate is missing.",
+"tieredFutureRevenue": "Conditional Future Transfer Revenue",
+"potentialCommissionRange": "Potential commission range",
+"currentConfirmedRevenue": "Current confirmed revenue",
+"qualifyingTransferTrigger": "A qualifying transfer must occur and the applicable net transfer fee must be confirmed.",
+"tieredNoInvoice": "No invoice is currently due. The applicable tier becomes invoiceable only after the contractual transfer trigger occurs.",
 "fixedScheduleRequired": "A fixed commission has been recorded, but its instalment schedule is not yet available. Lifetime revenue can be shown, but annual revenue and invoice timing require the recorded payment schedule.",
 "sectionInvoiceForecast": "Invoice Forecast",
 "invoiceForecastSubtitle": "Potential invoices identified from the recorded commission structure. Confirm contractual triggers and dates before issuing an invoice.",
@@ -1619,6 +1624,11 @@
 "mixedMethod": "Pourcentage + commission fixe",
 "auditNote": "Cette piste de calcul présente les données et hypothèses enregistrées utilisées par DealTrack Pro. Elle doit être vérifiée avec les documents contractuels signés avant émission d’une facture.",
 "commercialValueUnavailable": "La valeur commerciale ne peut pas encore être calculée, car le salaire, la fréquence salariale ou le taux de commission est manquant.",
+"tieredFutureRevenue": "Revenu futur conditionnel lié au transfert",
+"potentialCommissionRange": "Fourchette de commission potentielle",
+"currentConfirmedRevenue": "Revenu actuellement confirmé",
+"qualifyingTransferTrigger": "Un transfert admissible doit avoir lieu et le montant net applicable du transfert doit être confirmé.",
+"tieredNoInvoice": "Aucune facture n’est actuellement exigible. Le palier applicable ne devient facturable qu’après la réalisation du déclencheur contractuel du transfert.",
 "fixedScheduleRequired": "Une commission fixe est enregistrée, mais son échéancier n’est pas encore disponible. Le revenu total peut être affiché, mais le revenu annuel et le calendrier de facturation nécessitent l’échéancier de paiement enregistré.",
 "sectionInvoiceForecast": "Prévision de facturation",
 "invoiceForecastSubtitle": "Factures potentielles identifiées à partir de la structure de commission enregistrée. Confirmez les déclencheurs et les dates contractuels avant d’émettre une facture.",
@@ -1819,6 +1829,11 @@
 "mixedMethod": "Porcentaje + comisión fija",
 "auditNote": "Esta pista de cálculo muestra los datos e hipótesis registrados que utiliza DealTrack Pro. Debe comprobarse con los documentos contractuales firmados antes de emitir una factura.",
 "commercialValueUnavailable": "El valor comercial todavía no puede calcularse porque falta el salario, la frecuencia salarial o el porcentaje de comisión.",
+"tieredFutureRevenue": "Ingresos futuros condicionales por transferencia",
+"potentialCommissionRange": "Rango de comisión potencial",
+"currentConfirmedRevenue": "Ingresos actualmente confirmados",
+"qualifyingTransferTrigger": "Debe producirse una transferencia válida y confirmarse el importe neto aplicable de la transferencia.",
+"tieredNoInvoice": "Actualmente no hay ninguna factura exigible. El tramo aplicable solo será facturable cuando se produzca el desencadenante contractual de la transferencia.",
 "fixedScheduleRequired": "Se ha registrado una comisión fija, pero su calendario de cuotas todavía no está disponible. Puede mostrarse el ingreso total, pero el ingreso anual y las fechas de facturación requieren el calendario de pagos registrado.",
 "sectionInvoiceForecast": "Previsión de facturación",
 "invoiceForecastSubtitle": "Facturas potenciales identificadas a partir de la estructura de comisión registrada. Confirme los desencadenantes y las fechas contractuales antes de emitir una factura.",
@@ -3872,7 +3887,102 @@ async function persistReconciledRevenueMetrics(data, metrics) {
   if (currentContract?.id === data.id) Object.assign(currentContract, payload);
 }
 
+/*
+ * Specialist resolver for mutually exclusive transfer-fee tiers.
+ * It is intentionally separate from the established fixed, percentage,
+ * mixed and instalment calculators below. Returning null preserves every
+ * existing calculation path for all other contract structures.
+ */
+function getTieredTransferScenario(data) {
+  const analysis = parseContractAnalysis(data) || {};
+  const commissionType = String(
+    data?.commission_type || analysis?.commission_type || ""
+  ).trim();
+  if (!/tier|band|slab|threshold/i.test(commissionType)) return null;
+
+  const components = Array.isArray(analysis?.commission_components)
+    ? analysis.commission_components
+    : [];
+  const tierComponents = components.filter((item) => {
+    const evidence = [
+      item?.calculation_basis,
+      item?.evidence,
+      item?.source_clause,
+      item?.applicable_period
+    ].filter(Boolean).join(" ");
+    return /(?:net\s+)?transfer\s+fee|threshold|tier/i.test(evidence);
+  });
+  const componentAmounts = tierComponents
+    .map((item) => resolverNumber(item?.fixed_amount))
+    .filter((value) => value !== null && value > 0);
+
+  const warnings = Array.isArray(analysis?.warnings) ? analysis.warnings : [];
+  const marker = warnings
+    .map((item) => String(item || ""))
+    .find((item) => /Tiered transfer-fee scenarios were preserved as alternatives/i.test(item));
+  const markerMatch = marker?.match(
+    /alternatives\s*\(([\d.,]+)\s+to\s+([\d.,]+)(?:\s+([A-Z]{3}))?\)/i
+  );
+  const markerAmounts = markerMatch
+    ? [resolverNumber(markerMatch[1]), resolverNumber(markerMatch[2])]
+        .filter((value) => value !== null && value > 0)
+    : [];
+
+  const amounts = [...new Set([...componentAmounts, ...markerAmounts])]
+    .sort((a, b) => a - b);
+  if (amounts.length < 2) return null;
+
+  return {
+    minimum: amounts[0],
+    maximum: amounts[amounts.length - 1],
+    currency:
+      markerMatch?.[3]?.toUpperCase() ||
+      tierComponents.find((item) => item?.currency)?.currency ||
+      analysis?.commission_currency ||
+      data?.commission_currency ||
+      "EUR"
+  };
+}
+
+function renderTieredTransferRevenue(data, scenario) {
+  const range = `${formatMoneyValue(scenario.minimum, scenario.currency)} – ${formatMoneyValue(scenario.maximum, scenario.currency)}`;
+  return `
+    <section class="premium-card commercial-value-card">
+      <div class="section-head">
+        <div>
+          <div class="section-kicker">06</div>
+          <h2 class="section-title">${t("sectionCommercialValue")}</h2>
+        </div>
+      </div>
+      <p class="muted">${t("tieredFutureRevenue")}</p>
+      <div class="commercial-value-headline">
+        <span class="commercial-value-label">${t("currentConfirmedRevenue")}</span>
+        <div class="commercial-value-annual">${formatMoneyValue(0, scenario.currency)}</div>
+        <div class="commercial-value-period">${new Date().getFullYear()}</div>
+      </div>
+      <div class="commercial-total-box">
+        <span class="commercial-value-label">${t("potentialCommissionRange")}</span>
+        <div class="commercial-total-value">${range}</div>
+        <div class="commercial-value-period">${safeValue(data?.commission_type)}</div>
+      </div>
+      <div class="commercial-calculation">
+        <div class="calculation-formula">
+          <strong>${t("currentYearRevenue")}:</strong> ${formatMoneyValue(0, scenario.currency)}<br>
+          <strong>${t("nextInvoiceLabel")}:</strong> ${t("na")}
+        </div>
+        <p class="commercial-note">${t("qualifyingTransferTrigger")}</p>
+        <p class="commercial-note">${t("auditNote")}</p>
+      </div>
+    </section>
+  `;
+}
+
 function renderCommercialValue(data) {
+  const tieredTransferScenario = getTieredTransferScenario(data);
+  if (tieredTransferScenario) {
+    return renderTieredTransferRevenue(data, tieredTransferScenario);
+  }
+
   const instalmentMetrics = getInstalmentMetrics(data);
 
   if (instalmentMetrics) {
@@ -4453,6 +4563,21 @@ function renderInvoiceGenerationAction(group, contractId) {
 }
 
 function renderInvoiceForecast(data) {
+  const tieredTransferScenario = getTieredTransferScenario(data);
+  if (tieredTransferScenario) {
+    return `
+      <section class="premium-card invoice-forecast-card">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">07</div>
+            <h2 class="section-title">${t("sectionInvoiceForecast")}</h2>
+          </div>
+        </div>
+        <div class="commercial-warning">${t("tieredNoInvoice")}</div>
+      </section>
+    `;
+  }
+
   const instalmentMetrics = getInstalmentMetrics(data);
 
   if (instalmentMetrics) {
@@ -4659,7 +4784,17 @@ function renderInvoiceForecast(data) {
       const container = document.getElementById("contractView");
       const resolvedCommission = resolveCommission(data);
       const reconciledMetrics = getInstalmentMetrics(data);
-      if (reconciledMetrics) void persistReconciledRevenueMetrics(data, reconciledMetrics);
+      const tieredTransferScenario = getTieredTransferScenario(data);
+      if (tieredTransferScenario) {
+        void persistReconciledRevenueMetrics(data, {
+          annualRevenue: 0,
+          lifetimeRevenue: 0,
+          invoiceForecast: 0,
+          currency: tieredTransferScenario.currency
+        });
+      } else if (reconciledMetrics) {
+        void persistReconciledRevenueMetrics(data, reconciledMetrics);
+      }
 
       container.innerHTML = `
         <section class="hero">
