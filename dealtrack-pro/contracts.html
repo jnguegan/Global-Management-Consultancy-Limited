@@ -1758,6 +1758,38 @@
       };
     }
 
+    function getNextOutstandingDueDate(contract) {
+      const outstandingDates = getContractInstalments(contract.id)
+        .filter((item) => {
+          const status = String(
+            item?.payment_record_status ||
+            item?.payment_status ||
+            item?.invoice_status ||
+            ""
+          ).trim().toLowerCase();
+
+          const isClosed = [
+            "paid",
+            "settled",
+            "received",
+            "cancelled",
+            "canceled"
+          ].includes(status);
+
+          const isPaid =
+            item?.is_paid === true ||
+            Boolean(item?.paid_at) ||
+            Boolean(item?.payment_received_date);
+
+          return !isClosed && !isPaid && parseDate(item.due_date);
+        })
+        .map((item) => parseDate(item.due_date).getTime());
+
+      return outstandingDates.length
+        ? Math.min(...outstandingDates)
+        : Number.POSITIVE_INFINITY;
+    }
+
     function getCommercialMetrics(contract) {
       const instalmentMetrics = getInstalmentMetrics(contract);
 
@@ -2250,8 +2282,25 @@
         }
       );
 
-      displayedContracts = filtered;
-      renderContracts(filtered);
+      const sortedByDueDate = [...filtered].sort((a, b) => {
+        const aDueDate = getNextOutstandingDueDate(a);
+        const bDueDate = getNextOutstandingDueDate(b);
+
+        if (aDueDate !== bDueDate) {
+          if (!Number.isFinite(aDueDate)) return 1;
+          if (!Number.isFinite(bDueDate)) return -1;
+          return aDueDate - bDueDate;
+        }
+
+        return String(a.player_name || "").localeCompare(
+          String(b.player_name || ""),
+          currentLang,
+          { sensitivity: "base" }
+        );
+      });
+
+      displayedContracts = sortedByDueDate;
+      renderContracts(sortedByDueDate);
     }
 
     function exportPortfolioToExcel() {
