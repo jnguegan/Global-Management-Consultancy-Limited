@@ -3612,14 +3612,45 @@ function resolveCommission(data) {
   let source = "contracts";
 
   if (detailedRows.length > 0) {
+    const scheduleGroupKey = (item) => {
+      const seasonMatch = String(item?.season_label || "").match(/\b(\d{4})\s*\//);
+      const feeSide = String(item?.fee_side || "").trim().toLowerCase();
+      return seasonMatch && feeSide ? `${seasonMatch[1]}|${feeSide}` : null;
+    };
+    const countScheduleGroups = (items) => {
+      const counts = new Map();
+      items.forEach((item) => {
+        const key = scheduleGroupKey(item);
+        if (key) counts.set(key, (counts.get(key) || 0) + 1);
+      });
+      return counts;
+    };
+    const storedGroupCounts = countScheduleGroups(detailedRows);
+    const analysisGroupCounts = countScheduleGroups(analysisRows);
+
     const supplementalAnalysisRows = analysisRows.filter(
       (item) => {
         if (!(item.due_date_type === "relative_to_event" || !item.due_date)) return false;
-        return !detailedRows.some((stored) =>
+        const exactStoredMatch = detailedRows.some((stored) =>
           String(stored.component_reference || "") === String(item.component_reference || "") &&
           resolverNumber(stored.amount) === resolverNumber(item.amount) &&
           String(stored.due_date_rule || "") === String(item.due_date_rule || "")
         );
+        if (exactStoredMatch) return false;
+
+        // Stored instalments are authoritative when they fully cover the same
+        // season and fee side. This prevents stale analysis obligations (for
+        // example, an old currency) from appearing as duplicate payments.
+        const groupKey = scheduleGroupKey(item);
+        if (
+          groupKey &&
+          storedGroupCounts.get(groupKey) > 0 &&
+          storedGroupCounts.get(groupKey) === analysisGroupCounts.get(groupKey)
+        ) {
+          return false;
+        }
+
+        return true;
       }
     );
     schedule = [...detailedRows, ...supplementalAnalysisRows];
