@@ -1505,6 +1505,7 @@
       "currencyEUR": "EUR",
       "currencyGBP": "GBP",
       "currencyUSD": "USD",
+      "currencyCHF": "CHF",
       "missingFinancialData": "Missing financial data",
       "missingFinancialDataText": "{count} contract(s) cannot yet be fully calculated.",
       "expiringContracts": "Contracts expiring within 12 months",
@@ -1655,6 +1656,7 @@
       "currencyEUR": "EUR",
       "currencyGBP": "GBP",
       "currencyUSD": "USD",
+      "currencyCHF": "CHF",
       "missingFinancialData": "Données financières manquantes",
       "missingFinancialDataText": "{count} contrat(s) ne peuvent pas encore être entièrement calculés.",
       "expiringContracts": "Contrats expirant dans les 12 mois",
@@ -1807,6 +1809,7 @@
       "currencyEUR": "EUR",
       "currencyGBP": "GBP",
       "currencyUSD": "USD",
+      "currencyCHF": "CHF",
       "missingFinancialData": "Faltan datos financieros",
       "missingFinancialDataText": "{count} contrato(s) todavía no pueden calcularse completamente.",
       "expiringContracts": "Contratos que vencen en 12 meses",
@@ -2141,7 +2144,7 @@
       };
     }
 
-    const DASHBOARD_CURRENCIES = ["EUR", "GBP", "USD"];
+    const DASHBOARD_CURRENCIES = ["EUR", "GBP", "USD", "CHF"];
 
     function normaliseCurrencyCode(value) {
       const code = String(value || "").trim().toUpperCase();
@@ -2158,18 +2161,18 @@
         DOLLAR: "USD",
         DOLLARS: "USD",
         "US DOLLAR": "USD",
-        "US DOLLARS": "USD"
+        "US DOLLARS": "USD",
+        "SWISS FRANC": "CHF",
+        "SWISS FRANCS": "CHF"
       };
 
       return aliases[code] || code;
     }
 
     function groupTotalsByCurrency(rows, field) {
-      const totals = {
-        EUR: 0,
-        GBP: 0,
-        USD: 0
-      };
+      const totals = Object.fromEntries(
+        DASHBOARD_CURRENCIES.map((currency) => [currency, 0])
+      );
 
       rows.forEach((row) => {
         if (!row.valid || !Number.isFinite(row[field])) return;
@@ -2555,8 +2558,12 @@
 
     function renderCurrencyMix() {
       const container = document.getElementById("currencyMix");
-      const counts = { EUR: 0, GBP: 0, USD: 0 };
-      const totals = { EUR: 0, GBP: 0, USD: 0 };
+      const counts = Object.fromEntries(
+        DASHBOARD_CURRENCIES.map((currency) => [currency, 0])
+      );
+      const totals = Object.fromEntries(
+        DASHBOARD_CURRENCIES.map((currency) => [currency, 0])
+      );
 
       dashboardRows.forEach((row) => {
         const currency = normaliseCurrencyCode(row.currency);
@@ -4226,7 +4233,8 @@
             backgroundColor: [
               "rgba(88, 166, 255, 0.82)",
               "rgba(240, 200, 90, 0.84)",
-              "rgba(87, 213, 154, 0.82)"
+              "rgba(87, 213, 154, 0.82)",
+              "rgba(181, 142, 255, 0.82)"
             ]
           }]
         },
@@ -4362,7 +4370,14 @@
           if (Number.isNaN(date.getTime())) return;
 
           const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
-          if (!monthly.has(key)) monthly.set(key, { date, EUR: 0, GBP: 0, USD: 0 });
+          if (!monthly.has(key)) {
+            monthly.set(key, {
+              date,
+              ...Object.fromEntries(
+                DASHBOARD_CURRENCIES.map((currency) => [currency, 0])
+              )
+            });
+          }
 
           if (DASHBOARD_CURRENCIES.includes(group.currency)) {
             monthly.get(key)[group.currency] += group.amount;
@@ -4379,7 +4394,14 @@
 
           const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
           const currency = normaliseCurrencyCode(row.currency);
-          if (!monthly.has(key)) monthly.set(key, { date, EUR: 0, GBP: 0, USD: 0 });
+          if (!monthly.has(key)) {
+            monthly.set(key, {
+              date,
+              ...Object.fromEntries(
+                DASHBOARD_CURRENCIES.map((currency) => [currency, 0])
+              )
+            });
+          }
 
           if (DASHBOARD_CURRENCIES.includes(currency)) {
             monthly.get(key)[currency] += row.invoiceForecast;
@@ -4418,12 +4440,14 @@
           borderColor: [
             "rgba(88, 166, 255, 1)",
             "rgba(240, 200, 90, 1)",
-            "rgba(87, 213, 154, 1)"
+            "rgba(87, 213, 154, 1)",
+            "rgba(181, 142, 255, 1)"
           ][index],
           backgroundColor: [
             "rgba(88, 166, 255, 0.15)",
             "rgba(240, 200, 90, 0.15)",
-            "rgba(87, 213, 154, 0.15)"
+            "rgba(87, 213, 154, 0.15)",
+            "rgba(181, 142, 255, 0.15)"
           ][index],
           tension: 0.3,
           fill: false,
