@@ -2880,6 +2880,21 @@ function calculateScheduleItemAmount(data, item) {
 
   const recorded = resolverNumber(item?.amount);
   const statedAmount = extractContractualAmountFromText(item);
+
+  /*
+   * An explicitly stored instalment amount is the contractual source of truth.
+   * This is essential where the agreed basis includes commissionable items
+   * that are not represented by the salary field alone, such as signing-on
+   * fees. Only derive an amount from salary when no row amount was recorded.
+   */
+  if (recorded !== null) {
+    return { amount: recorded, estimated: false, allocation };
+  }
+
+  if (statedAmount !== null) {
+    return { amount: statedAmount, estimated: false, allocation };
+  }
+
   const percentageEvidence = String(
     item?.component_type || item?.component_reference || item?.calculation_basis || ""
   ).toLowerCase();
