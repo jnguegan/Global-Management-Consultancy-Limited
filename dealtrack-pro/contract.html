@@ -1450,6 +1450,7 @@
 "invoiceAlreadyIssued": "Invoiced",
 "openInvoice": "Open invoice",
 "invoiceRequiresStoredPayment": "Re-analyse to generate",
+"invoiceTriggerPending": "Not ready — trigger pending",
       "sectionSnapshot": "Commercial Snapshot",
       "sectionSnapshotText": "A premium summary of the commercial foundations currently recorded for this mandate.",
       "labelClubName": "Club Name",
@@ -1655,6 +1656,7 @@
 "invoiceAlreadyIssued": "Facturée",
 "openInvoice": "Ouvrir la facture",
 "invoiceRequiresStoredPayment": "Réanalyser pour générer",
+"invoiceTriggerPending": "Non prête — condition en attente",
       "sectionSnapshot": "Synthèse commerciale",
       "sectionSnapshotText": "Une synthèse premium des fondements commerciaux actuellement enregistrés pour ce mandat.",
       "labelClubName": "Nom du club",
@@ -1860,6 +1862,7 @@
 "invoiceAlreadyIssued": "Facturada",
 "openInvoice": "Abrir factura",
 "invoiceRequiresStoredPayment": "Volver a analizar para generar",
+"invoiceTriggerPending": "No lista — condición pendiente",
       "sectionSnapshot": "Resumen comercial",
       "sectionSnapshotText": "Un resumen premium de las bases comerciales actualmente registradas para este mandato.",
       "labelClubName": "Nombre del club",
@@ -4595,6 +4598,16 @@ function renderInvoiceGenerationAction(group, contractId) {
   const issuedStatuses = ["invoiced", "paid", "settled", "received"];
   if (invoiceStatuses.length && invoiceStatuses.every((status) => issuedStatuses.includes(status))) {
     return `<span class="trigger-badge met">${t("invoiceAlreadyIssued")}</span>`;
+  }
+
+  // A conditional entitlement must not be invoiced until its contractual
+  // trigger has been explicitly confirmed. Existing invoices remain
+  // accessible through the checks above for audit purposes.
+  const hasPendingTrigger = items.some(
+    (item) => item?.conditional && normaliseTriggerStatus(item) !== "met"
+  );
+  if (hasPendingTrigger) {
+    return `<span class="trigger-badge pending">${t("invoiceTriggerPending")}</span>`;
   }
 
   // One commission obligation must always create one invoice. This prevents
