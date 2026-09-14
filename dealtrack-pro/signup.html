@@ -472,7 +472,7 @@
 
         <p class="helper">
           <span data-i18n="already">Already have an account?</span>
-          <a href="/dealtrack-pro/login.html" data-i18n="signIn">Sign in</a>
+          <a id="signInLink" href="/dealtrack-pro/login.html" data-i18n="signIn">Sign in</a>
         </p>
       </section>
 
@@ -487,7 +487,7 @@
         Your account has been created. Please check your email and confirm your email address. After confirmation, return to DealTrack Pro and sign in.
       </p>
       <div class="success-modal-actions">
-        <a class="btn btn-primary" href="/dealtrack-pro/login.html" data-i18n="goToSignIn">Go to Sign In</a>
+        <a id="successLoginLink" class="btn btn-primary" href="/dealtrack-pro/login.html" data-i18n="goToSignIn">Go to Sign In</a>
         <button type="button" class="btn btn-google" id="closeSuccessModal" data-i18n="closeModal">Close</button>
       </div>
     </div>
@@ -511,6 +511,15 @@
     SUPABASE_ANON_KEY
   );
 
+  const signupParams = new URLSearchParams(window.location.search);
+  const invitedAgencyId = signupParams.get("agency");
+  const invitedEmail = (signupParams.get("email") || "").trim().toLowerCase();
+  const invitedName = (signupParams.get("name") || "").trim();
+  const isViewerInvitation =
+    signupParams.get("invite") === "viewer" &&
+    Boolean(invitedEmail) &&
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(invitedAgencyId || "");
+
   const translations = {
     en: {
       brandLine:"Contract Intelligence for Football Agents",
@@ -524,6 +533,7 @@
       item4:"Use agency reporting and financial-control tools",
       signupTitle:"Sign up / Create account",
       signupIntro:"Create a new DealTrack Pro account with Google or your email address.",
+      invitedSignupIntro:"Create your account to join the invited agency as a Partner Viewer.",
       googleButton:"Continue with Google",
       or:"or create account with email",
       nameLabel:"Full name",
@@ -544,7 +554,8 @@
       goToSignIn:"Go to Sign In",
       closeModal:"Close",
       signupError:"We could not create your account. Please try again.",
-      googleError:"Google account creation could not be started. Please try again."
+      googleError:"Google account creation could not be started. Please try again.",
+      inviteEmailMismatch:"Please use the email address authorised by the invitation."
     },
     fr: {
       brandLine:"Intelligence contractuelle pour agents de football",
@@ -558,6 +569,7 @@
       item4:"Utiliser les outils de reporting et de contrôle financier",
       signupTitle:"Inscription / Créer un compte",
       signupIntro:"Créez un nouveau compte DealTrack Pro avec Google ou votre adresse e-mail.",
+      invitedSignupIntro:"Créez votre compte pour rejoindre l’agence invitante en tant que partenaire avec accès en lecture seule.",
       googleButton:"Continuer avec Google",
       or:"ou créer un compte avec e-mail",
       nameLabel:"Nom complet",
@@ -578,7 +590,8 @@
       goToSignIn:"Aller à la connexion",
       closeModal:"Fermer",
       signupError:"Nous n’avons pas pu créer votre compte. Veuillez réessayer.",
-      googleError:"La création du compte avec Google n’a pas pu être lancée. Veuillez réessayer."
+      googleError:"La création du compte avec Google n’a pas pu être lancée. Veuillez réessayer.",
+      inviteEmailMismatch:"Veuillez utiliser l’adresse e-mail autorisée dans l’invitation."
     },
     es: {
       brandLine:"Inteligencia contractual para agentes de fútbol",
@@ -592,6 +605,7 @@
       item4:"Utilizar informes y herramientas de control financiero",
       signupTitle:"Registrarse / Crear cuenta",
       signupIntro:"Cree una nueva cuenta de DealTrack Pro con Google o con su correo electrónico.",
+      invitedSignupIntro:"Cree su cuenta para unirse a la agencia invitante como socio con acceso de solo lectura.",
       googleButton:"Continuar con Google",
       or:"o crear cuenta con correo electrónico",
       nameLabel:"Nombre completo",
@@ -612,7 +626,8 @@
       goToSignIn:"Ir a iniciar sesión",
       closeModal:"Cerrar",
       signupError:"No hemos podido crear su cuenta. Inténtelo de nuevo.",
-      googleError:"No se pudo iniciar la creación de la cuenta con Google. Inténtelo de nuevo."
+      googleError:"No se pudo iniciar la creación de la cuenta con Google. Inténtelo de nuevo.",
+      inviteEmailMismatch:"Utilice la dirección de correo electrónico autorizada en la invitación."
     }
   };
 
@@ -635,6 +650,13 @@
         btn.getAttribute("data-lang") === currentLang
       );
     });
+
+    if(isViewerInvitation){
+      const intro = document.querySelector('[data-i18n="signupIntro"]');
+      if(intro){
+        intro.textContent = translations[currentLang].invitedSignupIntro;
+      }
+    }
   }
 
   document.querySelectorAll("[data-lang]").forEach((btn)=>{
@@ -661,8 +683,8 @@
   }
 
   function clearSignupForm(){
-    fullNameInput.value = "";
-    emailInput.value = "";
+    fullNameInput.value = isViewerInvitation ? invitedName : "";
+    emailInput.value = isViewerInvitation ? invitedEmail : "";
     passwordInput.value = "";
     passwordInput.type = "password";
     showPassword.textContent = translations[currentLang].show;
@@ -708,6 +730,11 @@
       return;
     }
 
+    if(isViewerInvitation && email.toLowerCase() !== invitedEmail){
+      showMessage("error",translations[currentLang].inviteEmailMismatch);
+      return;
+    }
+
     if(password.length < 8){
       showMessage("error",translations[currentLang].shortPassword);
       return;
@@ -717,9 +744,11 @@
     signupButton.textContent = translations[currentLang].creating;
 
     try{
-      const emailRedirectTo =
-  window.location.origin +
-  "/dealtrack-pro/setup.html";
+      const emailRedirectTo = isViewerInvitation
+        ? window.location.origin +
+          "/dealtrack-pro/login.html?invite=viewer&agency=" +
+          encodeURIComponent(invitedAgencyId)
+        : window.location.origin + "/dealtrack-pro/setup.html";
 
       const { data, error } = await db.auth.signUp({
         email,
@@ -736,6 +765,18 @@
       if(error) throw error;
 
       if(data?.session){
+        if(isViewerInvitation){
+          const { error: invitationError } = await db.rpc(
+            "accept_my_agency_invitation",
+            { p_agency_id: invitedAgencyId }
+          );
+
+          if(invitationError) throw invitationError;
+
+          window.location.href = "/dealtrack-pro/agency-dashboard.html";
+          return;
+        }
+
         clearSignupForm();
         showMessage("success",translations[currentLang].accountCreated);
         setTimeout(()=>{
@@ -784,6 +825,23 @@
       showMessage("error",translations[currentLang].googleError);
     }
   });
+
+  if(isViewerInvitation){
+    fullNameInput.value = invitedName;
+    emailInput.value = invitedEmail;
+    emailInput.readOnly = true;
+    googleButton.hidden = true;
+
+    sessionStorage.setItem("dealtrackViewerInviteAgency", invitedAgencyId);
+
+    const loginUrl =
+      "/dealtrack-pro/login.html?invite=viewer&agency=" +
+      encodeURIComponent(invitedAgencyId) +
+      "&email=" + encodeURIComponent(invitedEmail);
+
+    document.getElementById("signInLink").href = loginUrl;
+    document.getElementById("successLoginLink").href = loginUrl;
+  }
 
   setLang(currentLang);
 </script>
