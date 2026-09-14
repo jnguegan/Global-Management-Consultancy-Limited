@@ -339,6 +339,23 @@
       line-height: 1.5;
     }
 
+    .invite-result {
+      display: none;
+      margin-top: 18px;
+      padding: 15px;
+      border: 1px solid rgba(34,197,94,0.25);
+      border-radius: 14px;
+      background: rgba(34,197,94,0.07);
+    }
+
+    .invite-result.show { display: block; }
+
+    .invite-result textarea {
+      min-height: 86px;
+      margin-top: 9px;
+      font-size: 0.82rem;
+    }
+
     @media (max-width: 900px) {
       .layout { grid-template-columns: 1fr; }
     }
@@ -462,6 +479,51 @@
 
             <div id="readonlyNote" class="readonly-note"></div>
           </form>
+        </section>
+
+        <section id="teamAccessPanel" class="panel" hidden>
+          <h2 class="panel-title">Team access</h2>
+          <p class="panel-subtitle">
+            Create a restricted Partner Viewer registration link. Viewers can
+            inspect and export agency information but cannot change financial
+            records, contracts, invoices or settings.
+          </p>
+
+          <form id="viewerInviteForm">
+            <div class="form-grid">
+              <div class="field">
+                <label for="inviteName">Full name</label>
+                <input id="inviteName" type="text" autocomplete="name" required />
+              </div>
+
+              <div class="field">
+                <label for="inviteEmail">Email address</label>
+                <input id="inviteEmail" type="email" autocomplete="email" required />
+              </div>
+
+              <div class="field full">
+                <label for="inviteRole">Access role</label>
+                <input id="inviteRole" type="text" value="Partner Viewer (read only)" disabled />
+              </div>
+            </div>
+
+            <div class="actions">
+              <button id="createInviteBtn" type="submit" class="btn btn-gold">
+                Create registration link
+              </button>
+            </div>
+          </form>
+
+          <div id="inviteResult" class="invite-result">
+            <strong>Registration link created</strong>
+            <p class="panel-subtitle">
+              Copy this private link and send it only to the person named above.
+            </p>
+            <textarea id="inviteLink" readonly></textarea>
+            <div class="actions">
+              <button id="copyInviteBtn" type="button" class="btn">Copy link</button>
+            </div>
+          </div>
         </section>
       </main>
 
@@ -616,6 +678,61 @@
       document.getElementById("readonlyNote").textContent = canEdit
         ? ""
         : "You have view-only access. An agency owner or administrator must update these settings.";
+
+      document.getElementById("teamAccessPanel").hidden = !canEdit;
+    }
+
+    async function createViewerInvitation(event) {
+      event.preventDefault();
+
+      if (!canEdit || !agency?.id) return;
+
+      const name = document.getElementById("inviteName").value.trim();
+      const email = document.getElementById("inviteEmail").value.trim().toLowerCase();
+      const button = document.getElementById("createInviteBtn");
+
+      if (!name || !email) {
+        showNotice("The viewer's full name and email address are required.", "error");
+        return;
+      }
+
+      button.disabled = true;
+
+      const { data, error } = await db.rpc(
+        "create_agency_viewer_invitation",
+        {
+          p_agency_id: agency.id,
+          p_email: email
+        }
+      );
+
+      button.disabled = false;
+
+      if (error) {
+        console.error("Viewer invitation error:", error);
+        showNotice(
+          error?.message || "The Partner Viewer invitation could not be created.",
+          "error"
+        );
+        return;
+      }
+
+      const invitation = Array.isArray(data) ? data[0] : data;
+
+      if (invitation?.status === "active") {
+        showNotice("This email address already has active agency access.", "error");
+        return;
+      }
+
+      const url = new URL("/dealtrack-pro/signup.html", window.location.origin);
+      url.searchParams.set("invite", "viewer");
+      url.searchParams.set("agency", agency.id);
+      url.searchParams.set("email", email);
+      url.searchParams.set("name", name);
+
+      document.getElementById("inviteLink").value = url.toString();
+      document.getElementById("inviteResult").classList.add("show");
+      showNotice("The Partner Viewer registration link has been created.", "success");
     }
 
     async function loadAgencyContext() {
@@ -754,6 +871,27 @@
       document.getElementById("resetBtn").addEventListener(
         "click",
         populateForm
+      );
+
+      document.getElementById("viewerInviteForm").addEventListener(
+        "submit",
+        createViewerInvitation
+      );
+
+      document.getElementById("copyInviteBtn").addEventListener(
+        "click",
+        async () => {
+          const link = document.getElementById("inviteLink").value;
+          if (!link) return;
+
+          try {
+            await navigator.clipboard.writeText(link);
+            showNotice("Registration link copied.", "success");
+          } catch (error) {
+            document.getElementById("inviteLink").select();
+            showNotice("Select the link and copy it manually.", "error");
+          }
+        }
       );
 
       document.getElementById("logoutBtn").addEventListener(
