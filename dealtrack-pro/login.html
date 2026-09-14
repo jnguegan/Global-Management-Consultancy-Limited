@@ -427,6 +427,13 @@
     SUPABASE_ANON_KEY
   );
 
+  const loginParams = new URLSearchParams(window.location.search);
+  const invitedAgencyId = loginParams.get("agency");
+  const invitedEmail = loginParams.get("email");
+  const isViewerInvitation =
+    loginParams.get("invite") === "viewer" &&
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(invitedAgencyId || "");
+
   const translations = {
     en: {
       brandLine:"Contract Intelligence for Football Agents",
@@ -556,6 +563,23 @@
 
   async function routeAuthenticatedUser(){
     try{
+      const agencyId = isViewerInvitation
+        ? invitedAgencyId
+        : sessionStorage.getItem("dealtrackViewerInviteAgency");
+
+      if(agencyId){
+        const { error: invitationError } = await db.rpc(
+          "accept_my_agency_invitation",
+          { p_agency_id: agencyId }
+        );
+
+        if(invitationError){
+          console.error("DealTrack invitation acceptance error:", invitationError);
+        }else{
+          sessionStorage.removeItem("dealtrackViewerInviteAgency");
+        }
+      }
+
       const { data, error } = await db.rpc("get_my_agency_context");
 
       if(error){
@@ -623,7 +647,10 @@
     try{
       const redirectTo =
         window.location.origin +
-        "/dealtrack-pro/login.html";
+        "/dealtrack-pro/login.html" +
+        (isViewerInvitation
+          ? `?invite=viewer&agency=${encodeURIComponent(invitedAgencyId)}`
+          : "");
 
       const { error } = await db.auth.signInWithOAuth({
         provider:"google",
@@ -642,6 +669,20 @@
 
     if(data?.session){
       await routeAuthenticatedUser();
+    }
+  }
+
+  if(isViewerInvitation){
+    sessionStorage.setItem("dealtrackViewerInviteAgency", invitedAgencyId);
+
+    if(invitedEmail){
+      emailInput.value = invitedEmail.trim().toLowerCase();
+    }
+
+    const signupLink = document.querySelector('a[href="/dealtrack-pro/signup.html"]');
+    if(signupLink){
+      signupLink.href =
+        "/dealtrack-pro/signup.html" + window.location.search;
     }
   }
 
