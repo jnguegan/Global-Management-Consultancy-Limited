@@ -731,6 +731,63 @@
       font-weight: 900;
     }
 
+    .partner-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .partner-tab {
+      padding: 10px 12px;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      color: var(--muted);
+      background: rgba(255,255,255,0.025);
+      font: inherit;
+      font-size: 0.78rem;
+      font-weight: 850;
+      cursor: pointer;
+    }
+
+    .partner-tab.is-active {
+      color: #07111f;
+      border-color: transparent;
+      background: linear-gradient(135deg, var(--blue-2), var(--gold-2));
+    }
+
+    .partner-position-summary {
+      display: grid;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .partner-summary-row,
+    .partner-position-item {
+      padding: 13px;
+      border: 1px solid rgba(255,255,255,0.055);
+      border-radius: 14px;
+      background: rgba(255,255,255,0.025);
+    }
+
+    .partner-summary-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .partner-summary-row span { color: var(--muted); font-size: 0.78rem; }
+    .partner-summary-row strong { color: var(--gold-2); }
+    .partner-position-list { display: grid; gap: 10px; }
+    .partner-position-item-head { display: flex; justify-content: space-between; gap: 12px; }
+    .partner-position-item-head strong { line-height: 1.35; }
+    .partner-position-item-head .money { white-space: nowrap; }
+    .partner-position-context { margin: 5px 0 10px; color: var(--muted); font-size: 0.78rem; line-height: 1.45; }
+    .partner-position-meta { display: grid; grid-template-columns: 1fr 1fr; gap: 7px 10px; font-size: 0.75rem; }
+    .partner-position-meta span { color: var(--muted); }
+    .partner-position-meta strong { display: block; margin-top: 2px; color: var(--text); }
+    .partner-position-link { display: inline-block; margin-top: 10px; }
+
     .quick-link {
       color: inherit;
       text-decoration: none;
@@ -1323,6 +1380,25 @@
           </p>
         </section>
 
+        <section class="panel" id="partnerPositionPanel">
+          <div class="panel-head">
+            <div>
+              <div class="panel-kicker" data-i18n="partnerPositionKicker">Partner finance</div>
+              <h2 class="panel-title" data-i18n="partnerPositionTitle">Partner financial position</h2>
+              <p class="panel-subtitle" data-i18n="partnerPositionSubtitle">Outgoing partner obligations and income due from partners, shown separately by currency.</p>
+            </div>
+          </div>
+
+          <div class="partner-tabs" role="tablist">
+            <button id="partnerPayableTab" class="partner-tab is-active" type="button" data-partner-tab="payable" data-i18n="partnersToPay">Partners to pay</button>
+            <button id="partnerReceivableTab" class="partner-tab" type="button" data-partner-tab="receivable" data-i18n="partnersToReceive">Partners paying us</button>
+          </div>
+
+          <div id="partnerPositionContent">
+            <div class="state-box"><span data-i18n="loadingText">Preparing your agency overview...</span></div>
+          </div>
+        </section>
+
         <section class="panel quick-links-panel">
           <div class="panel-head">
             <div>
@@ -1475,6 +1551,21 @@
       "portfolioSubtitle": "Review the financial position of every recorded contract.",
       "attentionKicker": "Attention Centre",
       "attentionTitle": "Items requiring review",
+      "partnerPositionKicker": "Partner finance",
+      "partnerPositionTitle": "Partner financial position",
+      "partnerPositionSubtitle": "Outgoing partner obligations and income due from partners, shown separately by currency.",
+      "partnersToPay": "Partners to pay",
+      "partnersToReceive": "Partners paying us",
+      "partnerCurrentYear": "Due this year",
+      "partnerOutstanding": "Outstanding",
+      "partnerPaid": "Paid",
+      "partnerReceived": "Received",
+      "partnerNextDate": "Next date",
+      "partnerNoPayables": "No partner payments are currently recorded.",
+      "partnerNoReceivables": "No income due from partners is currently recorded.",
+      "partnerViewContract": "View contract →",
+      "partnerViewIncome": "Open partner income →",
+      "partnerLoadWarning": "Some partner information could not be loaded.",
       "quickKicker": "Quick Actions",
       "quickTitle": "Manage DealTrack Pro",
       "quickPortfolio": "Open Contract Portfolio",
@@ -1627,6 +1718,21 @@
       "portfolioSubtitle": "Consultez la position financière de chaque contrat enregistré.",
       "attentionKicker": "Centre d’attention",
       "attentionTitle": "Éléments à vérifier",
+      "partnerPositionKicker": "Finances partenaires",
+      "partnerPositionTitle": "Position financière des partenaires",
+      "partnerPositionSubtitle": "Obligations envers les partenaires et revenus dus par les partenaires, présentés séparément par devise.",
+      "partnersToPay": "Partenaires à payer",
+      "partnersToReceive": "Partenaires qui nous paient",
+      "partnerCurrentYear": "Dû cette année",
+      "partnerOutstanding": "Solde restant",
+      "partnerPaid": "Payé",
+      "partnerReceived": "Reçu",
+      "partnerNextDate": "Prochaine date",
+      "partnerNoPayables": "Aucun paiement partenaire n’est actuellement enregistré.",
+      "partnerNoReceivables": "Aucun revenu dû par un partenaire n’est actuellement enregistré.",
+      "partnerViewContract": "Voir le contrat →",
+      "partnerViewIncome": "Ouvrir les revenus partenaire →",
+      "partnerLoadWarning": "Certaines informations partenaires n’ont pas pu être chargées.",
       "quickKicker": "Actions rapides",
       "quickTitle": "Gérer DealTrack Pro",
       "quickPortfolio": "Ouvrir le portefeuille de contrats",
@@ -1781,6 +1887,21 @@
       "portfolioSubtitle": "Revise la posición financiera de cada contrato registrado.",
       "attentionKicker": "Centro de atención",
       "attentionTitle": "Elementos que requieren revisión",
+      "partnerPositionKicker": "Finanzas de socios",
+      "partnerPositionTitle": "Posición financiera de socios",
+      "partnerPositionSubtitle": "Obligaciones de pago a socios e ingresos pendientes de socios, mostrados por separado y por moneda.",
+      "partnersToPay": "Socios a pagar",
+      "partnersToReceive": "Socios que nos pagan",
+      "partnerCurrentYear": "Vence este año",
+      "partnerOutstanding": "Pendiente",
+      "partnerPaid": "Pagado",
+      "partnerReceived": "Recibido",
+      "partnerNextDate": "Próxima fecha",
+      "partnerNoPayables": "Actualmente no hay pagos a socios registrados.",
+      "partnerNoReceivables": "Actualmente no hay ingresos pendientes de socios registrados.",
+      "partnerViewContract": "Ver contrato →",
+      "partnerViewIncome": "Abrir ingresos de socios →",
+      "partnerLoadWarning": "No se pudo cargar parte de la información de socios.",
       "quickKicker": "Acciones rápidas",
       "quickTitle": "Gestionar DealTrack Pro",
       "quickPortfolio": "Abrir cartera de contratos",
@@ -1837,6 +1958,11 @@
     let currentAgency = null;
     let currentUser = null;
     let currentPlanUsage = null;
+    let partnerPayables = [];
+    let partnerIncomeRecords = [];
+    let partnerIncomeInstalments = [];
+    let activePartnerTab = "payable";
+    let partnerDataWarning = false;
     let currencyRevenueChart = null;
     let contractStatusChart = null;
     let invoiceForecastChart = null;
@@ -4749,6 +4875,161 @@
       `).join("");
     }
 
+    function partnerDate(value) {
+      if (!value) return t("datePending");
+      const date = new Date(`${String(value).slice(0, 10)}T00:00:00`);
+      if (Number.isNaN(date.getTime())) return String(value);
+      return new Intl.DateTimeFormat(
+        currentLang === "fr" ? "fr-FR" : currentLang === "es" ? "es-ES" : "en-GB",
+        { day: "2-digit", month: "short", year: "numeric" }
+      ).format(date);
+    }
+
+    function isSettledPartnerStatus(status) {
+      return ["paid", "received", "settled"].includes(String(status || "").toLowerCase());
+    }
+
+    function buildOutgoingPartnerGroups() {
+      const year = new Date().getFullYear();
+      const groups = new Map();
+      partnerPayables.forEach((item) => {
+        const currency = String(item.currency || "GBP").toUpperCase();
+        const key = `${item.partnership_deal_id || item.partner_name}:${item.contract_id}:${currency}`;
+        if (!groups.has(key)) {
+          groups.set(key, {
+            partner: item.partner_name || "—",
+            context: item.deal_name || item.player_name || "—",
+            contractId: item.contract_id,
+            currency,
+            total: 0,
+            paid: 0,
+            outstanding: 0,
+            currentYear: 0,
+            nextDate: null
+          });
+        }
+        const group = groups.get(key);
+        const total = toNumber(item.partner_amount) || 0;
+        const paid = toNumber(item.amount_paid) || 0;
+        const outstanding = toNumber(item.outstanding_amount) ?? Math.max(0, total - paid);
+        const dueDate = item.source_payment_due_date || item.partner_payment_due_date || null;
+        group.total += total;
+        group.paid += paid;
+        group.outstanding += outstanding;
+        if (dueDate && String(dueDate).startsWith(`${year}-`)) group.currentYear += outstanding;
+        if (outstanding > 0 && dueDate && (!group.nextDate || dueDate < group.nextDate)) group.nextDate = dueDate;
+      });
+      return [...groups.values()].sort((a, b) => b.currentYear - a.currentYear || b.outstanding - a.outstanding);
+    }
+
+    function buildIncomingPartnerGroups() {
+      const year = new Date().getFullYear();
+      const instalmentsByRecord = new Map();
+      partnerIncomeInstalments.forEach((item) => {
+        const id = String(item.partner_income_id || "");
+        if (!instalmentsByRecord.has(id)) instalmentsByRecord.set(id, []);
+        instalmentsByRecord.get(id).push(item);
+      });
+
+      return partnerIncomeRecords.map((record) => {
+        const instalments = instalmentsByRecord.get(String(record.id)) || [];
+        const currency = String(record.currency || "GBP").toUpperCase();
+        const group = {
+          partner: record.partner_name || "—",
+          context: [record.player_or_client, record.club_or_brand].filter(Boolean).join(" · ") || record.agreement_reference || "—",
+          recordId: record.id,
+          currency,
+          total: 0,
+          received: 0,
+          outstanding: 0,
+          currentYear: 0,
+          nextDate: null
+        };
+
+        if (instalments.length) {
+          instalments.forEach((item) => {
+            const amount = toNumber(item.amount) || 0;
+            const received = isSettledPartnerStatus(item.status);
+            const date = item.expected_date || null;
+            group.total += amount;
+            group.received += received ? amount : 0;
+            group.outstanding += received ? 0 : amount;
+            if (!received && date && String(date).startsWith(`${year}-`)) group.currentYear += amount;
+            if (!received && date && (!group.nextDate || date < group.nextDate)) group.nextDate = date;
+          });
+        } else {
+          const amount = toNumber(record.expected_income) || 0;
+          const received = isSettledPartnerStatus(record.status);
+          const date = record.expected_payment_date || null;
+          group.total = amount;
+          group.received = received ? amount : 0;
+          group.outstanding = received ? 0 : amount;
+          if (!received && date && String(date).startsWith(`${year}-`)) group.currentYear = amount;
+          if (!received) group.nextDate = date;
+        }
+        return group;
+      }).sort((a, b) => b.currentYear - a.currentYear || b.outstanding - a.outstanding);
+    }
+
+    function renderPartnerPosition() {
+      const container = document.getElementById("partnerPositionContent");
+      if (!container) return;
+      const outgoing = activePartnerTab === "payable";
+      const groups = outgoing ? buildOutgoingPartnerGroups() : buildIncomingPartnerGroups();
+      const emptyText = outgoing ? t("partnerNoPayables") : t("partnerNoReceivables");
+      const totalByCurrency = new Map();
+      const yearByCurrency = new Map();
+
+      groups.forEach((group) => {
+        totalByCurrency.set(group.currency, (totalByCurrency.get(group.currency) || 0) + group.outstanding);
+        yearByCurrency.set(group.currency, (yearByCurrency.get(group.currency) || 0) + group.currentYear);
+      });
+
+      const summaries = [...totalByCurrency.keys()].sort().map((currency) => `
+        <div class="partner-summary-row">
+          <span>${escapeHtml(t("partnerOutstanding"))} · ${escapeHtml(currency)}</span>
+          <strong>${escapeHtml(formatMoney(totalByCurrency.get(currency), currency))}</strong>
+        </div>
+        <div class="partner-summary-row">
+          <span>${escapeHtml(t("partnerCurrentYear"))} · ${escapeHtml(currency)}</span>
+          <strong>${escapeHtml(formatMoney(yearByCurrency.get(currency) || 0, currency))}</strong>
+        </div>
+      `).join("");
+
+      const rows = groups.map((group) => {
+        const paidValue = outgoing ? group.paid : group.received;
+        const link = outgoing
+          ? `/dealtrack-pro/contract.html?id=${encodeURIComponent(group.contractId || "")}`
+          : "/dealtrack-pro/partner-income.html";
+        return `
+          <div class="partner-position-item">
+            <div class="partner-position-item-head">
+              <strong>${escapeHtml(group.partner)}</strong>
+              <span class="money">${escapeHtml(formatMoney(group.currentYear, group.currency))}</span>
+            </div>
+            <div class="partner-position-context">${escapeHtml(group.context)}</div>
+            <div class="partner-position-meta">
+              <span>${escapeHtml(outgoing ? t("partnerPaid") : t("partnerReceived"))}<strong>${escapeHtml(formatMoney(paidValue, group.currency))}</strong></span>
+              <span>${escapeHtml(t("partnerOutstanding"))}<strong>${escapeHtml(formatMoney(group.outstanding, group.currency))}</strong></span>
+              <span>${escapeHtml(t("partnerNextDate"))}<strong>${escapeHtml(partnerDate(group.nextDate))}</strong></span>
+              <span>${escapeHtml(t("partnerCurrentYear"))}<strong>${escapeHtml(formatMoney(group.currentYear, group.currency))}</strong></span>
+            </div>
+            <a class="view-link partner-position-link" href="${link}">${escapeHtml(outgoing ? t("partnerViewContract") : t("partnerViewIncome"))}</a>
+          </div>
+        `;
+      }).join("");
+
+      container.innerHTML = `
+        ${partnerDataWarning ? `<div class="state-box error-box" style="margin-bottom:12px;"><span>${escapeHtml(t("partnerLoadWarning"))}</span></div>` : ""}
+        ${summaries ? `<div class="partner-position-summary">${summaries}</div>` : ""}
+        <div class="partner-position-list">${rows || `<div class="state-box"><span>${escapeHtml(emptyText)}</span></div>`}</div>
+      `;
+
+      document.querySelectorAll("[data-partner-tab]").forEach((button) => {
+        button.classList.toggle("is-active", button.dataset.partnerTab === activePartnerTab);
+      });
+    }
+
     function renderDashboard() {
       renderKpis();
       renderPortfolioHealth();
@@ -4758,6 +5039,7 @@
       renderAttentionList();
       renderRenewals();
       renderInvoiceCalendar();
+      renderPartnerPosition();
       renderCharts();
     }
 
@@ -4775,12 +5057,20 @@
       document.getElementById("attentionList").innerHTML = message;
       document.getElementById("renewalList").innerHTML = message;
       document.getElementById("invoiceCalendar").innerHTML = message;
+      document.getElementById("partnerPositionContent").innerHTML = message;
       renderChartEmpty("currencyChartContainer", t("errorText"));
       renderChartEmpty("statusChartContainer", t("errorText"));
       renderChartEmpty("invoiceChartContainer", t("errorText"));
     }
 
     document.addEventListener("DOMContentLoaded", async () => {
+      document.querySelectorAll("[data-partner-tab]").forEach((button) => {
+        button.addEventListener("click", () => {
+          activePartnerTab = button.dataset.partnerTab || "payable";
+          renderPartnerPosition();
+        });
+      });
+
       document.querySelectorAll("[data-lang-btn]").forEach((btn) => {
         btn.addEventListener("click", () => {
           currentLang = btn.getAttribute("data-lang-btn");
@@ -4906,6 +5196,49 @@
       dashboardRows = allContracts
         .map(buildDashboardRow)
         .map(applyInstalmentMetrics);
+
+      partnerPayables = [];
+      partnerIncomeRecords = [];
+      partnerIncomeInstalments = [];
+      partnerDataWarning = false;
+
+      if (contractIds.length) {
+        const payableResults = await Promise.all(
+          contractIds.map(async (contractId) => {
+            const result = await db.rpc("get_contract_partner_financials", {
+              p_contract_id: contractId
+            });
+            return { contractId, ...result };
+          })
+        );
+
+        payableResults.forEach((result) => {
+          if (result.error) {
+            partnerDataWarning = true;
+            console.warn("Partner payable data could not be loaded:", result.error);
+            return;
+          }
+          if (Array.isArray(result.data)) {
+            partnerPayables.push(...result.data.map((item) => ({
+              ...item,
+              contract_id: item.contract_id || result.contractId
+            })));
+          }
+        });
+      }
+
+      const [incomeResult, incomeInstalmentResult] = await Promise.all([
+        db.rpc("list_partner_income", { p_agency_id: currentAgency.agency_id }),
+        db.rpc("list_partner_income_installments", { p_agency_id: currentAgency.agency_id })
+      ]);
+
+      if (incomeResult.error || incomeInstalmentResult.error) {
+        partnerDataWarning = true;
+        if (incomeResult.error) console.warn("Partner income data could not be loaded:", incomeResult.error);
+        if (incomeInstalmentResult.error) console.warn("Partner income instalments could not be loaded:", incomeInstalmentResult.error);
+      }
+      partnerIncomeRecords = Array.isArray(incomeResult.data) ? incomeResult.data : [];
+      partnerIncomeInstalments = Array.isArray(incomeInstalmentResult.data) ? incomeInstalmentResult.data : [];
 
       renderDashboard();
     });
