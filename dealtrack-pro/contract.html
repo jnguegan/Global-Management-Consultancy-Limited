@@ -1158,6 +1158,65 @@
       font-weight: 600;
     }
 
+    .partner-payment-action {
+      white-space: nowrap;
+      padding: 9px 12px;
+      font-size: 0.82rem;
+    }
+
+    .partner-payment-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: rgba(3, 8, 20, 0.82);
+      backdrop-filter: blur(8px);
+    }
+
+    .partner-payment-modal.is-open { display: flex; }
+
+    .partner-payment-panel {
+      width: min(720px, 100%);
+      max-height: calc(100vh - 40px);
+      overflow-y: auto;
+      padding: 26px;
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 22px;
+      background: #111a2b;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.5);
+    }
+
+    .partner-payment-panel h2 { margin: 0 0 8px; }
+    .partner-payment-balance { margin: 0 0 20px; color: var(--muted); }
+
+    .partner-payment-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .partner-payment-field { display: grid; gap: 7px; }
+    .partner-payment-field.full { grid-column: 1 / -1; }
+    .partner-payment-field label { font-weight: 800; font-size: 0.84rem; }
+    .partner-payment-field input,
+    .partner-payment-field textarea {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 12px 14px;
+      color: var(--text);
+      background: rgba(255,255,255,0.055);
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 12px;
+      font: inherit;
+    }
+
+    .partner-payment-field textarea { min-height: 88px; resize: vertical; }
+    .partner-payment-actions { display: flex; justify-content: flex-end; gap: 12px; margin-top: 20px; }
+    .partner-payment-message { min-height: 22px; margin-top: 12px; color: #ffcb4c; font-weight: 700; }
+
     @media (max-width: 1050px) {
       .layout {
         grid-template-columns: 1fr;
@@ -1214,6 +1273,11 @@
         width: 100%;
         max-width: none;
       }
+
+      .partner-payment-grid { grid-template-columns: 1fr; }
+      .partner-payment-field.full { grid-column: auto; }
+      .partner-payment-actions { flex-direction: column-reverse; }
+      .partner-payment-actions .btn { width: 100%; }
     }
   </style>
 </head>
@@ -1288,6 +1352,46 @@
     </div>
   </div>
 
+  <div id="partnerPaymentModal" class="partner-payment-modal" role="dialog" aria-modal="true" aria-labelledby="partnerPaymentTitle">
+    <div class="partner-payment-panel">
+      <h2 id="partnerPaymentTitle" data-i18n="recordPartnerPaymentTitle">Record partner payment</h2>
+      <p id="partnerPaymentBalance" class="partner-payment-balance"></p>
+      <form id="partnerPaymentForm">
+        <div class="partner-payment-grid">
+          <div class="partner-payment-field">
+            <label for="partnerPaymentAmount" data-i18n="partnerPaymentAmountLabel">Amount paid</label>
+            <input id="partnerPaymentAmount" name="amount" type="number" min="0.01" step="0.01" required>
+          </div>
+          <div class="partner-payment-field">
+            <label for="partnerPaymentDate" data-i18n="partnerPaymentDateLabel">Payment date</label>
+            <input id="partnerPaymentDate" name="payment_date" type="date" required>
+          </div>
+          <div class="partner-payment-field">
+            <label for="partnerPaymentReference" data-i18n="partnerPaymentReferenceLabel">Payment reference</label>
+            <input id="partnerPaymentReference" name="payment_reference" type="text">
+          </div>
+          <div class="partner-payment-field">
+            <label for="partnerInvoiceNumber" data-i18n="partnerInvoiceNumberLabel">Partner invoice number (optional)</label>
+            <input id="partnerInvoiceNumber" name="partner_invoice_number" type="text">
+          </div>
+          <div class="partner-payment-field">
+            <label for="partnerInvoiceDate" data-i18n="partnerInvoiceDateLabel">Partner invoice date (optional)</label>
+            <input id="partnerInvoiceDate" name="partner_invoice_date" type="date">
+          </div>
+          <div class="partner-payment-field full">
+            <label for="partnerPaymentNotes" data-i18n="partnerPaymentNotesLabel">Notes (optional)</label>
+            <textarea id="partnerPaymentNotes" name="notes"></textarea>
+          </div>
+        </div>
+        <div id="partnerPaymentMessage" class="partner-payment-message" aria-live="polite"></div>
+        <div class="partner-payment-actions">
+          <button id="cancelPartnerPayment" type="button" class="btn" data-i18n="cancelPartnerPayment">Cancel</button>
+          <button id="savePartnerPayment" type="submit" class="btn btn-primary" data-i18n="savePartnerPayment">Save partner payment</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <script type="application/json" id="dealtrack-contract-i18n">
   {
     "en": {
@@ -1337,9 +1441,29 @@
       "partnerStatusLabel": "Partner-payment status",
       "partnerStatusPending": "Pending",
       "partnerStatusDue": "Due",
+      "partnerStatusPartiallyPaid": "Partially paid",
       "partnerStatusPaid": "Paid",
       "partnerStatusDisputed": "Disputed",
       "partnerStatusCancelled": "Cancelled",
+      "amountPaidLabel": "Amount paid",
+      "outstandingBalanceLabel": "Balance remaining",
+      "partnerPaymentActionLabel": "Action",
+      "recordPartnerPayment": "Record payment",
+      "recordPartnerPaymentTitle": "Record partner payment",
+      "partnerPaymentBalanceText": "{partner} · Balance remaining: {amount}",
+      "partnerPaymentAmountLabel": "Amount paid",
+      "partnerPaymentDateLabel": "Payment date",
+      "partnerPaymentReferenceLabel": "Payment reference",
+      "partnerInvoiceNumberLabel": "Partner invoice number (optional)",
+      "partnerInvoiceDateLabel": "Partner invoice date (optional)",
+      "partnerPaymentNotesLabel": "Notes (optional)",
+      "cancelPartnerPayment": "Cancel",
+      "savePartnerPayment": "Save partner payment",
+      "savingPartnerPayment": "Saving payment...",
+      "partnerPaymentSaved": "Partner payment recorded successfully.",
+      "partnerPaymentInvalid": "Enter a valid amount no greater than the outstanding balance.",
+      "partnerPaymentFailed": "The partner payment could not be recorded.",
+      "partnerPaymentReadOnly": "View only",
     "sectionCommercialValue": "Revenue Forecast",
 "commercialValueSubtitle": "Track the projected financial value of this mandate throughout its lifetime. Revenue estimates are calculated from the recorded salary, commission structure and contract duration.",
 "expectedAnnualRevenue": "Expected Annual Revenue",
@@ -1563,9 +1687,29 @@
       "partnerStatusLabel": "Statut du paiement partenaire",
       "partnerStatusPending": "En attente",
       "partnerStatusDue": "À payer",
+      "partnerStatusPartiallyPaid": "Partiellement payé",
       "partnerStatusPaid": "Payé",
       "partnerStatusDisputed": "Contesté",
       "partnerStatusCancelled": "Annulé",
+      "amountPaidLabel": "Montant payé",
+      "outstandingBalanceLabel": "Solde restant",
+      "partnerPaymentActionLabel": "Action",
+      "recordPartnerPayment": "Enregistrer un paiement",
+      "recordPartnerPaymentTitle": "Enregistrer un paiement au partenaire",
+      "partnerPaymentBalanceText": "{partner} · Solde restant : {amount}",
+      "partnerPaymentAmountLabel": "Montant payé",
+      "partnerPaymentDateLabel": "Date du paiement",
+      "partnerPaymentReferenceLabel": "Référence du paiement",
+      "partnerInvoiceNumberLabel": "Numéro de facture partenaire (facultatif)",
+      "partnerInvoiceDateLabel": "Date de facture partenaire (facultatif)",
+      "partnerPaymentNotesLabel": "Notes (facultatif)",
+      "cancelPartnerPayment": "Annuler",
+      "savePartnerPayment": "Enregistrer le paiement",
+      "savingPartnerPayment": "Enregistrement du paiement...",
+      "partnerPaymentSaved": "Le paiement au partenaire a été enregistré.",
+      "partnerPaymentInvalid": "Saisissez un montant valide ne dépassant pas le solde restant.",
+      "partnerPaymentFailed": "Le paiement au partenaire n’a pas pu être enregistré.",
+      "partnerPaymentReadOnly": "Lecture seule",
    "sectionCommercialValue": "Prévision des revenus",
 "commercialValueSubtitle": "Suivez la valeur financière prévisionnelle de ce mandat pendant toute sa durée. Les estimations sont calculées à partir du salaire, de la structure de commission et de la durée du contrat enregistrés.",
 "expectedAnnualRevenue": "Revenus annuels prévisionnels",
@@ -1789,9 +1933,29 @@
       "partnerStatusLabel": "Estado del pago al socio",
       "partnerStatusPending": "Pendiente",
       "partnerStatusDue": "A pagar",
+      "partnerStatusPartiallyPaid": "Parcialmente pagado",
       "partnerStatusPaid": "Pagado",
       "partnerStatusDisputed": "En disputa",
       "partnerStatusCancelled": "Cancelado",
+      "amountPaidLabel": "Importe pagado",
+      "outstandingBalanceLabel": "Saldo restante",
+      "partnerPaymentActionLabel": "Acción",
+      "recordPartnerPayment": "Registrar pago",
+      "recordPartnerPaymentTitle": "Registrar pago al socio",
+      "partnerPaymentBalanceText": "{partner} · Saldo restante: {amount}",
+      "partnerPaymentAmountLabel": "Importe pagado",
+      "partnerPaymentDateLabel": "Fecha de pago",
+      "partnerPaymentReferenceLabel": "Referencia de pago",
+      "partnerInvoiceNumberLabel": "Número de factura del socio (opcional)",
+      "partnerInvoiceDateLabel": "Fecha de factura del socio (opcional)",
+      "partnerPaymentNotesLabel": "Notas (opcional)",
+      "cancelPartnerPayment": "Cancelar",
+      "savePartnerPayment": "Guardar pago al socio",
+      "savingPartnerPayment": "Guardando el pago...",
+      "partnerPaymentSaved": "El pago al socio se ha registrado correctamente.",
+      "partnerPaymentInvalid": "Introduzca un importe válido que no supere el saldo restante.",
+      "partnerPaymentFailed": "No se pudo registrar el pago al socio.",
+      "partnerPaymentReadOnly": "Solo lectura",
    "sectionCommercialValue": "Previsión de ingresos",
 "commercialValueSubtitle": "Realice un seguimiento del valor financiero previsto de este mandato durante toda su vigencia. Las estimaciones se calculan a partir del salario, la estructura de comisión y la duración contractual registrados.",
 "expectedAnnualRevenue": "Ingresos anuales previstos",
@@ -1980,9 +2144,114 @@
     let currentDb = null;
     let currentUser = null;
     let currentAgency = null;
+    let selectedPartnerPayable = null;
 
     function t(key) {
       return I18N[currentLang]?.[key] || I18N.en?.[key] || key;
+    }
+
+    function interpolateTranslation(key, values = {}) {
+      return Object.entries(values).reduce(
+        (text, [name, value]) => text.replaceAll(`{${name}}`, String(value)),
+        t(key)
+      );
+    }
+
+    function canRecordPartnerPayments() {
+      const role = String(
+        currentAgency?.role || currentAgency?.membership_role || currentAgency?.access_role || ""
+      ).toLowerCase();
+      return role !== "viewer";
+    }
+
+    async function refreshPartnerFinancials() {
+      if (!currentDb || !currentContract?.id) return;
+      const result = await currentDb.rpc("get_contract_partner_financials", {
+        p_contract_id: currentContract.id
+      });
+      if (result.error) throw result.error;
+      currentPartnerFinancials = Array.isArray(result.data) ? result.data : [];
+    }
+
+    function closePartnerPaymentModal() {
+      const modal = document.getElementById("partnerPaymentModal");
+      if (modal) modal.classList.remove("is-open");
+      selectedPartnerPayable = null;
+      const form = document.getElementById("partnerPaymentForm");
+      if (form) form.reset();
+      const message = document.getElementById("partnerPaymentMessage");
+      if (message) message.textContent = "";
+    }
+
+    function openPartnerPaymentModal(payableId) {
+      if (!canRecordPartnerPayments()) return;
+      const payable = currentPartnerFinancials.find(
+        (item) => String(item.payable_id) === String(payableId)
+      );
+      const outstanding = toNumber(payable?.outstanding_amount) || 0;
+      if (!payable || outstanding <= 0) return;
+
+      selectedPartnerPayable = payable;
+      const amountInput = document.getElementById("partnerPaymentAmount");
+      amountInput.value = outstanding.toFixed(2);
+      amountInput.max = outstanding.toFixed(2);
+      document.getElementById("partnerPaymentDate").value = new Date().toISOString().slice(0, 10);
+      document.getElementById("partnerPaymentBalance").textContent = interpolateTranslation(
+        "partnerPaymentBalanceText",
+        {
+          partner: payable.partner_name || "—",
+          amount: formatMoneyValue(outstanding, payable.currency || "USD")
+        }
+      );
+      document.getElementById("partnerPaymentMessage").textContent = "";
+      document.getElementById("partnerPaymentModal").classList.add("is-open");
+      amountInput.focus();
+    }
+
+    async function savePartnerPayment(event) {
+      event.preventDefault();
+      if (!selectedPartnerPayable || !currentDb) return;
+
+      const amount = Number(document.getElementById("partnerPaymentAmount").value);
+      const outstanding = toNumber(selectedPartnerPayable.outstanding_amount) || 0;
+      const message = document.getElementById("partnerPaymentMessage");
+      const saveButton = document.getElementById("savePartnerPayment");
+
+      if (!Number.isFinite(amount) || amount <= 0 || amount > outstanding + 0.000001) {
+        message.textContent = t("partnerPaymentInvalid");
+        return;
+      }
+
+      saveButton.disabled = true;
+      message.textContent = t("savingPartnerPayment");
+
+      const optionalValue = (id) => {
+        const value = document.getElementById(id).value.trim();
+        return value || null;
+      };
+
+      try {
+        const { error } = await currentDb.rpc("record_partner_commission_payment", {
+          p_payable_id: selectedPartnerPayable.payable_id,
+          p_payment_amount: amount,
+          p_payment_date: document.getElementById("partnerPaymentDate").value,
+          p_payment_reference: optionalValue("partnerPaymentReference"),
+          p_partner_invoice_number: optionalValue("partnerInvoiceNumber"),
+          p_partner_invoice_date: optionalValue("partnerInvoiceDate"),
+          p_notes: optionalValue("partnerPaymentNotes")
+        });
+        if (error) throw error;
+
+        message.textContent = t("partnerPaymentSaved");
+        await refreshPartnerFinancials();
+        closePartnerPaymentModal();
+        renderContract(currentContract);
+      } catch (error) {
+        console.error("Partner payment could not be recorded:", error);
+        message.textContent = `${t("partnerPaymentFailed")} ${error?.message || ""}`.trim();
+      } finally {
+        saveButton.disabled = false;
+      }
     }
 
     function getUserDisplayName(user) {
@@ -4929,16 +5198,18 @@ function renderInvoiceForecast(data) {
           0
         );
         const outstandingTotal = items.reduce(
-          (sum, item) => String(item.payable_status || "").toLowerCase() === "paid"
-            ? sum
-            : sum + (toNumber(item.partner_amount) || 0),
+          (sum, item) => sum + (toNumber(item.outstanding_amount) || 0),
           0
         );
-        const paidTotal = partnerTotal - outstandingTotal;
+        const paidTotal = items.reduce(
+          (sum, item) => sum + (toNumber(item.amount_paid) || 0),
+          0
+        );
         const partnerStatusText = (status) => {
           const keyMap = {
             pending: "partnerStatusPending",
             due: "partnerStatusDue",
+            partially_paid: "partnerStatusPartiallyPaid",
             paid: "partnerStatusPaid",
             disputed: "partnerStatusDisputed",
             cancelled: "partnerStatusCancelled"
@@ -4946,17 +5217,28 @@ function renderInvoiceForecast(data) {
           const normalized = String(status || "pending").toLowerCase();
           return t(keyMap[normalized] || "partnerStatusPending");
         };
-        const rows = items.map((item, index) => `
+        const rows = items.map((item, index) => {
+          const outstanding = toNumber(item.outstanding_amount) || 0;
+          const action = outstanding <= 0
+            ? t("partnerStatusPaid")
+            : canRecordPartnerPayments()
+              ? `<button type="button" class="btn btn-primary partner-payment-action" onclick="openPartnerPaymentModal('${item.payable_id}')">${t("recordPartnerPayment")}</button>`
+              : t("partnerPaymentReadOnly");
+          return `
           <tr>
             <td>${item.instalment_number ?? index + 1}</td>
             <td><strong>${safeValue(item.source_payment_due_date)}</strong></td>
             <td>${formatMoneyValue(item.gross_amount, currency)}</td>
             <td>${toNumber(item.partner_percentage) ?? 0}%</td>
             <td>${formatMoneyValue(item.partner_amount, currency)}</td>
+            <td>${formatMoneyValue(item.amount_paid, currency)}</td>
+            <td>${formatMoneyValue(outstanding, currency)}</td>
             <td>${formatMoneyValue(item.bs_group_net_amount, currency)}</td>
             <td>${partnerStatusText(item.payable_status)}</td>
+            <td>${action}</td>
           </tr>
-        `).join("");
+        `;
+        }).join("");
 
         return `
           <section class="premium-card">
@@ -4990,8 +5272,11 @@ function renderInvoiceForecast(data) {
                       <th>${t("grossAmountLabel")}</th>
                       <th>${t("partnerShareLabel")}</th>
                       <th>${t("partnerAmountLabel")}</th>
+                      <th>${t("amountPaidLabel")}</th>
+                      <th>${t("outstandingBalanceLabel")}</th>
                       <th>${t("bsGroupNetLabel")}</th>
                       <th>${t("partnerStatusLabel")}</th>
+                      <th>${t("partnerPaymentActionLabel")}</th>
                     </tr>
                   </thead>
                   <tbody>${rows}</tbody>
@@ -5292,6 +5577,15 @@ function renderInvoiceForecast(data) {
 
     document.addEventListener("DOMContentLoaded", async () => {
       applyStaticTranslations();
+
+      document.getElementById("partnerPaymentForm")?.addEventListener("submit", savePartnerPayment);
+      document.getElementById("cancelPartnerPayment")?.addEventListener("click", closePartnerPaymentModal);
+      document.getElementById("partnerPaymentModal")?.addEventListener("click", (event) => {
+        if (event.target.id === "partnerPaymentModal") closePartnerPaymentModal();
+      });
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") closePartnerPaymentModal();
+      });
 
       document.querySelectorAll("[data-lang-btn]").forEach((btn) => {
         btn.addEventListener("click", () => {
