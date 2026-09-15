@@ -226,6 +226,112 @@
       line-height: 1.5;
     }
 
+    .payments-section {
+      margin-top: 28px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+    }
+
+    .payments-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .payments-heading h2 {
+      margin: 0 0 6px;
+      font-size: 20px;
+    }
+
+    .payments-heading p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .payment-list {
+      display: grid;
+      gap: 14px;
+    }
+
+    .payment-card {
+      padding: 16px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: var(--panel-2);
+    }
+
+    .payment-card.is-locked {
+      border-color: rgba(239, 68, 68, 0.35);
+      background: rgba(239, 68, 68, 0.04);
+    }
+
+    .payment-card-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .payment-card-title { font-weight: 800; }
+
+    .payment-reference {
+      color: var(--muted);
+      font-size: 0.78rem;
+      overflow-wrap: anywhere;
+    }
+
+    .payment-badge {
+      padding: 6px 9px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      color: #bbf7d0;
+      background: rgba(22, 163, 74, 0.16);
+      border: 1px solid rgba(22, 163, 74, 0.35);
+    }
+
+    .payment-badge.locked {
+      color: #fecaca;
+      background: rgba(239, 68, 68, 0.14);
+      border-color: rgba(239, 68, 68, 0.35);
+    }
+
+    .payment-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .payment-card textarea { min-height: 82px; }
+    .payment-card input:disabled,
+    .payment-card select:disabled,
+    .payment-card textarea:disabled { opacity: 0.62; cursor: not-allowed; }
+
+    .payment-lock-note {
+      margin: 12px 0 0;
+      color: #fecaca;
+      font-size: 0.84rem;
+      line-height: 1.45;
+    }
+
+    .payment-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+
+    .payment-row-status { min-height: 20px; font-size: 0.84rem; }
+    .payment-row-status.error { color: var(--danger); }
+    .payment-row-status.success { color: var(--success); }
+
     .topbar-session {
       display: flex;
       align-items: center;
@@ -283,6 +389,8 @@
       .grid {
         grid-template-columns: 1fr;
       }
+
+      .payment-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -600,6 +708,17 @@
           Manual values will be used by the dashboard and reports. The user, date, reason and source will be recorded for audit purposes.
         </div>
 
+        <section class="payments-section" aria-labelledby="paymentsTitle">
+          <div class="payments-heading">
+            <div>
+              <h2 id="paymentsTitle" data-i18n="paymentsTitle">Individual Commission Payments</h2>
+              <p data-i18n="paymentsSubtitle">Edit a future payment without changing the rest of the contract. Paid or invoice-linked payments are protected.</p>
+            </div>
+          </div>
+          <div id="paymentsStatus" class="status"></div>
+          <div id="paymentsList" class="payment-list"></div>
+        </section>
+
         <div class="actions">
           <button type="submit" class="btn btn-primary" id="saveBtn" data-i18n="saveBtn">Save Changes</button>
           <a id="cancelBtn" href="/dealtrack-pro/contracts.html" class="btn btn-secondary" data-i18n="cancelBtn">Cancel</a>
@@ -650,6 +769,35 @@
       "sourceInternalReview": "Internal Review",
       "sourceOther": "Other",
       "manualCorrectionNote": "Manual values will be used by the dashboard and reports. The user, date, reason and source will be recorded for audit purposes.",
+      "paymentsTitle": "Individual Commission Payments",
+      "paymentsSubtitle": "Edit a future payment without changing the rest of the contract. Paid or invoice-linked payments are protected.",
+      "paymentsLoading": "Loading individual payments...",
+      "paymentsEmpty": "No individual commission payments are recorded for this contract.",
+      "paymentNumber": "Payment",
+      "paymentAmount": "Amount",
+      "paymentCurrency": "Currency",
+      "paymentDueDate": "Due date",
+      "paymentFeeSide": "Fee side",
+      "paymentClubSide": "Club-side",
+      "paymentPlayerSide": "Player-side",
+      "paymentPayer": "Payer",
+      "paymentConditional": "Conditional payment",
+      "paymentTriggerStatus": "Trigger status",
+      "paymentConditionNotes": "Condition details",
+      "paymentTriggerNote": "Trigger note",
+      "paymentCorrectionSource": "Correction source",
+      "paymentCorrectionReason": "Reason / evidence for this correction",
+      "paymentCorrectionPlaceholder": "Explain exactly what changed and the supporting evidence.",
+      "paymentSave": "Save payment correction",
+      "paymentSaving": "Saving payment correction...",
+      "paymentSaved": "Payment updated and audit record created.",
+      "paymentProtected": "Protected",
+      "paymentEditable": "Editable",
+      "paymentProtectedNote": "This payment is paid or linked to an invoice. It cannot be overwritten here. Use the invoice correction or credit-note process first.",
+      "paymentSourceRequired": "Select a correction source.",
+      "paymentReasonRequired": "Enter a correction reason.",
+      "paymentPayerRequired": "Enter the payer.",
+      "paymentLoadError": "Individual payments could not be loaded. Run the supplied secure SQL setup first, then refresh this page.",
       "pageTitle": "Edit Contract",
       "pageSubtitle": "Update the contract master record, agent details, salary baseline, and commission structure.",
       "sectionContract": "Contract Details",
@@ -755,6 +903,35 @@
       "sourceInternalReview": "Révision interne",
       "sourceOther": "Autre",
       "manualCorrectionNote": "Les valeurs manuelles seront utilisées par le tableau de bord et les rapports. L’utilisateur, la date, le motif et la source seront enregistrés.",
+      "paymentsTitle": "Paiements de commission individuels",
+      "paymentsSubtitle": "Modifiez un paiement futur sans changer le reste du contrat. Les paiements réglés ou liés à une facture sont protégés.",
+      "paymentsLoading": "Chargement des paiements individuels...",
+      "paymentsEmpty": "Aucun paiement de commission individuel n’est enregistré pour ce contrat.",
+      "paymentNumber": "Paiement",
+      "paymentAmount": "Montant",
+      "paymentCurrency": "Devise",
+      "paymentDueDate": "Date d’échéance",
+      "paymentFeeSide": "Partie facturée",
+      "paymentClubSide": "Côté club",
+      "paymentPlayerSide": "Côté joueur",
+      "paymentPayer": "Payeur",
+      "paymentConditional": "Paiement conditionnel",
+      "paymentTriggerStatus": "Statut du déclencheur",
+      "paymentConditionNotes": "Détails de la condition",
+      "paymentTriggerNote": "Note sur le déclencheur",
+      "paymentCorrectionSource": "Source de la correction",
+      "paymentCorrectionReason": "Motif / preuve de cette correction",
+      "paymentCorrectionPlaceholder": "Expliquez précisément le changement et les justificatifs.",
+      "paymentSave": "Enregistrer la correction",
+      "paymentSaving": "Enregistrement de la correction...",
+      "paymentSaved": "Paiement mis à jour et piste d’audit créée.",
+      "paymentProtected": "Protégé",
+      "paymentEditable": "Modifiable",
+      "paymentProtectedNote": "Ce paiement est réglé ou lié à une facture. Il ne peut pas être remplacé ici. Utilisez d’abord le processus de correction de facture ou d’avoir.",
+      "paymentSourceRequired": "Sélectionnez une source de correction.",
+      "paymentReasonRequired": "Saisissez un motif de correction.",
+      "paymentPayerRequired": "Saisissez le payeur.",
+      "paymentLoadError": "Impossible de charger les paiements individuels. Exécutez d’abord le script SQL sécurisé fourni, puis actualisez cette page.",
       "pageTitle": "Modifier le contrat",
       "pageSubtitle": "Mettez à jour la fiche principale du contrat, les détails de l’agent, la base salariale et la structure de commission.",
       "sectionContract": "Détails du contrat",
@@ -860,6 +1037,35 @@
       "sourceInternalReview": "Revisión interna",
       "sourceOther": "Otro",
       "manualCorrectionNote": "Los valores manuales se utilizarán en el panel y los informes. Se registrarán el usuario, la fecha, el motivo y la fuente.",
+      "paymentsTitle": "Pagos de comisión individuales",
+      "paymentsSubtitle": "Edite un pago futuro sin cambiar el resto del contrato. Los pagos abonados o vinculados a una factura están protegidos.",
+      "paymentsLoading": "Cargando pagos individuales...",
+      "paymentsEmpty": "No hay pagos de comisión individuales registrados para este contrato.",
+      "paymentNumber": "Pago",
+      "paymentAmount": "Importe",
+      "paymentCurrency": "Moneda",
+      "paymentDueDate": "Fecha de vencimiento",
+      "paymentFeeSide": "Parte de la comisión",
+      "paymentClubSide": "Parte del club",
+      "paymentPlayerSide": "Parte del jugador",
+      "paymentPayer": "Pagador",
+      "paymentConditional": "Pago condicional",
+      "paymentTriggerStatus": "Estado del activador",
+      "paymentConditionNotes": "Detalles de la condición",
+      "paymentTriggerNote": "Nota del activador",
+      "paymentCorrectionSource": "Fuente de la corrección",
+      "paymentCorrectionReason": "Motivo / evidencia de esta corrección",
+      "paymentCorrectionPlaceholder": "Explique exactamente qué cambió y la evidencia de respaldo.",
+      "paymentSave": "Guardar corrección del pago",
+      "paymentSaving": "Guardando corrección del pago...",
+      "paymentSaved": "Pago actualizado y registro de auditoría creado.",
+      "paymentProtected": "Protegido",
+      "paymentEditable": "Editable",
+      "paymentProtectedNote": "Este pago está abonado o vinculado a una factura. No se puede sobrescribir aquí. Use primero el proceso de corrección de factura o nota de crédito.",
+      "paymentSourceRequired": "Seleccione una fuente de corrección.",
+      "paymentReasonRequired": "Introduzca un motivo de corrección.",
+      "paymentPayerRequired": "Introduzca el pagador.",
+      "paymentLoadError": "No se pudieron cargar los pagos individuales. Ejecute primero el script SQL seguro suministrado y actualice esta página.",
       "pageTitle": "Editar contrato",
       "pageSubtitle": "Actualice el registro maestro del contrato, los datos del agente, la base salarial y la estructura de comisión.",
       "sectionContract": "Detalles del contrato",
@@ -935,6 +1141,9 @@
     let currentLang = localStorage.getItem("lang") || "en";
     let currentUser = null;
     let currentAgency = null;
+    let currentDb = null;
+    let currentContractId = null;
+    let currentInstalments = [];
 
     function t(key) {
       return I18N[currentLang]?.[key] || I18N.en?.[key] || key;
@@ -1001,6 +1210,250 @@
       const box = document.getElementById("statusMessage");
       box.className = `status ${type}`.trim();
       box.textContent = message || "";
+    }
+
+    function setPaymentsStatus(message, type = "") {
+      const box = document.getElementById("paymentsStatus");
+      box.className = `status ${type}`.trim();
+      box.textContent = message || "";
+    }
+
+    function isProtectedInstalment(row) {
+      const status = String(row?.invoice_status || "").toLowerCase();
+      const protectedStatuses = new Set([
+        "invoiced", "finalised", "paid", "part_paid",
+        "partially_paid", "settled", "received"
+      ]);
+
+      return !!row?.invoice_id ||
+        Number(row?.amount_paid || 0) !== 0 ||
+        !!row?.payment_date ||
+        !!row?.paid_date ||
+        protectedStatuses.has(status);
+    }
+
+    function makeField(labelText, control, full = false) {
+      const wrapper = document.createElement("div");
+      wrapper.className = `field${full ? " full" : ""}`;
+      const label = document.createElement("label");
+      label.textContent = labelText;
+      wrapper.append(label, control);
+      return wrapper;
+    }
+
+    function makeInput(type, fieldName, value, locked) {
+      const input = document.createElement("input");
+      input.type = type;
+      input.dataset.field = fieldName;
+      input.value = value ?? "";
+      input.disabled = locked;
+      if (type === "number") {
+        input.min = "0";
+        input.step = "0.01";
+      }
+      return input;
+    }
+
+    function makeSelect(fieldName, options, selected, locked) {
+      const select = document.createElement("select");
+      select.dataset.field = fieldName;
+      select.disabled = locked;
+      options.forEach(([value, label]) => {
+        const option = document.createElement("option");
+        option.value = value;
+        option.textContent = label;
+        option.selected = value === String(selected ?? "");
+        select.appendChild(option);
+      });
+      return select;
+    }
+
+    function makeTextarea(fieldName, value, locked, placeholder = "") {
+      const textarea = document.createElement("textarea");
+      textarea.dataset.field = fieldName;
+      textarea.value = value ?? "";
+      textarea.placeholder = placeholder;
+      textarea.disabled = locked;
+      return textarea;
+    }
+
+    function renderInstalments() {
+      const list = document.getElementById("paymentsList");
+      list.replaceChildren();
+
+      if (!currentInstalments.length) {
+        const empty = document.createElement("div");
+        empty.className = "manual-note";
+        empty.textContent = t("paymentsEmpty");
+        list.appendChild(empty);
+        return;
+      }
+
+      const sourceOptions = [
+        ["", "—"],
+        ["employment_contract", t("sourceEmployment")],
+        ["representation_agreement", t("sourceRepresentation")],
+        ["club_announcement", t("sourceClubAnnouncement")],
+        ["agent_confirmation", t("sourceAgentConfirmation")],
+        ["internal_review", t("sourceInternalReview")],
+        ["other", t("sourceOther")]
+      ];
+
+      currentInstalments.forEach((row, index) => {
+        const locked = isProtectedInstalment(row);
+        const card = document.createElement("article");
+        card.className = `payment-card${locked ? " is-locked" : ""}`;
+        card.dataset.instalmentId = row.id;
+
+        const head = document.createElement("div");
+        head.className = "payment-card-head";
+        const titleWrap = document.createElement("div");
+        const title = document.createElement("div");
+        title.className = "payment-card-title";
+        title.textContent = `${t("paymentNumber")} ${row.instalment_number ?? index + 1}`;
+        const reference = document.createElement("div");
+        reference.className = "payment-reference";
+        reference.textContent = row.component_reference || row.id;
+        titleWrap.append(title, reference);
+        const badge = document.createElement("span");
+        badge.className = `payment-badge${locked ? " locked" : ""}`;
+        badge.textContent = t(locked ? "paymentProtected" : "paymentEditable");
+        head.append(titleWrap, badge);
+
+        const grid = document.createElement("div");
+        grid.className = "payment-grid";
+        grid.append(
+          makeField(t("paymentAmount"), makeInput("number", "amount", row.amount, locked)),
+          makeField(t("paymentCurrency"), makeInput("text", "currency", row.currency || "EUR", locked)),
+          makeField(t("paymentDueDate"), makeInput("date", "due_date", row.due_date, locked)),
+          makeField(t("paymentFeeSide"), makeSelect("fee_side", [
+            ["club-side", t("paymentClubSide")],
+            ["player-side", t("paymentPlayerSide")]
+          ], row.fee_side, locked)),
+          makeField(t("paymentPayer"), makeInput("text", "payer", row.payer, locked)),
+          makeField(t("paymentTriggerStatus"), makeInput("text", "trigger_status", row.trigger_status, locked)),
+          makeField(t("paymentConditionNotes"), makeTextarea("condition_notes", row.condition_notes, locked), true),
+          makeField(t("paymentTriggerNote"), makeTextarea("trigger_note", row.trigger_note, locked), true)
+        );
+
+        const conditionalWrap = document.createElement("div");
+        conditionalWrap.className = "checkbox-row";
+        const conditional = document.createElement("input");
+        conditional.type = "checkbox";
+        conditional.dataset.field = "conditional";
+        conditional.checked = !!row.conditional;
+        conditional.disabled = locked;
+        const conditionalLabel = document.createElement("label");
+        conditionalLabel.textContent = t("paymentConditional");
+        conditionalWrap.append(conditional, conditionalLabel);
+        grid.appendChild(conditionalWrap);
+
+        card.append(head, grid);
+
+        if (locked) {
+          const note = document.createElement("p");
+          note.className = "payment-lock-note";
+          note.textContent = t("paymentProtectedNote");
+          card.appendChild(note);
+        } else {
+          const auditGrid = document.createElement("div");
+          auditGrid.className = "payment-grid";
+          auditGrid.style.marginTop = "14px";
+          auditGrid.append(
+            makeField(t("paymentCorrectionSource"), makeSelect("correction_source", sourceOptions, "", false)),
+            makeField(
+              t("paymentCorrectionReason"),
+              makeTextarea("correction_reason", "", false, t("paymentCorrectionPlaceholder")),
+              true
+            )
+          );
+
+          const actions = document.createElement("div");
+          actions.className = "payment-actions";
+          const save = document.createElement("button");
+          save.type = "button";
+          save.className = "btn btn-primary";
+          save.textContent = t("paymentSave");
+          save.addEventListener("click", () => saveInstalment(card, row));
+          const rowStatus = document.createElement("span");
+          rowStatus.className = "payment-row-status";
+          rowStatus.dataset.role = "status";
+          actions.append(save, rowStatus);
+          card.append(auditGrid, actions);
+        }
+
+        list.appendChild(card);
+      });
+    }
+
+    async function loadInstalments() {
+      setPaymentsStatus(t("paymentsLoading"));
+      const { data, error } = await currentDb.rpc("get_contract_instalments_for_edit", {
+        p_contract_id: currentContractId
+      });
+
+      if (error) {
+        console.error("Load instalments error:", error);
+        currentInstalments = [];
+        renderInstalments();
+        setPaymentsStatus(`${t("paymentLoadError")} ${error.message}`, "error");
+        return;
+      }
+
+      currentInstalments = Array.isArray(data) ? data : (data ? [data] : []);
+      renderInstalments();
+      setPaymentsStatus("");
+    }
+
+    async function saveInstalment(card, originalRow) {
+      const get = (name) => card.querySelector(`[data-field="${name}"]`);
+      const status = card.querySelector('[data-role="status"]');
+      const saveButton = card.querySelector("button");
+      const source = get("correction_source")?.value || "";
+      const reason = get("correction_reason")?.value?.trim() || "";
+      const payer = get("payer")?.value?.trim() || "";
+
+      status.className = "payment-row-status error";
+      if (!payer) { status.textContent = t("paymentPayerRequired"); return; }
+      if (!source) { status.textContent = t("paymentSourceRequired"); return; }
+      if (!reason) { status.textContent = t("paymentReasonRequired"); return; }
+
+      const amountValue = get("amount")?.value;
+      saveButton.disabled = true;
+      status.className = "payment-row-status";
+      status.textContent = t("paymentSaving");
+
+      const { data, error } = await currentDb.rpc("update_commission_instalment_secure", {
+        p_instalment_id: originalRow.id,
+        p_amount: amountValue === "" ? null : Number(amountValue),
+        p_currency: get("currency")?.value?.trim().toUpperCase() || "",
+        p_due_date: get("due_date")?.value || null,
+        p_fee_side: get("fee_side")?.value || "",
+        p_payer: payer,
+        p_conditional: !!get("conditional")?.checked,
+        p_trigger_status: get("trigger_status")?.value?.trim() || null,
+        p_condition_notes: get("condition_notes")?.value?.trim() || null,
+        p_trigger_note: get("trigger_note")?.value?.trim() || null,
+        p_correction_source: source,
+        p_correction_reason: reason
+      });
+
+      if (error) {
+        console.error("Update instalment error:", error);
+        status.className = "payment-row-status error";
+        status.textContent = `${t("msgErrorPrefix")} ${error.message}`;
+        saveButton.disabled = false;
+        return;
+      }
+
+      const updated = Array.isArray(data) ? data[0] : data;
+      const rowIndex = currentInstalments.findIndex((item) => item.id === originalRow.id);
+      if (updated && rowIndex >= 0) currentInstalments[rowIndex] = updated;
+      status.className = "payment-row-status success";
+      status.textContent = t("paymentSaved");
+      saveButton.disabled = false;
+      get("correction_source").value = "";
+      get("correction_reason").value = "";
     }
 
     function fillForm(data) {
@@ -1075,6 +1528,7 @@
           localStorage.setItem("lang", currentLang);
           applyTranslations();
           renderIdentityBar();
+          renderInstalments();
         });
       });
 
@@ -1084,6 +1538,8 @@
         setStatus(t("msgSupabaseMissing"), "error");
         return;
       }
+
+      currentDb = db;
 
       const { data: { user }, error: userError } = await db.auth.getUser();
 
@@ -1109,6 +1565,8 @@
         return;
       }
 
+      currentContractId = id;
+
       document.getElementById("backLink").href = `/dealtrack-pro/contract.html?id=${id}`;
       document.getElementById("cancelBtn").href = `/dealtrack-pro/contract.html?id=${id}`;
 
@@ -1129,6 +1587,7 @@
 
       fillForm(data);
       setStatus("");
+      await loadInstalments();
 
       document.getElementById("contractForm").addEventListener("submit", async (e) => {
         e.preventDefault();
