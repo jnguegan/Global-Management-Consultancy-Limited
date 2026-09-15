@@ -1320,6 +1320,26 @@
       "sectionContract": "Contract Timeline",
       "sectionSalary": "Salary Baseline",
       "sectionCommission": "Commission Structure",
+      "sectionPartnerAllocation": "Partner Commission Allocation",
+      "partnerAllocationKicker": "Partner allocation",
+      "partnerAllocationSubtitle": "Separate visibility of the gross commission, partner entitlement and net amount retained by BS Group.",
+      "partnerNameLabel": "Partner organisation",
+      "grossCommissionLabel": "Gross commission",
+      "partnerShareLabel": "Partner share",
+      "partnerPayableLabel": "Payable to partner",
+      "netBsGroupLabel": "Net BS Group earnings",
+      "outstandingPartnerLabel": "Outstanding partner payable",
+      "paidPartnerLabel": "Paid to partner",
+      "partnerScheduleLabel": "Instalment allocation",
+      "grossAmountLabel": "Gross amount",
+      "partnerAmountLabel": "Partner amount",
+      "bsGroupNetLabel": "BS Group net",
+      "partnerStatusLabel": "Partner-payment status",
+      "partnerStatusPending": "Pending",
+      "partnerStatusDue": "Due",
+      "partnerStatusPaid": "Paid",
+      "partnerStatusDisputed": "Disputed",
+      "partnerStatusCancelled": "Cancelled",
     "sectionCommercialValue": "Revenue Forecast",
 "commercialValueSubtitle": "Track the projected financial value of this mandate throughout its lifetime. Revenue estimates are calculated from the recorded salary, commission structure and contract duration.",
 "expectedAnnualRevenue": "Expected Annual Revenue",
@@ -1526,6 +1546,26 @@
       "sectionContract": "Calendrier du contrat",
       "sectionSalary": "Base salariale",
       "sectionCommission": "Structure de commission",
+      "sectionPartnerAllocation": "Répartition de la commission partenaire",
+      "partnerAllocationKicker": "Répartition partenaire",
+      "partnerAllocationSubtitle": "Vue séparée de la commission brute, du droit du partenaire et du montant net conservé par BS Group.",
+      "partnerNameLabel": "Organisation partenaire",
+      "grossCommissionLabel": "Commission brute",
+      "partnerShareLabel": "Part du partenaire",
+      "partnerPayableLabel": "À payer au partenaire",
+      "netBsGroupLabel": "Revenus nets de BS Group",
+      "outstandingPartnerLabel": "Dette partenaire restante",
+      "paidPartnerLabel": "Payé au partenaire",
+      "partnerScheduleLabel": "Répartition par échéance",
+      "grossAmountLabel": "Montant brut",
+      "partnerAmountLabel": "Montant du partenaire",
+      "bsGroupNetLabel": "Net BS Group",
+      "partnerStatusLabel": "Statut du paiement partenaire",
+      "partnerStatusPending": "En attente",
+      "partnerStatusDue": "À payer",
+      "partnerStatusPaid": "Payé",
+      "partnerStatusDisputed": "Contesté",
+      "partnerStatusCancelled": "Annulé",
    "sectionCommercialValue": "Prévision des revenus",
 "commercialValueSubtitle": "Suivez la valeur financière prévisionnelle de ce mandat pendant toute sa durée. Les estimations sont calculées à partir du salaire, de la structure de commission et de la durée du contrat enregistrés.",
 "expectedAnnualRevenue": "Revenus annuels prévisionnels",
@@ -1732,6 +1772,26 @@
       "sectionContract": "Calendario contractual",
       "sectionSalary": "Base salarial",
       "sectionCommission": "Estructura de comisión",
+      "sectionPartnerAllocation": "Distribución de comisión del socio",
+      "partnerAllocationKicker": "Distribución del socio",
+      "partnerAllocationSubtitle": "Visibilidad separada de la comisión bruta, el derecho del socio y el importe neto retenido por BS Group.",
+      "partnerNameLabel": "Organización asociada",
+      "grossCommissionLabel": "Comisión bruta",
+      "partnerShareLabel": "Participación del socio",
+      "partnerPayableLabel": "A pagar al socio",
+      "netBsGroupLabel": "Ingresos netos de BS Group",
+      "outstandingPartnerLabel": "Deuda pendiente con el socio",
+      "paidPartnerLabel": "Pagado al socio",
+      "partnerScheduleLabel": "Distribución por cuota",
+      "grossAmountLabel": "Importe bruto",
+      "partnerAmountLabel": "Importe del socio",
+      "bsGroupNetLabel": "Neto BS Group",
+      "partnerStatusLabel": "Estado del pago al socio",
+      "partnerStatusPending": "Pendiente",
+      "partnerStatusDue": "A pagar",
+      "partnerStatusPaid": "Pagado",
+      "partnerStatusDisputed": "En disputa",
+      "partnerStatusCancelled": "Cancelado",
    "sectionCommercialValue": "Previsión de ingresos",
 "commercialValueSubtitle": "Realice un seguimiento del valor financiero previsto de este mandato durante toda su vigencia. Las estimaciones se calculan a partir del salario, la estructura de comisión y la duración contractual registrados.",
 "expectedAnnualRevenue": "Ingresos anuales previstos",
@@ -1916,6 +1976,7 @@
     let currentLang = localStorage.getItem("lang") || "en";
     let currentContract = null;
     let currentContractInstalments = [];
+    let currentPartnerFinancials = [];
     let currentDb = null;
     let currentUser = null;
     let currentAgency = null;
@@ -4839,6 +4900,109 @@ function renderInvoiceForecast(data) {
       `;
     }
 
+    function renderPartnerFinancials() {
+      if (!Array.isArray(currentPartnerFinancials) || !currentPartnerFinancials.length) {
+        return "";
+      }
+
+      const groups = new Map();
+
+      currentPartnerFinancials.forEach((item) => {
+        const key = `${item.partnership_deal_id || "deal"}:${item.currency || ""}`;
+        if (!groups.has(key)) groups.set(key, []);
+        groups.get(key).push(item);
+      });
+
+      return Array.from(groups.values()).map((items) => {
+        const first = items[0];
+        const currency = first.currency || "USD";
+        const grossTotal = items.reduce(
+          (sum, item) => sum + (toNumber(item.gross_amount) || 0),
+          0
+        );
+        const partnerTotal = items.reduce(
+          (sum, item) => sum + (toNumber(item.partner_amount) || 0),
+          0
+        );
+        const netTotal = items.reduce(
+          (sum, item) => sum + (toNumber(item.bs_group_net_amount) || 0),
+          0
+        );
+        const outstandingTotal = items.reduce(
+          (sum, item) => String(item.payable_status || "").toLowerCase() === "paid"
+            ? sum
+            : sum + (toNumber(item.partner_amount) || 0),
+          0
+        );
+        const paidTotal = partnerTotal - outstandingTotal;
+        const partnerStatusText = (status) => {
+          const keyMap = {
+            pending: "partnerStatusPending",
+            due: "partnerStatusDue",
+            paid: "partnerStatusPaid",
+            disputed: "partnerStatusDisputed",
+            cancelled: "partnerStatusCancelled"
+          };
+          const normalized = String(status || "pending").toLowerCase();
+          return t(keyMap[normalized] || "partnerStatusPending");
+        };
+        const rows = items.map((item, index) => `
+          <tr>
+            <td>${item.instalment_number ?? index + 1}</td>
+            <td><strong>${safeValue(item.source_payment_due_date)}</strong></td>
+            <td>${formatMoneyValue(item.gross_amount, currency)}</td>
+            <td>${toNumber(item.partner_percentage) ?? 0}%</td>
+            <td>${formatMoneyValue(item.partner_amount, currency)}</td>
+            <td>${formatMoneyValue(item.bs_group_net_amount, currency)}</td>
+            <td>${partnerStatusText(item.payable_status)}</td>
+          </tr>
+        `).join("");
+
+        return `
+          <section class="premium-card">
+            <div class="section-head">
+              <div>
+                <div class="section-kicker">${t("partnerAllocationKicker")}</div>
+                <h2 class="section-title">${t("sectionPartnerAllocation")}</h2>
+              </div>
+            </div>
+
+            <p class="muted">${t("partnerAllocationSubtitle")}</p>
+
+            <div class="master-grid-4" style="margin-top:18px;">
+              ${renderTile("partnerNameLabel", safeValue(first.partner_name))}
+              ${renderTile("grossCommissionLabel", formatMoneyValue(grossTotal, currency))}
+              ${renderTile("partnerShareLabel", `${toNumber(first.partner_percentage) ?? 0}%`)}
+              ${renderTile("partnerPayableLabel", formatMoneyValue(partnerTotal, currency))}
+              ${renderTile("netBsGroupLabel", formatMoneyValue(netTotal, currency))}
+              ${renderTile("outstandingPartnerLabel", formatMoneyValue(outstandingTotal, currency))}
+              ${renderTile("paidPartnerLabel", formatMoneyValue(paidTotal, currency))}
+            </div>
+
+            <div style="margin-top:18px;">
+              <div class="section-kicker">${t("partnerScheduleLabel")}</div>
+              <div class="audit-schedule" style="margin-top:12px;">
+                <table class="compact-forecast-table">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>${t("dueDate")}</th>
+                      <th>${t("grossAmountLabel")}</th>
+                      <th>${t("partnerShareLabel")}</th>
+                      <th>${t("partnerAmountLabel")}</th>
+                      <th>${t("bsGroupNetLabel")}</th>
+                      <th>${t("partnerStatusLabel")}</th>
+                    </tr>
+                  </thead>
+                  <tbody>${rows}</tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+        `;
+      }).join("");
+    }
+
     function renderContract(data) {
       const container = document.getElementById("contractView");
       const resolvedCommission = resolveCommission(data);
@@ -4954,6 +5118,8 @@ function renderInvoiceForecast(data) {
 
             ${renderResolvedCommissionSchedule(data)}
           </section>
+
+          ${renderPartnerFinancials()}
 
           ${renderCommercialValue(data)}
 
@@ -5238,8 +5404,26 @@ function renderInvoiceForecast(data) {
             rpcResult.data.filter(
               (item) =>
                 String(item.contract_id) === String(id)
-            );
+          );
         }
+      }
+
+      currentPartnerFinancials = [];
+      const partnerFinancialsResult = await db.rpc(
+        "get_contract_partner_financials",
+        { p_contract_id: id }
+      );
+
+      if (
+        !partnerFinancialsResult.error &&
+        Array.isArray(partnerFinancialsResult.data)
+      ) {
+        currentPartnerFinancials = partnerFinancialsResult.data;
+      } else if (partnerFinancialsResult.error) {
+        console.warn(
+          "Partner financials could not be loaded:",
+          partnerFinancialsResult.error
+        );
       }
 
       applyStaticTranslations();
