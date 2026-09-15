@@ -2232,7 +2232,7 @@
 
       try {
         const { error } = await currentDb.rpc("record_partner_commission_payment", {
-          p_payable_id: selectedPartnerPayable.payable_id,
+          p_partner_payable_id: selectedPartnerPayable.payable_id,
           p_payment_amount: amount,
           p_payment_date: document.getElementById("partnerPaymentDate").value,
           p_payment_reference: optionalValue("partnerPaymentReference"),
