@@ -287,6 +287,7 @@
     }
 
     .payment-badge {
+      appearance: none;
       padding: 6px 9px;
       border-radius: 999px;
       font-size: 0.75rem;
@@ -294,12 +295,21 @@
       color: #bbf7d0;
       background: rgba(22, 163, 74, 0.16);
       border: 1px solid rgba(22, 163, 74, 0.35);
+      cursor: pointer;
+    }
+
+    .payment-badge:hover,
+    .payment-badge:focus-visible {
+      border-color: #86efac;
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.16);
     }
 
     .payment-badge.locked {
       color: #fecaca;
       background: rgba(239, 68, 68, 0.14);
       border-color: rgba(239, 68, 68, 0.35);
+      cursor: not-allowed;
     }
 
     .payment-grid {
@@ -714,6 +724,7 @@
               <h2 id="paymentsTitle" data-i18n="paymentsTitle">Individual Commission Payments</h2>
               <p data-i18n="paymentsSubtitle">Edit a future payment without changing the rest of the contract. Paid or invoice-linked payments are protected.</p>
             </div>
+            <button id="addPaymentBtn" type="button" class="btn btn-primary" data-i18n="paymentAdd">+ Add Payment</button>
           </div>
           <div id="paymentsStatus" class="status"></div>
           <div id="paymentsList" class="payment-list"></div>
@@ -793,6 +804,12 @@
       "paymentSaved": "Payment updated and audit record created.",
       "paymentProtected": "Protected",
       "paymentEditable": "Editable",
+      "paymentAdd": "+ Add Payment",
+      "paymentCreate": "Save new payment",
+      "paymentCreating": "Adding payment...",
+      "paymentCreated": "New payment added successfully.",
+      "paymentCancelAdd": "Cancel",
+      "paymentNewTitle": "New payment",
       "paymentProtectedNote": "This payment is paid or linked to an invoice. It cannot be overwritten here. Use the invoice correction or credit-note process first.",
       "paymentSourceRequired": "Select a correction source.",
       "paymentReasonRequired": "Enter a correction reason.",
@@ -927,6 +944,12 @@
       "paymentSaved": "Paiement mis à jour et piste d’audit créée.",
       "paymentProtected": "Protégé",
       "paymentEditable": "Modifiable",
+      "paymentAdd": "+ Ajouter un paiement",
+      "paymentCreate": "Enregistrer le nouveau paiement",
+      "paymentCreating": "Ajout du paiement...",
+      "paymentCreated": "Nouveau paiement ajouté.",
+      "paymentCancelAdd": "Annuler",
+      "paymentNewTitle": "Nouveau paiement",
       "paymentProtectedNote": "Ce paiement est réglé ou lié à une facture. Il ne peut pas être remplacé ici. Utilisez d’abord le processus de correction de facture ou d’avoir.",
       "paymentSourceRequired": "Sélectionnez une source de correction.",
       "paymentReasonRequired": "Saisissez un motif de correction.",
@@ -1061,6 +1084,12 @@
       "paymentSaved": "Pago actualizado y registro de auditoría creado.",
       "paymentProtected": "Protegido",
       "paymentEditable": "Editable",
+      "paymentAdd": "+ Añadir pago",
+      "paymentCreate": "Guardar nuevo pago",
+      "paymentCreating": "Añadiendo pago...",
+      "paymentCreated": "Nuevo pago añadido correctamente.",
+      "paymentCancelAdd": "Cancelar",
+      "paymentNewTitle": "Nuevo pago",
       "paymentProtectedNote": "Este pago está abonado o vinculado a una factura. No se puede sobrescribir aquí. Use primero el proceso de corrección de factura o nota de crédito.",
       "paymentSourceRequired": "Seleccione una fuente de corrección.",
       "paymentReasonRequired": "Introduzca un motivo de corrección.",
@@ -1315,9 +1344,11 @@
         reference.className = "payment-reference";
         reference.textContent = row.component_reference || row.id;
         titleWrap.append(title, reference);
-        const badge = document.createElement("span");
+        const badge = document.createElement("button");
+        badge.type = "button";
         badge.className = `payment-badge${locked ? " locked" : ""}`;
         badge.textContent = t(locked ? "paymentProtected" : "paymentEditable");
+        badge.disabled = locked;
         head.append(titleWrap, badge);
 
         const grid = document.createElement("div");
@@ -1349,6 +1380,15 @@
         grid.appendChild(conditionalWrap);
 
         card.append(head, grid);
+
+        if (!locked) {
+          badge.addEventListener("click", () => {
+            const firstField = card.querySelector('[data-field="amount"]');
+            firstField?.scrollIntoView({ behavior: "smooth", block: "center" });
+            firstField?.focus({ preventScroll: true });
+            firstField?.select?.();
+          });
+        }
 
         if (locked) {
           const note = document.createElement("p");
@@ -1384,6 +1424,140 @@
 
         list.appendChild(card);
       });
+    }
+
+    function openNewPaymentEditor() {
+      if (document.getElementById("newPaymentCard")) {
+        document.getElementById("newPaymentCard").scrollIntoView({ behavior: "smooth", block: "center" });
+        return;
+      }
+
+      const sourceOptions = [
+        ["", "—"],
+        ["employment_contract", t("sourceEmployment")],
+        ["representation_agreement", t("sourceRepresentation")],
+        ["club_announcement", t("sourceClubAnnouncement")],
+        ["agent_confirmation", t("sourceAgentConfirmation")],
+        ["internal_review", t("sourceInternalReview")],
+        ["other", t("sourceOther")]
+      ];
+      const previous = currentInstalments[currentInstalments.length - 1] || {};
+      const card = document.createElement("article");
+      card.id = "newPaymentCard";
+      card.className = "payment-card";
+
+      const head = document.createElement("div");
+      head.className = "payment-card-head";
+      const title = document.createElement("div");
+      title.className = "payment-card-title";
+      title.textContent = t("paymentNewTitle");
+      head.appendChild(title);
+
+      const grid = document.createElement("div");
+      grid.className = "payment-grid";
+      grid.append(
+        makeField(t("paymentAmount"), makeInput("number", "amount", "", false)),
+        makeField(t("paymentCurrency"), makeInput("text", "currency", previous.currency || document.getElementById("commissionCurrency")?.value || "EUR", false)),
+        makeField(t("paymentDueDate"), makeInput("date", "due_date", "", false)),
+        makeField(t("paymentFeeSide"), makeSelect("fee_side", [
+          ["club-side", t("paymentClubSide")],
+          ["player-side", t("paymentPlayerSide")]
+        ], previous.fee_side || "club-side", false)),
+        makeField(t("paymentPayer"), makeInput("text", "payer", previous.payer || document.getElementById("club")?.value || "", false)),
+        makeField(t("paymentTriggerStatus"), makeInput("text", "trigger_status", "guaranteed", false)),
+        makeField(t("paymentConditionNotes"), makeTextarea("condition_notes", "", false), true),
+        makeField(t("paymentTriggerNote"), makeTextarea("trigger_note", "", false), true)
+      );
+
+      const conditionalWrap = document.createElement("div");
+      conditionalWrap.className = "checkbox-row";
+      const conditional = document.createElement("input");
+      conditional.type = "checkbox";
+      conditional.dataset.field = "conditional";
+      const conditionalLabel = document.createElement("label");
+      conditionalLabel.textContent = t("paymentConditional");
+      conditionalWrap.append(conditional, conditionalLabel);
+      grid.appendChild(conditionalWrap);
+
+      const auditGrid = document.createElement("div");
+      auditGrid.className = "payment-grid";
+      auditGrid.style.marginTop = "14px";
+      auditGrid.append(
+        makeField(t("paymentCorrectionSource"), makeSelect("correction_source", sourceOptions, "", false)),
+        makeField(t("paymentCorrectionReason"), makeTextarea("correction_reason", "", false, t("paymentCorrectionPlaceholder")), true)
+      );
+
+      const actions = document.createElement("div");
+      actions.className = "payment-actions";
+      const save = document.createElement("button");
+      save.type = "button";
+      save.className = "btn btn-primary";
+      save.textContent = t("paymentCreate");
+      save.addEventListener("click", () => createInstalment(card));
+      const cancel = document.createElement("button");
+      cancel.type = "button";
+      cancel.className = "btn btn-secondary";
+      cancel.textContent = t("paymentCancelAdd");
+      cancel.addEventListener("click", () => card.remove());
+      const status = document.createElement("span");
+      status.className = "payment-row-status";
+      status.dataset.role = "status";
+      actions.append(save, cancel, status);
+
+      card.append(head, grid, auditGrid, actions);
+      document.getElementById("paymentsList").prepend(card);
+      card.scrollIntoView({ behavior: "smooth", block: "center" });
+      card.querySelector('[data-field="amount"]')?.focus({ preventScroll: true });
+    }
+
+    async function createInstalment(card) {
+      const get = (name) => card.querySelector(`[data-field="${name}"]`);
+      const status = card.querySelector('[data-role="status"]');
+      const buttons = card.querySelectorAll("button");
+      const amountValue = get("amount")?.value;
+      const payer = get("payer")?.value?.trim() || "";
+      const source = get("correction_source")?.value || "";
+      const reason = get("correction_reason")?.value?.trim() || "";
+
+      status.className = "payment-row-status error";
+      if (amountValue === "" || Number(amountValue) < 0) { status.textContent = `${t("msgErrorPrefix")} ${t("paymentAmount")}`; return; }
+      if (!payer) { status.textContent = t("paymentPayerRequired"); return; }
+      if (!source) { status.textContent = t("paymentSourceRequired"); return; }
+      if (!reason) { status.textContent = t("paymentReasonRequired"); return; }
+
+      buttons.forEach((button) => { button.disabled = true; });
+      status.className = "payment-row-status";
+      status.textContent = t("paymentCreating");
+
+      const { data, error } = await currentDb.rpc("create_commission_instalment_secure", {
+        p_contract_id: currentContractId,
+        p_amount: Number(amountValue),
+        p_currency: get("currency")?.value?.trim().toUpperCase() || "",
+        p_due_date: get("due_date")?.value || null,
+        p_fee_side: get("fee_side")?.value || "",
+        p_payer: payer,
+        p_conditional: !!get("conditional")?.checked,
+        p_trigger_status: get("trigger_status")?.value?.trim() || null,
+        p_condition_notes: get("condition_notes")?.value?.trim() || null,
+        p_trigger_note: get("trigger_note")?.value?.trim() || null,
+        p_correction_source: source,
+        p_correction_reason: reason
+      });
+
+      if (error) {
+        console.error("Create instalment error:", error);
+        status.className = "payment-row-status error";
+        status.textContent = `${t("msgErrorPrefix")} ${error.message}`;
+        buttons.forEach((button) => { button.disabled = false; });
+        return;
+      }
+
+      const created = Array.isArray(data) ? data[0] : data;
+      if (created) currentInstalments.push(created);
+      currentInstalments.sort((a, b) => String(a.due_date || "9999").localeCompare(String(b.due_date || "9999")));
+      document.getElementById("commissionInstalments").value = currentInstalments.length;
+      renderInstalments();
+      setPaymentsStatus(t("paymentCreated"), "success");
     }
 
     async function loadInstalments() {
@@ -1588,6 +1762,8 @@
       fillForm(data);
       setStatus("");
       await loadInstalments();
+
+      document.getElementById("addPaymentBtn")?.addEventListener("click", openNewPaymentEditor);
 
       document.getElementById("contractForm").addEventListener("submit", async (e) => {
         e.preventDefault();
