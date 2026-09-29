@@ -164,6 +164,11 @@ function resolveBillingIdentity(){
   const sides=[...new Set(sourceRows.map(row=>String(row.fee_side||'').toLowerCase()).filter(Boolean))];
   if(sides.length===1&&sides[0].includes('player')&&contract.player_name)return{type:'player',name:String(contract.player_name).trim()};
   if(sides.length===1&&sides[0].includes('club')&&contract.club_name)return{type:'club',name:String(contract.club_name).trim()};
+  const hasClubSide=sides.some(side=>side.includes('club'));
+  const hasPlayerSide=sides.some(side=>side.includes('player'));
+  if(hasClubSide&&hasPlayerSide&&contract.club_name){
+    return{type:'club',name:String(contract.club_name).trim()};
+  }
   return null;
 }
 function renderBillingProfileState(messageKey){
