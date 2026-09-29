@@ -1064,6 +1064,54 @@
   line-height: 1.6;
 }
 
+.invoice-selection-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 14px 0 10px;
+  padding: 12px 14px;
+  border: 1px solid rgba(88, 166, 255, 0.22);
+  border-radius: 14px;
+  background: rgba(47, 140, 255, 0.06);
+}
+
+.invoice-selection-summary {
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 750;
+}
+
+.invoice-select-cell {
+  text-align: center;
+  width: 54px;
+}
+
+.invoice-select-checkbox {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--blue-2);
+  cursor: pointer;
+}
+
+.invoice-action-stack {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.combined-invoice-btn {
+  min-height: 34px;
+  padding: 7px 12px;
+}
+
+.combined-invoice-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
 @media (max-width: 620px) {
   .invoice-details-grid {
     grid-template-columns: 1fr;
@@ -1591,6 +1639,13 @@
     "annualCommissionInvoice": "Annual Commission Invoice",
 "invoiceForecastNote": "This is a forecast based on the recorded contract terms. Confirm the contractual invoice trigger, billing entity, taxes and payment deadline before issuing the invoice.",
 "generateInvoice": "Generate invoice",
+"selectForInvoice": "Select",
+"selectAllReady": "Select all ready",
+"clearInvoiceSelection": "Clear selection",
+"generateCombinedInvoice": "Generate combined invoice",
+"selectedPayments": "payments selected",
+"combinedInvoiceNeedTwo": "Select at least two ready payments to create a combined invoice.",
+"combinedInvoiceMismatch": "Selected payments must use the same currency and payment due date.",
 "invoiceAlreadyIssued": "Invoiced",
 "openInvoice": "Open invoice",
 "invoiceRequiresStoredPayment": "Re-analyse to generate",
@@ -1837,6 +1892,13 @@
     "annualCommissionInvoice": "Facture annuelle de commission",
 "invoiceForecastNote": "Cette prévision est basée sur les conditions contractuelles enregistrées. Confirmez le déclencheur de facturation, l’entité facturante, les taxes et la date limite de paiement avant d’émettre la facture.",
 "generateInvoice": "Générer la facture",
+"selectForInvoice": "Sélectionner",
+"selectAllReady": "Tout sélectionner",
+"clearInvoiceSelection": "Effacer la sélection",
+"generateCombinedInvoice": "Générer une facture groupée",
+"selectedPayments": "paiements sélectionnés",
+"combinedInvoiceNeedTwo": "Sélectionnez au moins deux paiements prêts pour créer une facture groupée.",
+"combinedInvoiceMismatch": "Les paiements sélectionnés doivent avoir la même devise et la même date d’échéance.",
 "invoiceAlreadyIssued": "Facturée",
 "openInvoice": "Ouvrir la facture",
 "invoiceRequiresStoredPayment": "Réanalyser pour générer",
@@ -2083,6 +2145,13 @@
     "invoiceBasisAnnual": "Derecho anual a comisión",
 "invoiceForecastNote": "Esta previsión se basa en las condiciones contractuales registradas. Confirme el desencadenante de facturación, la entidad facturante, los impuestos y la fecha límite de pago antes de emitir una factura.",
 "generateInvoice": "Generar factura",
+"selectForInvoice": "Seleccionar",
+"selectAllReady": "Seleccionar todos",
+"clearInvoiceSelection": "Borrar selección",
+"generateCombinedInvoice": "Generar factura combinada",
+"selectedPayments": "pagos seleccionados",
+"combinedInvoiceNeedTwo": "Seleccione al menos dos pagos listos para crear una factura combinada.",
+"combinedInvoiceMismatch": "Los pagos seleccionados deben tener la misma moneda y la misma fecha de vencimiento.",
 "invoiceAlreadyIssued": "Facturada",
 "openInvoice": "Abrir factura",
 "invoiceRequiresStoredPayment": "Volver a analizar para generar",
@@ -4917,7 +4986,7 @@ function formatDateValue(dateValue) {
   ).format(new Date(`${dateValue}T00:00:00`));
 }
 
-function renderInvoiceGenerationAction(group, contractId) {
+function renderInvoiceGenerationAction(group, contractId, tableId) {
   const items = Array.isArray(group?.items) ? group.items : [];
   const invoiceStatuses = items.map((item) => String(item?.invoice_status || "").toLowerCase());
   const invoiceId = items.map((item) => item?.invoice_id).find(Boolean);
@@ -4940,15 +5009,102 @@ function renderInvoiceGenerationAction(group, contractId) {
     return `<span class="trigger-badge pending">${t("invoiceTriggerPending")}</span>`;
   }
 
-  // One commission obligation must always create one invoice. This prevents
-  // club-side and player-side fees with the same payer/date being combined.
+  // Each stored obligation may still be invoiced individually. Ready stored
+  // obligations can also be selected and passed together to the invoice page.
   const storedId = items.length === 1 ? items[0]?.id : null;
   if (!storedId) {
     return `<span class="trigger-badge pending">${t("invoiceRequiresStoredPayment")}</span>`;
   }
 
   const href = `/dealtrack-pro/invoice.html?contract_id=${encodeURIComponent(contractId || "")}&instalments=${encodeURIComponent(storedId)}`;
-  return `<a class="trigger-btn confirm" href="${href}">${t("generateInvoice")}</a>`;
+  const safeTableId = String(tableId || "").replace(/[^a-zA-Z0-9_-]/g, "");
+  const safeStoredId = String(storedId).replace(/[^a-zA-Z0-9-]/g, "");
+  const safeCurrency = String(group?.currency || "").replace(/[^a-zA-Z]/g, "").toUpperCase();
+  const safeDueDate = String(group?.dueDate || "").replace(/[^0-9-]/g, "");
+  const safeAmount = Number(group?.amount || 0);
+
+  return `
+    <div class="invoice-action-stack">
+      <label class="invoice-select-cell" title="${t("selectForInvoice")}">
+        <input
+          type="checkbox"
+          class="invoice-select-checkbox"
+          data-invoice-table="${safeTableId}"
+          data-instalment-id="${safeStoredId}"
+          data-currency="${safeCurrency}"
+          data-due-date="${safeDueDate}"
+          data-amount="${safeAmount}"
+          aria-label="${t("selectForInvoice")}"
+          onchange="updateInvoiceSelection('${safeTableId}')"
+        >
+      </label>
+      <a class="trigger-btn confirm" href="${href}">${t("generateInvoice")}</a>
+    </div>`;
+}
+
+function getSelectedInvoicePayments(tableId) {
+  return [...document.querySelectorAll(
+    `.invoice-select-checkbox[data-invoice-table="${tableId}"]:checked`
+  )].map((checkbox) => ({
+    id: checkbox.dataset.instalmentId || "",
+    currency: checkbox.dataset.currency || "",
+    dueDate: checkbox.dataset.dueDate || "",
+    amount: toNumber(checkbox.dataset.amount) || 0
+  })).filter((item) => item.id);
+}
+
+function updateInvoiceSelection(tableId) {
+  const selected = getSelectedInvoicePayments(tableId);
+  const button = document.getElementById(`${tableId}-combined-button`);
+  const summary = document.getElementById(`${tableId}-selection-summary`);
+  const currencies = [...new Set(selected.map((item) => item.currency).filter(Boolean))];
+  const dueDates = [...new Set(selected.map((item) => item.dueDate).filter(Boolean))];
+  const compatible = selected.length >= 2 && currencies.length === 1 && dueDates.length === 1;
+  const total = selected.reduce((sum, item) => sum + item.amount, 0);
+
+  if (summary) {
+    summary.textContent = selected.length
+      ? `${selected.length} ${t("selectedPayments")} — ${formatMoneyValue(total, currencies[0] || "")}`
+      : `0 ${t("selectedPayments")}`;
+  }
+
+  if (button) {
+    button.disabled = !compatible;
+    button.title = selected.length < 2
+      ? t("combinedInvoiceNeedTwo")
+      : compatible
+        ? t("generateCombinedInvoice")
+        : t("combinedInvoiceMismatch");
+  }
+}
+
+function clearInvoiceSelection(tableId) {
+  document.querySelectorAll(
+    `.invoice-select-checkbox[data-invoice-table="${tableId}"]`
+  ).forEach((checkbox) => {
+    checkbox.checked = false;
+  });
+  updateInvoiceSelection(tableId);
+}
+
+function generateCombinedInvoice(tableId, contractId) {
+  const selected = getSelectedInvoicePayments(tableId);
+  const currencies = [...new Set(selected.map((item) => item.currency).filter(Boolean))];
+  const dueDates = [...new Set(selected.map((item) => item.dueDate).filter(Boolean))];
+
+  if (selected.length < 2) {
+    window.alert(t("combinedInvoiceNeedTwo"));
+    return;
+  }
+
+  if (currencies.length !== 1 || dueDates.length !== 1) {
+    window.alert(t("combinedInvoiceMismatch"));
+    return;
+  }
+
+  const instalmentIds = selected.map((item) => item.id).join(",");
+  const href = `/dealtrack-pro/invoice.html?contract_id=${encodeURIComponent(contractId || "")}&instalments=${encodeURIComponent(instalmentIds)}`;
+  window.location.assign(href);
 }
 
 function renderInvoiceForecast(data) {
@@ -5030,7 +5186,7 @@ function renderInvoiceForecast(data) {
           <td><span class="amount-known">${formatMoneyValue(group.amount, group.currency)}</span></td>
           <td class="payer-cell">${safeValue(payers)}</td>
           <td>${group.items.some((item) => item.conditional && normaliseTriggerStatus(item) === "pending") ? t("triggerConditionalPending") : group.items.some((item) => item.conditional && normaliseTriggerStatus(item) === "met") ? t("triggerConditionalMet") : t("invoiceStatusForecast")}</td>
-          <td>${renderInvoiceGenerationAction(group, data.id)}</td>
+          <td>${renderInvoiceGenerationAction(group, data.id, tableId)}</td>
         </tr>`;
     }).join("");
 
@@ -5041,6 +5197,20 @@ function renderInvoiceForecast(data) {
         <div class="schedule-toolbar">
           <div class="schedule-count">${groups.length} ${t("sectionInvoiceForecast")}</div>
           ${groups.length > visibleLimit ? `<button type="button" class="schedule-toggle" onclick="toggleScheduleRows('${tableId}', this)">${t("showAllPayments")}</button>` : ""}
+        </div>
+        <div class="invoice-selection-bar">
+          <div id="${tableId}-selection-summary" class="invoice-selection-summary">0 ${t("selectedPayments")}</div>
+          <div class="invoice-action-stack">
+            <button type="button" class="trigger-btn" onclick="clearInvoiceSelection('${tableId}')">${t("clearInvoiceSelection")}</button>
+            <button
+              type="button"
+              id="${tableId}-combined-button"
+              class="trigger-btn confirm combined-invoice-btn"
+              onclick="generateCombinedInvoice('${tableId}', '${String(data.id || "").replace(/[^a-zA-Z0-9-]/g, "")}')"
+              title="${t("combinedInvoiceNeedTwo")}"
+              disabled
+            >${t("generateCombinedInvoice")}</button>
+          </div>
         </div>
         <div class="audit-schedule">
           <table id="${tableId}" class="compact-forecast-table">
