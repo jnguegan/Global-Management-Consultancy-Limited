@@ -1085,6 +1085,10 @@
             📊 Download Excel Report
           </button>
 
+          <button id="downloadPlayerPortfolioBtn" type="button" class="btn btn-gold" data-i18n="downloadPlayerPortfolio">
+            👥 Download Player Portfolio
+          </button>
+
           <button id="downloadReportBtn" type="button" class="btn btn-primary" data-i18n="downloadReport">
             ⬇ Download Management Report
           </button>
@@ -1456,6 +1460,7 @@
       "planUnavailable": "Plan information unavailable",
       "downloadReport": "⬇ Download Management Report",
       "downloadExcel": "📊 Download Excel Report",
+      "downloadPlayerPortfolio": "👥 Download Player Portfolio",
       "healthKicker": "Portfolio Health",
       "healthTitle": "Agency portfolio status",
       "healthSubtitle": "A concise operational view of contracts, renewals and recorded invoice risks.",
@@ -1625,6 +1630,7 @@
       "planUnavailable": "Informations du forfait indisponibles",
       "downloadReport": "⬇ Télécharger le rapport de gestion",
       "downloadExcel": "📊 Télécharger le rapport Excel",
+      "downloadPlayerPortfolio": "👥 Télécharger le portefeuille joueurs",
       "healthKicker": "Santé du portefeuille",
       "healthTitle": "Situation du portefeuille de l’agence",
       "healthSubtitle": "Vue opérationnelle synthétique des contrats, renouvellements et risques de facturation enregistrés.",
@@ -1792,6 +1798,7 @@
       "planUnavailable": "Información del plan no disponible",
       "downloadReport": "⬇ Descargar informe de gestión",
       "downloadExcel": "📊 Descargar informe Excel",
+      "downloadPlayerPortfolio": "👥 Descargar cartera de jugadores",
       "healthKicker": "Salud de la cartera",
       "healthTitle": "Situación de la cartera de la agencia",
       "healthSubtitle": "Vista operativa resumida de contratos, renovaciones y riesgos de facturación registrados.",
@@ -3398,6 +3405,351 @@
         noInvoices: t("reportNoInvoices"),
         noRenewals: t("reportNoRenewals")
       };
+    }
+
+    function splitPlayerName(fullName) {
+      const parts = String(fullName || "").trim().split(/\s+/).filter(Boolean);
+      if (!parts.length) return { firstName: "—", lastName: "—" };
+      if (parts.length === 1) return { firstName: "—", lastName: parts[0] };
+      return {
+        firstName: parts[0],
+        lastName: parts.slice(1).join(" ")
+      };
+    }
+
+    function footballSeasonKey(dateValue) {
+      if (!dateValue) return null;
+      const date = new Date(`${String(dateValue).slice(0, 10)}T00:00:00`);
+      if (Number.isNaN(date.getTime())) return null;
+      const year = date.getFullYear();
+      const startYear = date.getMonth() >= 6 ? year : year - 1;
+      return `${startYear}/${String(startYear + 1).slice(-2)}`;
+    }
+
+    function reportMarketValue(contract) {
+      const raw =
+        contract.market_value ??
+        contract.player_market_value ??
+        contract.transfermarkt_value ??
+        contract.estimated_market_value;
+
+      if (raw === null || raw === undefined || raw === "") return "—";
+
+      if (typeof raw === "string" && /[a-z€£$]/i.test(raw)) {
+        return raw.trim();
+      }
+
+      const amount = toNumber(raw);
+      if (amount === null) return String(raw);
+      const currency = normaliseCurrencyCode(
+        contract.market_value_currency || contract.player_market_value_currency || "EUR"
+      );
+      const symbol = { EUR: "€", GBP: "£", USD: "$", CHF: "CHF ", AED: "AED " }[currency] || `${currency} `;
+      if (Math.abs(amount) >= 1000000) {
+        return `${symbol}${(amount / 1000000).toLocaleString("en-GB", { maximumFractionDigits: 1 })}m`;
+      }
+      if (Math.abs(amount) >= 1000) {
+        return `${symbol}${Math.round(amount / 1000).toLocaleString("en-GB")}k`;
+      }
+      return `${symbol}${amount.toLocaleString("en-GB", { maximumFractionDigits: 0 })}`;
+    }
+
+    function reportMarketValueSort(contract) {
+      const raw =
+        contract.market_value ??
+        contract.player_market_value ??
+        contract.transfermarkt_value ??
+        contract.estimated_market_value;
+      if (raw === null || raw === undefined || raw === "") return 0;
+      if (typeof raw === "number") return Number.isFinite(raw) ? raw : 0;
+      const text = String(raw).trim().toLowerCase().replace(",", ".");
+      const number = toNumber(text);
+      if (number === null) return 0;
+      if (/\b(m|million|millions)\b/.test(text) || /m[€£$]/.test(text)) return number * 1000000;
+      if (/\b(k|thousand)\b/.test(text) || /k[€£$]/.test(text)) return number * 1000;
+      return number;
+    }
+
+    function contractAgentAllocations(contract) {
+      const candidates = [
+        contract.agent_allocations,
+        contract.agent_remuneration,
+        contract.agent_shares,
+        contract.agents
+      ];
+
+      let allocations = [];
+      for (const candidate of candidates) {
+        if (!candidate) continue;
+        if (Array.isArray(candidate)) {
+          allocations = candidate;
+          break;
+        }
+        if (typeof candidate === "string") {
+          try {
+            const parsed = JSON.parse(candidate);
+            if (Array.isArray(parsed)) {
+              allocations = parsed;
+              break;
+            }
+          } catch {
+            // Continue to the recorded primary agent below.
+          }
+        }
+      }
+
+      const normalised = allocations.map((item) => ({
+        name: String(item?.name || item?.agent_name || item?.full_name || "").trim(),
+        percentage: toNumber(item?.percentage ?? item?.share ?? item?.agent_percentage)
+      })).filter((item) => item.name);
+
+      const primaryName = String(contract.agent_name || "").trim();
+      if (primaryName && !normalised.some((item) => item.name.toLowerCase() === primaryName.toLowerCase())) {
+        normalised.unshift({
+          name: primaryName,
+          percentage: toNumber(
+            contract.agent_percentage ??
+            contract.agent_share ??
+            contract.agent_commission_percentage
+          )
+        });
+      }
+
+      return normalised.slice(0, 4);
+    }
+
+    function agentInitials(name) {
+      return String(name || "")
+        .trim()
+        .split(/\s+/)
+        .filter(Boolean)
+        .slice(0, 3)
+        .map((part) => part.charAt(0).toUpperCase())
+        .join("") || "—";
+    }
+
+    function compactSeasonAmounts(amounts) {
+      if (!amounts || !amounts.size) return "—";
+      const symbols = { EUR: "€", GBP: "£", USD: "$", CHF: "CHF ", AED: "AED " };
+      return [...amounts.entries()]
+        .sort(([a], [b]) => a.localeCompare(b))
+        .map(([currency, amount]) => {
+          const prefix = symbols[currency] || `${currency} `;
+          return `${prefix}${Number(amount || 0).toLocaleString("en-GB", { maximumFractionDigits: 0 })}`;
+        })
+        .join("\n");
+    }
+
+    function buildPlayerPortfolioRows(seasons) {
+      const grouped = new Map();
+
+      dashboardRows.forEach((row) => {
+        const contract = row.contract || {};
+        const playerName = String(contract.player_name || "").trim();
+        if (!playerName) return;
+        const key = playerName.toLocaleLowerCase();
+
+        if (!grouped.has(key)) {
+          grouped.set(key, {
+            playerName,
+            club: contract.club_name || "—",
+            marketValue: reportMarketValue(contract),
+            marketValueSort: reportMarketValueSort(contract),
+            seasonAmounts: new Map(seasons.map((season) => [season, new Map()])),
+            agents: [],
+            contractIds: new Set()
+          });
+        }
+
+        const player = grouped.get(key);
+        player.contractIds.add(contract.id);
+        if ((!player.club || player.club === "—") && contract.club_name) player.club = contract.club_name;
+        if (player.marketValue === "—") {
+          player.marketValue = reportMarketValue(contract);
+          player.marketValueSort = reportMarketValueSort(contract);
+        }
+
+        contractAgentAllocations(contract).forEach((agent) => {
+          const existing = player.agents.find(
+            (item) => item.name.toLowerCase() === agent.name.toLowerCase()
+          );
+          if (!existing && player.agents.length < 4) player.agents.push(agent);
+          else if (existing && existing.percentage === null && agent.percentage !== null) {
+            existing.percentage = agent.percentage;
+          }
+        });
+      });
+
+      commissionInstalments.forEach((item) => {
+        const player = [...grouped.values()].find((entry) => entry.contractIds.has(item.contract_id));
+        if (!player) return;
+        const season = footballSeasonKey(item.due_date || item.payment_due_date || item.expected_date);
+        if (!season || !player.seasonAmounts.has(season)) return;
+        const amount = toNumber(item.amount);
+        if (amount === null) return;
+        const contract = allContracts.find((entry) => entry.id === item.contract_id) || {};
+        const currency = normaliseCurrencyCode(item.currency || contract.commission_currency || "EUR");
+        const totals = player.seasonAmounts.get(season);
+        totals.set(currency, (totals.get(currency) || 0) + amount);
+      });
+
+      return [...grouped.values()].sort((a, b) => {
+        return b.marketValueSort - a.marketValueSort || a.playerName.localeCompare(b.playerName);
+      });
+    }
+
+    function downloadPlayerPortfolioReport() {
+      try {
+        if (!window.jspdf?.jsPDF) throw new Error("jsPDF is unavailable");
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4" });
+        const startYear = new Date().getFullYear();
+        const seasons = Array.from({ length: 5 }, (_, index) => {
+          const year = startYear + index;
+          return `${year}/${String(year + 1).slice(-2)}`;
+        });
+        const players = buildPlayerPortfolioRows(seasons);
+        const agencyName = currentAgency?.legal_name || currentAgency?.name || "DealTrack Pro Agency";
+        const reportLocale = currentLang === "fr" ? "fr-FR" : currentLang === "es" ? "es-ES" : "en-GB";
+        const generated = new Intl.DateTimeFormat(reportLocale, {
+          day: "2-digit", month: "long", year: "numeric"
+        }).format(new Date());
+
+        const labels = {
+          en: {
+            title: `${agencyName} — Player Portfolio`, first: "First name", last: "Surname",
+            club: "Club", value: "Market value", commission: "Gross commission by season",
+            agent: "Agent remuneration", initials: "Initials", source: "Source: DealTrack Pro contract and commission records",
+            missing: "— = not recorded. Seasonal amounts are gross contractual commission before partner or agent deductions.", total: "TOTAL"
+          },
+          fr: {
+            title: `${agencyName} — Clients joueurs`, first: "Prénom", last: "Nom",
+            club: "Club", value: "Valeur", commission: "Commission globale par saison",
+            agent: "Rémunération agent", initials: "Initiales", source: "Source : contrats et commissions DealTrack Pro",
+            missing: "— = non enregistré. Les montants saisonniers sont les commissions contractuelles brutes avant déduction des partenaires ou agents.", total: "TOTAL"
+          },
+          es: {
+            title: `${agencyName} — Cartera de jugadores`, first: "Nombre", last: "Apellidos",
+            club: "Club", value: "Valor", commission: "Comisión bruta por temporada",
+            agent: "Remuneración de agentes", initials: "Iniciales", source: "Fuente: contratos y comisiones de DealTrack Pro",
+            missing: "— = no registrado. Los importes por temporada son comisiones contractuales brutas antes de deducciones.", total: "TOTAL"
+          }
+        }[currentLang] || null;
+        const text = labels || {
+          title: `${agencyName} — Player Portfolio`, first: "First name", last: "Surname",
+          club: "Club", value: "Market value", commission: "Gross commission by season",
+          agent: "Agent remuneration", initials: "Initials", source: "Source: DealTrack Pro contract and commission records",
+          missing: "— = not recorded. Seasonal amounts are gross contractual commission before partner or agent deductions.", total: "TOTAL"
+        };
+
+        const head = [
+          [
+            { content: "#", rowSpan: 3 },
+            { content: text.first, rowSpan: 3 },
+            { content: text.last, rowSpan: 3 },
+            { content: text.club, rowSpan: 3 },
+            { content: text.value, rowSpan: 3 },
+            { content: text.commission, colSpan: 5 },
+            { content: text.agent, colSpan: 8 }
+          ],
+          [
+            ...seasons.map((season) => ({ content: season, rowSpan: 2 })),
+            ...Array.from({ length: 4 }, (_, index) => ({ content: `Agent ${index + 1}`, colSpan: 2 }))
+          ],
+          Array.from({ length: 4 }, () => [text.initials, "%"]).flat()
+        ];
+
+        const body = players.map((player, index) => {
+          const name = splitPlayerName(player.playerName);
+          const agents = Array.from({ length: 4 }, (_, agentIndex) => player.agents[agentIndex] || null);
+          return [
+            index + 1,
+            name.firstName,
+            name.lastName,
+            player.club,
+            player.marketValue,
+            ...seasons.map((season) => compactSeasonAmounts(player.seasonAmounts.get(season))),
+            ...agents.flatMap((agent) => [
+              agent ? agentInitials(agent.name) : "—",
+              agent?.percentage !== null && agent?.percentage !== undefined ? `${agent.percentage}%` : "—"
+            ])
+          ];
+        });
+
+        const seasonTotals = new Map(seasons.map((season) => [season, new Map()]));
+        players.forEach((player) => {
+          seasons.forEach((season) => {
+            player.seasonAmounts.get(season)?.forEach((amount, currency) => {
+              const totals = seasonTotals.get(season);
+              totals.set(currency, (totals.get(currency) || 0) + amount);
+            });
+          });
+        });
+        body.push([
+          "", "", text.total, "", "",
+          ...seasons.map((season) => compactSeasonAmounts(seasonTotals.get(season))),
+          ...Array(8).fill("")
+        ]);
+
+        doc.autoTable({
+          head,
+          body,
+          startY: 30,
+          margin: { top: 30, right: 7, bottom: 15, left: 7 },
+          theme: "grid",
+          styles: {
+            font: "helvetica", fontSize: 5.4, cellPadding: 1.25,
+            textColor: [20, 30, 45], lineColor: [177, 195, 219], lineWidth: 0.18,
+            valign: "middle", overflow: "linebreak"
+          },
+          headStyles: {
+            fillColor: [8, 31, 64], textColor: [255, 255, 255],
+            fontStyle: "bold", halign: "center", lineColor: [102, 130, 168]
+          },
+          alternateRowStyles: { fillColor: [244, 247, 251] },
+          columnStyles: {
+            0: { cellWidth: 6, halign: "center" },
+            1: { cellWidth: 18 }, 2: { cellWidth: 22 }, 3: { cellWidth: 31 },
+            4: { cellWidth: 17, halign: "right" },
+            5: { cellWidth: 19, halign: "right", fillColor: [235, 243, 253] },
+            6: { cellWidth: 19, halign: "right", fillColor: [235, 243, 253] },
+            7: { cellWidth: 19, halign: "right", fillColor: [235, 243, 253] },
+            8: { cellWidth: 19, halign: "right", fillColor: [235, 243, 253] },
+            9: { cellWidth: 19, halign: "right", fillColor: [235, 243, 253] },
+            10: { cellWidth: 10, halign: "center" }, 11: { cellWidth: 10, halign: "center" },
+            12: { cellWidth: 10, halign: "center" }, 13: { cellWidth: 10, halign: "center" },
+            14: { cellWidth: 10, halign: "center" }, 15: { cellWidth: 10, halign: "center" },
+            16: { cellWidth: 10, halign: "center" }, 17: { cellWidth: 10, halign: "center" }
+          },
+          didParseCell(data) {
+            if (data.section === "body" && data.row.index === body.length - 1) {
+              data.cell.styles.fillColor = [8, 31, 64];
+              data.cell.styles.textColor = [255, 255, 255];
+              data.cell.styles.fontStyle = "bold";
+            }
+          },
+          didDrawPage() {
+            const page = doc.internal.getCurrentPageInfo().pageNumber;
+            doc.setTextColor(12, 34, 68);
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(15);
+            doc.text(text.title, 8, 12);
+            doc.setFont("helvetica", "normal");
+            doc.setFontSize(7.5);
+            doc.setTextColor(90, 97, 108);
+            doc.text(`${text.source} · ${players.length} · ${generated}`, 8, 19);
+            doc.setFontSize(6.5);
+            doc.text(text.missing, 8, 24);
+            doc.text(`${page}`, 289, 203, { align: "right" });
+          }
+        });
+
+        const isoDate = new Date().toISOString().slice(0, 10);
+        doc.save(`DealTrack-Pro-Player-Portfolio-${isoDate}.pdf`);
+      } catch (error) {
+        console.error("Player portfolio report generation error:", error);
+        alert(t("reportUnavailable"));
+      }
     }
 
     function downloadExcelReport() {
@@ -5082,6 +5434,11 @@
       document.getElementById("downloadExcelBtn").addEventListener(
         "click",
         downloadExcelReport
+      );
+
+      document.getElementById("downloadPlayerPortfolioBtn").addEventListener(
+        "click",
+        downloadPlayerPortfolioReport
       );
 
       document.getElementById("downloadReportBtn").addEventListener(
