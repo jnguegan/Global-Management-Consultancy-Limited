@@ -4306,7 +4306,37 @@
               : sum;
           }, 0))
         })).filter((series) => series.values.some((value) => value > 0));
-        const cashTop = 122;
+        // Place the cash-flow section after the final revenue bar. When the
+        // complete section will not fit above the report footer, move it to a
+        // fresh landscape page instead of squeezing it over existing content.
+        const cashFlowSectionHeight = 20 + Math.max(cashFlowSeries.length, 1) * 17;
+        const printablePageBottom = 194;
+        let cashTop = Math.max(122, chartY + 5);
+        if (cashTop + cashFlowSectionHeight > printablePageBottom) {
+          doc.addPage("a4", "landscape");
+          resetPdfTypography();
+          doc.setFillColor(3, 14, 35);
+          doc.rect(0, 0, 297, 25, "F");
+          doc.setTextColor(240, 200, 90);
+          doc.setFont("helvetica", "bold");
+          doc.setFontSize(10);
+          doc.text("DEALTRACK PRO", 15, 10);
+          doc.setTextColor(255, 255, 255);
+          doc.setFontSize(17);
+          doc.text(
+            currentLang === "fr"
+              ? "Planification des flux de trésorerie 2026"
+              : currentLang === "es"
+                ? "Planificación de flujo de caja 2026"
+                : "2026 Cash-Flow Planning",
+            15,
+            19
+          );
+          doc.setFont("helvetica", "normal");
+          doc.setFontSize(8.5);
+          doc.text(`${labels.period}: 01 January–31 December ${reportYear}`, 190, 17);
+          cashTop = 35;
+        }
         doc.setTextColor(20, 28, 45);
         doc.setFont("helvetica", "bold");
         doc.setFontSize(11);
