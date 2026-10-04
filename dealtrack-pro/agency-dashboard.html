@@ -3602,7 +3602,7 @@
 
       // Partner remuneration recorded in Supabase belongs to the precise
       // player-club transaction. Merge those allocations into the report's
-      // remuneration columns. GMC is reserved for Agent 2, as requested.
+      // remuneration columns. GMC is reserved exclusively for Agent 4.
       partnerPayables.forEach((payable) => {
         const player = [...grouped.values()].find(
           (entry) => entry.contractIds.has(payable.contract_id)
@@ -3625,15 +3625,16 @@
 
         if (existingIndex >= 0) {
           player.agents[existingIndex].percentage = percentage;
-          if (!isGmc || existingIndex === 1) return;
+          if (!isGmc || existingIndex === 3) return;
           player.agents.splice(existingIndex, 1);
         }
 
         const allocation = { name, percentage };
         if (isGmc) {
-          if (player.agents.length === 0) player.agents.push(null);
-          if (player.agents[1]) player.agents.splice(1, 0, allocation);
-          else player.agents[1] = allocation;
+          // Agents 1–3 remain available for transaction-specific partners
+          // such as DIMA Sports. Agent 4 belongs to GMC only.
+          while (player.agents.length < 3) player.agents.push(null);
+          player.agents[3] = allocation;
         } else {
           const emptyIndex = player.agents.findIndex((agent) => !agent);
           if (emptyIndex >= 0) player.agents[emptyIndex] = allocation;
@@ -3669,26 +3670,30 @@
             title: `${agencyName} — Player Portfolio`, first: "First name", last: "Surname",
             club: "Club", value: "Market value", commission: "Gross commission by season",
             agent: "Agent remuneration", initials: "Initials", source: "Source: DealTrack Pro contract and commission records",
-            missing: "— = not recorded. Seasonal amounts are gross contractual commission before partner or agent deductions.", total: "TOTAL"
+            missing: "— = not recorded. Seasonal amounts are gross contractual commission before partner or agent deductions.", total: "TOTAL",
+            gmcTotal: "GMC 1% TOTAL"
           },
           fr: {
             title: `${agencyName} — Clients joueurs`, first: "Prénom", last: "Nom",
             club: "Club", value: "Valeur", commission: "Commission globale par saison",
             agent: "Rémunération agent", initials: "Initiales", source: "Source : contrats et commissions DealTrack Pro",
-            missing: "— = non enregistré. Les montants saisonniers sont les commissions contractuelles brutes avant déduction des partenaires ou agents.", total: "TOTAL"
+            missing: "— = non enregistré. Les montants saisonniers sont les commissions contractuelles brutes avant déduction des partenaires ou agents.", total: "TOTAL",
+            gmcTotal: "TOTAL GMC 1 %"
           },
           es: {
             title: `${agencyName} — Cartera de jugadores`, first: "Nombre", last: "Apellidos",
             club: "Club", value: "Valor", commission: "Comisión bruta por temporada",
             agent: "Remuneración de agentes", initials: "Iniciales", source: "Fuente: contratos y comisiones de DealTrack Pro",
-            missing: "— = no registrado. Los importes por temporada son comisiones contractuales brutas antes de deducciones.", total: "TOTAL"
+            missing: "— = no registrado. Los importes por temporada son comisiones contractuales brutas antes de deducciones.", total: "TOTAL",
+            gmcTotal: "TOTAL GMC 1 %"
           }
         }[currentLang] || null;
         const text = labels || {
           title: `${agencyName} — Player Portfolio`, first: "First name", last: "Surname",
           club: "Club", value: "Market value", commission: "Gross commission by season",
           agent: "Agent remuneration", initials: "Initials", source: "Source: DealTrack Pro contract and commission records",
-          missing: "— = not recorded. Seasonal amounts are gross contractual commission before partner or agent deductions.", total: "TOTAL"
+          missing: "— = not recorded. Seasonal amounts are gross contractual commission before partner or agent deductions.", total: "TOTAL",
+          gmcTotal: "GMC 1% TOTAL"
         };
 
         const head = [
@@ -3734,10 +3739,38 @@
             });
           });
         });
+        const portfolioTotalRowIndex = body.length;
         body.push([
           "", "", text.total, "", "",
           ...seasons.map((season) => compactSeasonAmounts(seasonTotals.get(season))),
           ...Array(8).fill("")
+        ]);
+
+        const gmcTotals = new Map();
+        partnerPayables.forEach((payable) => {
+          const partnerName = String(
+            payable.partner_name ||
+            payable.partner_legal_name ||
+            payable.organisation_name ||
+            ""
+          ).trim().toLowerCase();
+          if (
+            partnerName !== "global management consultants limited" ||
+            String(payable.status || "").toLowerCase() === "cancelled"
+          ) return;
+          const amount = toNumber(payable.partner_amount);
+          if (amount === null) return;
+          const currency = normaliseCurrencyCode(payable.currency || "GBP");
+          gmcTotals.set(currency, (gmcTotals.get(currency) || 0) + amount);
+        });
+        const gmcTotalRowIndex = body.length;
+        body.push([
+          ...Array(10).fill(""),
+          {
+            content: `${text.gmcTotal}: ${compactSeasonAmounts(gmcTotals)}`,
+            colSpan: 8,
+            styles: { halign: "right" }
+          }
         ]);
 
         doc.autoTable({
@@ -3771,9 +3804,14 @@
             16: { cellWidth: 10, halign: "center" }, 17: { cellWidth: 10, halign: "center" }
           },
           didParseCell(data) {
-            if (data.section === "body" && data.row.index === body.length - 1) {
+            if (data.section === "body" && data.row.index === portfolioTotalRowIndex) {
               data.cell.styles.fillColor = [8, 31, 64];
               data.cell.styles.textColor = [255, 255, 255];
+              data.cell.styles.fontStyle = "bold";
+            }
+            if (data.section === "body" && data.row.index === gmcTotalRowIndex) {
+              data.cell.styles.fillColor = [240, 200, 90];
+              data.cell.styles.textColor = [8, 31, 64];
               data.cell.styles.fontStyle = "bold";
             }
           },
