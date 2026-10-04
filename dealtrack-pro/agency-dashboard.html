@@ -3547,12 +3547,19 @@
         const contract = row.contract || {};
         const playerName = String(contract.player_name || "").trim();
         if (!playerName) return;
-        const key = playerName.toLocaleLowerCase();
+        const clubName = String(contract.club_name || "—").trim() || "—";
+        // Agent/partner remuneration belongs to the individual transaction.
+        // Use the contract ID as the accounting key so that every player-club
+        // transaction keeps its own seasonal income and remuneration split.
+        // The fallback preserves sensible grouping for any legacy row without ID.
+        const key = contract.id
+          ? `contract::${contract.id}`
+          : `${playerName.toLocaleLowerCase()}::${clubName.toLocaleLowerCase()}`;
 
         if (!grouped.has(key)) {
           grouped.set(key, {
             playerName,
-            club: contract.club_name || "—",
+            club: clubName,
             marketValue: reportMarketValue(contract),
             marketValueSort: reportMarketValueSort(contract),
             seasonAmounts: new Map(seasons.map((season) => [season, new Map()])),
@@ -3591,6 +3598,48 @@
         const currency = normaliseCurrencyCode(item.currency || contract.commission_currency || "EUR");
         const totals = player.seasonAmounts.get(season);
         totals.set(currency, (totals.get(currency) || 0) + amount);
+      });
+
+      // Partner remuneration recorded in Supabase belongs to the precise
+      // player-club transaction. Merge those allocations into the report's
+      // remuneration columns. GMC is reserved for Agent 2, as requested.
+      partnerPayables.forEach((payable) => {
+        const player = [...grouped.values()].find(
+          (entry) => entry.contractIds.has(payable.contract_id)
+        );
+        if (!player) return;
+
+        const name = String(
+          payable.partner_name ||
+          payable.partner_legal_name ||
+          payable.organisation_name ||
+          ""
+        ).trim();
+        const percentage = toNumber(payable.partner_percentage);
+        if (!name || percentage === null) return;
+
+        const isGmc = name.toLowerCase() === "global management consultants limited";
+        const existingIndex = player.agents.findIndex(
+          (agent) => agent && agent.name.toLowerCase() === name.toLowerCase()
+        );
+
+        if (existingIndex >= 0) {
+          player.agents[existingIndex].percentage = percentage;
+          if (!isGmc || existingIndex === 1) return;
+          player.agents.splice(existingIndex, 1);
+        }
+
+        const allocation = { name, percentage };
+        if (isGmc) {
+          if (player.agents.length === 0) player.agents.push(null);
+          if (player.agents[1]) player.agents.splice(1, 0, allocation);
+          else player.agents[1] = allocation;
+        } else {
+          const emptyIndex = player.agents.findIndex((agent) => !agent);
+          if (emptyIndex >= 0) player.agents[emptyIndex] = allocation;
+          else player.agents.push(allocation);
+        }
+        player.agents = player.agents.slice(0, 4);
       });
 
       return [...grouped.values()].sort((a, b) => {
