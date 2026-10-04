@@ -1602,6 +1602,7 @@
       "currencyGBP": "GBP",
       "currencyUSD": "USD",
       "currencyCHF": "CHF",
+      "currencyCZK": "CZK",
       "currencyAED": "AED",
       "missingFinancialData": "Missing financial data",
       "missingFinancialDataText": "{count} contract(s) cannot yet be fully calculated.",
@@ -1770,6 +1771,7 @@
       "currencyGBP": "GBP",
       "currencyUSD": "USD",
       "currencyCHF": "CHF",
+      "currencyCZK": "CZK",
       "currencyAED": "AED",
       "missingFinancialData": "Données financières manquantes",
       "missingFinancialDataText": "{count} contrat(s) ne peuvent pas encore être entièrement calculés.",
@@ -1940,6 +1942,7 @@
       "currencyGBP": "GBP",
       "currencyUSD": "USD",
       "currencyCHF": "CHF",
+      "currencyCZK": "CZK",
       "currencyAED": "AED",
       "missingFinancialData": "Faltan datos financieros",
       "missingFinancialDataText": "{count} contrato(s) todavía no pueden calcularse completamente.",
@@ -2280,7 +2283,7 @@
       };
     }
 
-    const DASHBOARD_CURRENCIES = ["EUR", "GBP", "USD", "CHF", "AED"];
+    const DASHBOARD_CURRENCIES = ["EUR", "GBP", "USD", "CHF", "CZK", "AED"];
 
     function normaliseCurrencyCode(value) {
       const code = String(value || "").trim().toUpperCase();
@@ -2300,6 +2303,8 @@
         "US DOLLARS": "USD",
         "SWISS FRANC": "CHF",
         "SWISS FRANCS": "CHF",
+        "CZECH KORUNA": "CZK",
+        KORUNA: "CZK",
         DIRHAM: "AED",
         DIRHAMS: "AED",
         "UAE DIRHAM": "AED",
