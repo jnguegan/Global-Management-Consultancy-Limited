@@ -2562,13 +2562,15 @@ function formatMoneyValue(
     es: "es-ES"
   };
 
+  const currencyCode = String(currency || "GBP").trim().toUpperCase();
+
   try {
     return new Intl.NumberFormat(
       localeMap[currentLang] || "en-GB",
       {
         style: "currency",
-        currency: currency || "GBP",
-        maximumFractionDigits: 0
+        currency: currencyCode,
+        maximumFractionDigits: currencyCode === "CZK" ? 2 : 0
       }
     ).format(numericAmount);
   } catch {
@@ -3230,8 +3232,9 @@ function extractContractualAmountFromText(item) {
 
   // Prefer amounts explicitly attached to amount / fee / payment wording.
   const contextualPatterns = [
-    /(?:amount|fee|payment|instalment|installment|commission)[^€£$\d]{0,40}(?:EUR|GBP|USD|€|£|\$)\s*([0-9][0-9.,]*)/i,
-    /(?:EUR|GBP|USD|€|£|\$)\s*([0-9][0-9.,]*)[^.]{0,50}(?:amount|fee|payment|instalment|installment|commission)/i
+    /(?:amount|fee|payment|instalment|installment|commission)[^€£$Kč\d]{0,40}(?:EUR|GBP|USD|CZK|€|£|\$|Kč)\s*([0-9][0-9.,]*)/i,
+    /(?:EUR|GBP|USD|CZK|€|£|\$|Kč)\s*([0-9][0-9.,]*)[^.]{0,50}(?:amount|fee|payment|instalment|installment|commission)/i,
+    /(?:amount|fee|payment|instalment|installment|commission)[^\d]{0,40}([0-9][0-9.,]*)\s*(?:EUR|GBP|USD|CZK|€|£|\$|Kč)/i
   ];
 
   for (const pattern of contextualPatterns) {
@@ -3244,7 +3247,9 @@ function extractContractualAmountFromText(item) {
 
   // Fallback: a currency-marked amount is still safer than treating a
   // contractually stated conditional payment as zero / not recorded.
-  const currencyMatch = text.match(/(?:EUR|GBP|USD|€|£|\$)\s*([0-9][0-9.,]*)/i);
+  const currencyMatch =
+    text.match(/(?:EUR|GBP|USD|CZK|€|£|\$|Kč)\s*([0-9][0-9.,]*)/i) ||
+    text.match(/([0-9][0-9.,]*)\s*(?:EUR|GBP|USD|CZK|€|£|\$|Kč)/i);
   if (currencyMatch) {
     const value = resolverNumber(currencyMatch[1]);
     if (value !== null && value > 0) return value;
