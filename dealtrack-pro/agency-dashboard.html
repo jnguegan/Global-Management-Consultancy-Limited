@@ -3427,11 +3427,17 @@
     }
 
     function reportMarketValue(contract) {
+      const snapshot = contract.latest_performance_snapshot || {};
       const raw =
         contract.market_value ??
         contract.player_market_value ??
         contract.transfermarkt_value ??
-        contract.estimated_market_value;
+        contract.estimated_market_value ??
+        snapshot.market_value ??
+        snapshot.player_market_value ??
+        snapshot.market_value_amount ??
+        snapshot.transfermarkt_value ??
+        snapshot.estimated_market_value;
 
       if (raw === null || raw === undefined || raw === "") return "—";
 
@@ -3442,7 +3448,11 @@
       const amount = toNumber(raw);
       if (amount === null) return String(raw);
       const currency = normaliseCurrencyCode(
-        contract.market_value_currency || contract.player_market_value_currency || "EUR"
+        contract.market_value_currency ||
+        contract.player_market_value_currency ||
+        snapshot.market_value_currency ||
+        snapshot.currency ||
+        "EUR"
       );
       const symbol = { EUR: "€", GBP: "£", USD: "$", CHF: "CHF ", AED: "AED " }[currency] || `${currency} `;
       if (Math.abs(amount) >= 1000000) {
@@ -3455,11 +3465,17 @@
     }
 
     function reportMarketValueSort(contract) {
+      const snapshot = contract.latest_performance_snapshot || {};
       const raw =
         contract.market_value ??
         contract.player_market_value ??
         contract.transfermarkt_value ??
-        contract.estimated_market_value;
+        contract.estimated_market_value ??
+        snapshot.market_value ??
+        snapshot.player_market_value ??
+        snapshot.market_value_amount ??
+        snapshot.transfermarkt_value ??
+        snapshot.estimated_market_value;
       if (raw === null || raw === undefined || raw === "") return 0;
       if (typeof raw === "number") return Number.isFinite(raw) ? raw : 0;
       const text = String(raw).trim().toLowerCase().replace(",", ".");
@@ -3536,6 +3552,21 @@
         .map(([currency, amount]) => {
           const prefix = symbols[currency] || `${currency} `;
           return `${prefix}${Number(amount || 0).toLocaleString("en-GB", { maximumFractionDigits: 0 })}`;
+        })
+        .join("\n");
+    }
+
+    function compactGmcAmounts(amounts) {
+      if (!amounts || !amounts.size) return "—";
+      const symbols = { EUR: "€", GBP: "£", USD: "$", CHF: "CHF ", AED: "AED " };
+      return [...amounts.entries()]
+        .sort(([a], [b]) => a.localeCompare(b))
+        .map(([currency, amount]) => {
+          const prefix = symbols[currency] || `${currency} `;
+          return `${prefix}${Number(amount || 0).toLocaleString("en-GB", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+          })}`;
         })
         .join("\n");
     }
@@ -3619,6 +3650,9 @@
         if (!name || percentage === null) return;
 
         const isGmc = name.toLowerCase() === "global management consultants limited";
+        // GMC is calculated uniformly from the seasonal portfolio income
+        // below, rather than from transaction-specific partner records.
+        if (isGmc) return;
         const existingIndex = player.agents.findIndex(
           (agent) => agent && agent.name.toLowerCase() === name.toLowerCase()
         );
@@ -3640,6 +3674,21 @@
           if (emptyIndex >= 0) player.agents[emptyIndex] = allocation;
           else player.agents.push(allocation);
         }
+        player.agents = player.agents.slice(0, 4);
+      });
+
+      // GMC receives 1% of every recorded contractual income amount shown in
+      // the portfolio, including future seasonal income not yet invoiced.
+      grouped.forEach((player) => {
+        const hasRecordedIncome = [...player.seasonAmounts.values()].some(
+          (currencyAmounts) => [...currencyAmounts.values()].some((amount) => Number(amount) !== 0)
+        );
+        if (!hasRecordedIncome) return;
+        while (player.agents.length < 3) player.agents.push(null);
+        player.agents[3] = {
+          name: "Global Management Consultants Limited",
+          percentage: 1
+        };
         player.agents = player.agents.slice(0, 4);
       });
 
@@ -3671,21 +3720,21 @@
             club: "Club", value: "Market value", commission: "Gross commission by season",
             agent: "Agent remuneration", initials: "Initials", source: "Source: DealTrack Pro contract and commission records",
             missing: "— = not recorded. Seasonal amounts are gross contractual commission before partner or agent deductions.", total: "TOTAL",
-            gmcTotal: "GMC 1% TOTAL"
+            gmcTotal: "GMC 1% TOTAL", bsNet: "BS GROUP NET"
           },
           fr: {
             title: `${agencyName} — Clients joueurs`, first: "Prénom", last: "Nom",
             club: "Club", value: "Valeur", commission: "Commission globale par saison",
             agent: "Rémunération agent", initials: "Initiales", source: "Source : contrats et commissions DealTrack Pro",
             missing: "— = non enregistré. Les montants saisonniers sont les commissions contractuelles brutes avant déduction des partenaires ou agents.", total: "TOTAL",
-            gmcTotal: "TOTAL GMC 1 %"
+            gmcTotal: "TOTAL GMC 1 %", bsNet: "NET BS GROUP"
           },
           es: {
             title: `${agencyName} — Cartera de jugadores`, first: "Nombre", last: "Apellidos",
             club: "Club", value: "Valor", commission: "Comisión bruta por temporada",
             agent: "Remuneración de agentes", initials: "Iniciales", source: "Fuente: contratos y comisiones de DealTrack Pro",
             missing: "— = no registrado. Los importes por temporada son comisiones contractuales brutas antes de deducciones.", total: "TOTAL",
-            gmcTotal: "TOTAL GMC 1 %"
+            gmcTotal: "TOTAL GMC 1 %", bsNet: "NETO BS GROUP"
           }
         }[currentLang] || null;
         const text = labels || {
@@ -3693,7 +3742,7 @@
           club: "Club", value: "Market value", commission: "Gross commission by season",
           agent: "Agent remuneration", initials: "Initials", source: "Source: DealTrack Pro contract and commission records",
           missing: "— = not recorded. Seasonal amounts are gross contractual commission before partner or agent deductions.", total: "TOTAL",
-          gmcTotal: "GMC 1% TOTAL"
+          gmcTotal: "GMC 1% TOTAL", bsNet: "BS GROUP NET"
         };
 
         const head = [
@@ -3746,31 +3795,42 @@
           ...Array(8).fill("")
         ]);
 
-        const gmcTotals = new Map();
-        partnerPayables.forEach((payable) => {
-          const partnerName = String(
-            payable.partner_name ||
-            payable.partner_legal_name ||
-            payable.organisation_name ||
-            ""
-          ).trim().toLowerCase();
-          if (
-            partnerName !== "global management consultants limited" ||
-            String(payable.status || "").toLowerCase() === "cancelled"
-          ) return;
-          const amount = toNumber(payable.partner_amount);
-          if (amount === null) return;
-          const currency = normaliseCurrencyCode(payable.currency || "GBP");
-          gmcTotals.set(currency, (gmcTotals.get(currency) || 0) + amount);
+        // GMC totals reconcile directly to the gross contractual income shown
+        // in each season column. Keep currencies separate and apply exactly 1%.
+        const gmcSeasonTotals = new Map(seasons.map((season) => [season, new Map()]));
+        seasons.forEach((season) => {
+          seasonTotals.get(season)?.forEach((amount, currency) => {
+            gmcSeasonTotals.get(season).set(currency, amount * 0.01);
+          });
         });
         const gmcTotalRowIndex = body.length;
         body.push([
-          ...Array(10).fill(""),
-          {
-            content: `${text.gmcTotal}: ${compactSeasonAmounts(gmcTotals)}`,
-            colSpan: 8,
-            styles: { halign: "right" }
-          }
+          "", "", text.gmcTotal, "", "",
+          ...seasons.map((season) => compactGmcAmounts(gmcSeasonTotals.get(season))),
+          ...Array(8).fill("")
+        ]);
+
+        // Net retained by BS Group after every recorded remuneration percentage
+        // on the individual player-club transaction, including GMC's 1%.
+        const bsNetSeasonTotals = new Map(seasons.map((season) => [season, new Map()]));
+        players.forEach((player) => {
+          const deductionPercentage = player.agents.reduce((total, agent) => {
+            const percentage = toNumber(agent?.percentage);
+            return total + (percentage === null ? 0 : percentage);
+          }, 0);
+          const retainedPercentage = Math.max(0, 100 - deductionPercentage) / 100;
+          seasons.forEach((season) => {
+            player.seasonAmounts.get(season)?.forEach((amount, currency) => {
+              const totals = bsNetSeasonTotals.get(season);
+              totals.set(currency, (totals.get(currency) || 0) + (amount * retainedPercentage));
+            });
+          });
+        });
+        const bsNetRowIndex = body.length;
+        body.push([
+          "", "", text.bsNet, "", "",
+          ...seasons.map((season) => compactGmcAmounts(bsNetSeasonTotals.get(season))),
+          ...Array(8).fill("")
         ]);
 
         doc.autoTable({
@@ -3812,6 +3872,11 @@
             if (data.section === "body" && data.row.index === gmcTotalRowIndex) {
               data.cell.styles.fillColor = [240, 200, 90];
               data.cell.styles.textColor = [8, 31, 64];
+              data.cell.styles.fontStyle = "bold";
+            }
+            if (data.section === "body" && data.row.index === bsNetRowIndex) {
+              data.cell.styles.fillColor = [31, 122, 86];
+              data.cell.styles.textColor = [255, 255, 255];
               data.cell.styles.fontStyle = "bold";
             }
           },
@@ -5664,6 +5729,35 @@
           commissionInstalments = Array.isArray(instalmentData)
             ? instalmentData
             : [];
+        }
+      }
+
+      if (contractIds.length) {
+        // Market values are maintained in the latest player performance
+        // snapshot, not necessarily on the contract itself.
+        const snapshotResult = await db
+          .from("player_performance_snapshots")
+          .select("*")
+          .in("contract_id", contractIds);
+
+        if (snapshotResult.error) {
+          console.error("Player market-value load error:", snapshotResult.error);
+        } else {
+          const latestByContract = new Map();
+          (snapshotResult.data || []).forEach((snapshot) => {
+            if (!snapshot.contract_id) return;
+            const timestamp = new Date(
+              snapshot.snapshot_date || snapshot.recorded_at ||
+              snapshot.updated_at || snapshot.created_at || 0
+            ).getTime();
+            const existing = latestByContract.get(snapshot.contract_id);
+            if (!existing || timestamp >= existing.timestamp) {
+              latestByContract.set(snapshot.contract_id, { timestamp, snapshot });
+            }
+          });
+          allContracts.forEach((contract) => {
+            contract.latest_performance_snapshot = latestByContract.get(contract.id)?.snapshot || null;
+          });
         }
       }
 
