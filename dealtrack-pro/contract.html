@@ -1402,6 +1402,7 @@
           <a class="btn" href="/dealtrack-pro/agency-dashboard.html" data-i18n="agencyDashboard">
             📊 Agency Dashboard
           </a>
+          <a class="btn" href="/dealtrack-pro/partners.html">👥 Partners</a>
         </div>
       </div>
     </header>
@@ -1537,6 +1538,7 @@
       "savePartnerRegister": "Save partner register", "partnerRegisterSaved": "Partner register saved.",
       "partnerRegisterFailed": "The partner register could not be saved.", "removeAllocation": "Remove",
       "automaticGmc": "GMC: 1% of gross, deducted from BS net", "otherDeductions": "Partner / parent deductions", "estimatedBsNet": "Final BS Group net",
+      "partnerDatabase": "Partner database", "partnerDatabaseHelp": "Suggestions come from optional player and club introductions. Confirm each partner before saving.", "selectPartner": "Select partner", "selectRule": "Select remuneration rule", "addLinkedPartner": "Add selected partner", "suggestedPartners": "Suggested partners", "noSuggestions": "No player or club introduction matches this contract.",
     "sectionCommercialValue": "Revenue Forecast",
 "commercialValueSubtitle": "Track the projected financial value of this mandate throughout its lifetime. Revenue estimates are calculated from the recorded salary, commission structure and contract duration.",
 "expectedAnnualRevenue": "Expected Annual Revenue",
@@ -1800,6 +1802,7 @@
       "savePartnerRegister": "Enregistrer le registre", "partnerRegisterSaved": "Registre des partenaires enregistré.",
       "partnerRegisterFailed": "Le registre des partenaires n’a pas pu être enregistré.", "removeAllocation": "Supprimer",
       "automaticGmc": "GMC : 1 % du brut, déduit du net BS", "otherDeductions": "Déductions partenaires / parents", "estimatedBsNet": "Net final BS Group",
+      "partnerDatabase": "Base partenaires", "partnerDatabaseHelp": "Les suggestions proviennent des introductions facultatives de joueurs et clubs. Confirmez chaque partenaire avant l'enregistrement.", "selectPartner": "Choisir un partenaire", "selectRule": "Choisir une règle", "addLinkedPartner": "Ajouter le partenaire", "suggestedPartners": "Partenaires suggérés", "noSuggestions": "Aucune introduction de joueur ou de club ne correspond à ce contrat.",
    "sectionCommercialValue": "Prévision des revenus",
 "commercialValueSubtitle": "Suivez la valeur financière prévisionnelle de ce mandat pendant toute sa durée. Les estimations sont calculées à partir du salaire, de la structure de commission et de la durée du contrat enregistrés.",
 "expectedAnnualRevenue": "Revenus annuels prévisionnels",
@@ -2063,6 +2066,7 @@
       "savePartnerRegister": "Guardar registro", "partnerRegisterSaved": "Registro de socios guardado.",
       "partnerRegisterFailed": "No se pudo guardar el registro de socios.", "removeAllocation": "Eliminar",
       "automaticGmc": "GMC: 1 % del bruto, deducido del neto BS", "otherDeductions": "Deducciones de socios / padres", "estimatedBsNet": "Neto final de BS Group",
+      "partnerDatabase": "Base de socios", "partnerDatabaseHelp": "Las sugerencias proceden de presentaciones opcionales de jugadores y clubes. Confirme cada socio antes de guardar.", "selectPartner": "Seleccionar socio", "selectRule": "Seleccionar regla", "addLinkedPartner": "Añadir socio", "suggestedPartners": "Socios sugeridos", "noSuggestions": "Ninguna presentación de jugador o club coincide con este contrato.",
    "sectionCommercialValue": "Previsión de ingresos",
 "commercialValueSubtitle": "Realice un seguimiento del valor financiero previsto de este mandato durante toda su vigencia. Las estimaciones se calculan a partir del salario, la estructura de comisión y la duración contractual registrados.",
 "expectedAnnualRevenue": "Ingresos anuales previstos",
@@ -2259,6 +2263,9 @@
     let currentUser = null;
     let currentAgency = null;
     let selectedPartnerPayable = null;
+    let partnerDirectoryRecords = [];
+    let suggestedContractPartners = [];
+    let linkedContractPartners = [];
 
     function t(key) {
       return I18N[currentLang]?.[key] || I18N.en?.[key] || key;
@@ -3037,6 +3044,29 @@ function parseContractAnalysis(data) {
 }
 
 function getContractPartnerAllocations(data = currentContract) {
+  if (linkedContractPartners.length) {
+    const linkedRows = linkedContractPartners.map((entry) => {
+      const allocation = entry.allocation || {}, partner = entry.partner || {}, rule = entry.rule || {};
+      return {
+        allocation_id: allocation.id,
+        partner_id: partner.id,
+        partner_rule_id: rule.id || null,
+        introduction_id: entry.introduction?.id || null,
+        name: partner.display_name || partner.legal_name || "",
+        role: partner.partner_category || "partner",
+        season: "all",
+        percentage: toNumber(allocation.percentage_override ?? rule.percentage) ?? 0,
+        amount: toNumber(allocation.relevant_amount ?? allocation.fixed_amount_override ?? rule.fixed_amount),
+        currency: allocation.currency || rule.currency || data?.commission_currency || "EUR",
+        basis: "gross"
+      };
+    });
+    const analysis = parseContractAnalysis(data) || {};
+    const legacyRows = (Array.isArray(analysis.partner_allocations) ? analysis.partner_allocations : [])
+      .filter((row) => !row?.partner_id && !linkedRows.some((linked) => linked.name.toLowerCase() === String(row?.name || "").trim().toLowerCase()))
+      .map((row) => ({ ...row, percentage: toNumber(row?.percentage) ?? 0, amount: toNumber(row?.amount) }));
+    return [...linkedRows, ...legacyRows];
+  }
   const analysis = parseContractAnalysis(data) || {};
   const rows = Array.isArray(analysis.partner_allocations) ? analysis.partner_allocations : [];
   return rows.map((row) => ({
@@ -3055,7 +3085,7 @@ function partnerAllocationRow(row = {}, index = 0) {
   const basis = String(row.basis || "gross").toLowerCase();
   const currency = String(row.currency || currentContract?.commission_currency || "EUR").toUpperCase();
   const option = (value, label, selected) => `<option value="${value}"${selected === value ? " selected" : ""}>${label}</option>`;
-  return `<tr data-allocation-row>
+  return `<tr data-allocation-row data-allocation-id="${escapeHtml(row.allocation_id || "")}" data-partner-id="${escapeHtml(row.partner_id || "")}" data-rule-id="${escapeHtml(row.partner_rule_id || "")}" data-introduction-id="${escapeHtml(row.introduction_id || "")}">
     <td><select data-field="role">${option("partner",t("partnerRolePartner"),role)}${option("parent",t("partnerRoleParent"),role)}${option("agent",t("partnerRoleAgent"),role)}${option("other",t("partnerRoleOther"),role)}</select></td>
     <td><input class="allocation-name" data-field="name" value="${escapeHtml(row.name || "")}" placeholder="${escapeHtml(t("partnerName"))}"></td>
     <td><input data-field="season" value="${escapeHtml(row.season && row.season !== "all" ? row.season : "")}" placeholder="2026/27"></td>
@@ -3081,6 +3111,10 @@ function readPartnerAllocationRows() {
   return [...document.querySelectorAll("[data-allocation-row]")].map((row) => {
     const value = (field) => row.querySelector(`[data-field="${field}"]`)?.value ?? "";
     return {
+      allocation_id: row.dataset.allocationId || null,
+      partner_id: row.dataset.partnerId || null,
+      partner_rule_id: row.dataset.ruleId || null,
+      introduction_id: row.dataset.introductionId || null,
       name: value("name").trim(), role: value("role") || "partner",
       season: value("season").trim() || "all",
       percentage: toNumber(value("percentage")) ?? 0,
@@ -3095,7 +3129,8 @@ async function saveContractPartnerRegister() {
   const message = document.getElementById("partnerRegisterMessage");
   const button = document.getElementById("savePartnerRegisterButton");
   const analysis = parseContractAnalysis(currentContract) || {};
-  analysis.partner_allocations = readPartnerAllocationRows();
+  const allocationRows = readPartnerAllocationRows();
+  analysis.partner_allocations = allocationRows;
   analysis.no_parent_involvement = Boolean(document.getElementById("noParentInvolvement")?.checked);
   analysis.partner_allocation_updated_at = new Date().toISOString();
   const field = Object.prototype.hasOwnProperty.call(currentContract, "analysis_json") ? "analysis_json" : "analysis_result";
@@ -3103,13 +3138,88 @@ async function saveContractPartnerRegister() {
   try {
     const { error } = await currentDb.from("contracts").update({ [field]: analysis }).eq("id", currentContract.id).eq("user_id", currentUser.id);
     if (error) throw error;
+    for (const row of allocationRows.filter((item) => item.partner_id)) {
+      const linkedPayload = {
+        id: row.allocation_id,
+        contract_id: currentContract.id,
+        partner_id: row.partner_id,
+        partner_rule_id: row.partner_rule_id,
+        introduction_id: row.introduction_id,
+        involvement_description: row.role,
+        percentage_override: row.percentage,
+        relevant_amount: row.amount,
+        currency: row.currency,
+        calculation_basis_override: "gross_commission",
+        status: "active"
+      };
+      const linkedResult = await currentDb.rpc("dealtrack_save_contract_partner", { p_allocation: linkedPayload });
+      if (linkedResult.error) throw linkedResult.error;
+    }
     currentContract[field] = analysis;
+    await loadLinkedPartnerData();
     message.textContent = t("partnerRegisterSaved");
     renderContract(currentContract);
   } catch (error) {
     console.error("Partner register save failed:", error);
     message.textContent = `${t("partnerRegisterFailed")} ${error?.message || ""}`.trim();
   } finally { button.disabled = false; }
+}
+
+async function loadLinkedPartnerData() {
+  const [directory, suggestions, linked] = await Promise.all([
+    currentDb.rpc("dealtrack_list_partners", { p_agency_id: currentAgency?.agency_id || null }),
+    currentDb.rpc("dealtrack_suggest_contract_partners", { p_contract_id: currentContract.id }),
+    currentDb.rpc("dealtrack_list_contract_partners", { p_contract_id: currentContract.id })
+  ]);
+  partnerDirectoryRecords = directory.error ? [] : (directory.data || []);
+  suggestedContractPartners = suggestions.error ? [] : (suggestions.data || []);
+  linkedContractPartners = linked.error ? [] : (linked.data || []);
+}
+
+function refreshPartnerRuleOptions() {
+  const partnerId = document.getElementById("databasePartnerSelect")?.value;
+  const select = document.getElementById("databaseRuleSelect");
+  if (!select) return;
+  const record = partnerDirectoryRecords.find((item) => String(item.partner?.id) === String(partnerId));
+  const rules = record?.rules || [];
+  select.innerHTML = `<option value="">${escapeHtml(t("selectRule"))}</option>` + rules.map((rule) =>
+    `<option value="${rule.id}">${escapeHtml(rule.rule_name)} · ${toNumber(rule.percentage) ?? 0}%</option>`
+  ).join("");
+}
+
+function addPartnerFromDatabase(partnerId = null, introductionId = null) {
+  const selectedId = partnerId || document.getElementById("databasePartnerSelect")?.value;
+  const ruleId = document.getElementById("databaseRuleSelect")?.value || null;
+  const record = partnerDirectoryRecords.find((item) => String(item.partner?.id) === String(selectedId));
+  if (!record) return;
+  const rule = (record.rules || []).find((item) => String(item.id) === String(ruleId)) || (record.rules || [])[0] || {};
+  const existing = linkedContractPartners.find((item) => String(item.partner?.id) === String(selectedId) && String(item.rule?.id || "") === String(rule.id || ""));
+  addPartnerAllocationRow({
+    allocation_id: existing?.allocation?.id || null,
+    partner_id: record.partner.id,
+    partner_rule_id: rule.id || null,
+    introduction_id: introductionId || existing?.introduction?.id || null,
+    name: record.partner.display_name,
+    role: record.partner.partner_category || "partner",
+    percentage: toNumber(rule.percentage) ?? 0,
+    amount: toNumber(rule.fixed_amount),
+    currency: rule.currency || currentContract?.commission_currency || "EUR",
+    basis: "gross"
+  });
+}
+
+function renderPartnerDatabasePicker() {
+  const options = partnerDirectoryRecords.filter((item) => item.partner?.status === "active").map((item) =>
+    `<option value="${item.partner.id}">${escapeHtml(item.partner.display_name)} · ${escapeHtml(item.partner.function_title || item.partner.partner_category)}</option>`
+  ).join("");
+  const suggestions = suggestedContractPartners.length ? suggestedContractPartners.map((item) =>
+    `<button type="button" class="btn" onclick="addPartnerFromDatabase('${item.partner_id}','${item.introduction_id}')">${escapeHtml(item.partner_name)} · ${escapeHtml(item.introduction_type)}: ${escapeHtml(item.introduced_name)}</button>`
+  ).join(" ") : `<span class="muted">${t("noSuggestions")}</span>`;
+  return `<div style="margin-top:18px;padding:16px;border:1px solid rgba(255,255,255,.10);border-radius:14px;background:rgba(255,255,255,.025)">
+    <div class="section-kicker">${t("partnerDatabase")}</div><p class="allocation-note">${t("partnerDatabaseHelp")}</p>
+    <div class="allocation-toolbar"><select id="databasePartnerSelect" onchange="refreshPartnerRuleOptions()"><option value="">${t("selectPartner")}</option>${options}</select><select id="databaseRuleSelect"><option value="">${t("selectRule")}</option></select><button type="button" class="btn btn-primary" onclick="addPartnerFromDatabase()">${t("addLinkedPartner")}</button></div>
+    <div><strong>${t("suggestedPartners")}:</strong><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">${suggestions}</div></div>
+  </div>`;
 }
 
 function renderPartnerRegister(data) {
@@ -3120,6 +3230,7 @@ function renderPartnerRegister(data) {
   return `<section class="premium-card">
     <div class="section-head"><div><div class="section-kicker">06A</div><h2 class="section-title">${t("partnerRegisterTitle")}</h2></div></div>
     <p class="allocation-note">${t("partnerRegisterSubtitle")}</p>
+    ${renderPartnerDatabasePicker()}
     <div class="allocation-summary">
       ${renderTile("automaticGmc", "<strong>1%</strong>")}
       ${renderTile("partnerRoleParent", noParent ? "N/A · 0%" : allocations.filter((row)=>row.role === "parent").map((row)=>`${escapeHtml(row.name)} · ${row.percentage}%`).join("<br>"))}
@@ -6043,6 +6154,12 @@ function renderInvoiceForecast(data) {
           "Partner financials could not be loaded:",
           partnerFinancialsResult.error
         );
+      }
+
+      try {
+        await loadLinkedPartnerData();
+      } catch (linkedPartnerError) {
+        console.warn("Partner directory links could not be loaded:", linkedPartnerError);
       }
 
       applyStaticTranslations();
