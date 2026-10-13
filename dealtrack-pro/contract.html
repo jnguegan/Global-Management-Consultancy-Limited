@@ -1264,6 +1264,20 @@
     .partner-payment-field textarea { min-height: 88px; resize: vertical; }
     .partner-payment-actions { display: flex; justify-content: flex-end; gap: 12px; margin-top: 20px; }
     .partner-payment-message { min-height: 22px; margin-top: 12px; color: #ffcb4c; font-weight: 700; }
+    .allocation-toolbar { display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; margin:16px 0; }
+    .allocation-note { color:var(--muted); line-height:1.55; margin:0; }
+    .allocation-table-wrap { overflow-x:auto; }
+    .allocation-table { width:100%; min-width:980px; border-collapse:collapse; }
+    .allocation-table th, .allocation-table td { padding:10px 8px; border-bottom:1px solid rgba(255,255,255,.10); text-align:left; vertical-align:middle; }
+    .allocation-table th { color:var(--muted); font-size:.74rem; text-transform:uppercase; letter-spacing:.05em; }
+    .allocation-table input, .allocation-table select { width:100%; min-width:90px; box-sizing:border-box; border:1px solid rgba(255,255,255,.14); border-radius:9px; padding:9px 10px; color:var(--text); background:#101a2a; }
+    .allocation-table .allocation-name { min-width:190px; }
+    .allocation-table .allocation-remove { min-width:42px; }
+    .allocation-summary { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; margin-top:16px; }
+    .allocation-summary .data-tile strong { color:var(--gold-2); }
+    .allocation-message { min-height:22px; color:#ffcb4c; font-weight:700; margin-top:12px; }
+    .allocation-check { display:flex; align-items:center; gap:9px; color:var(--muted); font-weight:700; }
+    .allocation-check input { width:18px; height:18px; }
 
     @media (max-width: 1050px) {
       .layout {
@@ -1326,6 +1340,7 @@
       .partner-payment-field.full { grid-column: auto; }
       .partner-payment-actions { flex-direction: column-reverse; }
       .partner-payment-actions .btn { width: 100%; }
+      .allocation-summary { grid-template-columns:1fr 1fr; }
     }
   </style>
 </head>
@@ -1512,6 +1527,16 @@
       "partnerPaymentInvalid": "Enter a valid amount no greater than the outstanding balance.",
       "partnerPaymentFailed": "The partner payment could not be recorded.",
       "partnerPaymentReadOnly": "View only",
+      "partnerRegisterTitle": "Contract partner & parent register",
+      "partnerRegisterSubtitle": "Partner and parent deductions are taken from gross commission first. GMC is calculated as 1% of the original gross, but is deducted only from BS Group's resulting net. An entered amount takes priority over the percentage calculation.",
+      "partnerRole": "Role", "partnerName": "Partner / parent name", "partnerSeason": "Season",
+      "partnerPercentage": "Percentage", "partnerRelevantAmount": "Relevant amount", "partnerCurrency": "Currency",
+      "partnerBasis": "Calculation basis", "partnerBasisGross": "Gross commission", "partnerBasisResidual": "Gross commission",
+      "partnerRolePartner": "Partner", "partnerRoleParent": "Parent", "partnerRoleAgent": "Agent", "partnerRoleOther": "Other",
+      "noParentInvolvement": "No parent involvement (N/A / 0%)", "addPartnerRow": "+ Add partner / parent",
+      "savePartnerRegister": "Save partner register", "partnerRegisterSaved": "Partner register saved.",
+      "partnerRegisterFailed": "The partner register could not be saved.", "removeAllocation": "Remove",
+      "automaticGmc": "GMC: 1% of gross, deducted from BS net", "otherDeductions": "Partner / parent deductions", "estimatedBsNet": "Final BS Group net",
     "sectionCommercialValue": "Revenue Forecast",
 "commercialValueSubtitle": "Track the projected financial value of this mandate throughout its lifetime. Revenue estimates are calculated from the recorded salary, commission structure and contract duration.",
 "expectedAnnualRevenue": "Expected Annual Revenue",
@@ -1765,6 +1790,16 @@
       "partnerPaymentInvalid": "Saisissez un montant valide ne dépassant pas le solde restant.",
       "partnerPaymentFailed": "Le paiement au partenaire n’a pas pu être enregistré.",
       "partnerPaymentReadOnly": "Lecture seule",
+      "partnerRegisterTitle": "Registre des partenaires et parents du contrat",
+      "partnerRegisterSubtitle": "Les déductions des partenaires et parents sont d’abord retirées de la commission brute. GMC est calculé à 1 % du brut initial, mais uniquement déduit du net revenant à BS Group. Un montant saisi prévaut sur le calcul en pourcentage.",
+      "partnerRole": "Rôle", "partnerName": "Nom du partenaire / parent", "partnerSeason": "Saison",
+      "partnerPercentage": "Pourcentage", "partnerRelevantAmount": "Montant concerné", "partnerCurrency": "Devise",
+      "partnerBasis": "Base de calcul", "partnerBasisGross": "Commission brute", "partnerBasisResidual": "Commission brute",
+      "partnerRolePartner": "Partenaire", "partnerRoleParent": "Parent", "partnerRoleAgent": "Agent", "partnerRoleOther": "Autre",
+      "noParentInvolvement": "Aucune implication parentale (N/A / 0 %)", "addPartnerRow": "+ Ajouter un partenaire / parent",
+      "savePartnerRegister": "Enregistrer le registre", "partnerRegisterSaved": "Registre des partenaires enregistré.",
+      "partnerRegisterFailed": "Le registre des partenaires n’a pas pu être enregistré.", "removeAllocation": "Supprimer",
+      "automaticGmc": "GMC : 1 % du brut, déduit du net BS", "otherDeductions": "Déductions partenaires / parents", "estimatedBsNet": "Net final BS Group",
    "sectionCommercialValue": "Prévision des revenus",
 "commercialValueSubtitle": "Suivez la valeur financière prévisionnelle de ce mandat pendant toute sa durée. Les estimations sont calculées à partir du salaire, de la structure de commission et de la durée du contrat enregistrés.",
 "expectedAnnualRevenue": "Revenus annuels prévisionnels",
@@ -2018,6 +2053,16 @@
       "partnerPaymentInvalid": "Introduzca un importe válido que no supere el saldo restante.",
       "partnerPaymentFailed": "No se pudo registrar el pago al socio.",
       "partnerPaymentReadOnly": "Solo lectura",
+      "partnerRegisterTitle": "Registro de socios y padres del contrato",
+      "partnerRegisterSubtitle": "Las deducciones de socios y padres se restan primero de la comisión bruta. GMC se calcula como el 1 % del bruto original, pero se deduce únicamente del neto de BS Group. Un importe introducido tiene prioridad sobre el cálculo porcentual.",
+      "partnerRole": "Función", "partnerName": "Nombre del socio / padre", "partnerSeason": "Temporada",
+      "partnerPercentage": "Porcentaje", "partnerRelevantAmount": "Importe relevante", "partnerCurrency": "Moneda",
+      "partnerBasis": "Base de cálculo", "partnerBasisGross": "Comisión bruta", "partnerBasisResidual": "Comisión bruta",
+      "partnerRolePartner": "Socio", "partnerRoleParent": "Padre/madre", "partnerRoleAgent": "Agente", "partnerRoleOther": "Otro",
+      "noParentInvolvement": "Sin participación parental (N/A / 0 %)", "addPartnerRow": "+ Añadir socio / padre",
+      "savePartnerRegister": "Guardar registro", "partnerRegisterSaved": "Registro de socios guardado.",
+      "partnerRegisterFailed": "No se pudo guardar el registro de socios.", "removeAllocation": "Eliminar",
+      "automaticGmc": "GMC: 1 % del bruto, deducido del neto BS", "otherDeductions": "Deducciones de socios / padres", "estimatedBsNet": "Neto final de BS Group",
    "sectionCommercialValue": "Previsión de ingresos",
 "commercialValueSubtitle": "Realice un seguimiento del valor financiero previsto de este mandato durante toda su vigencia. Las estimaciones se calculan a partir del salario, la estructura de comisión y la duración contractual registrados.",
 "expectedAnnualRevenue": "Ingresos anuales previstos",
@@ -2989,6 +3034,109 @@ function parseContractAnalysis(data) {
   }
 
   return null;
+}
+
+function getContractPartnerAllocations(data = currentContract) {
+  const analysis = parseContractAnalysis(data) || {};
+  const rows = Array.isArray(analysis.partner_allocations) ? analysis.partner_allocations : [];
+  return rows.map((row) => ({
+    name: String(row?.name || "").trim(),
+    role: String(row?.role || "partner").trim().toLowerCase(),
+    season: String(row?.season || "all").trim(),
+    percentage: toNumber(row?.percentage) ?? 0,
+    amount: toNumber(row?.amount),
+    currency: String(row?.currency || data?.commission_currency || "EUR").trim().toUpperCase(),
+    basis: String(row?.basis || "gross").trim().toLowerCase()
+  })).filter((row) => row.name || row.role === "parent");
+}
+
+function partnerAllocationRow(row = {}, index = 0) {
+  const role = String(row.role || "partner").toLowerCase();
+  const basis = String(row.basis || "gross").toLowerCase();
+  const currency = String(row.currency || currentContract?.commission_currency || "EUR").toUpperCase();
+  const option = (value, label, selected) => `<option value="${value}"${selected === value ? " selected" : ""}>${label}</option>`;
+  return `<tr data-allocation-row>
+    <td><select data-field="role">${option("partner",t("partnerRolePartner"),role)}${option("parent",t("partnerRoleParent"),role)}${option("agent",t("partnerRoleAgent"),role)}${option("other",t("partnerRoleOther"),role)}</select></td>
+    <td><input class="allocation-name" data-field="name" value="${escapeHtml(row.name || "")}" placeholder="${escapeHtml(t("partnerName"))}"></td>
+    <td><input data-field="season" value="${escapeHtml(row.season && row.season !== "all" ? row.season : "")}" placeholder="2026/27"></td>
+    <td><input data-field="percentage" type="number" min="0" max="100" step="0.01" value="${toNumber(row.percentage) ?? 0}"></td>
+    <td><input data-field="amount" type="number" min="0" step="0.01" value="${toNumber(row.amount) ?? ""}" placeholder="0.00"></td>
+    <td><select data-field="currency">${["EUR","GBP","USD","CHF","AED","CZK"].map((code)=>option(code,code,currency)).join("")}</select></td>
+    <td><select data-field="basis">${option("gross",t("partnerBasisGross"),"gross")}</select></td>
+    <td><button class="btn allocation-remove" type="button" onclick="removePartnerAllocationRow(this)" aria-label="${escapeHtml(t("removeAllocation"))}">×</button></td>
+  </tr>`;
+}
+
+function addPartnerAllocationRow(seed = {}) {
+  const body = document.getElementById("partnerAllocationRows");
+  if (!body) return;
+  body.insertAdjacentHTML("beforeend", partnerAllocationRow(seed, body.children.length));
+}
+
+function removePartnerAllocationRow(button) {
+  button?.closest("[data-allocation-row]")?.remove();
+}
+
+function readPartnerAllocationRows() {
+  return [...document.querySelectorAll("[data-allocation-row]")].map((row) => {
+    const value = (field) => row.querySelector(`[data-field="${field}"]`)?.value ?? "";
+    return {
+      name: value("name").trim(), role: value("role") || "partner",
+      season: value("season").trim() || "all",
+      percentage: toNumber(value("percentage")) ?? 0,
+      amount: toNumber(value("amount")),
+      currency: (value("currency") || "EUR").toUpperCase(), basis: value("basis") || "gross"
+    };
+  }).filter((row) => row.name);
+}
+
+async function saveContractPartnerRegister() {
+  if (!currentDb || !currentContract?.id || !currentUser?.id) return;
+  const message = document.getElementById("partnerRegisterMessage");
+  const button = document.getElementById("savePartnerRegisterButton");
+  const analysis = parseContractAnalysis(currentContract) || {};
+  analysis.partner_allocations = readPartnerAllocationRows();
+  analysis.no_parent_involvement = Boolean(document.getElementById("noParentInvolvement")?.checked);
+  analysis.partner_allocation_updated_at = new Date().toISOString();
+  const field = Object.prototype.hasOwnProperty.call(currentContract, "analysis_json") ? "analysis_json" : "analysis_result";
+  button.disabled = true;
+  try {
+    const { error } = await currentDb.from("contracts").update({ [field]: analysis }).eq("id", currentContract.id).eq("user_id", currentUser.id);
+    if (error) throw error;
+    currentContract[field] = analysis;
+    message.textContent = t("partnerRegisterSaved");
+    renderContract(currentContract);
+  } catch (error) {
+    console.error("Partner register save failed:", error);
+    message.textContent = `${t("partnerRegisterFailed")} ${error?.message || ""}`.trim();
+  } finally { button.disabled = false; }
+}
+
+function renderPartnerRegister(data) {
+  const analysis = parseContractAnalysis(data) || {};
+  const allocations = getContractPartnerAllocations(data);
+  const noParent = analysis.no_parent_involvement === true || !allocations.some((row) => row.role === "parent");
+  const rows = allocations.length ? allocations.map(partnerAllocationRow).join("") : "";
+  return `<section class="premium-card">
+    <div class="section-head"><div><div class="section-kicker">06A</div><h2 class="section-title">${t("partnerRegisterTitle")}</h2></div></div>
+    <p class="allocation-note">${t("partnerRegisterSubtitle")}</p>
+    <div class="allocation-summary">
+      ${renderTile("automaticGmc", "<strong>1%</strong>")}
+      ${renderTile("partnerRoleParent", noParent ? "N/A · 0%" : allocations.filter((row)=>row.role === "parent").map((row)=>`${escapeHtml(row.name)} · ${row.percentage}%`).join("<br>"))}
+      ${renderTile("otherDeductions", String(allocations.length))}
+      ${renderTile("estimatedBsNet", "Gross − partners − GMC")}
+    </div>
+    <div class="allocation-toolbar">
+      <label class="allocation-check"><input id="noParentInvolvement" type="checkbox"${noParent ? " checked" : ""}> ${t("noParentInvolvement")}</label>
+      <button type="button" class="btn" onclick="addPartnerAllocationRow()">${t("addPartnerRow")}</button>
+    </div>
+    <div class="allocation-table-wrap"><table class="allocation-table"><thead><tr>
+      <th>${t("partnerRole")}</th><th>${t("partnerName")}</th><th>${t("partnerSeason")}</th><th>${t("partnerPercentage")}</th>
+      <th>${t("partnerRelevantAmount")}</th><th>${t("partnerCurrency")}</th><th>${t("partnerBasis")}</th><th></th>
+    </tr></thead><tbody id="partnerAllocationRows">${rows}</tbody></table></div>
+    <div class="allocation-toolbar"><div id="partnerRegisterMessage" class="allocation-message" aria-live="polite"></div>
+      <button id="savePartnerRegisterButton" type="button" class="btn btn-primary" onclick="saveContractPartnerRegister()">${t("savePartnerRegister")}</button></div>
+  </section>`;
 }
 
 function normaliseResolverDate(value) {
@@ -5578,6 +5726,8 @@ function renderInvoiceForecast(data) {
 
             ${renderResolvedCommissionSchedule(data)}
           </section>
+
+          ${renderPartnerRegister(data)}
 
           ${renderPartnerFinancials()}
 
