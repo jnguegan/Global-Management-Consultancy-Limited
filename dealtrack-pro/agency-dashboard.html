@@ -1403,6 +1403,15 @@
           </div>
         </section>
 
+        <section class="panel" id="bsNetPanel">
+          <div class="panel-head"><div>
+            <div class="panel-kicker" data-i18n="netPositionKicker">Gross to net</div>
+            <h2 class="panel-title" data-i18n="netPositionTitle">BS Group gross, deductions and net</h2>
+            <p class="panel-subtitle" data-i18n="netPositionSubtitle">Partners are deducted first. GMC is 1% of gross commission but is deducted only from BS Group's net.</p>
+          </div></div>
+          <div id="bsNetSummary"><div class="state-box"><span data-i18n="loadingText">Preparing your agency overview...</span></div></div>
+        </section>
+
         <section class="panel quick-links-panel">
           <div class="panel-head">
             <div>
@@ -1571,6 +1580,10 @@
       "partnerViewContract": "View contract →",
       "partnerViewIncome": "Open partner income →",
       "partnerLoadWarning": "Some partner information could not be loaded.",
+      "netPositionKicker": "Gross to net", "netPositionTitle": "BS Group gross, deductions and net",
+      "netPositionSubtitle": "Partners are deducted first. GMC is 1% of gross commission but is deducted only from BS Group's net.",
+      "grossIncome": "Gross income", "gmcDeduction": "GMC 1%", "otherPartnerDeductions": "Partner / parent deductions",
+      "totalDeductions": "Total deductions", "bsNetBeforeGmc": "BS Group net before GMC", "bsGroupNet": "Final BS Group net", "currencyLabel": "Currency",
       "quickKicker": "Quick Actions",
       "quickTitle": "Manage DealTrack Pro",
       "quickPortfolio": "Open Contract Portfolio",
@@ -1740,6 +1753,10 @@
       "partnerViewContract": "Voir le contrat →",
       "partnerViewIncome": "Ouvrir les revenus partenaire →",
       "partnerLoadWarning": "Certaines informations partenaires n’ont pas pu être chargées.",
+      "netPositionKicker": "Du brut au net", "netPositionTitle": "Brut, déductions et net BS Group",
+      "netPositionSubtitle": "Les partenaires sont déduits en premier. GMC représente 1 % de la commission brute, mais est uniquement déduit du net de BS Group.",
+      "grossIncome": "Revenu brut", "gmcDeduction": "GMC 1 %", "otherPartnerDeductions": "Déductions partenaires / parents",
+      "totalDeductions": "Déductions totales", "bsNetBeforeGmc": "Net BS Group avant GMC", "bsGroupNet": "Net final BS Group", "currencyLabel": "Devise",
       "quickKicker": "Actions rapides",
       "quickTitle": "Gérer DealTrack Pro",
       "quickPortfolio": "Ouvrir le portefeuille de contrats",
@@ -1911,6 +1928,10 @@
       "partnerViewContract": "Ver contrato →",
       "partnerViewIncome": "Abrir ingresos de socios →",
       "partnerLoadWarning": "No se pudo cargar parte de la información de socios.",
+      "netPositionKicker": "De bruto a neto", "netPositionTitle": "Bruto, deducciones y neto de BS Group",
+      "netPositionSubtitle": "Primero se deducen los socios. GMC representa el 1 % de la comisión bruta, pero se deduce únicamente del neto de BS Group.",
+      "grossIncome": "Ingreso bruto", "gmcDeduction": "GMC 1 %", "otherPartnerDeductions": "Deducciones de socios / padres",
+      "totalDeductions": "Deducciones totales", "bsNetBeforeGmc": "Neto BS Group antes de GMC", "bsGroupNet": "Neto final de BS Group", "currencyLabel": "Moneda",
       "quickKicker": "Acciones rápidas",
       "quickTitle": "Gestionar DealTrack Pro",
       "quickPortfolio": "Abrir cartera de contratos",
@@ -3524,6 +3545,13 @@
         percentage: toNumber(item?.percentage ?? item?.share ?? item?.agent_percentage)
       })).filter((item) => item.name);
 
+      const analysis = parseDashboardAnalysis(contract) || {};
+      (Array.isArray(analysis.partner_allocations) ? analysis.partner_allocations : []).forEach((item) => {
+        const name = String(item?.name || "").trim();
+        if (!name || normalised.some((entry) => entry.name.toLowerCase() === name.toLowerCase())) return;
+        normalised.push({ name, percentage: toNumber(item?.percentage) ?? 0 });
+      });
+
       const primaryName = String(contract.agent_name || "").trim();
       if (primaryName && !normalised.some((item) => item.name.toLowerCase() === primaryName.toLowerCase())) {
         normalised.unshift({
@@ -3536,7 +3564,69 @@
         });
       }
 
-      return normalised.slice(0, 4);
+      return normalised.slice(0, 3);
+    }
+
+    function contractPartnerRegister(contract) {
+      const analysis = parseDashboardAnalysis(contract) || {};
+      const rows = Array.isArray(analysis.partner_allocations) ? analysis.partner_allocations : [];
+      return rows.map((row) => ({
+        name: String(row?.name || "").trim(),
+        role: String(row?.role || "partner").trim().toLowerCase(),
+        season: String(row?.season || "all").trim(),
+        percentage: toNumber(row?.percentage) ?? 0,
+        amount: toNumber(row?.amount),
+        currency: normaliseCurrencyCode(row?.currency || contract.commission_currency || "EUR"),
+        basis: String(row?.basis || "gross").trim().toLowerCase()
+      })).filter((row) => row.name);
+    }
+
+    function buildGrossNetReconciliation() {
+      const contractMap = new Map(allContracts.map((contract) => [String(contract.id), contract]));
+      const rows = new Map();
+      commissionInstalments.forEach((item) => {
+        const contract = contractMap.get(String(item.contract_id));
+        if (!contract) return;
+        const amount = toNumber(item.amount);
+        if (amount === null) return;
+        const currency = normaliseCurrencyCode(item.currency || contract.commission_currency || "EUR");
+        const season = footballSeasonKey(item.due_date || item.payment_due_date || item.expected_date) || "Trigger-based";
+        const key = `${contract.id}|${season}|${currency}`;
+        if (!rows.has(key)) rows.set(key, {
+          contract, season, currency, gross: 0, gmc: 0, partnerDeductions: 0, partnerDetails: []
+        });
+        rows.get(key).gross += amount;
+      });
+
+      rows.forEach((entry) => {
+        entry.gmc = entry.gross * 0.01;
+        const allocations = contractPartnerRegister(entry.contract).filter((allocation) =>
+          allocation.currency === entry.currency &&
+          (allocation.season === "all" || allocation.season === entry.season)
+        );
+        allocations.forEach((allocation) => {
+          // Partner and parent entitlements are established before GMC. GMC
+          // never reduces a partner's contractual entitlement.
+          const deduction = allocation.amount !== null ? allocation.amount : entry.gross * allocation.percentage / 100;
+          const safeDeduction = Math.max(0, deduction || 0);
+          entry.partnerDeductions += safeDeduction;
+          entry.partnerDetails.push({ ...allocation, deduction: safeDeduction });
+        });
+        entry.bsNetBeforeGmc = entry.gross - entry.partnerDeductions;
+        entry.totalDeductions = entry.partnerDeductions + entry.gmc;
+        entry.net = entry.bsNetBeforeGmc - entry.gmc;
+      });
+      return [...rows.values()];
+    }
+
+    function grossNetTotalsByCurrency() {
+      const totals = new Map();
+      buildGrossNetReconciliation().forEach((row) => {
+        if (!totals.has(row.currency)) totals.set(row.currency, { currency: row.currency, gross:0, gmc:0, partnerDeductions:0, bsNetBeforeGmc:0, totalDeductions:0, net:0 });
+        const total = totals.get(row.currency);
+        ["gross","gmc","partnerDeductions","bsNetBeforeGmc","totalDeductions","net"].forEach((field) => total[field] += row[field]);
+      });
+      return [...totals.values()].sort((a,b)=>a.currency.localeCompare(b.currency));
     }
 
     function agentInitials(name) {
@@ -3800,8 +3890,25 @@
           ...Array(8).fill("")
         ]);
 
-        // GMC totals reconcile directly to the gross contractual income shown
-        // in each season column. Keep currencies separate and apply exactly 1%.
+        const reconciliationRows = buildGrossNetReconciliation();
+        const partnerDeductionSeasonTotals = new Map(seasons.map((season) => [season, new Map()]));
+        const bsNetBeforeGmcSeasonTotals = new Map(seasons.map((season) => [season, new Map()]));
+        reconciliationRows.forEach((row) => {
+          if (!partnerDeductionSeasonTotals.has(row.season)) return;
+          const partnerTotals = partnerDeductionSeasonTotals.get(row.season);
+          partnerTotals.set(row.currency, (partnerTotals.get(row.currency) || 0) + row.partnerDeductions);
+          const preGmcTotals = bsNetBeforeGmcSeasonTotals.get(row.season);
+          preGmcTotals.set(row.currency, (preGmcTotals.get(row.currency) || 0) + row.bsNetBeforeGmc);
+        });
+        const partnerDeductionsRowIndex = body.length;
+        body.push(["", "", t("otherPartnerDeductions"), "", "",
+          ...seasons.map((season) => compactGmcAmounts(partnerDeductionSeasonTotals.get(season))), ...Array(8).fill("")]);
+        const bsNetBeforeGmcRowIndex = body.length;
+        body.push(["", "", t("bsNetBeforeGmc"), "", "",
+          ...seasons.map((season) => compactGmcAmounts(bsNetBeforeGmcSeasonTotals.get(season))), ...Array(8).fill("")]);
+
+        // GMC is calculated as exactly 1% of gross contractual income, but
+        // is shown and applied only after BS Group's partner deductions.
         const gmcSeasonTotals = new Map(seasons.map((season) => [season, new Map()]));
         seasons.forEach((season) => {
           seasonTotals.get(season)?.forEach((amount, currency) => {
@@ -3815,21 +3922,13 @@
           ...Array(8).fill("")
         ]);
 
-        // Net retained by BS Group after every recorded remuneration percentage
-        // on the individual player-club transaction, including GMC's 1%.
+        // Final BS Group net after GMC has been deducted from BS Group's own
+        // post-partner net. Partner entitlements are never reduced by GMC.
         const bsNetSeasonTotals = new Map(seasons.map((season) => [season, new Map()]));
-        players.forEach((player) => {
-          const deductionPercentage = player.agents.reduce((total, agent) => {
-            const percentage = toNumber(agent?.percentage);
-            return total + (percentage === null ? 0 : percentage);
-          }, 0);
-          const retainedPercentage = Math.max(0, 100 - deductionPercentage) / 100;
-          seasons.forEach((season) => {
-            player.seasonAmounts.get(season)?.forEach((amount, currency) => {
-              const totals = bsNetSeasonTotals.get(season);
-              totals.set(currency, (totals.get(currency) || 0) + (amount * retainedPercentage));
-            });
-          });
+        reconciliationRows.forEach((row) => {
+          if (!bsNetSeasonTotals.has(row.season)) return;
+          const totals = bsNetSeasonTotals.get(row.season);
+          totals.set(row.currency, (totals.get(row.currency) || 0) + row.net);
         });
         const bsNetRowIndex = body.length;
         body.push([
@@ -3879,6 +3978,11 @@
               data.cell.styles.textColor = [8, 31, 64];
               data.cell.styles.fontStyle = "bold";
             }
+            if (data.section === "body" && (data.row.index === partnerDeductionsRowIndex || data.row.index === bsNetBeforeGmcRowIndex)) {
+              data.cell.styles.fillColor = [225, 233, 244];
+              data.cell.styles.textColor = [8, 31, 64];
+              data.cell.styles.fontStyle = "bold";
+            }
             if (data.section === "body" && data.row.index === bsNetRowIndex) {
               data.cell.styles.fillColor = [31, 122, 86];
               data.cell.styles.textColor = [255, 255, 255];
@@ -3899,6 +4003,51 @@
             doc.text(text.missing, 8, 24);
             doc.text(`${page}`, 289, 203, { align: "right" });
           }
+        });
+
+        const reconciliation = buildGrossNetReconciliation();
+        doc.addPage("a4", "landscape");
+        doc.setTextColor(12, 34, 68);
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(15);
+        doc.text(t("netPositionTitle"), 8, 12);
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(7.5);
+        doc.setTextColor(90, 97, 108);
+        doc.text(t("netPositionSubtitle"), 8, 19);
+
+        const reconciliationBody = reconciliation.map((row) => {
+          const partnerText = row.partnerDetails.length
+            ? row.partnerDetails.map((item) => `${item.role}: ${item.name} · ${item.percentage}% · ${compactGmcAmounts(new Map([[row.currency,item.deduction]]))}`).join("\n")
+            : "Parent: N/A · 0%";
+          return [row.contract.player_name || "—", row.contract.club_name || "—", row.season, row.currency,
+            compactGmcAmounts(new Map([[row.currency,row.gross]])),
+            partnerText,
+            compactGmcAmounts(new Map([[row.currency,row.partnerDeductions]])),
+            compactGmcAmounts(new Map([[row.currency,row.bsNetBeforeGmc]])),
+            compactGmcAmounts(new Map([[row.currency,row.gmc]])),
+            compactGmcAmounts(new Map([[row.currency,row.net]]))];
+        });
+        grossNetTotalsByCurrency().forEach((row) => reconciliationBody.push([
+          text.total, "", "", row.currency,
+          compactGmcAmounts(new Map([[row.currency,row.gross]])),
+          "",
+          compactGmcAmounts(new Map([[row.currency,row.partnerDeductions]])),
+          compactGmcAmounts(new Map([[row.currency,row.bsNetBeforeGmc]])),
+          compactGmcAmounts(new Map([[row.currency,row.gmc]])),
+          compactGmcAmounts(new Map([[row.currency,row.net]]))
+        ]));
+        doc.autoTable({
+          head:[[text.first+" / "+text.last,text.club,"Season",t("currencyLabel"),t("grossIncome"),t("partnerPositionTitle"),t("otherPartnerDeductions"),t("bsNetBeforeGmc"),t("gmcDeduction"),t("bsGroupNet")]],
+          body:reconciliationBody, startY:25, margin:{top:25,right:7,bottom:12,left:7}, theme:"grid",
+          styles:{font:"helvetica",fontSize:6.2,cellPadding:1.4,textColor:[20,30,45],lineColor:[177,195,219],lineWidth:.18,valign:"middle",overflow:"linebreak"},
+          headStyles:{fillColor:[8,31,64],textColor:[255,255,255],fontStyle:"bold"},
+          alternateRowStyles:{fillColor:[244,247,251]},
+          columnStyles:{0:{cellWidth:25},1:{cellWidth:36},2:{cellWidth:16},3:{cellWidth:12},4:{cellWidth:25,halign:"right"},5:{cellWidth:58},6:{cellWidth:25,halign:"right"},7:{cellWidth:25,halign:"right"},8:{cellWidth:22,halign:"right"},9:{cellWidth:25,halign:"right"}},
+          didParseCell(data){
+            if(data.section==="body" && String(data.row.raw?.[0]||"")===text.total){data.cell.styles.fillColor=[8,31,64];data.cell.styles.textColor=[255,255,255];data.cell.styles.fontStyle="bold";}
+          },
+          didDrawPage(){const page=doc.internal.getCurrentPageInfo().pageNumber;doc.setFontSize(6.5);doc.setTextColor(90,97,108);doc.text(`${page}`,289,203,{align:"right"});}
         });
 
         const isoDate = new Date().toISOString().slice(0, 10);
@@ -5569,6 +5718,23 @@
       });
     }
 
+    function renderBsNetSummary() {
+      const container = document.getElementById("bsNetSummary");
+      if (!container) return;
+      const totals = grossNetTotalsByCurrency();
+      if (!totals.length) {
+        container.innerHTML = `<div class="state-box"><span>${escapeHtml(t("emptyText"))}</span></div>`;
+        return;
+      }
+      container.innerHTML = `<div class="table-wrap"><table class="data-table"><thead><tr>
+        <th>${escapeHtml(t("currencyLabel"))}</th><th>${escapeHtml(t("grossIncome"))}</th>
+        <th>${escapeHtml(t("otherPartnerDeductions"))}</th><th>${escapeHtml(t("bsNetBeforeGmc"))}</th><th>${escapeHtml(t("gmcDeduction"))}</th><th>${escapeHtml(t("bsGroupNet"))}</th>
+      </tr></thead><tbody>${totals.map((row)=>`<tr><td><strong>${escapeHtml(row.currency)}</strong></td>
+        <td>${escapeHtml(formatMoney(row.gross,row.currency))}</td><td>${escapeHtml(formatMoney(row.partnerDeductions,row.currency))}</td>
+        <td>${escapeHtml(formatMoney(row.bsNetBeforeGmc,row.currency))}</td><td>${escapeHtml(formatMoney(row.gmc,row.currency))}</td>
+        <td><strong>${escapeHtml(formatMoney(row.net,row.currency))}</strong></td></tr>`).join("")}</tbody></table></div>`;
+    }
+
     function renderDashboard() {
       renderKpis();
       renderPortfolioHealth();
@@ -5579,6 +5745,7 @@
       renderRenewals();
       renderInvoiceCalendar();
       renderPartnerPosition();
+      renderBsNetSummary();
       renderCharts();
     }
 
@@ -5597,6 +5764,7 @@
       document.getElementById("renewalList").innerHTML = message;
       document.getElementById("invoiceCalendar").innerHTML = message;
       document.getElementById("partnerPositionContent").innerHTML = message;
+      document.getElementById("bsNetSummary").innerHTML = message;
       renderChartEmpty("currencyChartContainer", t("errorText"));
       renderChartEmpty("statusChartContainer", t("errorText"));
       renderChartEmpty("invoiceChartContainer", t("errorText"));
