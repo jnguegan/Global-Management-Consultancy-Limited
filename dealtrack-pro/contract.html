@@ -6156,14 +6156,16 @@ function renderInvoiceForecast(data) {
         );
       }
 
-      try {
-        await loadLinkedPartnerData();
-      } catch (linkedPartnerError) {
-        console.warn("Partner directory links could not be loaded:", linkedPartnerError);
-      }
-
       applyStaticTranslations();
       renderContract(data);
+
+      // Partner intelligence is supplementary. Never block the original
+      // contract page while the partner RPCs are loading or unavailable.
+      loadLinkedPartnerData()
+        .then(() => renderContract(currentContract))
+        .catch((linkedPartnerError) => {
+          console.warn("Partner directory links could not be loaded:", linkedPartnerError);
+        });
     });
   </script>
 </body>
