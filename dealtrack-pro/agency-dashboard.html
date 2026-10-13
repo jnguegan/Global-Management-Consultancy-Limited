@@ -1077,6 +1077,10 @@
             🤝 Record Partner Income
           </a>
 
+          <a class="btn btn-gold" href="/dealtrack-pro/partners.html">
+            👥 Partners
+          </a>
+
           <a class="btn" href="/dealtrack-pro/invoices.html" data-i18n="invoiceRegister">
             🧾 Invoices
           </a>
@@ -1990,6 +1994,7 @@
     let currentUser = null;
     let currentPlanUsage = null;
     let partnerPayables = [];
+    let contractPartnerAllocations = [];
     let partnerIncomeRecords = [];
     let partnerIncomeInstalments = [];
     let activePartnerTab = "payable";
@@ -3568,6 +3573,23 @@
     }
 
     function contractPartnerRegister(contract) {
+      const linked = contractPartnerAllocations.filter((entry) =>
+        String(entry.allocation?.contract_id || "") === String(contract.id)
+      );
+      if (linked.length) {
+        return linked.map((entry) => {
+          const allocation = entry.allocation || {}, rule = entry.rule || {}, partner = entry.partner || {};
+          return {
+            name: String(partner.display_name || partner.legal_name || "").trim(),
+            role: String(partner.partner_category || "partner").trim().toLowerCase(),
+            season: "all",
+            percentage: toNumber(allocation.percentage_override ?? rule.percentage) ?? 0,
+            amount: toNumber(allocation.relevant_amount ?? allocation.fixed_amount_override ?? rule.fixed_amount),
+            currency: normaliseCurrencyCode(allocation.currency || rule.currency || contract.commission_currency || "EUR"),
+            basis: String(allocation.calculation_basis_override || rule.calculation_basis || "gross_commission").trim().toLowerCase()
+          };
+        }).filter((row) => row.name);
+      }
       const analysis = parseDashboardAnalysis(contract) || {};
       const rows = Array.isArray(analysis.partner_allocations) ? analysis.partner_allocations : [];
       return rows.map((row) => ({
@@ -5939,6 +5961,7 @@
         .map(applyInstalmentMetrics);
 
       partnerPayables = [];
+      contractPartnerAllocations = [];
       partnerIncomeRecords = [];
       partnerIncomeInstalments = [];
       partnerDataWarning = false;
@@ -5965,6 +5988,18 @@
               contract_id: item.contract_id || result.contractId
             })));
           }
+        });
+
+        const linkedResults = await Promise.all(contractIds.map(async (contractId) => {
+          const result = await db.rpc("dealtrack_list_contract_partners", { p_contract_id: contractId });
+          return { contractId, ...result };
+        }));
+        linkedResults.forEach((result) => {
+          if (result.error) {
+            console.warn("Linked contract partners could not be loaded:", result.error);
+            return;
+          }
+          if (Array.isArray(result.data)) contractPartnerAllocations.push(...result.data);
         });
       }
 
