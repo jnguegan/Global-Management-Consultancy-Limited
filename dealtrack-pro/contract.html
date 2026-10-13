@@ -3107,6 +3107,31 @@ function removePartnerAllocationRow(button) {
   button?.closest("[data-allocation-row]")?.remove();
 }
 
+function bindPartnerRegisterControls() {
+  const partnerSelect = document.getElementById("databasePartnerSelect");
+  if (partnerSelect) partnerSelect.onchange = refreshPartnerRuleOptions;
+
+  const addSelected = document.getElementById("addSelectedPartnerButton");
+  if (addSelected) addSelected.onclick = () => addPartnerFromDatabase();
+
+  const addRow = document.getElementById("addPartnerAllocationRowButton");
+  if (addRow) addRow.onclick = () => {
+    addPartnerAllocationRow();
+    const firstNewName = document.querySelector("#partnerAllocationRows tr:last-child [data-field='name']");
+    firstNewName?.focus();
+  };
+
+  const saveRegister = document.getElementById("savePartnerRegisterButton");
+  if (saveRegister) saveRegister.onclick = saveContractPartnerRegister;
+
+  document.querySelectorAll('[data-partner-action="remove-row"]').forEach((button) => {
+    button.onclick = () => removePartnerAllocationRow(button);
+  });
+  document.querySelectorAll('[data-partner-action="add-suggestion"]').forEach((button) => {
+    button.onclick = () => addPartnerFromDatabase(button.dataset.partnerId, button.dataset.introductionId);
+  });
+}
+
 function readPartnerAllocationRows() {
   return [...document.querySelectorAll("[data-allocation-row]")].map((row) => {
     const value = (field) => row.querySelector(`[data-field="${field}"]`)?.value ?? "";
@@ -5894,6 +5919,7 @@ function renderInvoiceForecast(data) {
           </section>
         </div>
       `;
+      bindPartnerRegisterControls();
     }
 
 
@@ -6031,33 +6057,6 @@ function renderInvoiceForecast(data) {
 
     document.addEventListener("DOMContentLoaded", async () => {
       applyStaticTranslations();
-
-      // Partner-register controls are rendered dynamically with the contract.
-      // Delegation keeps them functional after every language change or data
-      // refresh and avoids reliance on inline event handlers.
-      document.addEventListener("change", (event) => {
-        if (event.target?.id === "databasePartnerSelect") refreshPartnerRuleOptions();
-      });
-      document.addEventListener("click", (event) => {
-        const button = event.target.closest("button");
-        if (!button) return;
-        if (button.id === "addPartnerAllocationRowButton") {
-          event.preventDefault();
-          addPartnerAllocationRow();
-        } else if (button.id === "addSelectedPartnerButton") {
-          event.preventDefault();
-          addPartnerFromDatabase();
-        } else if (button.id === "savePartnerRegisterButton") {
-          event.preventDefault();
-          saveContractPartnerRegister();
-        } else if (button.dataset.partnerAction === "remove-row") {
-          event.preventDefault();
-          removePartnerAllocationRow(button);
-        } else if (button.dataset.partnerAction === "add-suggestion") {
-          event.preventDefault();
-          addPartnerFromDatabase(button.dataset.partnerId, button.dataset.introductionId);
-        }
-      });
 
       document.getElementById("partnerPaymentForm")?.addEventListener("submit", savePartnerPayment);
       document.getElementById("cancelPartnerPayment")?.addEventListener("click", closePartnerPaymentModal);
