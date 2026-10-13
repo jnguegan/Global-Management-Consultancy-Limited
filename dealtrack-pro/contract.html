@@ -3093,7 +3093,7 @@ function partnerAllocationRow(row = {}, index = 0) {
     <td><input data-field="amount" type="number" min="0" step="0.01" value="${toNumber(row.amount) ?? ""}" placeholder="0.00"></td>
     <td><select data-field="currency">${["EUR","GBP","USD","CHF","AED","CZK"].map((code)=>option(code,code,currency)).join("")}</select></td>
     <td><select data-field="basis">${option("gross",t("partnerBasisGross"),"gross")}</select></td>
-    <td><button class="btn allocation-remove" type="button" onclick="removePartnerAllocationRow(this)" aria-label="${escapeHtml(t("removeAllocation"))}">×</button></td>
+    <td><button class="btn allocation-remove" type="button" data-partner-action="remove-row" aria-label="${escapeHtml(t("removeAllocation"))}">×</button></td>
   </tr>`;
 }
 
@@ -3166,12 +3166,26 @@ async function saveContractPartnerRegister() {
 }
 
 async function loadLinkedPartnerData() {
+  const agencyId = currentAgency?.agency_id || currentAgency?.id || null;
   const [directory, suggestions, linked] = await Promise.all([
-    currentDb.rpc("dealtrack_list_partners", { p_agency_id: currentAgency?.agency_id || null }),
+    currentDb.rpc("dealtrack_list_partners", { p_agency_id: agencyId }),
     currentDb.rpc("dealtrack_suggest_contract_partners", { p_contract_id: currentContract.id }),
     currentDb.rpc("dealtrack_list_contract_partners", { p_contract_id: currentContract.id })
   ]);
-  partnerDirectoryRecords = directory.error ? [] : (directory.data || []);
+  if (directory.error) console.warn("Partner directory could not be loaded:", directory.error);
+  partnerDirectoryRecords = directory.error ? [] : (directory.data || []).map((item) => {
+    // The RPC normally returns { partner, introductions, rules }. Retain
+    // compatibility with installations that expose the partner columns at
+    // the top level, so the contract selector never appears empty while the
+    // Partners page itself contains active records.
+    const partner = item?.partner && typeof item.partner === "object" ? item.partner : item;
+    return {
+      ...item,
+      partner,
+      introductions: Array.isArray(item?.introductions) ? item.introductions : [],
+      rules: Array.isArray(item?.rules) ? item.rules : []
+    };
+  });
   suggestedContractPartners = suggestions.error ? [] : (suggestions.data || []);
   linkedContractPartners = linked.error ? [] : (linked.data || []);
 }
@@ -3209,15 +3223,19 @@ function addPartnerFromDatabase(partnerId = null, introductionId = null) {
 }
 
 function renderPartnerDatabasePicker() {
-  const options = partnerDirectoryRecords.filter((item) => item.partner?.status === "active").map((item) =>
+  const options = partnerDirectoryRecords.filter((item) => String(item.partner?.status || "active").toLowerCase() === "active").map((item) =>
     `<option value="${item.partner.id}">${escapeHtml(item.partner.display_name)} · ${escapeHtml(item.partner.function_title || item.partner.partner_category)}</option>`
   ).join("");
   const suggestions = suggestedContractPartners.length ? suggestedContractPartners.map((item) =>
-    `<button type="button" class="btn" onclick="addPartnerFromDatabase('${item.partner_id}','${item.introduction_id}')">${escapeHtml(item.partner_name)} · ${escapeHtml(item.introduction_type)}: ${escapeHtml(item.introduced_name)}</button>`
+    `<button type="button" class="btn" data-partner-action="add-suggestion" data-partner-id="${escapeHtml(item.partner_id)}" data-introduction-id="${escapeHtml(item.introduction_id)}">${escapeHtml(item.partner_name)} · ${escapeHtml(item.introduction_type)}: ${escapeHtml(item.introduced_name)}</button>`
   ).join(" ") : `<span class="muted">${t("noSuggestions")}</span>`;
+  const directoryStatus = partnerDirectoryRecords.length
+    ? `<span class="muted">${partnerDirectoryRecords.length} active partner record(s) available.</span>`
+    : `<span class="allocation-message">No partner records were returned. Refresh the page; if this remains empty, check the partner-directory RPC.</span>`;
   return `<div style="margin-top:18px;padding:16px;border:1px solid rgba(255,255,255,.10);border-radius:14px;background:rgba(255,255,255,.025)">
     <div class="section-kicker">${t("partnerDatabase")}</div><p class="allocation-note">${t("partnerDatabaseHelp")}</p>
-    <div class="allocation-toolbar"><select id="databasePartnerSelect" onchange="refreshPartnerRuleOptions()"><option value="">${t("selectPartner")}</option>${options}</select><select id="databaseRuleSelect"><option value="">${t("selectRule")}</option></select><button type="button" class="btn btn-primary" onclick="addPartnerFromDatabase()">${t("addLinkedPartner")}</button></div>
+    <div class="allocation-toolbar"><select id="databasePartnerSelect"><option value="">${t("selectPartner")}</option>${options}</select><select id="databaseRuleSelect"><option value="">${t("selectRule")}</option></select><button id="addSelectedPartnerButton" type="button" class="btn btn-primary">${t("addLinkedPartner")}</button></div>
+    <div style="margin:8px 0 14px">${directoryStatus}</div>
     <div><strong>${t("suggestedPartners")}:</strong><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">${suggestions}</div></div>
   </div>`;
 }
@@ -3239,14 +3257,14 @@ function renderPartnerRegister(data) {
     </div>
     <div class="allocation-toolbar">
       <label class="allocation-check"><input id="noParentInvolvement" type="checkbox"${noParent ? " checked" : ""}> ${t("noParentInvolvement")}</label>
-      <button type="button" class="btn" onclick="addPartnerAllocationRow()">${t("addPartnerRow")}</button>
+      <button id="addPartnerAllocationRowButton" type="button" class="btn">${t("addPartnerRow")}</button>
     </div>
     <div class="allocation-table-wrap"><table class="allocation-table"><thead><tr>
       <th>${t("partnerRole")}</th><th>${t("partnerName")}</th><th>${t("partnerSeason")}</th><th>${t("partnerPercentage")}</th>
       <th>${t("partnerRelevantAmount")}</th><th>${t("partnerCurrency")}</th><th>${t("partnerBasis")}</th><th></th>
     </tr></thead><tbody id="partnerAllocationRows">${rows}</tbody></table></div>
     <div class="allocation-toolbar"><div id="partnerRegisterMessage" class="allocation-message" aria-live="polite"></div>
-      <button id="savePartnerRegisterButton" type="button" class="btn btn-primary" onclick="saveContractPartnerRegister()">${t("savePartnerRegister")}</button></div>
+      <button id="savePartnerRegisterButton" type="button" class="btn btn-primary">${t("savePartnerRegister")}</button></div>
   </section>`;
 }
 
@@ -6013,6 +6031,33 @@ function renderInvoiceForecast(data) {
 
     document.addEventListener("DOMContentLoaded", async () => {
       applyStaticTranslations();
+
+      // Partner-register controls are rendered dynamically with the contract.
+      // Delegation keeps them functional after every language change or data
+      // refresh and avoids reliance on inline event handlers.
+      document.addEventListener("change", (event) => {
+        if (event.target?.id === "databasePartnerSelect") refreshPartnerRuleOptions();
+      });
+      document.addEventListener("click", (event) => {
+        const button = event.target.closest("button");
+        if (!button) return;
+        if (button.id === "addPartnerAllocationRowButton") {
+          event.preventDefault();
+          addPartnerAllocationRow();
+        } else if (button.id === "addSelectedPartnerButton") {
+          event.preventDefault();
+          addPartnerFromDatabase();
+        } else if (button.id === "savePartnerRegisterButton") {
+          event.preventDefault();
+          saveContractPartnerRegister();
+        } else if (button.dataset.partnerAction === "remove-row") {
+          event.preventDefault();
+          removePartnerAllocationRow(button);
+        } else if (button.dataset.partnerAction === "add-suggestion") {
+          event.preventDefault();
+          addPartnerFromDatabase(button.dataset.partnerId, button.dataset.introductionId);
+        }
+      });
 
       document.getElementById("partnerPaymentForm")?.addEventListener("submit", savePartnerPayment);
       document.getElementById("cancelPartnerPayment")?.addEventListener("click", closePartnerPaymentModal);
