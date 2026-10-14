@@ -1077,7 +1077,7 @@
             🤝 Record Partner Income
           </a>
 
-          <a class="btn btn-gold" href="/dealtrack-pro/partners.html">
+          <a id="partnersAccessBtn" class="btn btn-gold" href="/dealtrack-pro/partners.html" hidden>
             👥 Partners
           </a>
 
@@ -2411,6 +2411,24 @@
 
       const usage = Array.isArray(data) ? data[0] : data;
       return usage?.agency_id ? usage : null;
+    }
+
+    async function renderPartnersAccess(db) {
+      const button = document.getElementById("partnersAccessBtn");
+      if (!button) return;
+
+      button.hidden = true;
+
+      const { data, error } = await db.rpc("dealtrack_can_manage_partners", {
+        p_agency_id: currentAgency?.agency_id || null
+      });
+
+      if (error) {
+        console.warn("Partners access could not be checked:", error);
+        return;
+      }
+
+      button.hidden = data !== true;
     }
 
     async function renderPlatformAdminAccess(db) {
@@ -5863,6 +5881,7 @@
       currentAgency = await loadAgencyContext(db, user);
       currentPlanUsage = await loadPlanUsage(db);
       await renderPlatformAdminAccess(db);
+      await renderPartnersAccess(db);
       renderIdentityBar();
       renderPlanUsage();
 
