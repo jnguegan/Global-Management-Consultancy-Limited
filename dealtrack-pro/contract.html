@@ -245,6 +245,7 @@
       padding: 0 16px;
       font-weight: 600;
       letter-spacing: 0.01em;
+      cursor: pointer;
     }
 
     .back-link:hover,
@@ -2440,6 +2441,15 @@
 
     function safeValue(value) {
       return value || `<span class="empty">${t("na")}</span>`;
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
     }
 
     function yesNo(value) {
