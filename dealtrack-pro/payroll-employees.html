@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DealTrack Pro | Payroll Employees</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/agent-academy/js/supabase-client.js"></script>
+<style>
+:root{font-family:system-ui,Arial,sans-serif;color:#17253b;background:#f4f7fb}*{box-sizing:border-box}body{margin:0}main{max-width:1100px;margin:auto;padding:28px 18px}header{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}h1{margin-bottom:4px}a{color:#164e86}section{background:white;border:1px solid #dce4ee;border-radius:14px;padding:20px;margin-top:20px}label{display:block;font-size:13px;font-weight:650;margin:10px 0 5px}input,select,button{font:inherit;padding:10px;border:1px solid #b9c8d8;border-radius:8px;width:100%}button{background:#123c69;color:white;cursor:pointer;border:0;margin-top:14px}button:disabled{opacity:.5;cursor:not-allowed}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}.muted{color:#5e7085}.error{color:#a3212b}.success{color:#116c4a}table{width:100%;border-collapse:collapse}td,th{padding:10px;text-align:left;border-bottom:1px solid #e5ebf2}#employeeSection,#formSection{display:none}.scroll{overflow-x:auto}
+</style></head>
+<body><main><header><div><div class="muted">DealTrack Pro / Payroll</div><h1>Employee register</h1><p class="muted">Restricted payroll workspace</p></div><a href="/dealtrack-pro/agency-dashboard.html">Back to dashboard</a></header>
+<p id="message" role="status">Checking payroll permissions…</p>
+<section id="employeeSection"><label for="employer">Payroll employer</label><select id="employer"></select>
+<div class="scroll"><table><thead><tr><th>Employee</th><th>Job title</th><th>Start date</th><th>Status</th><th>Monthly gross</th></tr></thead><tbody id="rows"></tbody></table></div></section>
+<section id="formSection"><h2>Register employee</h2><p class="muted">Salaries are stored only in Supabase. Enter amounts in the employer's payroll currency.</p>
+<form id="employeeForm"><div class="grid">
+<div><label for="fullName">Full name</label><input id="fullName" required maxlength="200"></div>
+<div><label for="jobTitle">Job title</label><input id="jobTitle" maxlength="200"></div>
+<div><label for="startDate">Employment start date</label><input id="startDate" type="date"></div>
+<div><label for="endDate">Employment end date (optional)</label><input id="endDate" type="date"></div>
+<div><label for="salary">Monthly gross salary (AED)</label><input id="salary" type="number" min="0" step="0.01" required></div>
+<div><label for="status">Status</label><select id="status"><option value="active">Active</option><option value="inactive">Inactive</option></select></div>
+</div><button id="save" type="submit">Save employee</button></form></section></main>
+<script>
+'use strict';
+const db=window.supabaseClient||window.sb;
+const $=id=>document.getElementById(id);
+const UAE_ID='85bdba79-7a24-435a-a37e-d351e2bb5c3b';
+const BS_AGENCY='721afc43-349a-4e79-a72e-b5dfe39c3d28';
+let access=null,issuers=[];
+function msg(s,error=false){$('message').textContent=s;$('message').className=error?'error':'success'}
+function cell(tr,value){const td=document.createElement('td');td.textContent=value==null?'—':String(value);tr.append(td)}
+function formatSalary(value,currency){return new Intl.NumberFormat('en-GB',{style:'currency',currency:currency||'AED'}).format(Number(value)||0)}
+async function loadEmployees(){
+ const issuer=issuers.find(x=>x.id===$('employer').value);if(!issuer)return;
+ const {data,error}=await db.from('dealtrack_payroll_employees').select('id,full_name,job_title,employment_start_date,status,base_salary,currency').eq('employer_id',issuer.id).order('full_name');
+ if(error){msg(error.message,true);return}
+ $('rows').replaceChildren();
+ for(const e of data||[]){const tr=document.createElement('tr');cell(tr,e.full_name);cell(tr,e.job_title);cell(tr,e.employment_start_date);cell(tr,e.status);cell(tr,formatSalary(e.base_salary,e.currency));$('rows').append(tr)}
+ if(!data?.length){const tr=document.createElement('tr');const td=document.createElement('td');td.colSpan=5;td.textContent='No employees registered for this employer.';tr.append(td);$('rows').append(tr)}
+}
+async function init(){
+ if(!db){msg('Supabase client unavailable.',true);return}
+ const {data:{user},error:authError}=await db.auth.getUser();
+ if(authError||!user){location.href='/dealtrack-pro/login.html';return}
+ const {data:roles,error:roleError}=await db.from('dealtrack_payroll_access').select('role,agency_id').eq('user_id',user.id);
+ // The access table currently permits SELECT only for the Super Admin.
+ // Payroll managers are authorised via payroll-table RLS, not via access-table SELECT.
+ if(roleError){msg('Payroll access verification failed: '+roleError.message,true);return}
+ access=roles?.[0]||null;
+ if(!access){msg('Payroll manager access needs a secure role-lookup RPC before this screen can be enabled for your account.',true);return}
+ const {data:entities,error:entityError}=await db.from('dealtrack_invoice_issuers').select('id,agency_id,display_name,legal_name,country,base_currency').order('display_name');
+ if(entityError){msg('Unable to load employers: '+entityError.message,true);return}
+ issuers=(entities||[]).filter(x=>access.role==='super_admin'||x.agency_id===access.agency_id);
+ // Only launch the UAE pilot in this version. Other employers are not yet enabled.
+ issuers=issuers.filter(x=>x.id===UAE_ID&&x.agency_id===BS_AGENCY);
+ if(!issuers.length){msg('No authorised UAE payroll employer is available.',true);return}
+ for(const i of issuers){const o=document.createElement('option');o.value=i.id;o.textContent=i.display_name||i.legal_name;$('employer').append(o)}
+ $('employeeSection').style.display='block';$('formSection').style.display='block';
+ $('employer').addEventListener('change',loadEmployees);
+ $('employeeForm').addEventListener('submit',saveEmployee);
+ await loadEmployees();msg('Payroll employee register ready.');
+}
+async function saveEmployee(event){
+ event.preventDefault();
+ const issuer=issuers.find(x=>x.id===$('employer').value);if(!issuer)return;
+ const salary=Number($('salary').value);
+ if(!Number.isFinite(salary)||salary<0){msg('Enter a valid monthly salary.',true);return}
+ if($('endDate').value&&$('startDate').value&&$('endDate').value<$('startDate').value){msg('End date cannot precede start date.',true);return}
+ $('save').disabled=true;
+ const payload={agency_id:issuer.agency_id,employer_id:issuer.id,full_name:$('fullName').value.trim(),job_title:$('jobTitle').value.trim()||null,employment_start_date:$('startDate').value||null,employment_end_date:$('endDate').value||null,currency:'AED',base_salary:salary,status:$('status').value};
+ const {error}=await db.from('dealtrack_payroll_employees').insert(payload);
+ $('save').disabled=false;
+ if(error){msg('Employee was not saved: '+error.message,true);return}
+ $('employeeForm').reset();msg('Employee saved successfully.');await loadEmployees();
+}
+init().catch(e=>msg(e.message,true));
+</script></body></html>
