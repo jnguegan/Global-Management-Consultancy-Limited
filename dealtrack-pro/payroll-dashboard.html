@@ -10,7 +10,9 @@
 <p id="message" role="status">Checking payroll access…</p>
 <div id="workspace"><section class="toolbar"><div><label for="employer">Payroll company</label><select id="employer"></select></div><div><label for="month">Payroll month</label><input id="month" type="month" value="2026-11"></div><div><label for="period">Available payroll runs</label><select id="period"></select></div></section>
 <div class="metrics"><div class="metric"><span class="muted">Total gross salary</span><strong id="gross">—</strong></div><div class="metric"><span class="muted">Allowances</span><strong id="allowances">—</strong></div><div class="metric"><span class="muted">Deductions</span><strong id="deductions">—</strong></div><div class="metric"><span class="muted">Total net salary</span><strong id="net">—</strong></div></div>
+<div class="metrics"><div class="metric"><span class="muted">Employer-paid benefits (non-cash)</span><strong id="benefits">—</strong></div><div class="metric"><span class="muted">Total company payroll cost</span><strong id="companyCost">—</strong></div></div>
 <section><div class="toolbar"><h2>Monthly payroll</h2><div><span id="status" class="status">Not created</span> <span id="count" class="muted small"></span></div></div><div class="scroll"><table><thead><tr><th>Employee</th><th>Job title</th><th class="right">Base salary</th><th class="right">Allowances</th><th class="right">Deductions</th><th class="right">Net salary</th></tr></thead><tbody id="rows"></tbody></table></div><p class="muted small">Read-only pilot: approval, payment, and PDF issuance are disabled until permission and document controls are tested.</p></section>
+<section><h2>Employer-paid benefits</h2><p class="muted small">These benefits are paid by the employer and do not increase the employee’s net cash salary. An invoice allocation is not independent evidence of individual insurance coverage.</p><div class="scroll"><table><thead><tr><th>Employee</th><th>Benefit</th><th>Provider</th><th>Invoice reference</th><th>Coverage</th><th class="right">Amount</th></tr></thead><tbody id="benefitRows"></tbody></table></div></section>
 <section><h2>Payroll history</h2><div class="scroll"><table><thead><tr><th>Month</th><th>Status</th><th>Currency</th><th>Created</th></tr></thead><tbody id="history"></tbody></table></div></section></div></main>
 <script>
 'use strict';
@@ -23,6 +25,7 @@ function message(s,error=false){$('message').textContent=s;$('message').classNam
 function money(n,c='AED'){return new Intl.NumberFormat('en-GB',{style:'currency',currency:c}).format(Number(n)||0)}
 function td(tr,value,right=false){const el=document.createElement('td');el.textContent=value==null?'—':String(value);if(right)el.className='right';tr.append(el)}
 function blank(tbody,cols,text){tbody.replaceChildren();const tr=document.createElement('tr');const el=document.createElement('td');el.colSpan=cols;el.className='empty';el.textContent=text;tr.append(el);tbody.append(tr)}
+function showBenefitTotals(items,benefits,c){const total=benefits.reduce((sum,b)=>sum+Number(b.amount||0),0);const net=items.reduce((sum,p)=>sum+Number(p.net_salary||0),0);$('benefits').textContent=money(total,c);$('companyCost').textContent=money(net+total,c)}
 function showTotals(items,c){for(const [key,field] of [['gross','base_salary'],['allowances','allowances'],['deductions','deductions'],['net','net_salary']])$(''+key).textContent=money(items.reduce((s,x)=>s+Number(x[field]||0),0),c)}
 async function refreshRuns(){
  const {data,error}=await db.from('dealtrack_payroll_runs').select('id,payroll_month,status,currency,created_at').eq('employer_id',issuer.id).order('payroll_month',{ascending:false});
@@ -37,7 +40,7 @@ async function loadMonth(){
  const selected=$('month').value;const run=runs.find(r=>r.payroll_month.slice(0,7)===selected);
  $('period').value=run?selected:'';
  const s=$('status');s.textContent=run?run.status:'Not created';s.className='status '+(run?.status||'');
- if(!run){showTotals([],'AED');$('count').textContent='0 payslips';blank($('rows'),6,'No payroll run exists for this month.');message('No payroll created for '+selected+'.');return}
+ if(!run){showTotals([],'AED');showBenefitTotals([],[],'AED');blank($('benefitRows'),6,'No benefits for this month.');$('count').textContent='0 payslips';blank($('rows'),6,'No payroll run exists for this month.');message('No payroll created for '+selected+'.');return}
  const {data,error}=await db.from('dealtrack_payslips').select('id,employee_id,base_salary,allowances,deductions,net_salary').eq('payroll_run_id',run.id);
  if(error)throw error;
  const slips=data||[];const ids=slips.map(x=>x.employee_id);
@@ -46,6 +49,13 @@ async function loadMonth(){
  const byId=new Map(employees.map(e=>[e.id,e]));slips.sort((a,b)=>(byId.get(a.employee_id)?.full_name||'').localeCompare(byId.get(b.employee_id)?.full_name||''));
  $('rows').replaceChildren();for(const p of slips){const e=byId.get(p.employee_id);const tr=document.createElement('tr');td(tr,e?.full_name||'Employee record unavailable');td(tr,e?.job_title);for(const k of ['base_salary','allowances','deductions','net_salary'])td(tr,money(p[k],run.currency),true);$('rows').append(tr)}
  if(!slips.length)blank($('rows'),6,'No payslips in this payroll run.');
+ let benefits=[];
+ if(slips.length){const br=await db.from('dealtrack_payroll_benefits').select('payslip_id,benefit_type,description,provider,invoice_reference,coverage_start,coverage_end,amount,currency').in('payslip_id',slips.map(p=>p.id));if(br.error)throw br.error;benefits=br.data||[]}
+ const bySlip=new Map(slips.map(p=>[p.id,p]));
+ $('benefitRows').replaceChildren();
+ for(const b of benefits){const p=bySlip.get(b.payslip_id);const e=p?byId.get(p.employee_id):null;const tr=document.createElement('tr');td(tr,e?.full_name||'Employee unavailable');td(tr,b.description||b.benefit_type);td(tr,b.provider);td(tr,b.invoice_reference);td(tr,[b.coverage_start,b.coverage_end].filter(Boolean).join(' to '));td(tr,money(b.amount,b.currency||run.currency),true);$('benefitRows').append(tr)}
+ if(!benefits.length)blank($('benefitRows'),6,'No employer-paid benefits recorded for this month.');
+ showBenefitTotals(slips,benefits,run.currency);
  showTotals(slips,run.currency);$('count').textContent=slips.length+' payslip'+(slips.length===1?'':'s');message('Payroll loaded. Read-only pilot.');
 }
 async function init(){
