@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DealTrack Pro | Payroll Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/agent-academy/js/supabase-client.js"></script>
+<style>
+:root{font-family:system-ui,Arial,sans-serif;color:#17253b;background:#f3f6fb}*{box-sizing:border-box}body{margin:0}main{max-width:1180px;margin:auto;padding:28px 18px}header,.toolbar,.metrics{display:flex;gap:16px;flex-wrap:wrap;align-items:center;justify-content:space-between}h1{margin:5px 0}h2{font-size:19px}a{color:#174b83}section,.metric{background:#fff;border:1px solid #dce4ee;border-radius:14px;padding:20px;margin-top:18px}.metrics{align-items:stretch}.metric{flex:1;min-width:190px}.metric strong{display:block;font-size:27px;margin-top:8px}.muted{color:#617389}.small{font-size:13px}.status{display:inline-block;border-radius:100px;background:#edf1f7;padding:5px 12px;font-size:13px;font-weight:700}.status.draft{background:#fff3d7;color:#825400}.status.approved{background:#dcecff;color:#164b80}.status.paid{background:#d9f6e7;color:#126444}label{font-size:13px;font-weight:700;display:block;margin-bottom:5px}select,input{font:inherit;padding:10px;border:1px solid #b7c5d8;border-radius:8px;min-width:200px;max-width:100%}table{border-collapse:collapse;width:100%}th,td{text-align:left;padding:13px 10px;border-bottom:1px solid #e7edf4}th{font-size:13px;color:#5e7085}.scroll{overflow-x:auto}.error{color:#b02532}.right{text-align:right}.empty{padding:22px;color:#617389}.links{display:flex;gap:18px;flex-wrap:wrap}#workspace{display:none}
+</style></head><body><main>
+<header><div><div class="muted small">DealTrack Pro / Payroll</div><h1>Payroll dashboard</h1><div class="muted">Company payroll overview and payslip records</div></div><nav class="links"><a href="/dealtrack-pro/payroll-employees.html">Employee register</a><a href="/dealtrack-pro/agency-dashboard.html">Agency dashboard</a></nav></header>
+<p id="message" role="status">Checking payroll access…</p>
+<div id="workspace"><section class="toolbar"><div><label for="employer">Payroll company</label><select id="employer"></select></div><div><label for="month">Payroll month</label><input id="month" type="month" value="2026-11"></div><div><label for="period">Available payroll runs</label><select id="period"></select></div></section>
+<div class="metrics"><div class="metric"><span class="muted">Total gross salary</span><strong id="gross">—</strong></div><div class="metric"><span class="muted">Allowances</span><strong id="allowances">—</strong></div><div class="metric"><span class="muted">Deductions</span><strong id="deductions">—</strong></div><div class="metric"><span class="muted">Total net salary</span><strong id="net">—</strong></div></div>
+<section><div class="toolbar"><h2>Monthly payroll</h2><div><span id="status" class="status">Not created</span> <span id="count" class="muted small"></span></div></div><div class="scroll"><table><thead><tr><th>Employee</th><th>Job title</th><th class="right">Base salary</th><th class="right">Allowances</th><th class="right">Deductions</th><th class="right">Net salary</th></tr></thead><tbody id="rows"></tbody></table></div><p class="muted small">Read-only pilot: approval, payment, and PDF issuance are disabled until permission and document controls are tested.</p></section>
+<section><h2>Payroll history</h2><div class="scroll"><table><thead><tr><th>Month</th><th>Status</th><th>Currency</th><th>Created</th></tr></thead><tbody id="history"></tbody></table></div></section></div></main>
+<script>
+'use strict';
+const db=window.supabaseClient||window.sb;
+const $=id=>document.getElementById(id);
+const UAE_ID='85bdba79-7a24-435a-a37e-d351e2bb5c3b';
+const BS_AGENCY='721afc43-349a-4e79-a72e-b5dfe39c3d28';
+let access,issuer,runs=[];
+function message(s,error=false){$('message').textContent=s;$('message').className=error?'error':'muted'}
+function money(n,c='AED'){return new Intl.NumberFormat('en-GB',{style:'currency',currency:c}).format(Number(n)||0)}
+function td(tr,value,right=false){const el=document.createElement('td');el.textContent=value==null?'—':String(value);if(right)el.className='right';tr.append(el)}
+function blank(tbody,cols,text){tbody.replaceChildren();const tr=document.createElement('tr');const el=document.createElement('td');el.colSpan=cols;el.className='empty';el.textContent=text;tr.append(el);tbody.append(tr)}
+function showTotals(items,c){for(const [key,field] of [['gross','base_salary'],['allowances','allowances'],['deductions','deductions'],['net','net_salary']])$(''+key).textContent=money(items.reduce((s,x)=>s+Number(x[field]||0),0),c)}
+async function refreshRuns(){
+ const {data,error}=await db.from('dealtrack_payroll_runs').select('id,payroll_month,status,currency,created_at').eq('employer_id',issuer.id).order('payroll_month',{ascending:false});
+ if(error)throw error;runs=data||[];
+ $('period').replaceChildren();const empty=document.createElement('option');empty.value='';empty.textContent='Select month';$('period').append(empty);
+ for(const r of runs){const o=document.createElement('option');o.value=r.payroll_month.slice(0,7);o.textContent=r.payroll_month.slice(0,7)+' · '+r.status;$('period').append(o)}
+ $('history').replaceChildren();
+ for(const r of runs){const tr=document.createElement('tr');td(tr,r.payroll_month.slice(0,7));td(tr,r.status);td(tr,r.currency);td(tr,r.created_at?.slice(0,10));$('history').append(tr)}
+ if(!runs.length)blank($('history'),4,'No payroll runs for this company.');
+}
+async function loadMonth(){
+ const selected=$('month').value;const run=runs.find(r=>r.payroll_month.slice(0,7)===selected);
+ $('period').value=run?selected:'';
+ const s=$('status');s.textContent=run?run.status:'Not created';s.className='status '+(run?.status||'');
+ if(!run){showTotals([],'AED');$('count').textContent='0 payslips';blank($('rows'),6,'No payroll run exists for this month.');message('No payroll created for '+selected+'.');return}
+ const {data,error}=await db.from('dealtrack_payslips').select('id,employee_id,base_salary,allowances,deductions,net_salary').eq('payroll_run_id',run.id);
+ if(error)throw error;
+ const slips=data||[];const ids=slips.map(x=>x.employee_id);
+ let employees=[];
+ if(ids.length){const res=await db.from('dealtrack_payroll_employees').select('id,full_name,job_title').in('id',ids).eq('employer_id',issuer.id);if(res.error)throw res.error;employees=res.data||[]}
+ const byId=new Map(employees.map(e=>[e.id,e]));slips.sort((a,b)=>(byId.get(a.employee_id)?.full_name||'').localeCompare(byId.get(b.employee_id)?.full_name||''));
+ $('rows').replaceChildren();for(const p of slips){const e=byId.get(p.employee_id);const tr=document.createElement('tr');td(tr,e?.full_name||'Employee record unavailable');td(tr,e?.job_title);for(const k of ['base_salary','allowances','deductions','net_salary'])td(tr,money(p[k],run.currency),true);$('rows').append(tr)}
+ if(!slips.length)blank($('rows'),6,'No payslips in this payroll run.');
+ showTotals(slips,run.currency);$('count').textContent=slips.length+' payslip'+(slips.length===1?'':'s');message('Payroll loaded. Read-only pilot.');
+}
+async function init(){
+ if(!db)throw Error('Supabase client unavailable.');
+ const auth=await db.auth.getUser();if(auth.error||!auth.data.user){location.href='/dealtrack-pro/login.html';return}
+ const res=await db.from('dealtrack_payroll_access').select('role,agency_id').eq('user_id',auth.data.user.id).maybeSingle();
+ if(res.error)throw res.error;access=res.data;if(!access)throw Error('Your account is not authorised for payroll.');
+ if(access.role!=='super_admin'&&!(access.role==='payroll_manager'&&access.agency_id===BS_AGENCY))throw Error('No access to this payroll employer.');
+ const entities=await db.from('dealtrack_invoice_issuers').select('id,agency_id,display_name,legal_name').eq('id',UAE_ID);
+ if(entities.error)throw entities.error;
+ issuer=(entities.data||[]).find(x=>x.agency_id===BS_AGENCY);
+ if(!issuer)throw Error('UAE payroll employer is unavailable to your account.');
+ const opt=document.createElement('option');opt.value=issuer.id;opt.textContent=issuer.display_name||issuer.legal_name;$('employer').append(opt);
+ $('workspace').style.display='block';
+ $('month').addEventListener('change',()=>loadMonth().catch(e=>message(e.message,true)));
+ $('period').addEventListener('change',()=>{if($('period').value){$('month').value=$('period').value;loadMonth().catch(e=>message(e.message,true))}});
+ await refreshRuns();await loadMonth();
+}
+init().catch(e=>message('Payroll dashboard unavailable: '+e.message,true));
+</script></body></html>
