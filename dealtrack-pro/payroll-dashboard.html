@@ -18,13 +18,13 @@ section,.metric{background:rgba(12,28,58,.96);border:1px solid rgba(255,255,255,
 .muted,th,.small{color:#9fb0cf}td,th{border-bottom-color:rgba(255,255,255,.10)}.metric strong{color:#f0c85a}
 select,input{background:#07152f;color:#f6f8fc;border:1px solid #405273}select option{background:#07152f;color:#fff}
 a{color:#f0c85a}.status{background:#263954;color:#e9f0ff}.status.draft{background:#473815;color:#f0c85a}.status.approved{background:#143958;color:#a4d8ff}.status.paid{background:#164b39;color:#b4f3d1}
-</style></head><body><main>
+button.payslip-button{background:#d4af37;color:#07152f;border:0;border-radius:8px;padding:9px 12px;font-weight:750;cursor:pointer;white-space:nowrap}button.payslip-button:hover{background:#f0c85a}</style></head><body><main>
 <header class="dt-topbar"><div class="dt-brand"><div class="dt-logo"><span>DealTrack</span> <b>Pro</b></div><div class="dt-tagline">Contract Intelligence for Football Agents</div></div><nav class="dt-nav"><a href="/dealtrack-pro/agency-dashboard.html">← Agency Dashboard</a><a class="dt-nav-gold" href="/dealtrack-pro/payroll-employees.html">👥 Employee Register</a></nav></header><div class="dt-heading"><div class="dt-eyebrow">DEALTRACK PRO / PAYROLL</div><h1>Payroll dashboard</h1><p>Company payroll overview and payslip records</p></div>
 <p id="message" role="status">Checking payroll access…</p>
 <div id="workspace"><section class="toolbar"><div><label for="employer">Payroll company</label><select id="employer"></select></div><div><label for="month">Payroll month</label><input id="month" type="month" value="2026-11"></div><div><label for="period">Available payroll runs</label><select id="period"></select></div></section>
 <div class="metrics"><div class="metric"><span class="muted">Total gross salary</span><strong id="gross">—</strong></div><div class="metric"><span class="muted">Allowances</span><strong id="allowances">—</strong></div><div class="metric"><span class="muted">Deductions</span><strong id="deductions">—</strong></div><div class="metric"><span class="muted">Total net salary</span><strong id="net">—</strong></div></div>
 <div class="metrics"><div class="metric"><span class="muted">Employer-paid benefits (non-cash)</span><strong id="benefits">—</strong></div><div class="metric"><span class="muted">Total company payroll cost</span><strong id="companyCost">—</strong></div></div>
-<section><div class="toolbar"><h2>Monthly payroll</h2><div><span id="status" class="status">Not created</span> <span id="count" class="muted small"></span></div></div><div class="scroll"><table><thead><tr><th>Employee</th><th>Job title</th><th class="right">Base salary</th><th class="right">Allowances</th><th class="right">Deductions</th><th class="right">Net salary</th></tr></thead><tbody id="rows"></tbody></table></div><p class="muted small">Read-only pilot: approval, payment, and PDF issuance are disabled until permission and document controls are tested.</p></section>
+<section><div class="toolbar"><h2>Monthly payroll</h2><div><span id="status" class="status">Not created</span> <span id="count" class="muted small"></span></div></div><div class="scroll"><table><thead><tr><th>Employee</th><th>Job title</th><th class="right">Base salary</th><th class="right">Allowances</th><th class="right">Deductions</th><th class="right">Net salary</th><th>Payslip</th></tr></thead><tbody id="rows"></tbody></table></div><p class="muted small">Generate / Print opens a printable draft payslip. Use your browser’s Print → Save as PDF option. Approval and payment actions remain disabled.</p></section>
 <section><h2>Employer-paid benefits</h2><p class="muted small">These benefits are paid by the employer and do not increase the employee’s net cash salary. An invoice allocation is not independent evidence of individual insurance coverage.</p><div class="scroll"><table><thead><tr><th>Employee</th><th>Benefit</th><th>Provider</th><th>Invoice reference</th><th>Coverage</th><th class="right">Amount</th></tr></thead><tbody id="benefitRows"></tbody></table></div></section>
 <section><h2>Payroll history</h2><div class="scroll"><table><thead><tr><th>Month</th><th>Status</th><th>Currency</th><th>Created</th></tr></thead><tbody id="history"></tbody></table></div></section></div></main>
 <script>
@@ -33,9 +33,10 @@ const db=window.supabaseClient||window.sb;
 const $=id=>document.getElementById(id);
 const UAE_ID='85bdba79-7a24-435a-a37e-d351e2bb5c3b';
 const BS_AGENCY='721afc43-349a-4e79-a72e-b5dfe39c3d28';
-let access,issuer,runs=[];
+let access,issuer,runs=[];let payslipView=new Map();
 function message(s,error=false){$('message').textContent=s;$('message').className=error?'error':'muted'}
 function money(n,c='AED'){return new Intl.NumberFormat('en-GB',{style:'currency',currency:c}).format(Number(n)||0)}
+function escapeHtml(v){return String(v??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]))}
 function td(tr,value,right=false){const el=document.createElement('td');el.textContent=value==null?'—':String(value);if(right)el.className='right';tr.append(el)}
 function blank(tbody,cols,text){tbody.replaceChildren();const tr=document.createElement('tr');const el=document.createElement('td');el.colSpan=cols;el.className='empty';el.textContent=text;tr.append(el);tbody.append(tr)}
 function showBenefitTotals(items,benefits,c){const total=benefits.reduce((sum,b)=>sum+Number(b.amount||0),0);const net=items.reduce((sum,p)=>sum+Number(p.net_salary||0),0);$('benefits').textContent=money(total,c);$('companyCost').textContent=money(net+total,c)}
@@ -53,23 +54,38 @@ async function loadMonth(){
  const selected=$('month').value;const run=runs.find(r=>r.payroll_month.slice(0,7)===selected);
  $('period').value=run?selected:'';
  const s=$('status');s.textContent=run?run.status:'Not created';s.className='status '+(run?.status||'');
- if(!run){showTotals([],'AED');showBenefitTotals([],[],'AED');blank($('benefitRows'),6,'No benefits for this month.');$('count').textContent='0 payslips';blank($('rows'),6,'No payroll run exists for this month.');message('No payroll created for '+selected+'.');return}
+ if(!run){showTotals([],'AED');showBenefitTotals([],[],'AED');blank($('benefitRows'),6,'No benefits for this month.');$('count').textContent='0 payslips';blank($('rows'),7,'No payroll run exists for this month.');message('No payroll created for '+selected+'.');return}
  const {data,error}=await db.from('dealtrack_payslips').select('id,employee_id,base_salary,allowances,deductions,net_salary').eq('payroll_run_id',run.id);
  if(error)throw error;
  const slips=data||[];const ids=slips.map(x=>x.employee_id);
  let employees=[];
  if(ids.length){const res=await db.from('dealtrack_payroll_employees').select('id,full_name,job_title').in('id',ids).eq('employer_id',issuer.id);if(res.error)throw res.error;employees=res.data||[]}
  const byId=new Map(employees.map(e=>[e.id,e]));slips.sort((a,b)=>(byId.get(a.employee_id)?.full_name||'').localeCompare(byId.get(b.employee_id)?.full_name||''));
- $('rows').replaceChildren();for(const p of slips){const e=byId.get(p.employee_id);const tr=document.createElement('tr');td(tr,e?.full_name||'Employee record unavailable');td(tr,e?.job_title);for(const k of ['base_salary','allowances','deductions','net_salary'])td(tr,money(p[k],run.currency),true);$('rows').append(tr)}
- if(!slips.length)blank($('rows'),6,'No payslips in this payroll run.');
+ $('rows').replaceChildren();payslipView=new Map();for(const p of slips){const e=byId.get(p.employee_id);const tr=document.createElement('tr');td(tr,e?.full_name||'Employee record unavailable');td(tr,e?.job_title);for(const k of ['base_salary','allowances','deductions','net_salary'])td(tr,money(p[k],run.currency),true);const cell=document.createElement('td');const btn=document.createElement('button');btn.type='button';btn.className='payslip-button';btn.textContent='Generate / Print';btn.addEventListener('click',()=>printPayslip(p.id));cell.append(btn);tr.append(cell);$('rows').append(tr);payslipView.set(p.id,{p,e,run,benefits:[]})}
+ if(!slips.length)blank($('rows'),7,'No payslips in this payroll run.');
  let benefits=[];
  if(slips.length){const br=await db.from('dealtrack_payroll_benefits').select('payslip_id,benefit_type,description,provider,invoice_reference,coverage_start,coverage_end,amount,currency').in('payslip_id',slips.map(p=>p.id));if(br.error)throw br.error;benefits=br.data||[]}
+ for(const b of benefits){const v=payslipView.get(b.payslip_id);if(v)v.benefits.push(b)}
  const bySlip=new Map(slips.map(p=>[p.id,p]));
  $('benefitRows').replaceChildren();
  for(const b of benefits){const p=bySlip.get(b.payslip_id);const e=p?byId.get(p.employee_id):null;const tr=document.createElement('tr');td(tr,e?.full_name||'Employee unavailable');td(tr,b.description||b.benefit_type);td(tr,b.provider);td(tr,b.invoice_reference);td(tr,[b.coverage_start,b.coverage_end].filter(Boolean).join(' to '));td(tr,money(b.amount,b.currency||run.currency),true);$('benefitRows').append(tr)}
  if(!benefits.length)blank($('benefitRows'),6,'No employer-paid benefits recorded for this month.');
  showBenefitTotals(slips,benefits,run.currency);
  showTotals(slips,run.currency);$('count').textContent=slips.length+' payslip'+(slips.length===1?'':'s');message('Payroll loaded. Read-only pilot.');
+}
+function printPayslip(id){
+ const item=payslipView.get(id);if(!item){message('Payslip not loaded.',true);return}
+ const {p,e,run,benefits}=item;
+ if(!e){message('Employee record unavailable.',true);return}
+ const pop=window.open('','_blank');
+ if(!pop){message('Allow pop-ups for this site to print payslips.',true);return}
+ const label=new Date(run.payroll_month+'T12:00:00').toLocaleDateString('en-GB',{month:'long',year:'numeric'});
+ const fmt=n=>money(n,run.currency);
+ const totalBenefits=benefits.reduce((sum,b)=>sum+Number(b.amount||0),0);
+ const benefitRows=benefits.map(b=>'<tr><td>'+escapeHtml(b.description||b.benefit_type)+'</td><td>'+escapeHtml(b.provider)+'</td><td>'+escapeHtml(b.invoice_reference)+'</td><td class="right">'+escapeHtml(fmt(b.amount))+'</td></tr>').join('');
+ const title=escapeHtml(e.full_name+' — '+label+' payslip');
+ const html='<!doctype html><html lang="en"><head><meta charset="utf-8"><title>'+title+'</title><style>body{font:14px Arial,sans-serif;color:#17253b;max-width:850px;margin:30px auto;padding:0 24px}header{border-bottom:4px solid #d4af37;padding-bottom:18px;display:flex;justify-content:space-between}h1{font-size:25px;margin:0}h2{font-size:17px;margin-top:30px}.brand{font-size:24px;font-weight:800}.brand b{color:#b78d18}.muted{color:#64748b}.draft{border:2px solid #d4af37;color:#795a12;padding:8px 14px;font-weight:800}table{width:100%;border-collapse:collapse;margin-top:10px}td,th{border-bottom:1px solid #dde4ed;padding:11px 8px;text-align:left}.right{text-align:right}.total{background:#f2f5f9;font-weight:bold}.note{font-size:12px;color:#586779;margin-top:22px}.actions{margin:20px 0}.actions button{background:#d4af37;border:0;border-radius:6px;padding:10px 18px;cursor:pointer}@media print{.actions{display:none}body{margin:0;max-width:none}} </style></head><body><header><div><div class="brand">DealTrack <b>Pro</b></div><div class="muted">PAYSLIP · '+escapeHtml(label)+'</div></div><div class="draft">'+escapeHtml(run.status.toUpperCase())+'</div></header><h2>'+escapeHtml(issuer.legal_name||issuer.display_name)+'</h2><p class="muted">Employer · '+escapeHtml(issuer.display_name||'')+'</p><table><tr><th>Employee</th><td>'+escapeHtml(e.full_name)+'</td></tr><tr><th>Job title</th><td>'+escapeHtml(e.job_title||'—')+'</td></tr><tr><th>Payroll month</th><td>'+escapeHtml(label)+'</td></tr><tr><th>Currency</th><td>'+escapeHtml(run.currency)+'</td></tr></table><h2>Salary breakdown</h2><table><tr><td>Base salary</td><td class="right">'+escapeHtml(fmt(p.base_salary))+'</td></tr><tr><td>Cash allowances</td><td class="right">'+escapeHtml(fmt(p.allowances))+'</td></tr><tr><td>Deductions</td><td class="right">'+escapeHtml(fmt(p.deductions))+'</td></tr><tr class="total"><td>Net cash salary</td><td class="right">'+escapeHtml(fmt(p.net_salary))+'</td></tr></table><h2>Employer-paid benefits (non-cash)</h2><table><tr><th>Benefit</th><th>Provider</th><th>Invoice reference</th><th class="right">Amount</th></tr>'+(benefitRows||'<tr><td colspan="4">None recorded</td></tr>')+'<tr class="total"><td colspan="3">Total employer-paid benefits</td><td class="right">'+escapeHtml(fmt(totalBenefits))+'</td></tr></table><p class="note">Employer-paid benefits are separate from cash salary and do not increase net cash pay. Benefits recorded as cost allocations do not independently establish individual insurance coverage.</p><p class="note">This document reflects payroll records currently stored in DealTrack Pro. A draft is not proof of payment or an approved salary statement.</p><div class="actions"><button onclick="window.print()">Print / Save as PDF</button></div></body></html>';
+ pop.document.open();pop.document.write(html);pop.document.close();pop.focus();
 }
 async function init(){
  if(!db)throw Error('Supabase client unavailable.');
